@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "thread_title": "Описать регистрацию ЛК юрлица на mos.ru",
-  "snapshot_moscow": "2026-11-03T21:03:01+03:00",
-  "messages": 177,
-  "user_messages": 55,
-  "assistant_messages": 122,
+  "snapshot_moscow": "2026-11-03T21:11:00+03:00",
+  "messages": 181,
+  "user_messages": 56,
+  "assistant_messages": 125,
   "embedded_user_images": 8,
   "format": "Visible user and assistant messages; readable archive, not a native Codex session import",
   "excluded": [
