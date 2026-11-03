@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "product-documentation-synthesis",
+  "version": "1.0.0",
+  "coordinator": "orchestrator",
+  "agents": ["orchestrator", "analyst", "ux-analyst", "regulatory-analyst", "source-reconciler", "specification", "documentation-author", "testing", "review", "verification"],
+  "workflow": ["analyst", "documentation-author", "ux-analyst", "regulatory-analyst", "source-reconciler", "analyst", "documentation-author", "testing", "review", "verification"],
+  "role_skills": {
+    "orchestrator": ["product-documentation-methodology"],
+    "analyst": ["product-documentation", "product-documentation-methodology", "meeting-decision-extraction", "business-process-modeling", "decision-table-and-branch-coverage", "nfr-elicitation"],
+    "ux-analyst": ["product-documentation-methodology"],
+    "regulatory-analyst": ["product-documentation-methodology"],
+    "source-reconciler": ["product-documentation-methodology"],
+    "specification": ["product-documentation-methodology"],
+    "documentation-author": ["product-documentation-methodology"],
+    "testing": ["product-documentation-methodology", "documentation-consistency-testing"],
+    "review": ["product-documentation-methodology"],
+    "verification": ["product-documentation-methodology"]
+  },
+  "required_artifacts": {
+    "analyst": ["source-registry.md", "product-map.md", "business-requirements.md", "business-processes.md", "scenarios.md", "business-rules.md", "entities.md", "statuses.md", "permissions.md", "functional-requirements.md", "non-functional-requirements.md", "glossary.md", "questions.md", "experts.md", "raci.md", "meeting-decisions.md", "branch-coverage.md"],
+    "ux-analyst": ["ux-flows.md", "screen-states.md", "ux-traceability.md"],
+    "regulatory-analyst": ["regulatory-sources.md", "regulatory-requirements.md", "regulatory-gaps.md"],
+    "source-reconciler": ["claims-alignment.md", "source-discrepancies.md", "decision-log.md"],
+    "documentation-author": ["PRODUCT.md", "documentation-index.md", "editorial-check.md"],
+    "testing": ["documentation-test-report.md"],
+    "review": ["review-report.md"],
+    "verification": ["acceptance-traceability.md", "verification-report.md"]
+  }
+}

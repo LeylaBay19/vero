@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "id": "platform-consistency",
+  "version": "1.0.0",
+  "coordinator": "orchestrator",
+  "agents": [
+    "orchestrator",
+    "analyst",
+    "ux-analyst",
+    "regulatory-analyst",
+    "source-reconciler",
+    "platform-consistency-steward",
+    "specification",
+    "documentation-author",
+    "testing",
+    "review",
+    "verification"
+  ],
+  "workflow": [
+    "analyst",
+    "documentation-author",
+    "ux-analyst",
+    "regulatory-analyst",
+    "source-reconciler",
+    "platform-consistency-steward",
+    "specification",
+    "analyst",
+    "documentation-author",
+    "testing",
+    "review",
+    "verification"
+  ],
+  "role_skills": {
+    "orchestrator": [
+      "product-documentation-methodology",
+      "raci-decision-routing",
+      "documentation-change-reconciliation"
+    ],
+    "analyst": [
+      "product-documentation",
+      "product-documentation-methodology",
+      "meeting-decision-extraction",
+      "business-process-modeling",
+      "decision-table-and-branch-coverage",
+      "nfr-elicitation",
+      "product-pattern-discovery",
+      "pattern-change-impact-analysis"
+    ],
+    "ux-analyst": [
+      "product-documentation-methodology",
+      "pattern-applicability-assessment",
+      "cross-service-consistency-audit"
+    ],
+    "regulatory-analyst": [
+      "product-documentation-methodology"
+    ],
+    "source-reconciler": [
+      "product-documentation-methodology",
+      "cross-service-consistency-audit"
+    ],
+    "specification": [
+      "product-documentation-methodology",
+      "pattern-applicability-assessment"
+    ],
+    "documentation-author": [
+      "product-documentation-methodology",
+      "documentation-change-reconciliation"
+    ],
+    "testing": [
+      "product-documentation-methodology",
+      "documentation-consistency-testing",
+      "cross-service-consistency-audit"
+    ],
+    "review": [
+      "product-documentation-methodology",
+      "cross-service-consistency-audit",
+      "pattern-exception-governance"
+    ],
+    "verification": [
+      "product-documentation-methodology",
+      "pattern-exception-governance"
+    ],
+    "platform-consistency-steward": [
+      "product-documentation-methodology",
+      "raci-decision-routing"
+    ]
+  },
+  "required_artifacts": {
+    "analyst": [
+      "source-registry.md",
+      "product-map.md",
+      "business-requirements.md",
+      "business-processes.md",
+      "scenarios.md",
+      "business-rules.md",
+      "entities.md",
+      "statuses.md",
+      "permissions.md",
+      "functional-requirements.md",
+      "non-functional-requirements.md",
+      "glossary.md",
+      "questions.md",
+      "experts.md",
+      "raci.md",
+      "meeting-decisions.md",
+      "branch-coverage.md",
+      "service-registry.md"
+    ],
+    "ux-analyst": [
+      "ux-flows.md",
+      "screen-states.md",
+      "ux-traceability.md"
+    ],
+    "regulatory-analyst": [
+      "regulatory-sources.md",
+      "regulatory-requirements.md",
+      "regulatory-gaps.md"
+    ],
+    "source-reconciler": [
+      "claims-alignment.md",
+      "source-discrepancies.md",
+      "decision-log.md"
+    ],
+    "documentation-author": [
+      "PRODUCT.md",
+      "documentation-index.md",
+      "editorial-check.md",
+      "dependency-map.md",
+      "change-log.md"
+    ],
+    "testing": [
+      "documentation-test-report.md"
+    ],
+    "review": [
+      "review-report.md"
+    ],
+    "verification": [
+      "acceptance-traceability.md",
+      "verification-report.md"
+    ],
+    "orchestrator": [
+      "coordination.md",
+      "raci-routing.md",
+      "automation-readiness.md"
+    ],
+    "platform-consistency-steward": [
+      "pattern-catalog.md",
+      "pattern-applicability.md",
+      "consistency-findings.md",
+      "exceptions.md",
+      "pattern-impact.md"
+    ],
+    "specification": [
+      "pattern-specification.md"
+    ]
+  }
+}

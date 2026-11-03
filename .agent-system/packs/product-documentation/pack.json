@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "product-documentation",
+  "version": "1.0.0",
+  "coordinator": "orchestrator",
+  "agents": ["orchestrator", "analyst", "specification", "review", "verification"],
+  "workflow": ["analyst", "review", "verification"],
+  "role_skills": {"analyst": ["product-documentation"]},
+  "required_artifacts": {
+    "analyst": ["source-registry.md", "product-map.md", "scenarios.md", "business-rules.md", "entities.md", "statuses.md", "permissions.md", "requirements.md", "questions.md", "experts.md", "raci.md"],
+    "review": ["review-report.md"],
+    "verification": ["acceptance-traceability.md", "verification-report.md"]
+  }
+}

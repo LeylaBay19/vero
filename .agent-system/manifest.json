@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "files": {
+    ".agent-system/packs/product-documentation/pack.json": {
+      "kind": "file",
+      "sha256": "f3a23bfd18f16891007f530bfdb0b16254e4c61e19081528dae67685de832932"
+    },
+    ".agent-system/packs/product-documentation/WORKFLOW.md": {
+      "kind": "file",
+      "sha256": "cb0dea034261d2bd1d076d99a7184bcc58719b0480a6e510fe3a61fda6e6e841"
+    },
+    ".agent-system/packs/software-development/pack.json": {
+      "kind": "file",
+      "sha256": "89fc0a62270920238906b74b29f80d5c592ee83b725a84e65a401077a6e2ee46"
+    },
+    ".agent-system/packs/software-development/WORKFLOW.md": {
+      "kind": "file",
+      "sha256": "0313fad296387758f2e570b158282321245a2ea97c0addecf2b1f338e672078b"
+    },
+    ".agent-system/packs/product-documentation-synthesis/pack.json": {
+      "kind": "file",
+      "sha256": "bbbe657ba318221be59fc175bade20752e1459b9356a008a928871ae1ccc7ef6"
+    },
+    ".agent-system/packs/product-documentation-synthesis/WORKFLOW.md": {
+      "kind": "file",
+      "sha256": "3f00dea112f3eeca2c1c431f592f436bfae4cdbae21534b48b1e257259b72c58"
+    },
+    ".agent-system/packs/platform-consistency/pack.json": {
+      "kind": "file",
+      "sha256": "2018f38413743f168c302aad6b5bfb6324ebc4f4e98463d98dcb967626a8a795"
+    },
+    ".agent-system/packs/platform-consistency/WORKFLOW.md": {
+      "kind": "file",
+      "sha256": "7e248ea3bb12b93a8555e2b22a7eb6d6d3ec64ddb02b418ce09b36b532315e72"
+    },
+    ".agents/skills/acceptance-chain-verification/SKILL.md": {
+      "kind": "file",
+      "sha256": "89f20ca36a57840a8ed92f8ffafc048c2ab880bfbf26ae09b97a203fb36a8293"
+    },
+    ".agents/skills/analysis-report-assembly/SKILL.md": {
+      "kind": "file",
+      "sha256": "d49c439031555ba63fa30d7544d95e22ee8ddc5da0e3d2741354fc6186c828b8"
+    },
+    ".agents/skills/approved-behavior-source-catalog/SKILL.md": {
+      "kind": "file",
+      "sha256": "0832925227118336fd8fe2f138e94d526e1082905a95b677872e91988d509a9f"
+    },
+    ".agents/skills/approved-design-implementation/SKILL.md": {
+      "kind": "file",
+      "sha256": "9bdbd04ac58c25360447c04240b90b2a33f065aa1519c742c158c1724a3ff73e"
+    },
+    ".agents/skills/architecture-aligned-solution-design/SKILL.md": {
+      "kind": "file",
+      "sha256": "ee7644ecc5b730920ff3836747738d2befe529f0d344f13dfe8fdfb23800169a"
+    },
+    ".agents/skills/automated-and-ui-test-execution/SKILL.md": {
+      "kind": "file",
+      "sha256": "1301f335a72cff594099c492f447f31a53d5699883fc6e6f6d607f5ee6f7d343"
+    },
+    ".agents/skills/behavioral-specification-drafting/SKILL.md": {
+      "kind": "file",
+      "sha256": "802c2d55e6ac552b08a89356f9e3e8e3c6cf31a0e59c6bfbbb4c0a658e9516c6"
+    },
+    ".agents/skills/product-documentation/references/templates.md": {
+      "kind": "file",
+      "sha256": "e8aa17da2d9fdeef59e3fb2e445cd91927b605e78204b6acfd415640a88e5c5e"
+    },
+    ".agents/skills/product-documentation/SKILL.md": {
+      "kind": "file",
+      "sha256": "3504bfb6500e4f71af6e6104d93cc50b60eb60cd022ce48e76229f6e715f8df6"
+    },
+    ".agents/skills/product-documentation-methodology/references/methodology.md": {
+      "kind": "file",
+      "sha256": "3a0ef9c9d77d9c2bf322b786de6cb49a0cb9611105a6155651f912df71cfc580"
+    },
+    ".agents/skills/product-documentation-methodology/references/quality-checklist.md": {
+      "kind": "file",
+      "sha256": "4d8351f66fc2b42df8c5720007c328c8628d11d3127285f05b374487f88dac38"
+    },
+    ".agents/skills/product-documentation-methodology/references/templates.md": {
+      "kind": "file",
+      "sha256": "ec563b19f3d6752e6a87c1595e16d4e5ecd3331fcff4be3085141a84656fba85"
+    },
+    ".agents/skills/product-documentation-methodology/SKILL.md": {
+      "kind": "file",
+      "sha256": "e573fdc8cd39654b654b8a6683c1863f45cc95296439b589e333a7252736d26d"
+    },
+    ".agents/skills/decision-table-and-branch-coverage/SKILL.md": {
+      "kind": "file",
+      "sha256": "62889ceb5ca4a3f84ab26929b65b77ad1144f8ca95884d5eab91080213300e33"
+    },
+    ".agents/skills/business-process-modeling/SKILL.md": {
+      "kind": "file",
+      "sha256": "58b8fbab8290cee7c15660b3ba35a7925870ca367ff6b28d39927cc0df52e4d3"
+    },
+    ".agents/skills/change-scope-and-test-planning/SKILL.md": {
+      "kind": "file",
+      "sha256": "bfb70c3962ecd7e8bcee39cc8c129c8619d6f78476e094ac97b86f8820924040"
+    },
+    ".agents/skills/claims-alignment/SKILL.md": {
+      "kind": "file",
+      "sha256": "731d6496e04d469e35f5a46b09a6dbc2d8ee869d8d55a8bae3ce3609abe23fde"
+    },
+    ".agents/skills/conflict-classification/SKILL.md": {
+      "kind": "file",
+      "sha256": "3df4d3f54f4deae0aecf8ce3d7893c710fd7aae47c143cd1ba8014980b1fe07a"
+    },
+    ".agents/skills/snapshot-evidence-capture/SKILL.md": {
+      "kind": "file",
+      "sha256": "b63f381cd5b564fab9d33efe7cab1457c02b3ce7f2bc200be469bb14bc3058c3"
+    },
+    ".agents/skills/pattern-applicability-assessment/SKILL.md": {
+      "kind": "file",
+      "sha256": "daf8227d5705829b3d863da4eb2300f7d35ba59ea9839281c31311e99d81c892"
+    },
+    ".agents/skills/cross-service-consistency-audit/SKILL.md": {
+      "kind": "file",
+      "sha256": "489cc7bf667a4741f65311fe624b1bd8d5a6301a276bd19cb1449ba38240b367"
+    },
+    ".agents/skills/design-contract-validation/SKILL.md": {
+      "kind": "file",
+      "sha256": "1a75610a0f52e5d69e26d3ae000acc7b157d5db8c5d350cf84f392b8a9adac38"
+    },
+    ".agents/skills/product-information-architecture/SKILL.md": {
+      "kind": "file",
+      "sha256": "d102d88fc26f39c92f50151203e3ef31ad99967e21e72da3bae1abd518beff55"
+    },
+    ".agents/skills/plain-language-editing/SKILL.md": {
+      "kind": "file",
+      "sha256": "c49534e675f69102ecb0374865c5ff06d1e53abdc71b9b0f0d7e4404baa48fc7"
+    },
+    ".agents/skills/product-documentation-assembly/SKILL.md": {
+      "kind": "file",
+      "sha256": "bbca0ba0a010f78de06b126e327fa8176bbed99ba17b2ef23869c1bdfdfe2fc0"
+    },
+    ".agents/skills/documentation-consistency-testing/SKILL.md": {
+      "kind": "file",
+      "sha256": "c6b90db53c45ca93d7786040a1a536d8c9c25251ae0eeb6a63eb6bafbc07e950"
+    },
+    ".agents/skills/working-copy-safety-inspection/SKILL.md": {
+      "kind": "file",
+      "sha256": "4f69542d591281b37534e4100845913052688c73a0c67d6e36f77a3afdb099a2"
+    },
+    ".agents/skills/resolution-tracking/SKILL.md": {
+      "kind": "file",
+      "sha256": "29449f8f643006507f5250a25305b34e1dcc70befd1915d93448432dccc9074c"
+    },
+    ".agents/skills/documentation-change-reconciliation/SKILL.md": {
+      "kind": "file",
+      "sha256": "79ec7c2eccd1805aa553313f7da567d2bb5970c511327e91d5b1dd28d0c59533"
+    },
+    ".agents/skills/figma-flow-extraction/SKILL.md": {
+      "kind": "file",
+      "sha256": "c03a4a180ce3e89b5dd871580720aee68ae012283ca5f0f0896f101400fadc11"
+    },
+    ".agents/skills/implementation-readiness-check/SKILL.md": {
+      "kind": "file",
+      "sha256": "e9bf594faa508ef43bdab0b7e34e5bcb5e7e5873184ec24512ffd06b94ee3d02"
+    },
+    ".agents/skills/implementation-report-assembly/SKILL.md": {
+      "kind": "file",
+      "sha256": "b0b9e1e06924faa2894f04dec4cf03c0dd3cb3811eeb0728657728d943f50e15"
+    },
+    ".agents/skills/independent-solution-review/SKILL.md": {
+      "kind": "file",
+      "sha256": "3ffe1c9c73c37698a0a48856badc88f41455892d6ed1c17ef014eacfa6b3fa96"
+    },
+    ".agents/skills/meeting-decision-extraction/SKILL.md": {
+      "kind": "file",
+      "sha256": "8fff70fc93cdc1f2274b5b2c316d5a7ac2f1ffdf08b8d4d0539f877d66122920"
+    },
+    ".agents/skills/nfr-elicitation/SKILL.md": {
+      "kind": "file",
+      "sha256": "41cfe8d4e6a851e45cf3de075d6a0c6ef54770d65867706f185c614e57bac486"
+    },
+    ".agents/skills/regulatory-source-validation/SKILL.md": {
+      "kind": "file",
+      "sha256": "98c442ff9fb22ab23589368dfa82fa7a5a0a4cdf5cb02278ddeb3cd305a49add"
+    },
+    ".agents/skills/obligation-to-requirement-mapping/SKILL.md": {
+      "kind": "file",
+      "sha256": "c59a44f5c0240b5fb29ce04cc8d6d5da5430a68bee0b855e85b94c2bc5abec51"
+    },
+    ".agents/skills/requirement-impact-mapping/SKILL.md": {
+      "kind": "file",
+      "sha256": "476a2107480ac2e84095b885966ff2a946ebc1db3e0e73b347736bee0a02a980"
+    },
+    ".agents/skills/pattern-change-impact-analysis/SKILL.md": {
+      "kind": "file",
+      "sha256": "639c8d41f1126e12d228452b11474af7b06eb1067d0ed27fa092e05b00b11b80"
+    },
+    ".agents/skills/pattern-exception-governance/SKILL.md": {
+      "kind": "file",
+      "sha256": "16816530b31ee652bd448ad0c96d2a2dbca53076ebec1d9371137f452829042c"
+    },
+    ".agents/skills/product-pattern-discovery/SKILL.md": {
+      "kind": "file",
+      "sha256": "7ca14ac429f9b87846ec412bf1c6b37bbbb2f246ecec7aa6a3f8ee5b2fb7d258"
+    },
+    ".agents/skills/raci-decision-routing/SKILL.md": {
+      "kind": "file",
+      "sha256": "a4dfd413bf6def149e766c55b278b24561e38e439d7b8681b9aaaf290f4fccc8"
+    },
+    ".agents/skills/regulatory-gap-analysis/SKILL.md": {
+      "kind": "file",
+      "sha256": "671e312fe2706cd9589a86135da0e11286987f434d7e480b2e9095d89bacd336"
+    },
+    ".agents/skills/repository-topology-discovery/SKILL.md": {
+      "kind": "file",
+      "sha256": "7c829f7c17312d571965b7e03257341ef4986a8025b1547e27dfa6e2fb5523a9"
+    },
+    ".agents/skills/risk-based-test-selection/SKILL.md": {
+      "kind": "file",
+      "sha256": "12518a27278363bead7796f854ee429870f2405b6a72c7b7bd1531050aa62b39"
+    },
+    ".agents/skills/screen-state-specification/SKILL.md": {
+      "kind": "file",
+      "sha256": "48567a87aa5ba523d6aa94f37c624f4c6bc582bfca5c02b1e5020b621536d0eb"
+    },
+    ".agents/skills/specification-contract-validation/SKILL.md": {
+      "kind": "file",
+      "sha256": "7ab5144f2beedde79926655b25e725a91838a01e3443b2a5a50f68228083e6a0"
+    },
+    ".agents/skills/test-adequacy-review/SKILL.md": {
+      "kind": "file",
+      "sha256": "b7fd8723faee526ca844b01d65e5417f944c03bb567cae41506ee7483e33d5be"
+    },
+    ".agents/skills/test-result-evidence-assembly/SKILL.md": {
+      "kind": "file",
+      "sha256": "b7fd95433bd71ad30c29a310d4cef381a1ab4beffa3662d2041f2faefb04782a"
+    },
+    ".agents/skills/ux-requirement-traceability/SKILL.md": {
+      "kind": "file",
+      "sha256": "55121ccefc8ef6e96781ba4b9dab3699fff324630b20ba7b220592c037115591"
+    },
+    ".agents/skills/verification-verdict-assembly/SKILL.md": {
+      "kind": "file",
+      "sha256": "4fff78c5a8bab1b650285bdb4d120ded2bbdb6c409d1db0fbc876b8f1bd17b4f"
+    },
+    ".agents/skills/workflow-orchestration/SKILL.md": {
+      "kind": "file",
+      "sha256": "bcc3614f0c6b85f3e0ee914edfc04db72b7601da6688d689ce753e1c38aebb41"
+    },
+    ".codex/agents/analyst.toml": {
+      "kind": "file",
+      "sha256": "698dde2884a245087b95ab3ae544b715ee12154baab62ca47b160aac07aa6fa6"
+    },
+    ".codex/agents/design.toml": {
+      "kind": "file",
+      "sha256": "cdf8a3a8705204bbef50ee83f3f6faf832f9c1456c01edefec68fe94ab775b7f"
+    },
+    ".codex/agents/documentation-author.toml": {
+      "kind": "file",
+      "sha256": "67af2f070b424989c78956bb0103adaab5a61db9d9ad2e72d86fcbb9414898e6"
+    },
+    ".codex/agents/implementation.toml": {
+      "kind": "file",
+      "sha256": "3ef8652df4af8df6da80cef05122c79ff739099fa2a3eda288422bb3d884808c"
+    },
+    ".codex/agents/orchestrator.toml": {
+      "kind": "file",
+      "sha256": "916a21186afc34a90602a80891d0a7501a7dcbde8928f75b8bb75cabf611a349"
+    },
+    ".codex/agents/platform-consistency-steward.toml": {
+      "kind": "file",
+      "sha256": "d2ca66d052cc8904a9b50b844cd7d1dab721288b6ae192ab969b1be759149bd9"
+    },
+    ".codex/agents/regulatory-analyst.toml": {
+      "kind": "file",
+      "sha256": "00be068cf012a0c8f26d3673eed4ab33a3e00c5895bccd0d03ef64f88ff5e4e5"
+    },
+    ".codex/agents/review.toml": {
+      "kind": "file",
+      "sha256": "4aff4d05c1fe28fa4e9b06549eff5a881e70e83a40b1f7127633d8238ec88932"
+    },
+    ".codex/agents/source-reconciler.toml": {
+      "kind": "file",
+      "sha256": "e70e2724e031ecb55493011b74e2ee6f9effafbaafa9eebf09d227e2852d7afb"
+    },
+    ".codex/agents/specification.toml": {
+      "kind": "file",
+      "sha256": "99317a93ac83d03cdc5ea534b384ff47acb2386b8412ed395011a3b09cb6667a"
+    },
+    ".codex/agents/testing.toml": {
+      "kind": "file",
+      "sha256": "d4e4542dcfb7df18534f521085a621b15ceabb2cd598ddc96a9f649e8df74e37"
+    },
+    ".codex/agents/ux-analyst.toml": {
+      "kind": "file",
+      "sha256": "e8857f520c67532e1b3bd29e790767333d29f16403a1303f65e4f69234e2bb2e"
+    },
+    ".codex/agents/verification.toml": {
+      "kind": "file",
+      "sha256": "e9b07e8036e5e819c3063509b48b5cba54f35d1fd5c36e3de674c664303a327e"
+    },
+    ".agent-system/core/CONTRACTS.md": {
+      "kind": "file",
+      "sha256": "178fbd876ae44eb2a8cd2fe156b62ac1b04a075cda3336a99b148b094b4f0b74"
+    },
+    ".agent-system/core/MODEL_POLICY.md": {
+      "kind": "file",
+      "sha256": "48bd9bd07acaa64e947932c536f1a8ba75dc79551f6bb0edc66bdcd2ef8c9651"
+    },
+    ".agent-system/core/RULES.md": {
+      "kind": "file",
+      "sha256": "bd42ffa0ac6db303e3f9f644a21cbb811e6cd05923e12d226a56eae109b29c8b"
+    },
+    ".agent-system/project/project.json": {
+      "kind": "file",
+      "sha256": "9d955d2405210f930c04c47a29f24b92aa4b2b82c00a62144e53f1baca75b58e"
+    },
+    ".agent-system/project/CONTEXT.md": {
+      "kind": "file",
+      "sha256": "abcc95358b714223d932ed091c89170a976738d3dd64b2960db4962b26b339a2"
+    },
+    ".agent-system/active.json": {
+      "kind": "file",
+      "sha256": "5823430b0b240c10ef2b38fa62b9238c7a05ee6ac15df4fdeb2516d8664ff079"
+    },
+    "AGENTS.md": {
+      "kind": "agents-block",
+      "sha256": "e453277f2800a693841323ef5e5b2802e195132472dea5ed49215050b3719838"
+    }
+  }
+}

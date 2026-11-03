@@ -1,0 +1,5 @@
+{
+  "requires": [
+    "working-copy-safety-inspection"
+  ]
+}

@@ -1,0 +1,3 @@
+{
+  "requires": ["product-documentation-methodology", "decision-table-and-branch-coverage"]
+}

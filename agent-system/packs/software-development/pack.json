@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "id": "software-development",
+  "version": "1.0.0",
+  "coordinator": "orchestrator",
+  "agents": ["orchestrator", "analyst", "specification", "design", "implementation", "testing", "review", "verification"],
+  "workflow": ["analyst", "specification", "design", "implementation", "testing", "review", "verification"],
+  "role_skills": {},
+  "required_artifacts": {
+    "analyst": ["working-copy-safety.md", "system-map.md", "evidence.md", "analysis-report.md"],
+    "specification": ["approved-behavior-sources.md", "behavioral-specification.md", "specification-validation.md"],
+    "design": ["technical-design.md", "change-and-test-plan.md", "design-validation.md"],
+    "implementation": ["implementation-readiness.md", "implementation-report.md"],
+    "testing": ["test-plan.md", "test-evidence.md", "test-report.md"],
+    "review": ["review-report.md", "test-adequacy-review.md"],
+    "verification": ["acceptance-traceability.md", "verification-report.md"]
+  }
+}

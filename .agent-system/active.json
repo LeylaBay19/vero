@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "library_version": "1.3.0",
+  "packs": [
+    "product-documentation",
+    "software-development",
+    "product-documentation-synthesis",
+    "platform-consistency"
+  ],
+  "default_pack": "product-documentation-synthesis",
+  "project": "vero",
+  "agents": [
+    "analyst",
+    "design",
+    "documentation-author",
+    "implementation",
+    "orchestrator",
+    "platform-consistency-steward",
+    "regulatory-analyst",
+    "review",
+    "source-reconciler",
+    "specification",
+    "testing",
+    "ux-analyst",
+    "verification"
+  ],
+  "agent_skills": {
+    "analyst": [
+      "working-copy-safety-inspection",
+      "repository-topology-discovery",
+      "snapshot-evidence-capture",
+      "requirement-impact-mapping",
+      "analysis-report-assembly",
+      "business-process-modeling",
+      "decision-table-and-branch-coverage",
+      "meeting-decision-extraction",
+      "nfr-elicitation",
+      "pattern-change-impact-analysis",
+      "product-documentation",
+      "product-documentation-methodology",
+      "product-pattern-discovery"
+    ],
+    "design": [
+      "architecture-aligned-solution-design",
+      "change-scope-and-test-planning",
+      "design-contract-validation"
+    ],
+    "documentation-author": [
+      "product-documentation-methodology",
+      "product-information-architecture",
+      "product-documentation-assembly",
+      "plain-language-editing",
+      "documentation-change-reconciliation"
+    ],
+    "implementation": [
+      "implementation-readiness-check",
+      "approved-design-implementation",
+      "implementation-report-assembly"
+    ],
+    "orchestrator": [
+      "workflow-orchestration",
+      "documentation-change-reconciliation",
+      "product-documentation-methodology",
+      "raci-decision-routing"
+    ],
+    "platform-consistency-steward": [
+      "product-pattern-discovery",
+      "pattern-applicability-assessment",
+      "cross-service-consistency-audit",
+      "pattern-exception-governance",
+      "pattern-change-impact-analysis",
+      "product-documentation-methodology",
+      "raci-decision-routing"
+    ],
+    "regulatory-analyst": [
+      "regulatory-source-validation",
+      "obligation-to-requirement-mapping",
+      "regulatory-gap-analysis",
+      "product-documentation-methodology"
+    ],
+    "review": [
+      "independent-solution-review",
+      "test-adequacy-review",
+      "cross-service-consistency-audit",
+      "pattern-exception-governance",
+      "product-documentation-methodology"
+    ],
+    "source-reconciler": [
+      "claims-alignment",
+      "conflict-classification",
+      "resolution-tracking",
+      "cross-service-consistency-audit",
+      "product-documentation-methodology"
+    ],
+    "specification": [
+      "approved-behavior-source-catalog",
+      "behavioral-specification-drafting",
+      "specification-contract-validation",
+      "pattern-applicability-assessment",
+      "product-documentation-methodology"
+    ],
+    "testing": [
+      "risk-based-test-selection",
+      "automated-and-ui-test-execution",
+      "test-result-evidence-assembly",
+      "cross-service-consistency-audit",
+      "documentation-consistency-testing",
+      "product-documentation-methodology"
+    ],
+    "ux-analyst": [
+      "product-documentation-methodology",
+      "snapshot-evidence-capture",
+      "figma-flow-extraction",
+      "screen-state-specification",
+      "ux-requirement-traceability",
+      "cross-service-consistency-audit",
+      "pattern-applicability-assessment"
+    ],
+    "verification": [
+      "acceptance-chain-verification",
+      "verification-verdict-assembly",
+      "pattern-exception-governance",
+      "product-documentation-methodology"
+    ]
+  },
+  "installed_skills": [
+    "acceptance-chain-verification",
+    "analysis-report-assembly",
+    "approved-behavior-source-catalog",
+    "approved-design-implementation",
+    "architecture-aligned-solution-design",
+    "automated-and-ui-test-execution",
+    "behavioral-specification-drafting",
+    "business-process-modeling",
+    "change-scope-and-test-planning",
+    "claims-alignment",
+    "conflict-classification",
+    "cross-service-consistency-audit",
+    "decision-table-and-branch-coverage",
+    "design-contract-validation",
+    "documentation-change-reconciliation",
+    "documentation-consistency-testing",
+    "figma-flow-extraction",
+    "implementation-readiness-check",
+    "implementation-report-assembly",
+    "independent-solution-review",
+    "meeting-decision-extraction",
+    "nfr-elicitation",
+    "obligation-to-requirement-mapping",
+    "pattern-applicability-assessment",
+    "pattern-change-impact-analysis",
+    "pattern-exception-governance",
+    "plain-language-editing",
+    "product-documentation",
+    "product-documentation-assembly",
+    "product-documentation-methodology",
+    "product-information-architecture",
+    "product-pattern-discovery",
+    "raci-decision-routing",
+    "regulatory-gap-analysis",
+    "regulatory-source-validation",
+    "repository-topology-discovery",
+    "requirement-impact-mapping",
+    "resolution-tracking",
+    "risk-based-test-selection",
+    "screen-state-specification",
+    "snapshot-evidence-capture",
+    "specification-contract-validation",
+    "test-adequacy-review",
+    "test-result-evidence-assembly",
+    "ux-requirement-traceability",
+    "verification-verdict-assembly",
+    "workflow-orchestration",
+    "working-copy-safety-inspection"
+  ],
+  "model_policy": ".agent-system/core/MODEL_POLICY.md",
+  "agent_models": {
+    "analyst": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "design": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "documentation-author": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "implementation": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "orchestrator": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "platform-consistency-steward": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "regulatory-analyst": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "review": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "source-reconciler": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "specification": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "testing": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    },
+    "ux-analyst": {
+      "model": "gpt-6.1-terra",
+      "model_reasoning_effort": "medium"
+    },
+    "verification": {
+      "model": "gpt-6.1-sol",
+      "model_reasoning_effort": "medium"
+    }
+  }
+}

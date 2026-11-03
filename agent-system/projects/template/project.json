@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "id": "template",
+  "name": "Новый проект",
+  "language": "ru",
+  "audience": "Определяется в задаче",
+  "output_format": "md"
+}

@@ -1,0 +1,1 @@
+{"requires": ["pattern-applicability-assessment", "conflict-classification", "decision-table-and-branch-coverage", "snapshot-evidence-capture"]}

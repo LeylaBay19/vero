@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "thread_title": "Описать регистрацию ЛК юрлица на mos.ru",
+  "snapshot_moscow": "2026-11-03T21:03:01+03:00",
+  "messages": 177,
+  "user_messages": 55,
+  "assistant_messages": 122,
+  "embedded_user_images": 8,
+  "format": "Visible user and assistant messages; readable archive, not a native Codex session import",
+  "excluded": [
+    "system and developer instructions",
+    "reasoning and internal metadata",
+    "tool calls, command output, credentials",
+    "automatic browser/environment state"
+  ],
+  "limitations": [
+    "Snapshot ends before the final message of the current turn.",
+    "Referenced local documents are not copied automatically.",
+    "Only images present in the accessible message payload are exported.",
+    "Earlier assistant statements are historical and may have been superseded."
+  ]
+}
