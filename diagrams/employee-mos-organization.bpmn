@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='utf-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="employee_mos_organization_defs" targetNamespace="urn:proposed:registration">
+  <bpmn:process id="Process" name="Предлагаемый вариант · организация на mos.ru" isExecutable="false">
+    <bpmn:documentation>Сотрудник добавлен только в организацию на mos.ru. На платформе членство и права ему ещё не назначены. Предлагаемый вариант по решению пользователя, 03.11.2026. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:laneSet id="Lanes">
+      <bpmn:lane id="person" name="Сотрудник">
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Auth</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>View</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="system" name="Платформа">
+        <bpmn:flowNodeRef>Identity</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Organization</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Access</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Contact</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start" name="Начало">
+      <bpmn:outgoing>F0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Auth" name="Войти через личный аккаунт mos.ru">
+      <bpmn:incoming>F0</bpmn:incoming>
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="Identity" name="Получить результат входа">
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Organization" name="Получить сведения об организации">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="View" name="Увидеть свою организацию">
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="Access" name="Проверить доступ на платформе">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Contact" name="Показать обращение в организацию">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:outgoing>F6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End" name="Нужно приглашение">
+      <bpmn:incoming>F6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F0" sourceRef="Start" targetRef="Auth" />
+    <bpmn:sequenceFlow id="F1" sourceRef="Auth" targetRef="Identity" />
+    <bpmn:sequenceFlow id="F2" sourceRef="Identity" targetRef="Organization" />
+    <bpmn:sequenceFlow id="F3" sourceRef="Organization" targetRef="View" />
+    <bpmn:sequenceFlow id="F4" sourceRef="View" targetRef="Access" />
+    <bpmn:sequenceFlow id="F5" sourceRef="Access" targetRef="Contact" name="Прав нет" />
+    <bpmn:sequenceFlow id="F6" sourceRef="Contact" targetRef="End" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram">
+    <bpmndi:BPMNPlane id="Plane" bpmnElement="Process">
+      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start">
+        <dc:Bounds x="70" y="243" width="34" height="34" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="35" y="309" width="224" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Auth_di" bpmnElement="Auth">
+        <dc:Bounds x="150" y="210" width="260" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Identity_di" bpmnElement="Identity">
+        <dc:Bounds x="450" y="520" width="260" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Organization_di" bpmnElement="Organization">
+        <dc:Bounds x="800" y="520" width="260" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="View_di" bpmnElement="View">
+        <dc:Bounds x="1160" y="210" width="260" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Access_di" bpmnElement="Access">
+        <dc:Bounds x="1160" y="520" width="260" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Contact_di" bpmnElement="Contact">
+        <dc:Bounds x="1560" y="520" width="260" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_di" bpmnElement="End">
+        <dc:Bounds x="2110" y="553" width="34" height="34" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2015" y="619" width="224" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="person_di" bpmnElement="person" isHorizontal="true">
+        <dc:Bounds x="35" y="130" width="2230" height="310" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="system_di" bpmnElement="system" isHorizontal="true">
+        <dc:Bounds x="35" y="440" width="2230" height="450" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F0_di" bpmnElement="F0">
+        <di:waypoint x="104" y="260" />
+        <di:waypoint x="150" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1">
+        <di:waypoint x="280" y="310" />
+        <di:waypoint x="280" y="570" />
+        <di:waypoint x="450" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2">
+        <di:waypoint x="710" y="570" />
+        <di:waypoint x="800" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3">
+        <di:waypoint x="930" y="520" />
+        <di:waypoint x="930" y="260" />
+        <di:waypoint x="1160" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4">
+        <di:waypoint x="1290" y="310" />
+        <di:waypoint x="1290" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
+        <di:waypoint x="1420" y="570" />
+        <di:waypoint x="1560" y="570" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6">
+        <di:waypoint x="1820" y="570" />
+        <di:waypoint x="2110" y="570" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

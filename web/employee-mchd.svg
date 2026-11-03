@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2300" height="1060" viewBox="0 0 2300 1060" role="img"><title>Предлагаемый вариант · выдача полномочий сотруднику</title><rect width="100%" height="100%" fill="white"/>
+<text x="35" y="40.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#193936">Предлагаемый вариант · выдача полномочий сотруднику</text>
+<text x="35" y="88.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#193936">Организация и сотрудник уже подключены. Обычный доступ к кабинету не требует оформления этой МЧД.</text>
+<rect x="35" y="130" width="2230" height="760" rx="0" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<polyline points="35,440 2265,440" fill="none" stroke="#466760" stroke-width="2"/>
+<text x="1150" y="154.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193936">ГЕНЕРАЛЬНЫЙ ДИРЕКТОР</text>
+<text x="1150" y="466.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193936">ПЛАТФОРМА</text>
+<polyline points="104,260 150,260" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="150,260 138.0,255.0 138.0,265.0" fill="#466760"/>
+<polyline points="280,310 280,570 450,570" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="450,570 438.0,565.0 438.0,575.0" fill="#466760"/>
+<polyline points="580,520 580,260 850,260" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="850,260 838.0,255.0 838.0,265.0" fill="#466760"/>
+<polyline points="1110,260 1240,260" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1240,260 1228.0,255.0 1228.0,265.0" fill="#466760"/>
+<polyline points="1370,310 1370,520" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1370,520 1375.0,508.0 1365.0,508.0" fill="#466760"/>
+<polyline points="1500,570 1720,570" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1720,570 1708.0,565.0 1708.0,575.0" fill="#466760"/>
+<polyline points="2020,570 2150,570" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="2150,570 2138.0,565.0 2138.0,575.0" fill="#466760"/>
+<circle cx="87.0" cy="260.0" r="17.0" fill="white" stroke="#193936" stroke-width="2"/>
+<text x="87.0" y="332.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Начало</text>
+<rect x="150" y="210" width="260" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<text x="280.0" y="244.82" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Выбрать полномочия</text>
+<text x="280.0" y="275.18" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">чекбоксами</text>
+<rect x="450" y="520" width="260" height="100" rx="10" fill="#f0f6f4" stroke="#8ba6a1" stroke-width="2"/>
+<text x="580.0" y="539.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Сформировать МЧД</text>
+<text x="580.0" y="570.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">по выбранным</text>
+<text x="580.0" y="600.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">правам</text>
+<rect x="850" y="210" width="260" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<text x="980.0" y="229.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Проверить</text>
+<text x="980.0" y="260.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">сотрудника и</text>
+<text x="980.0" y="290.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">полномочия в МЧД</text>
+<rect x="1240" y="210" width="260" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<text x="1370.0" y="229.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Подписать МЧД</text>
+<text x="1370.0" y="260.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">электронной</text>
+<text x="1370.0" y="290.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">подписью</text>
+<rect x="1240" y="520" width="260" height="100" rx="10" fill="#f0f6f4" stroke="#8ba6a1" stroke-width="2"/>
+<text x="1370.0" y="554.82" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Сохранить</text>
+<text x="1370.0" y="585.18" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">подписанную МЧД</text>
+<rect x="1720" y="520" width="300" height="100" rx="10" fill="#f0f6f4" stroke="#8ba6a1" stroke-width="2"/>
+<text x="1870.0" y="539.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Показать сотруднику</text>
+<text x="1870.0" y="570.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">оформленные</text>
+<text x="1870.0" y="600.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">полномочия</text>
+<circle cx="2167.0" cy="570.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
+<text x="2167.0" y="630.12" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">МЧД</text>
+<text x="2167.0" y="653.88" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">подписана</text>
+<text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · проект поведения после правок пользователя от 03.11.2026</text>
+<text x="35" y="986.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Выбор полномочий чекбоксами не заменяет подписание МЧД электронной подписью руководителя.</text>
+</svg>

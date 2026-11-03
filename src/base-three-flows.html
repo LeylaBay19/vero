@@ -1,0 +1,364 @@
+<div id="auth-flow-prototype" aria-label="Прототип регистрации и входа: Тринити и Орбита">
+  <div class="ap-bench">
+    <div class="ap-bench-head"><strong>Регистрация и вход <small>v2</small></strong><span>Интерактивный прототип · демонстрационные данные</span></div>
+    <div class="ap-scenarios" aria-label="Выбор сценария">
+      <button type="button" data-flow="mos"><span class="ap-scenario-kicker">Сотрудник</span><strong>Тринити · mos.ru</strong><span>Личный вход и доверенность</span></button>
+      <button type="button" data-flow="ep"><span class="ap-scenario-kicker">Руководитель</span><strong>Тринити · УКЭП</strong><span>Подключение организации</span></button>
+      <button type="button" data-flow="orb"><span class="ap-scenario-kicker">Новый пользователь</span><strong>Орбита · email</strong><span>Регистрация и анкета</span></button>
+    </div>
+    <div class="ap-options">
+      <label class="ap-repeat-label"><input type="checkbox" id="ap-repeat"> Повторный вход</label>
+      <label id="ap-org-control" hidden>Компания
+        <select id="ap-org-case"><option value="new">Новая организация</option><option value="existing">Уже зарегистрирована</option></select>
+      </label>
+      <span id="ap-demo-message" aria-live="polite">Первое подключение</span>
+    </div>
+  </div>
+  <section class="ap-window" aria-label="Экран продукта">
+    <header class="ap-product-head"><div class="ap-brand-group"><span class="ap-brand-mark" aria-hidden="true">Т</span><strong id="ap-brand">ТРИНИТИ</strong></div><span id="ap-context"></span><span class="ap-preview-badge">Концепция интерфейса</span></header>
+    <div class="ap-workspace"><aside id="ap-journey" class="ap-journey" aria-label="Этапы подключения"></aside><div id="ap-screen" class="ap-screen" aria-live="polite"></div></div>
+    <footer class="ap-bench-actions"><button type="button" id="ap-back">← Назад</button><span id="ap-screen-count"></span><div class="ap-footer-tools"><button type="button" id="ap-demo">Заполнить пример</button><button type="button" id="ap-start">Начать заново</button></div></footer>
+  </section>
+  <div class="ap-reference-tools"><details class="ap-map"><summary>Карта сценария <span id="ap-map-count"></span></summary><div class="ap-steps" id="ap-steps" aria-label="Экраны сценария"></div></details></div>
+</div>
+<style data-ap-style="base">
+#auth-flow-prototype {color-scheme:light dark; --ap-bg:light-dark(#ffffff,#191919);--ap-fg:light-dark(#242424,#eeeeee);--ap-soft:light-dark(#f3f3f3,#252525);--ap-line:light-dark(#bcbcbc,#656565);--ap-muted:light-dark(#5c5c5c,#bbbbbb);--ap-button:light-dark(#303030,#e5e5e5);--ap-button-fg:light-dark(#ffffff,#202020);font:14px/1.5 Arial,sans-serif;color:var(--ap-fg);width:100%;}
+#auth-flow-prototype * {box-sizing:border-box;}
+#auth-flow-prototype .ap-bench {display:grid;gap:12px;margin-bottom:16px;}
+#auth-flow-prototype .ap-bench-head {display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;padding-right:90px;}
+#auth-flow-prototype .ap-bench-head strong {font-size:20px;font-weight:600;}
+#auth-flow-prototype .ap-bench-head span,#auth-flow-prototype .ap-evidence {color:var(--ap-muted);font-size:13px;}
+#auth-flow-prototype .ap-scenarios,#auth-flow-prototype .ap-options,#auth-flow-prototype .ap-bench-actions {display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+#auth-flow-prototype button,#auth-flow-prototype input,#auth-flow-prototype select {font:inherit;}
+#auth-flow-prototype button {border:1px solid var(--ap-line);background:var(--ap-bg);color:var(--ap-fg);padding:9px 14px;border-radius:3px;cursor:pointer;min-height:40px;}
+#auth-flow-prototype button:disabled {opacity:.5;cursor:default;}
+#auth-flow-prototype button[aria-pressed="true"],#auth-flow-prototype .ap-primary {background:var(--ap-button);color:var(--ap-button-fg);border-color:var(--ap-button);}
+#auth-flow-prototype button:focus-visible,#auth-flow-prototype input:focus-visible,#auth-flow-prototype select:focus-visible {outline:2px solid var(--ap-fg);outline-offset:3px;}
+#auth-flow-prototype .ap-options {font-size:13px;gap:18px;}
+#auth-flow-prototype .ap-options label {display:flex;gap:7px;align-items:center;flex-wrap:wrap;}
+#auth-flow-prototype .ap-options select {padding:5px;max-width:100%;background:var(--ap-bg);color:var(--ap-fg);border:1px solid var(--ap-line);}
+#auth-flow-prototype .ap-steps {display:flex;flex-wrap:wrap;gap:4px;}
+#auth-flow-prototype .ap-steps button {padding:5px 9px;font-size:12px;min-height:32px;border-style:dashed;}
+#auth-flow-prototype .ap-bench-actions {justify-content:space-between;font-size:12px;}
+#auth-flow-prototype .ap-bench-actions button {font-size:12px;min-height:30px;padding:3px 8px;}
+#auth-flow-prototype .ap-window {background:var(--ap-bg);border:1px solid var(--ap-line);border-radius:4px;overflow:hidden;}
+#auth-flow-prototype .ap-product-head {padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--ap-line);flex-wrap:wrap;}
+#auth-flow-prototype .ap-product-head strong {font-size:16px;letter-spacing:1px;}
+#auth-flow-prototype .ap-product-head span {font-size:12px;color:var(--ap-muted);}
+#auth-flow-prototype .ap-screen {padding:30px;min-height:380px;}
+#auth-flow-prototype .ap-form {width:100%;max-width:460px;margin:0 auto;display:grid;gap:16px;}
+#auth-flow-prototype .ap-wide {max-width:800px;}
+#auth-flow-prototype .ap-wide > form.ap-form {max-width:none;}
+#auth-flow-prototype h2 {font-size:24px;line-height:1.25;font-weight:500;margin:0;}
+#auth-flow-prototype h3 {font-size:17px;font-weight:500;margin:0;}
+#auth-flow-prototype p {margin:0;}
+#auth-flow-prototype .ap-muted {color:var(--ap-muted);}
+#auth-flow-prototype .ap-field {display:grid;gap:5px;min-width:0;}
+#auth-flow-prototype .ap-field input,#auth-flow-prototype .ap-field select {padding:10px 12px;border:1px solid var(--ap-line);background:var(--ap-bg);color:var(--ap-fg);width:100%;min-height:42px;border-radius:2px;}
+#auth-flow-prototype .ap-field input[readonly] {background:var(--ap-soft);}
+#auth-flow-prototype .ap-check {display:flex;gap:9px;align-items:flex-start;}
+#auth-flow-prototype .ap-check input {margin-top:4px;flex-shrink:0;}
+#auth-flow-prototype .ap-actions {display:flex;gap:10px;flex-wrap:wrap;}
+#auth-flow-prototype .ap-actions button {flex:1;}
+#auth-flow-prototype .ap-divider {border-top:1px solid var(--ap-line);padding-top:16px;}
+#auth-flow-prototype .ap-group {padding:16px;border:1px dashed var(--ap-line);display:grid;gap:12px;min-width:0;}
+#auth-flow-prototype .ap-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+#auth-flow-prototype .ap-description {padding:14px;background:var(--ap-soft);display:grid;gap:6px;}
+#auth-flow-prototype .ap-description small {font-size:12px;}
+#auth-flow-prototype .ap-status {border-left:3px solid var(--ap-fg);padding:10px 14px;background:var(--ap-soft);}
+#auth-flow-prototype .ap-link {border:none;text-decoration:underline;padding:0;min-height:30px;background:transparent;}
+#auth-flow-prototype .ap-label {font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ap-muted);}
+#auth-flow-prototype .ap-evidence {margin-top:14px;}
+#auth-flow-prototype .ap-evidence summary {cursor:pointer;}
+#auth-flow-prototype .ap-evidence div {margin-top:8px;display:grid;gap:5px;}
+#auth-flow-prototype .ap-evidence a {color:inherit;}
+#auth-flow-prototype .ap-error {border:1px solid var(--ap-line);padding:10px;background:var(--ap-soft);}
+#auth-flow-prototype .ap-role {text-align:left;display:grid;gap:4px;}
+#auth-flow-prototype .ap-table {width:100%;border-collapse:collapse;}
+#auth-flow-prototype .ap-table td,#auth-flow-prototype .ap-table th {text-align:left;border-bottom:1px solid var(--ap-line);padding:10px;word-break:break-word;}
+#auth-flow-prototype [hidden] {display:none!important;}
+@media(max-width:580px){#auth-flow-prototype .ap-grid{grid-template-columns:1fr;}#auth-flow-prototype .ap-screen{padding:20px 16px;}#auth-flow-prototype .ap-bench-head{padding-right:0;}#auth-flow-prototype .ap-actions{flex-direction:column;}#auth-flow-prototype .ap-options{align-items:flex-start;}#auth-flow-prototype input,#auth-flow-prototype select{font-size:16px;}#auth-flow-prototype .ap-product-head{padding:12px 16px;}#auth-flow-prototype .ap-steps button{min-height:40px;}#auth-flow-prototype button{min-height:44px;}}
+</style>
+<style data-ap-style="updated">
+#auth-flow-prototype{--ap-bg:light-dark(#fff,#1b1c1f);--ap-fg:light-dark(#202329,#f0f0f2);--ap-soft:light-dark(#f5f6f7,#24262b);--ap-line:light-dark(#dde0e5,#41444d);--ap-muted:light-dark(#646975,#b5bac6);--ap-button:light-dark(#242a35,#e9ecf1);--ap-button-fg:light-dark(#fff,#202329);--ap-tint:light-dark(#eceff3,#323640);--ap-danger:light-dark(#9c252f,#ffb1b8);font:14px/1.55 'Segoe UI',Arial,sans-serif;}
+#auth-flow-prototype .ap-bench{gap:16px;margin-bottom:20px;}
+#auth-flow-prototype .ap-bench-head{justify-content:space-between;gap:8px;}
+#auth-flow-prototype .ap-bench-head strong{font-size:21px;font-weight:600;letter-spacing:-.5px;}
+#auth-flow-prototype .ap-bench-head small{font-size:11px;font-weight:500;letter-spacing:0;color:var(--ap-muted);border:1px solid var(--ap-line);padding:2px 5px;border-radius:4px;margin-left:6px;vertical-align:middle;}
+#auth-flow-prototype .ap-bench-head>span{font-size:12px;}
+#auth-flow-prototype .ap-scenarios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+#auth-flow-prototype .ap-scenarios button{display:grid;gap:3px;text-align:left;padding:15px 18px;border-radius:9px;background:var(--ap-bg);border:1px solid var(--ap-line);color:var(--ap-fg);min-width:0;}
+#auth-flow-prototype .ap-scenarios button strong{font-size:15px;font-weight:600;}
+#auth-flow-prototype .ap-scenarios button>span{font-size:12px;color:var(--ap-muted);}
+#auth-flow-prototype .ap-scenarios button[aria-pressed="true"]{background:var(--ap-tint);border-color:var(--ap-fg);box-shadow:inset 0 0 0 1px var(--ap-fg);color:var(--ap-fg);}
+#auth-flow-prototype .ap-scenario-kicker{text-transform:uppercase;letter-spacing:.08em;font-size:10px!important;}
+#auth-flow-prototype .ap-options{justify-content:flex-start;min-height:30px;font-size:12px;gap:20px;}
+#auth-flow-prototype input[type="checkbox"]{accent-color:var(--ap-button);width:16px;height:16px;}
+#auth-flow-prototype .ap-options select{padding:6px 9px;border-radius:6px;}
+#auth-flow-prototype #ap-demo-message{color:var(--ap-muted);margin-left:auto;}
+#auth-flow-prototype .ap-window{border-radius:12px;overflow:hidden;box-shadow:0 4px 20px light-dark(#1b29310a,#00000026);}
+#auth-flow-prototype .ap-product-head{padding:18px 26px;gap:14px;min-height:70px;}
+#auth-flow-prototype .ap-brand-group{display:flex;align-items:center;gap:10px;}
+#auth-flow-prototype .ap-brand-mark{width:28px;height:28px;display:grid;place-items:center;border:1.5px solid var(--ap-fg);border-radius:7px;color:var(--ap-fg);font-size:15px;font-weight:600;}
+#auth-flow-prototype .ap-product-head strong{font-size:14px;letter-spacing:1.6px;}
+#auth-flow-prototype .ap-preview-badge{border:1px solid var(--ap-line);padding:4px 8px;border-radius:5px;font-size:10px!important;}
+#auth-flow-prototype .ap-workspace{display:grid;grid-template-columns:235px minmax(0,1fr);}
+#auth-flow-prototype .ap-journey{padding:32px 24px;background:var(--ap-soft);border-right:1px solid var(--ap-line);display:flex;flex-direction:column;gap:23px;}
+#auth-flow-prototype .ap-journey h3{font-size:23px;line-height:1.25;letter-spacing:-.7px;}
+#auth-flow-prototype .ap-journey-intro{font-size:12px;color:var(--ap-muted);margin-top:10px;}
+#auth-flow-prototype .ap-stage-list{list-style:none;padding:0;margin:0;display:grid;gap:21px;}
+#auth-flow-prototype .ap-stage-list li{display:grid;grid-template-columns:27px minmax(0,1fr);gap:10px;align-items:start;}
+#auth-flow-prototype .ap-stage-dot{display:grid;place-items:center;width:26px;height:26px;border:1px solid var(--ap-line);border-radius:50%;font-size:11px;color:var(--ap-muted);background:var(--ap-bg);}
+#auth-flow-prototype .ap-stage-list strong{font-size:12px;font-weight:500;display:block;margin-top:2px;}
+#auth-flow-prototype .ap-stage-list small{display:block;color:var(--ap-muted);font-size:11px;margin-top:2px;}
+#auth-flow-prototype .ap-stage-list li[data-current="true"] .ap-stage-dot{background:var(--ap-button);color:var(--ap-button-fg);border-color:var(--ap-button);}
+#auth-flow-prototype .ap-stage-list li[data-past="true"] .ap-stage-dot{background:var(--ap-tint);border-color:var(--ap-line);color:var(--ap-fg);}
+#auth-flow-prototype .ap-journey-foot{margin-top:auto;padding-top:20px;border-top:1px solid var(--ap-line);font-size:11px;color:var(--ap-muted);}
+#auth-flow-prototype .ap-screen{padding:36px 38px;min-height:440px;min-width:0;}
+#auth-flow-prototype .ap-form{gap:19px;max-width:460px;}
+#auth-flow-prototype .ap-wide{max-width:760px;}
+#auth-flow-prototype h2{font-size:25px;line-height:1.25;letter-spacing:-.7px;}
+#auth-flow-prototype h3{font-size:16px;}
+#auth-flow-prototype .ap-field{gap:7px;font-size:12px;}
+#auth-flow-prototype .ap-field input,#auth-flow-prototype .ap-field select{font-size:14px;min-height:44px;border-radius:7px;padding:10px 12px;outline-offset:2px;}
+#auth-flow-prototype .ap-field input[readonly]{color:var(--ap-muted);border-color:var(--ap-line);}
+#auth-flow-prototype .ap-grid{gap:15px;}
+#auth-flow-prototype button{border-radius:7px;min-height:42px;transition:border-color .13s;}
+#auth-flow-prototype .ap-scenarios .ap-scenario-kicker{font-size:11px!important;letter-spacing:.03em;}
+#auth-flow-prototype button:not(:disabled):hover{background:var(--ap-tint);color:var(--ap-fg);}
+#auth-flow-prototype .ap-primary{min-height:46px;font-size:13px;font-weight:500;padding:12px 17px;}
+#auth-flow-prototype .ap-primary:not(:disabled):hover{background:var(--ap-button);color:var(--ap-button-fg);filter:brightness(1.12);}
+#auth-flow-prototype .ap-description{padding:17px 18px;border:1px solid var(--ap-line);background:var(--ap-soft);border-radius:8px;gap:7px;font-size:13px;}
+#auth-flow-prototype .ap-description strong{font-weight:600;}
+#auth-flow-prototype .ap-status{border:1px solid var(--ap-line);border-radius:8px;padding:15px 17px;display:flex;gap:10px;align-items:flex-start;font-size:13px;}
+#auth-flow-prototype .ap-status::before{content:'•';font-size:20px;line-height:1.05;color:var(--ap-muted);}
+#auth-flow-prototype .ap-check{font-size:12px;line-height:1.6;align-items:flex-start;}
+#auth-flow-prototype .ap-check input{margin-top:2px;}
+#auth-flow-prototype .ap-group{border-style:solid;border-radius:8px;padding:18px;gap:15px;}
+#auth-flow-prototype .ap-link{min-height:24px;padding:0;border-radius:0;font-size:inherit;}
+#auth-flow-prototype .ap-divider{display:grid;gap:12px;}
+#auth-flow-prototype .ap-label{font-size:10px;letter-spacing:.08em;}
+#auth-flow-prototype .ap-bench-actions{padding:12px 20px;border-top:1px solid var(--ap-line);background:var(--ap-soft);font-size:11px;gap:10px;}
+#auth-flow-prototype .ap-bench-actions button{min-height:32px;padding:4px 9px;font-size:11px;background:transparent;}
+#auth-flow-prototype .ap-footer-tools{display:flex;gap:9px;flex-wrap:wrap;}
+#auth-flow-prototype .ap-reference-tools{display:grid;gap:12px;margin-top:18px;font-size:12px;color:var(--ap-muted);}
+#auth-flow-prototype .ap-reference-tools details{margin:0;}
+#auth-flow-prototype .ap-reference-tools summary{cursor:pointer;padding:2px 0;}
+#auth-flow-prototype .ap-map summary span{margin-left:5px;font-size:11px;}
+#auth-flow-prototype .ap-steps{gap:6px;padding-top:12px;}
+#auth-flow-prototype .ap-steps button{border-style:solid;min-height:30px;border-radius:5px;font-size:11px;}
+#auth-flow-prototype .ap-evidence div{padding-top:6px;gap:8px;}
+#auth-flow-prototype .ap-pass-wrap{position:relative;display:block;}
+#auth-flow-prototype .ap-pass-wrap input{padding-right:87px;}
+#auth-flow-prototype .ap-pass-toggle{position:absolute;right:5px;top:5px;font-size:10px;padding:3px 8px;min-height:33px;background:transparent;border:0;}
+#auth-flow-prototype .ap-error{color:var(--ap-danger);border-color:var(--ap-danger);border-radius:7px;font-size:12px;}
+#auth-flow-prototype input[aria-invalid="true"]{border-color:var(--ap-danger);}
+#auth-flow-prototype .ap-screen .ap-role{padding:17px;gap:12px;border-radius:8px;}
+#auth-flow-prototype .ap-role>span{font-size:11px;color:var(--ap-muted);}
+#auth-flow-prototype .ap-form>p,#auth-flow-prototype .ap-form>form>p{font-size:13px;}
+@media(max-width:760px){#auth-flow-prototype .ap-workspace{grid-template-columns:190px minmax(0,1fr);}#auth-flow-prototype .ap-journey{padding:25px 18px;}#auth-flow-prototype .ap-screen{padding:28px 24px;}#auth-flow-prototype .ap-scenarios button{padding:12px;}#auth-flow-prototype .ap-scenarios button>span:last-child{display:none;}}
+@media(max-width:580px){#auth-flow-prototype .ap-bench-head{padding-right:0;}#auth-flow-prototype .ap-bench-head>span{font-size:11px;}#auth-flow-prototype .ap-scenarios{gap:6px;}#auth-flow-prototype .ap-scenarios button{padding:10px 8px;}#auth-flow-prototype .ap-scenarios button strong{font-size:11px;}#auth-flow-prototype .ap-scenario-kicker{font-size:9px!important;letter-spacing:0;}#auth-flow-prototype .ap-options{gap:10px;}#auth-flow-prototype #ap-demo-message{display:none;}#auth-flow-prototype .ap-window{border-radius:8px;}#auth-flow-prototype .ap-workspace{grid-template-columns:1fr;}#auth-flow-prototype .ap-journey{padding:13px 17px;border:0;border-bottom:1px solid var(--ap-line);gap:0;}#auth-flow-prototype .ap-journey>div:first-child,#auth-flow-prototype .ap-journey-foot{display:none;}#auth-flow-prototype .ap-stage-list{display:flex;gap:12px;justify-content:space-between;}#auth-flow-prototype .ap-stage-list li{display:flex;gap:6px;align-items:center;}#auth-flow-prototype .ap-stage-list li:not([data-current="true"]){display:none;}#auth-flow-prototype .ap-stage-list small{display:none;}#auth-flow-prototype .ap-product-head{padding:13px 16px;}#auth-flow-prototype .ap-preview-badge{display:none;}#auth-flow-prototype .ap-screen{padding:27px 20px;min-height:350px;}#auth-flow-prototype h2{font-size:23px;}#auth-flow-prototype .ap-grid{grid-template-columns:1fr;}#auth-flow-prototype .ap-field input,#auth-flow-prototype .ap-field select{font-size:16px;}#auth-flow-prototype .ap-bench-actions{padding:10px;font-size:10px;}#auth-flow-prototype .ap-bench-actions button{font-size:10px;padding:4px 7px;}#auth-flow-prototype .ap-footer-tools{gap:4px;}#auth-flow-prototype #ap-screen-count{display:none;}#auth-flow-prototype .ap-pass-toggle{min-height:34px;}#auth-flow-prototype .ap-actions{flex-direction:column;}#auth-flow-prototype .ap-steps button{min-height:36px;}}
+@media(prefers-reduced-motion:reduce){#auth-flow-prototype button{transition:none;}}
+</style>
+<script id="ap-logic">
+(() => {
+const root=document.getElementById('auth-flow-prototype');
+const pane=root.querySelector('#ap-screen');
+const saved=window.openai?.widgetState?.privateContent;
+const localWriter=Math.random().toString(36).slice(2);
+const S={flow:'mos',screen:'entry',repeat:false,orgCase:'new',history:[],email:'ivan@example.test',role:'Подрядчик',...((saved&&['mos','ep','orb'].includes(saved.flow))?{flow:saved.flow,repeat:!!saved.repeat,orgCase:saved.orgCase==='existing'?'existing':'new'}:{})};
+const drafts={};
+const draftKey=()=>S.flow+':'+S.orgCase+':'+S.screen;
+function capture(){drafts[draftKey()]=[...pane.querySelectorAll('input,select')].filter(e=>e.type!=='password'&&!e.dataset.wasPassword).map(e=>({id:e.id,value:e.value,checked:e.checked}));}
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const B=(text,to,primary=true)=>`<button type="button" ${primary?'class="ap-primary"':''} data-go="${to}">${text.replace(/ · демо/g,'')}</button>`;
+const field=(label,id,value='',type='text',readonly=false)=>`<label class="ap-field" for="${id}">${label}<input id="${id}" name="${id}" type="${type}" value="${esc(['surname','firstname','patronymic'].includes(id)?S.profile?.[id]||value:value)}" ${readonly?'readonly':''} autocomplete="off"></label>`;
+const select=(label,id,options)=>options.length===1?field(label,id,'Выбор из справочника','text',true):`<label class="ap-field" for="${id}">${label}<select id="${id}" name="${id}">${options.map(o=>`<option>${esc(o)}</option>`).join('')}</select></label>`;
+const check=(label,id)=>`<label class="ap-check"><input type="checkbox" id="${id}" name="${id}"><span>${label}</span></label>`;
+const wrap=(title,body,wide=false)=>`<div class="ap-form ${wide?'ap-wide':''}"><h2>${title}</h2>${body}</div>`;
+const submit=(text,action)=>`<button class="ap-primary" type="submit" data-action="${action}">${text}</button>`;
+const form=(body,action)=>`<form class="ap-form" data-form="${action}" novalidate>${body}<div class="ap-error" role="alert" hidden></div></form>`;
+function persist(){
+ const data={version:2,writer:localWriter,flow:S.flow,screen:S.screen,repeat:S.repeat,orgCase:S.orgCase};
+ window.openai?.setWidgetState?.({modelContent:{scenario:S.flow,screen:S.screen,repeat:S.repeat,organization:S.orgCase},privateContent:data})?.catch(()=>{});
+}
+function go(screen){capture();S.history.push(S.screen);S.screen=screen;render();persist();}
+function restart(){S.screen='entry';S.history=[];render();persist();}
+function journey(q){
+ let steps,title,intro;
+ if(S.repeat){title='С возвращением';intro='Войдите в ранее настроенный личный кабинет.';steps=[['Вход','Подтверждение личности',['entry','orb-login','consent','mosid','certificate']],['Личный кабинет','Доступ к работе',['done']]];}
+ else if(S.flow==='mos'){title='Доступ сотрудника';intro='Войдите лично и получите полномочия от своей организации.';steps=[['Личный вход','Через учётную запись mos.ru',['entry','consent','mosid']],['Ваши данные','Профиль физического лица',['first','person','person-fixed']],['Полномочия','Организация и запрос на МЧД',['authority','mchd','waiting']],['Подтверждение','Подпись руководителя',['review','edit-powers','mchd-signed','approved','done']]];}
+ else if(S.flow==='ep'){title='Подключение компании';intro='Первичную настройку выполняет руководитель с УКЭП.';steps=[['Электронная подпись','Вход первого лица',['entry','certificate']],['Компания','Сведения и деятельность',['company','activity']],['Команда','Приглашения сотрудникам',['invite']],['Завершение','Работа в личном кабинете',['configured','done']]];}
+ else{title='Начните с учётной записи';intro='Зарегистрируйтесь, затем подключите организацию.';steps=[['Учётная запись','Регистрация и подтверждение email',['entry','register','email','letter','confirmed','orb-login']],['Организация',S.orgCase==='new'?'Создание новой компании':'Присоединение к компании',['first','search','result','person','company']],['Подтверждение',S.orgCase==='new'?'Подписание анкеты ЭП':'Решение администратора',['sign','waiting','review','approved','rejected']],['Роль участника','Доступ к функциям платформы',['role','role-confirm','done']]];}
+ const current=Math.max(0,steps.findIndex(v=>v[2].includes(q)));
+ root.querySelector('#ap-journey').innerHTML=`<div><span class="ap-label">${S.repeat?'Личный кабинет':'Первое подключение'}</span><h3>${title}</h3><p class="ap-journey-intro">${intro}</p></div><ol class="ap-stage-list">${steps.map(([name,desc],i)=>`<li data-current="${i===current}" data-past="${i<current}"><span class="ap-stage-dot">${i+1}</span><div><strong>${name}</strong><small>${desc}</small></div></li>`).join('')}</ol><p class="ap-journey-foot">${q==='review'?'Сейчас действует '+(S.flow==='orb'?'администратор организации.':'руководитель организации.'):'Вход подтверждает личность. Права на действия от компании оформляются отдельно.'}</p>`;
+}
+function enhance(){
+ for(const item of drafts[draftKey()]||[]){const el=pane.querySelector('#'+item.id);if(el){el.value=item.value;if(el.type==='checkbox')el.checked=item.checked;}}
+ pane.querySelectorAll('p.ap-muted').forEach(p=>{if(/прототип|уточн|демонстра|условн|здесь заканчивается/i.test(p.textContent))p.remove();});
+ pane.querySelectorAll('.ap-description small').forEach(p=>{if(/здесь|демонстра/i.test(p.textContent))p.remove();});
+ pane.querySelectorAll('input[type="password"]').forEach(input=>{
+  const w=document.createElement('span');w.className='ap-pass-wrap';input.replaceWith(w);w.append(input);input.dataset.wasPassword='true';
+  const b=document.createElement('button');b.type='button';b.className='ap-pass-toggle';b.dataset.password=input.id;b.textContent='Показать';b.setAttribute('aria-label','Показать пароль');b.setAttribute('aria-pressed','false');w.append(b);
+ });
+ root.querySelector('#ap-demo').hidden=!pane.querySelector('form');
+ root.querySelector('.ap-brand-mark').textContent=S.flow==='orb'?'О':S.screen==='mosid'?'М':'Т';
+ root.querySelector('#ap-demo-message').textContent=S.repeat?'Кабинет уже настроен':'Первое подключение';
+ if(S.screen==='review'){
+  const desc=pane.querySelector('.ap-description');
+  if(desc){desc.querySelector('strong').textContent=[S.profile?.surname||'Иванов',S.profile?.firstname||'Иван',S.profile?.patronymic||''].filter(Boolean).join(' ')+' · ООО «Пример»';const contact=document.createElement('p');contact.textContent=S.email;contact.className='ap-muted';desc.append(contact);}
+ }
+ journey(S.screen);
+}
+function route(){
+ if(S.repeat)return [['entry','Вход'],...(S.flow==='mos'?[['consent','Доступ к данным'],['mosid','mos ID']]:S.flow==='ep'?[['certificate','УКЭП']]:[]),['done','Личный кабинет']];
+ if(S.flow==='mos')return [['entry','Вход'],['consent','Доступ'],['mosid','mos ID'],['first','Начало работы'],['person','Данные человека'],['authority','Организация и МЧД'],['mchd','Запрос'],['waiting','Ожидание'],['review','Руководитель'],['done','Доступ']];
+ if(S.flow==='ep')return [['entry','Вход'],['certificate','УКЭП'],['company','Организация'],['activity','Деятельность'],['invite','Сотрудники'],['configured','Настройка завершена'],['done','Личный кабинет']];
+ return [['entry','Вход'],['register','Регистрация'],['email','Письмо'],['letter','Подтверждение'],['confirmed','Email подтверждён'],['orb-login','Вход'],['first','Анкета'],['search','Поиск компании'],['result','Результат'],['person','Данные человека'],...(S.orgCase==='new'?[['company','Компания'],['sign','Подпись']]:[['waiting','Проверка'],['review','Администратор']]),['role','Роль'],['role-confirm','Подтверждение'],['done','Личный кабинет']];
+}
+function render(){
+ const orb=S.flow==='orb';const ep=S.flow==='ep';const q=S.screen;
+ root.querySelectorAll('[data-flow]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.flow===S.flow?'true':'false'));
+ root.querySelector('#ap-repeat').checked=S.repeat;
+ root.querySelector('#ap-org-control').hidden=!orb||S.repeat;
+ root.querySelector('#ap-org-case').value=S.orgCase;
+ root.querySelector('#ap-brand').textContent=orb?'ОРБИТА':q==='mosid'?'mos ID':'ТРИНИТИ';
+ root.querySelector('#ap-context').textContent=q==='review'?(orb?'Кабинет администратора организации':'Кабинет руководителя'):q==='mosid'?'Внешняя страница входа':S.repeat?'Повторный вход':'Первое подключение';
+ const active=({'person-fixed':'person','edit-powers':'review','mchd-signed':'review','approved':'review','rejected':'review'})[q]||q;
+ const r=route();root.querySelector('#ap-steps').innerHTML=r.map(([id,label])=>`<button type="button" data-jump="${id}" aria-pressed="${id===active}">${label}</button>`).join('');
+ root.querySelector('#ap-back').disabled=!S.history.length;
+ const index=r.findIndex(v=>v[0]===active);root.querySelector('#ap-screen-count').textContent=index>=0?`${index+1} / ${r.length}`:'';
+ root.querySelector('#ap-map-count').textContent='· '+r.length+' экранов';
+ let html='';
+ if(q==='entry'||q==='orb-login'){
+  if(orb){
+   html=wrap('Авторизация',form(field('E-mail','email',S.email,'email')+field('Пароль','password','','password')+check('Принимаю пользовательское соглашение и согласие на обработку персональных данных','agreements')+submit('Войти','orb-login'),'orb-login')+`<div class="ap-grid"><button disabled>Госуслуги · недоступно</button><button disabled>mos.ru · недоступно</button></div><p>Нет личного кабинета? <button type="button" class="ap-link" data-go="register">Зарегистрируйтесь</button></p>`);
+  }else{
+   html=wrap('Вход в личный кабинет',`<p class="ap-muted">${ep?'Подключите компанию с помощью электронной подписи руководителя.':'Используйте личную учётную запись mos.ru, чтобы войти как сотрудник.'}</p>${B('Войти через mos.ru','consent',!ep)}${B('Войти с электронной подписью','certificate',ep)}<p class="ap-muted">Вход через mos.ru доступен пользователям с полной учётной записью.</p>`);
+  }
+ } else if(q==='consent'){
+  html=wrap('Разрешить доступ к данным',`<p>«Тринити» запрашивает доступ к данным вашей учётной записи mos.ru.</p><div class="ap-description"><strong>Данные учётной записи</strong><p>Точный перечень полей нужно сверить с интеграцией.</p></div>${B('Подтвердить','mosid')}<p class="ap-muted">Следующий шаг — авторизация в mos ID.</p>`);
+ } else if(q==='mosid'){
+  html=wrap('Вход в mos ID',form(field('Телефон, email или СНИЛС','mos-login','ivan@example.test')+field('Пароль','mos-password','','password')+submit('Войти','mos-login'),'mos-login')+`<p class="ap-muted">Нужна полная учётная запись mos.ru. Это условный внешний экран, без подключения к mos.ru.</p>`);
+ } else if(q==='certificate'){
+  html=wrap('Вход с УКЭП',`<p>Используйте электронную подпись${S.repeat?'':' первого лица организации'}.</p><div class="ap-description"><span class="ap-label">Сертификат · пример</span><strong>Иванов Иван Иванович</strong><p>ООО «Пример»</p></div>${B('Подтвердить вход · демо',S.repeat?'done':'company')}`);
+ } else if(q==='first'){
+  html=wrap(orb?'Подключитесь к организации':'Начало работы',`<div class="ap-status">Вход выполнен. Подключение к организации ещё не завершено.</div><p>${orb?'Заполните анкету, чтобы создать кабинет организации или присоединиться к существующей компании.':'Заполните личные данные и сформируйте запрос на доверенность от организации.'}</p>${B(orb?'Заполнить анкету':'Данные физического лица',orb?'search':'person')}`);
+ } else if(q==='register'){
+  html=wrap('Регистрация пользователя',form(`<div class="ap-grid">${field('Фамилия','surname','Иванов')}${field('Имя','firstname','Иван')}</div>`+field('E-mail','email',S.email,'email')+field('Имя пользователя','username','Формируется по фамилии и имени','text',true)+field('Пароль','new-password','','password')+field('Подтверждение пароля','confirm-password','','password')+submit('Зарегистрироваться','register'),'register'));
+ } else if(q==='email'){
+  html=wrap('Подтвердите E-mail',`<div class="ap-status">Письмо для подтверждения регистрации</div><p>Адрес электронной почты: <strong>${esc(S.email)}</strong>.</p><p>Перейдите по ссылке из письма.</p>${B('Открыть письмо · демо','letter')}`);
+ } else if(q==='letter'){
+  html=wrap('Письмо: подтверждение E-mail',`<div class="ap-description"><span class="ap-label">Внешняя почта · условный экран</span><p>Для завершения регистрации подтвердите адрес электронной почты.</p></div>${B('Подтвердить E-mail','confirmed')}`);
+ } else if(q==='confirmed'){
+  html=wrap('E-mail подтверждён',`<div class="ap-status">Адрес электронной почты подтверждён.</div><p>Теперь войдите с указанными при регистрации данными.</p>${B('Перейти ко входу','orb-login')}`);
+ } else if(q==='search'){
+  html=wrap('Проверка наличия организации',form(field('ИНН, наименование или ОГРН','org-query','ООО «Пример»')+submit('Найти организацию','org-search'),'org-search'));
+ } else if(q==='result'){
+  const found=S.orgCase==='existing';
+  html=wrap('Проверка наличия организации',`<div class="ap-description"><strong>${found?'ООО «Пример»':'Организация не найдена'}</strong><p>${found?'Компания уже зарегистрирована в системе.':'Измените параметры поиска или создайте кабинеты организации и должностного лица.'}</p></div>${B(found?'Создать личный кабинет должностного лица':'Создать личный кабинет организации и должностного лица','person')}`);
+ } else if(q==='person'){
+  const personal=`<div class="ap-grid">${field('Фамилия','surname','Иванов')}${field('Имя','firstname','Иван')}${field('Отчество','patronymic','Иванович')}${orb?select('Гражданство','citizenship',['Выбрать','Россия']):field('СНИЛС','snils','')}</div>${orb?'':check('Согласен на обработку персональных данных','pd')}<div class="ap-grid">${field('E-mail','person-email',S.email,'email',orb)}${field('Телефон','phone','+7 (000) 000-00-00')}</div>`;
+  const work=orb?`<h3>Работа в организации</h3><div class="ap-grid">${field('Роль должностного лица','job-role',S.orgCase==='new'?'Администратор':'Выбрать роль из справочника','text',S.orgCase==='new')}${field('Работает с','job-date','','date')}</div>${S.orgCase==='new'?select('Основание действия','basis',['Выбрать основание из справочника']):''}`:'';
+  html=wrap(orb?'Анкета должностного лица':'Данные физического лица',form(personal+work+submit(orb?(S.orgCase==='new'?'Продолжить':'Отправить на проверку'):'Применить','person'),'person'),true);
+ } else if(q==='person-fixed'){
+  html=wrap('Зафиксируйте данные',`<div class="ap-description"><strong>Данные физического лица</strong><p>Проверьте сведения перед подтверждением.</p></div>${B('Зафиксировать данные','authority')}`);
+ } else if(q==='authority'){
+  html=wrap('Организация и полномочия',form(field('ИНН организации','company-inn','0000000000')+select('Полномочия для доверенности','permissions',['Выберите полномочия из справочника'])+`<p class="ap-muted">Состав справочника полномочий нужно уточнить.</p>`+submit('Применить','authority'),'authority'));
+ } else if(q==='mchd'){
+  html=wrap('Запрос на доверенность',`<div class="ap-description"><strong>Сотрудник → организация</strong><p>Перечень полномочий выбран на предыдущем шаге.</p></div>${B('Сформировать доверенность','waiting')}`);
+ } else if(q==='company'){
+  const cols=orb?`${field('Полное наименование','full-name','ООО «Пример»','text',true)}${field('Краткое наименование','short-name','ООО «Пример»','text',true)}${field('ИНН','inn','0000000000','text',true)}${field('КПП','kpp','000000000','text',true)}${field('ОГРН / ОГРНИП','ogrn','0000000000000','text',true)}${field('Юридический адрес','legal-address','Демонстрационный адрес','text',true)}${field('Фактический адрес','actual-address','')}${field('Руководитель, ФИО','director','')}${field('Должность руководителя','director-job','')}${field('Контактный номер','org-phone','')}${field('Почта организации','org-email','','email')}${select('Территория деятельности','territory',['Выбрать из справочника'])}`:`${field('Наименование','full-name','ООО «Пример»')}${field('ИНН','inn','0000000000')}${field('ОГРН','ogrn','0000000000000')}${field('Контактные сведения','contacts','')}`;
+  html=wrap(orb?'Анкета организации':'Проверьте сведения об организации',form(`<p class="ap-muted">${orb?'Показаны основные поля анкеты. Остальные группы — дополнительные коды, даты и ОКВЭД.':'Данные организации подгружены автоматически. Проверьте их и заполните недостающее.'}</p><div class="ap-grid">${cols}</div>`+submit(orb?'Подписать ЭП':'Применить','company'),'company'),true);
+ } else if(q==='activity'){
+  html=wrap('Виды деятельности',`${select('Вид деятельности','activity',['Выбрать значение из справочника'])}<p class="ap-muted">Конкретный справочник и возможность нескольких значений уточняются.</p>${B('Применить','invite')}`);
+ } else if(q==='invite'){
+  html=wrap('Пригласите сотрудников',`<div class="ap-group" id="ap-invites"><h3>Приглашение</h3>${field('ФИО сотрудника','invite-name','')}${field('E-mail','invite-email','','email')}</div><button type="button" data-action="add-invite">+ Пригласить пользователя</button>${B('Завершить настройку','configured')}`);
+ } else if(q==='configured'){
+  html=wrap('Настройка завершена',`<div class="ap-status">Личный кабинет готов к работе</div>${B('Продолжить работу как руководитель организации','done')}`);
+ } else if(q==='sign'){
+  html=wrap('Подписание анкеты',`<div class="ap-description"><strong>Анкета организации и должностного лица</strong><p>Новая организация · создатель получает роль администратора</p></div>${B('Подписать анкету ЭП · демо','role')}<p class="ap-muted">Подпись здесь моделирует переход. Реальный документ не создаётся.</p>`);
+ } else if(q==='waiting'){
+  html=wrap(orb?'Заявка отправлена на проверку':'Ожидание подписи доверенности',`<div class="ap-status">${orb?'Анкету рассматривает администратор организации.':'Запрос на МЧД передан руководителю организации.'}</div><p>${orb?'Проверка выполняется в разделе «Сотрудники» → «Текущие заявки».':'Руководитель проверяет полномочия и подписывает МЧД в своём кабинете.'}</p><div class="ap-divider"><span class="ap-label">Переключение участника · управление прототипом</span>${B(orb?'Посмотреть действия администратора':'Посмотреть действия руководителя','review',false)}</div>`);
+ } else if(q==='review'){
+  html=wrap(orb?'Сотрудники → Текущие заявки':'Начало работы → Доверенности',`<div class="ap-description"><strong>Иванов Иван · ООО «Пример»</strong><p>${orb?'Анкета должностного лица':'МЧД сотрудника'}</p></div>${orb?'<p>Проверьте анкету и примите решение.</p>':'<p>Проверьте статус и перечень полномочий сотрудника.</p><button type="button" data-go="edit-powers">Изменить полномочия</button>'}<div class="ap-actions">${B(orb?'Одобрить':'Подписать МЧД · демо',orb?'approved':'mchd-signed')}${orb?B('Отклонить','rejected',false):''}</div>`,true);
+ } else if(q==='edit-powers'){
+  html=wrap('Изменение полномочий',`${select('Полномочия сотрудника','edit-powers',['Полномочия из справочника'])}${B('Вернуться к проверке','review')}`);
+ } else if(q==='mchd-signed'){
+  html=wrap('МЧД подписана',`<div class="ap-status">Подписанная МЧД загружена в карточку</div>${B('Применить','approved')}`);
+ } else if(q==='approved'){
+  html=wrap(orb?'Заявка одобрена':'Доверенность готова',`<div class="ap-status">${orb?'Администратор одобрил присоединение сотрудника.':'Руководитель завершил оформление МЧД.'}</div><span class="ap-label">Возврат к сотруднику · переход прототипа</span>${B('Продолжить как сотрудник',orb?'role':'done')}`);
+ } else if(q==='rejected'){
+  html=wrap('Заявка отклонена',`<div class="ap-status">Администратор выбрал отклонение заявки.</div>`);
+ } else if(q==='role'){
+  html=wrap('Выберите роль участника',`<p class="ap-muted">Роль должностного лица и роль компании в системе — разные настройки.</p><div class="ap-grid">${['Подрядчик','Поставщик','Перевозчик','Отходополучатель'].map(r=>`<button type="button" class="ap-role" data-role="${r}"><strong>${r}</strong><span>Выбрать роль</span></button>`).join('')}</div>`,true);
+ } else if(q==='role-confirm'){
+  html=wrap('Добавить роль',`<div class="ap-description"><strong>${esc(S.role)}</strong><p>Подтвердите добавление выбранной роли.</p></div>${B('Добавить роль','done')}`);
+ } else if(q==='done'){
+  html=wrap('Личный кабинет',`<div class="ap-status">${S.repeat?'Вход выполнен':orb?'Роль добавлена. Подключение завершено.':ep?'Настройка организации завершена.':'Доступ к организации оформлен.'}</div><div class="ap-description"><strong>ООО «Пример»</strong><p>${orb?(S.repeat?'Пользователь с ранее настроенным доступом':S.orgCase==='new'?'Администратор организации':'Сотрудник организации'):ep?'Руководитель организации':'Сотрудник организации'}</p></div>`);
+ } else {S.screen='entry';return render();}
+ pane.innerHTML=html;
+ enhance();
+}
+root.addEventListener('click',e=>{
+ const btn=e.target.closest('button');if(!btn||btn.disabled)return;
+ if(btn.type==='submit'&&btn.closest('form[data-form]')){e.preventDefault();btn.closest('form').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));return;}
+ if(btn.dataset.flow){S.flow=btn.dataset.flow;restart();return;}
+ if(btn.dataset.jump){go(btn.dataset.jump);return;}
+ if(btn.dataset.go){if(btn.dataset.go==='certificate')S.flow='ep';if(btn.dataset.go==='consent')S.flow='mos';go(btn.dataset.go);return;}
+ if(btn.dataset.role){S.role=btn.dataset.role;go('role-confirm');return;}
+ if(btn.id==='ap-back'){if(S.history.length){capture();S.screen=S.history.pop();render();persist();}return;}
+ if(btn.id==='ap-start'){restart();return;}
+ if(btn.dataset.password){const input=pane.querySelector('#'+btn.dataset.password);const show=input.type==='password';input.type=show?'text':'password';btn.textContent=show?'Скрыть':'Показать';btn.setAttribute('aria-pressed',String(show));btn.setAttribute('aria-label',show?'Скрыть пароль':'Показать пароль');return;}
+ if(btn.id==='ap-demo'){
+  const examples={'surname':'Иванов','firstname':'Иван','patronymic':'Иванович','email':'ivan@example.test','person-email':'ivan@example.test','phone':'+7 (000) 000-00-00','org-phone':'+7 (000) 000-00-00','org-email':'office@example.test','invite-name':'Петров Пётр','invite-email':'petr@example.test','job-date':'2026-11-03','director':'Иванов Иван Иванович','director-job':'Генеральный директор','actual-address':'Адрес для примера'};
+  pane.querySelectorAll('form input:not([readonly])').forEach(input=>{if(input.type==='checkbox')return;if(input.dataset.wasPassword)input.value='Example-2026!';else if(!input.value)input.value=examples[input.id]||'Пример';input.removeAttribute('aria-invalid');});
+  pane.querySelector('[role="alert"]')?.setAttribute('hidden','');root.querySelector('#ap-demo-message').textContent='Пример заполнен · согласия отметьте сами';return;
+ }
+ if(btn.dataset.action==='add-invite'){
+  const n=root.querySelectorAll('#ap-invites input').length;
+  root.querySelector('#ap-invites').insertAdjacentHTML('beforeend',field('ФИО следующего сотрудника','invite-name-'+n,'')+field('E-mail','invite-email-'+n,'','email'));return;
+ }
+});
+root.addEventListener('change',e=>{
+ if(e.target.id==='ap-repeat'){S.repeat=e.target.checked;restart();}
+ if(e.target.id==='ap-org-case'){S.orgCase=e.target.value;restart();}
+});
+root.addEventListener('submit',e=>{
+ e.preventDefault();const f=e.target;const action=f.dataset.form;const val=id=>f.querySelector('#'+id)?.value.trim()||'';
+ const err=(msg,ids=[])=>{const box=f.querySelector('[role="alert"]');box.textContent=msg;box.hidden=false;ids.forEach(id=>f.querySelector('#'+id)?.setAttribute('aria-invalid','true'));f.querySelector('[aria-invalid="true"]')?.focus();};
+ f.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
+ if(action==='register'){
+  const missing=['surname','firstname','email','new-password','confirm-password'].filter(id=>!val(id));if(missing.length)return err('Заполните поля регистрации.',missing);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email')))return err('Проверьте адрес электронной почты.',['email']);
+  if(val('new-password')!==val('confirm-password'))return err('Пароли не совпадают.',['confirm-password']);
+  S.email=val('email');S.profile={surname:val('surname'),firstname:val('firstname')};go('email');
+ } else if(action==='orb-login'){
+  if(!val('email')||!val('password'))return err('Введите email и пароль.',['email','password'].filter(id=>!val(id)));
+  if(!f.querySelector('#agreements').checked)return err('Отметьте принятие документов, чтобы пройти демонстрационный сценарий.');
+  S.email=val('email');go(S.repeat?'done':'first');
+ } else if(action==='mos-login'){
+  if(!val('mos-login')||!val('mos-password'))return err('Введите логин и пароль.',['mos-login','mos-password'].filter(id=>!val(id)));
+  go(S.repeat?'done':'first');
+ } else if(action==='org-search'){if(!val('org-query'))return err('Укажите организацию.');go('result');
+ } else if(action==='person'){
+  S.profile={surname:val('surname'),firstname:val('firstname'),patronymic:val('patronymic')};if(val('person-email'))S.email=val('person-email');
+  if(S.flow!=='orb'){
+   if(!f.querySelector('#pd').checked)return err('Отметьте согласие на обработку персональных данных.');go('person-fixed');
+  }else go(S.orgCase==='new'?'company':'waiting');
+ } else if(action==='authority')go('mchd');
+ else if(action==='company')go(S.flow==='orb'?'sign':'activity');
+});
+root.addEventListener('input',e=>{if(e.target.hasAttribute('aria-invalid'))e.target.removeAttribute('aria-invalid');});
+root.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')&&e.target.closest('form[data-form]')){e.preventDefault();e.target.closest('form').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}});
+window.addEventListener('openai:set_globals',e=>{
+ const p=e.detail?.globals?.widgetState?.privateContent;
+ if(p?.writer===localWriter)return;
+ if(!p||p.version!==2||!['mos','ep','orb'].includes(p.flow))return;
+ if(p.flow===S.flow&&p.screen===S.screen&&!!p.repeat===S.repeat&&p.orgCase===S.orgCase)return;
+ capture();S.flow=p.flow;S.repeat=!!p.repeat;S.orgCase=p.orgCase==='existing'?'existing':'new';S.screen=typeof p.screen==='string'?p.screen:'entry';S.history=[];render();
+});
+if(saved?.version===2&&typeof saved.screen==='string')S.screen=saved.screen;
+render();
+})();
+</script>
