@@ -96,7 +96,7 @@ def diagram(slug,title,precondition,nodes,flows,lanes=None,size=(2300,1060)):
             assert len(lines)*task_size*1.32<=h-8,(nid,lines)
             text(x+w/2,y+h/2,'\n'.join(lines),task_size)
     text(35,H-117,f'Предлагаемый процесс · v{VERSION} · интерфейс и BPMN одной версии',23,True,False)
-    text(35,H-74,'Для уже подключённого сотрудника. В едином подключении полномочия берутся из приглашения; МЧД подписывает руководитель.' if slug=='employee-mchd' else 'Получение организации из mos.ru — гипотеза интеграции, не подтверждённая документами Тринити.' if slug=='employee-mos-organization' else 'Единый процесс: организация из приглашения; обычный доступ после принятия, полномочия МЧД — после подписи руководителя.' if slug=='employee-invitation' else 'Проверка платформой обязательна; способ её реализации и сроки здесь не определяются.',21,False,False)
+    text(35,H-74,'Для уже подключённого сотрудника. В едином подключении полномочия берутся из приглашения; МЧД подписывает руководитель.' if slug=='employee-mchd' else 'Получение организации из mos.ru — гипотеза интеграции, не подтверждённая документами Тринити.' if slug=='employee-mos-organization' else 'Единый процесс: организация из приглашения; обычный доступ после принятия, полномочия МЧД — после подписи руководителя.' if slug=='employee-invitation' else 'Вариант 2: проверки выполняются по задаче; интеграции и юридические требования требуют уточнения.' if slug.startswith('v2-') else 'Проверка платформой обязательна; способ её реализации и сроки здесь не определяются.',21,False,False)
     svg.append('</svg>');(OUT/(slug+'.svg')).write_text('\n'.join(svg),encoding='utf-8');im.save(OUT/(slug+'.png'))
     defs=E.Element('{'+NS['bpmn']+'}definitions',id=slug.replace('-','_')+'_defs',targetNamespace='urn:proposed:registration')
     proc=el(defs,'bpmn:process',id='Process',name=title,isExecutable='false')
@@ -245,6 +245,9 @@ diagram('employee-mchd','Предлагаемый вариант · выдача
  ('Generate','Review',[(580,520),(580,260),(850,260)],'',None),('Review','Sign',[(1110,260),(1240,260)],'',None),
  ('Sign','Signed',[(1370,310),(1370,520)],'',None),('Signed','Ready',[(1500,570),(1720,570)],'',None),('Ready','End',[(2020,570),(2150,570)],'',None),
 ])
+
+from proposal_v2_diagrams import generate
+generate(diagram)
 
 card=(ROOT/'docs/PRODUCT.md').read_text(encoding='utf-8')
 (OUT/'business-processes.md').write_text(card,encoding='utf-8')

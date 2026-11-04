@@ -1886,18 +1886,29 @@ html&gt;body{padding:0}&lt;/style&gt;
 
 &lt;div id=&quot;auth-flow-prototype&quot; aria-label=&quot;Прототип регистрации и входа: Тринити и Орбита&quot;&gt;
   &lt;div class=&quot;ap-bench&quot;&gt;
-    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.2.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.3.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&quot;ap-scenarios&quot; aria-label=&quot;Выбор сценария&quot;&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;mos&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;01 · Сотрудник&lt;/span&gt;&lt;strong&gt;Тринити · mos.ru&lt;/strong&gt;&lt;span&gt;Личный вход и доверенность&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;ep&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;02 · Руководитель&lt;/span&gt;&lt;strong&gt;Тринити · УКЭП&lt;/strong&gt;&lt;span&gt;Подключение организации&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;orb&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;03 · Новый пользователь&lt;/span&gt;&lt;strong&gt;Орбита · email&lt;/strong&gt;&lt;span&gt;Регистрация и анкета&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;proposal&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;Флоу 04 · проект решения&lt;/span&gt;&lt;strong&gt;Предлагаемый вариант&lt;/strong&gt;&lt;span&gt;Организация и сотрудник&lt;/span&gt;&lt;/button&gt;
+      &lt;button type=&quot;button&quot; data-flow=&quot;proposal2&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;Флоу 05 · проект решения&lt;/span&gt;&lt;strong&gt;Предлагаемый вариант 2&lt;/strong&gt;&lt;span&gt;Простой вход · сервисы отдельно&lt;/span&gt;&lt;/button&gt;
     &lt;/div&gt;
     &lt;div class=&quot;ap-options&quot;&gt;
       &lt;label class=&quot;ap-repeat-label&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;ap-repeat&quot;&gt; Повторный вход&lt;/label&gt;
       &lt;label id=&quot;ap-org-control&quot; hidden&gt;Компания
         &lt;select id=&quot;ap-org-case&quot;&gt;&lt;option value=&quot;new&quot;&gt;Новая организация&lt;/option&gt;&lt;option value=&quot;existing&quot;&gt;Уже зарегистрирована&lt;/option&gt;&lt;/select&gt;
       &lt;/label&gt;
+      &lt;div id=&quot;ap-v2-controls&quot; hidden&gt;
+        &lt;label&gt;Путь&lt;select id=&quot;ap-v2-path&quot;&gt;&lt;option value=&quot;personal&quot;&gt;Новый пользователь&lt;/option&gt;&lt;option value=&quot;invite&quot;&gt;Сотрудник по приглашению&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
+        &lt;label id=&quot;ap-v2-membership-wrap&quot;&gt;Демо: сохранённый доступ&lt;select id=&quot;ap-v2-membership&quot;&gt;&lt;option value=&quot;none&quot;&gt;Не подключён&lt;/option&gt;&lt;option value=&quot;director&quot;&gt;Руководитель&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Сотрудник&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
+        &lt;label id=&quot;ap-v2-outcome-wrap&quot; hidden&gt;Демо: результат проверки&lt;select id=&quot;ap-v2-outcome&quot;&gt;&lt;option value=&quot;success&quot;&gt;Успешно&lt;/option&gt;&lt;option value=&quot;failure&quot;&gt;Ошибка проверки&lt;/option&gt;&lt;option value=&quot;no-certificate&quot;&gt;Нет УКЭП&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
+        &lt;label id=&quot;ap-v2-invite-state-wrap&quot; hidden&gt;Демо: приглашение&lt;select id=&quot;ap-v2-invite-state&quot;&gt;&lt;option value=&quot;valid&quot;&gt;Действует&lt;/option&gt;&lt;option value=&quot;invalid&quot;&gt;Истекло / отозвано&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
+        &lt;button type=&quot;button&quot; id=&quot;ap-v2-director&quot; data-v2-action=&quot;director-review&quot; hidden&gt;Демо: руководитель проверяет МЧД&lt;/button&gt;
+        &lt;span id=&quot;ap-v2-code-note&quot; hidden&gt;Демо-код: 123456. Письмо не отправляется.&lt;/span&gt;
+        &lt;a href=&quot;schemes-v2.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;BPMN варианта 2 ↗&lt;/a&gt;
+        &lt;span class=&quot;ap-mos-assumption&quot;&gt;Стенд: email, mos.ru, реестры, УКЭП и МЧД имитируются. Данные живут в текущем сеансе. Требования интеграции ОССиГ требуют согласования.&lt;/span&gt;
+      &lt;/div&gt;
       &lt;div id=&quot;ap-proposal-controls&quot; hidden&gt;
         &lt;label&gt;Путь&lt;select id=&quot;ap-proposal-path&quot;&gt;&lt;option value=&quot;company&quot;&gt;Регистрация организации&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Регистрация сотрудника&lt;/option&gt;&lt;option value=&quot;powers&quot;&gt;Полномочия сотрудника · МЧД&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
         &lt;label id=&quot;ap-proposal-entry-wrap&quot;&gt;Подключение&lt;select id=&quot;ap-proposal-entry&quot;&gt;&lt;option value=&quot;invite&quot;&gt;По приглашению&lt;/option&gt;&lt;option value=&quot;contact&quot;&gt;Нет приглашения&lt;/option&gt;&lt;option value=&quot;mos-org&quot;&gt;Организация есть на mos.ru&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
@@ -2058,7 +2069,11 @@ html&gt;body{padding:0}&lt;/style&gt;
 @media(max-width:580px){#auth-flow-prototype .ap-bench-head{padding-right:0;}#auth-flow-prototype .ap-bench-head&gt;span{font-size:11px;}#auth-flow-prototype .ap-scenarios{gap:6px;}#auth-flow-prototype .ap-scenarios button{padding:10px 8px;}#auth-flow-prototype .ap-scenarios button strong{font-size:11px;}#auth-flow-prototype .ap-scenario-kicker{font-size:9px!important;letter-spacing:0;}#auth-flow-prototype .ap-options{gap:10px;}#auth-flow-prototype #ap-demo-message{display:none;}#auth-flow-prototype .ap-window{border-radius:8px;}#auth-flow-prototype .ap-workspace{grid-template-columns:1fr;}#auth-flow-prototype .ap-journey{padding:13px 17px;border:0;border-bottom:1px solid var(--ap-line);gap:0;}#auth-flow-prototype .ap-journey&gt;div:first-child,#auth-flow-prototype .ap-journey-foot{display:none;}#auth-flow-prototype .ap-stage-list{display:flex;gap:12px;justify-content:space-between;}#auth-flow-prototype .ap-stage-list li{display:flex;gap:6px;align-items:center;}#auth-flow-prototype .ap-stage-list li:not([data-current=&quot;true&quot;]){display:none;}#auth-flow-prototype .ap-stage-list small{display:none;}#auth-flow-prototype .ap-product-head{padding:13px 16px;}#auth-flow-prototype .ap-preview-badge{display:none;}#auth-flow-prototype .ap-screen{padding:27px 20px;min-height:350px;}#auth-flow-prototype h2{font-size:23px;}#auth-flow-prototype .ap-grid{grid-template-columns:1fr;}#auth-flow-prototype .ap-field input,#auth-flow-prototype .ap-field select{font-size:16px;}#auth-flow-prototype .ap-bench-actions{padding:10px;font-size:10px;}#auth-flow-prototype .ap-bench-actions button{font-size:10px;padding:4px 7px;}#auth-flow-prototype .ap-footer-tools{gap:4px;}#auth-flow-prototype #ap-screen-count{display:none;}#auth-flow-prototype .ap-pass-toggle{min-height:34px;}#auth-flow-prototype .ap-actions{flex-direction:column;}#auth-flow-prototype .ap-steps button{min-height:36px;}}
 @media(prefers-reduced-motion:reduce){#auth-flow-prototype button{transition:none;}}
 
-#auth-flow-prototype .ap-scenarios{grid-template-columns:repeat(4,minmax(0,1fr));}
+#auth-flow-prototype #ap-v2-controls{display:contents;}
+#auth-flow-prototype .ap-v2-services{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+@media(max-width:700px){#auth-flow-prototype .ap-v2-services{grid-template-columns:1fr;}}
+
+#auth-flow-prototype .ap-scenarios{grid-template-columns:repeat(5,minmax(0,1fr));}
 #auth-flow-prototype #ap-proposal-controls{display:contents;}
 #auth-flow-prototype #ap-proposal-controls label{display:flex;gap:7px;align-items:center;flex-wrap:wrap;max-width:100%;}
 #auth-flow-prototype .ap-options{gap:12px;}
@@ -2086,7 +2101,7 @@ const root=document.getElementById(&#x27;auth-flow-prototype&#x27;);
 const pane=root.querySelector(&#x27;#ap-screen&#x27;);
 const saved=window.openai?.widgetState?.privateContent;
 const localWriter=Math.random().toString(36).slice(2);
-const S={flow:&#x27;proposal&#x27;,screen:&#x27;entry&#x27;,repeat:false,orgCase:&#x27;new&#x27;,history:[],email:&#x27;ivan@example.test&#x27;,role:&#x27;Подрядчик&#x27;,...((saved&amp;&amp;[&#x27;mos&#x27;,&#x27;ep&#x27;,&#x27;orb&#x27;,&#x27;proposal&#x27;].includes(saved.flow))?{flow:saved.flow,repeat:!!saved.repeat,orgCase:saved.orgCase===&#x27;existing&#x27;?&#x27;existing&#x27;:&#x27;new&#x27;}:{})};
+const S={flow:location.hash===&#x27;#variant2&#x27;?&#x27;proposal2&#x27;:&#x27;proposal&#x27;,screen:&#x27;entry&#x27;,repeat:false,orgCase:&#x27;new&#x27;,history:[],email:&#x27;ivan@example.test&#x27;,role:&#x27;Подрядчик&#x27;,...((saved&amp;&amp;[&#x27;mos&#x27;,&#x27;ep&#x27;,&#x27;orb&#x27;,&#x27;proposal&#x27;,&#x27;proposal2&#x27;].includes(saved.flow))?{flow:saved.flow,repeat:!!saved.repeat,orgCase:saved.orgCase===&#x27;existing&#x27;?&#x27;existing&#x27;:&#x27;new&#x27;}:{})};
 const drafts={};
 const draftKey=()=&gt;S.flow+&#x27;:&#x27;+S.orgCase+&#x27;:&#x27;+(S.flow===&#x27;proposal&#x27;?S.proposalPath+&#x27;:&#x27;+S.employeeEntry+&#x27;:&#x27;+S.pIdentity+&#x27;:&#x27;:&#x27;&#x27;)+S.screen;
 function capture(){drafts[draftKey()]=[...pane.querySelectorAll(&#x27;input,select&#x27;)].filter(e=&gt;e.type!==&#x27;password&#x27;&amp;&amp;e.type!==&#x27;file&#x27;&amp;&amp;!e.dataset.wasPassword).map(e=&gt;({id:e.id,value:e.value,checked:e.checked}));}
@@ -2103,7 +2118,7 @@ function persist(){
  window.openai?.setWidgetState?.({modelContent:{scenario:S.flow,screen:S.screen,repeat:S.repeat,organization:S.orgCase},privateContent:data})?.catch(()=&gt;{});
 }
 function go(screen){capture();S.history.push(S.screen);S.screen=screen;render();persist();}
-function restart(){if(S.flow===&#x27;proposal&#x27;)resetProposal();S.screen=&#x27;entry&#x27;;S.history=[];render();persist();}
+function restart(){if(S.flow===&#x27;proposal&#x27;)resetProposal();if(S.flow===&#x27;proposal2&#x27;)resetV2();S.screen=&#x27;entry&#x27;;S.history=[];render();persist();}
 function journey(q){
  let steps,title,intro;
  if(S.repeat){title=&#x27;С возвращением&#x27;;intro=&#x27;Войдите в ранее настроенный личный кабинет.&#x27;;steps=[[&#x27;Вход&#x27;,&#x27;Подтверждение личности&#x27;,[&#x27;entry&#x27;,&#x27;orb-login&#x27;,&#x27;consent&#x27;,&#x27;mosid&#x27;,&#x27;certificate&#x27;]],[&#x27;Личный кабинет&#x27;,&#x27;Доступ к работе&#x27;,[&#x27;done&#x27;]]];}
@@ -2424,7 +2439,132 @@ function pUseSavedAccess(role){
  return true;
 }
 
+// Independent proposal: account -&gt; organization -&gt; service-specific access.
+let V2;
+function resetV2(){
+ const path=root.querySelector(&#x27;#ap-v2-path&#x27;)?.value||&#x27;personal&#x27;;
+ V2={path,screen:path===&#x27;invite&#x27;?&#x27;invite&#x27;:&#x27;login&#x27;,email:path===&#x27;invite&#x27;?&#x27;employee@example.test&#x27;:&#x27;&#x27;,authenticated:false,member:false,authority:false,service:false,mchd:&#x27;none&#x27;,invitationValid:true,inn:&#x27;&#x27;,name:&#x27;&#x27;,role:&#x27;&#x27;,pending:false,history:[],message:&#x27;&#x27;};
+}
+const v2Button=(label,action,primary=true)=&gt;`&lt;button type=&quot;button&quot; ${primary?&#x27;class=&quot;ap-primary&quot;&#x27;:&#x27;&#x27;} data-v2-action=&quot;${action}&quot;&gt;${label}&lt;/button&gt;`;
+const v2Status=text=&gt;`&lt;div class=&quot;ap-status&quot;&gt;${esc(text)}&lt;/div&gt;`;
+function v2Go(screen){V2.history.push(V2.screen);V2.screen=screen;V2.message=&#x27;&#x27;;render();}
+function v2Error(message){const e=pane.querySelector(&#x27;[role=alert]&#x27;);if(e){e.hidden=false;e.textContent=message;}}
+function v2Authenticated(){V2.authenticated=true;if(V2.path===&#x27;personal&#x27;){const link=root.querySelector(&#x27;#ap-v2-membership&#x27;).value;if(link!==&#x27;none&#x27;){V2.member=true;V2.authority=link===&#x27;director&#x27;;V2.inn=&#x27;0000000000&#x27;;V2.name=&#x27;ООО «Пример»&#x27;;}}v2Go(V2.path===&#x27;invite&#x27;&amp;&amp;!V2.member?&#x27;accept&#x27;:&#x27;home&#x27;);}
+function v2Journey(){
+ const stages=[[&#x27;Аккаунт&#x27;,&#x27;Вход по email или mos.ru&#x27;],[&#x27;Организация&#x27;,&#x27;Подтвердить связь с компанией&#x27;],[&#x27;Сота&#x27;,&#x27;Настроить выбранный сервис&#x27;]];
+ const current=[&#x27;login&#x27;,&#x27;code&#x27;,&#x27;mos&#x27;,&#x27;invite&#x27;,&#x27;accept&#x27;].includes(V2.screen)?0:[&#x27;company&#x27;,&#x27;record&#x27;,&#x27;authority&#x27;,&#x27;invite-team&#x27;,&#x27;invite-sent&#x27;].includes(V2.screen)?1:2;
+ root.querySelector(&#x27;#ap-journey&#x27;).innerHTML=`&lt;div&gt;&lt;span class=&quot;ap-label&quot;&gt;Предлагаемый вариант 2&lt;/span&gt;&lt;h3&gt;Начните с простого&lt;/h3&gt;&lt;p class=&quot;ap-journey-intro&quot;&gt;Общий кабинет сразу после входа. Дополнительные сведения — для выбранной задачи.&lt;/p&gt;&lt;/div&gt;&lt;ol class=&quot;ap-stage-list&quot;&gt;${stages.map(([name,desc],i)=&gt;`&lt;li data-current=&quot;${i===current}&quot; data-past=&quot;${i&lt;current}&quot;&gt;&lt;span class=&quot;ap-stage-dot&quot;&gt;${i+1}&lt;/span&gt;&lt;div&gt;&lt;strong&gt;${name}&lt;/strong&gt;&lt;small&gt;${desc}&lt;/small&gt;&lt;/div&gt;&lt;/li&gt;`).join(&#x27;&#x27;)}&lt;/ol&gt;&lt;div class=&quot;ap-journey-foot&quot;&gt;Аккаунт, связь с компанией и полномочия сервиса проверяются отдельно.&lt;/div&gt;`;
+}
+function v2Render(){
+ if(!V2)resetV2();
+ if(!V2.authenticated&amp;&amp;![&#x27;login&#x27;,&#x27;code&#x27;,&#x27;mos&#x27;,&#x27;invite&#x27;,&#x27;invalid&#x27;].includes(V2.screen))V2.screen=&#x27;login&#x27;;
+ if(V2.screen===&#x27;ready&#x27;&amp;&amp;!V2.service)V2.screen=&#x27;service&#x27;;
+ if(V2.screen===&#x27;mchd-review&#x27;&amp;&amp;V2.mchd!==&#x27;pending&#x27;)V2.screen=V2.service?&#x27;ready&#x27;:&#x27;service&#x27;;
+ const q=V2.screen;
+ root.querySelector(&#x27;#ap-proposal-controls&#x27;).hidden=true;
+ for(const id of [&#x27;ap-mos-org-note&#x27;,&#x27;ap-director-review&#x27;,&#x27;ap-sign-result-wrap&#x27;,&#x27;ap-return-employee&#x27;,&#x27;ap-invite-demo-note&#x27;,&#x27;ap-org-control&#x27;])root.querySelector(&#x27;#&#x27;+id).hidden=true;
+ root.querySelector(&#x27;#ap-v2-controls&#x27;).hidden=false;
+ root.querySelector(&#x27;.ap-repeat-label&#x27;).hidden=true;
+ root.querySelector(&#x27;#ap-repeat&#x27;).disabled=true;
+ root.querySelector(&#x27;#ap-brand&#x27;).textContent=&#x27;Предлагаемый вариант 2&#x27;;
+ root.querySelector(&#x27;.ap-brand-mark&#x27;).textContent=&#x27;05&#x27;;
+ root.querySelector(&#x27;.ap-preview-badge&#x27;).textContent=&#x27;Проект решения · вариант 2&#x27;;
+ root.querySelector(&#x27;#ap-context&#x27;).textContent=V2.authenticated?&#x27;Общий кабинет&#x27;:&#x27;Вход на платформу&#x27;;
+ root.querySelectorAll(&#x27;[data-flow]&#x27;).forEach(b=&gt;b.setAttribute(&#x27;aria-pressed&#x27;,String(b.dataset.flow===&#x27;proposal2&#x27;)));
+ root.querySelector(&#x27;#ap-steps&#x27;).innerHTML=&#x27;&#x27;;root.querySelector(&#x27;#ap-map-count&#x27;).textContent=&#x27;· последовательный процесс&#x27;;
+ root.querySelector(&#x27;#ap-screen-count&#x27;).textContent=&#x27;Вариант 2&#x27;;root.querySelector(&#x27;#ap-back&#x27;).disabled=!V2.history.length;
+ root.querySelector(&#x27;#ap-v2-membership-wrap&#x27;).hidden=V2.path!==&#x27;personal&#x27;||V2.authenticated;
+ root.querySelector(&#x27;#ap-v2-code-note&#x27;).hidden=q!==&#x27;code&#x27;;
+ root.querySelector(&#x27;#ap-v2-outcome-wrap&#x27;).hidden=![&#x27;authority&#x27;,&#x27;service-check&#x27;,&#x27;mchd-review&#x27;,&#x27;mchd-existing&#x27;].includes(q);
+ root.querySelector(&#x27;#ap-v2-director&#x27;).hidden=!(q===&#x27;mchd-wait&#x27;&amp;&amp;V2.mchd===&#x27;pending&#x27;);
+ root.querySelector(&#x27;#ap-v2-invite-state-wrap&#x27;).hidden=V2.path!==&#x27;invite&#x27;||V2.member;
+ let body=&#x27;&#x27;;
+ if(q===&#x27;invite&#x27;)body=wrap(&#x27;Вас приглашают в команду&#x27;,`&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;ООО «Пример»&lt;/strong&gt;&lt;p&gt;Доступ: внутренние черновики. Операции ОССиГ подключаются отдельно.&lt;/p&gt;&lt;p&gt;Приглашение для employee@example.test&lt;/p&gt;&lt;/div&gt;${v2Button(&#x27;Войти и принять приглашение&#x27;,&#x27;invite-login&#x27;)}`);
+ if(q===&#x27;login&#x27;)body=wrap(&#x27;Добро пожаловать&#x27;,`&lt;p&gt;Войдите, чтобы выбрать сервис и начать работу. Данные компании можно добавить позже.&lt;/p&gt;${form(field(&#x27;Email&#x27;,&#x27;v2-email&#x27;,V2.email,&#x27;email&#x27;)+check(&#x27;Принимаю условия использования платформы&#x27;,&#x27;v2-terms&#x27;)+submit(&#x27;Получить код&#x27;,&#x27;v2-email&#x27;),&#x27;v2-email&#x27;)}&lt;div class=&quot;ap-auth-separator&quot;&gt;или&lt;/div&gt;${v2Button(&#x27;Войти через mos.ru&#x27;,&#x27;mos&#x27;,false)}`);
+ if(q===&#x27;code&#x27;)body=wrap(&#x27;Проверьте почту&#x27;,`&lt;p&gt;Код отправлен на ${esc(V2.email)}.&lt;/p&gt;${V2.path===&#x27;invite&#x27;?&#x27;&lt;p&gt;Подтвердите почту получателя приглашения. Компания уже указана, вводить ИНН не нужно.&lt;/p&gt;&#x27;:&#x27;&#x27;}${form(field(&#x27;Код из письма&#x27;,&#x27;v2-code&#x27;,&#x27;&#x27;,&#x27;text&#x27;)+submit(&#x27;Продолжить&#x27;,&#x27;v2-code&#x27;),&#x27;v2-code&#x27;)}${v2Button(&#x27;Отправить код ещё раз&#x27;,&#x27;resend&#x27;,false)}${v2Button(&#x27;Изменить email&#x27;,&#x27;email-back&#x27;,false)}`);
+ if(q===&#x27;mos&#x27;)body=wrap(&#x27;Вход через mos.ru&#x27;,`&lt;p&gt;Подтвердите вход в своём аккаунте mos.ru. Права на компанию назначаются отдельно.&lt;/p&gt;${v2Button(&#x27;Продолжить&#x27;,&#x27;mos-return&#x27;)}${v2Button(&#x27;Отменить&#x27;,&#x27;email-back&#x27;,false)}`);
+ if(q===&#x27;accept&#x27;)body=wrap(&#x27;Примите приглашение&#x27;,`&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;ООО «Пример»&lt;/strong&gt;&lt;p&gt;ИНН 0000000000 · сотрудник&lt;/p&gt;&lt;p&gt;Внутренние черновики. Управление командой и операции ОССиГ пока недоступны.&lt;/p&gt;&lt;/div&gt;${check(&#x27;Присоединиться к организации с указанным доступом&#x27;,&#x27;v2-accept&#x27;)}${v2Button(&#x27;Принять приглашение&#x27;,&#x27;accept&#x27;)}${v2Button(&#x27;Отклонить&#x27;,&#x27;decline&#x27;,false)}`);
+ if(q===&#x27;home&#x27;)body=wrap(&#x27;Ваш личный кабинет&#x27;,`${v2Status(V2.member?`${V2.name||&#x27;ООО «Пример»&#x27;} · ${V2.authority?&#x27;полномочия руководителя подтверждены&#x27;:V2.orgRepresentative?&#x27;полномочия представителя подтверждены&#x27;:&#x27;доступ сотрудника подтверждён&#x27;}`:&#x27;Аккаунт создан. Организация пока не подключена.&#x27;)}&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Организация&lt;/h3&gt;&lt;p&gt;${V2.member?&#x27;Вы работаете с назначенным доступом.&#x27;:&#x27;Для действий от имени компании подтвердите связь с ней.&#x27;}&lt;/p&gt;${V2.member?(V2.authority?v2Button(&#x27;Пригласить сотрудника&#x27;,&#x27;invite-team&#x27;,false):&#x27;&#x27;):v2Button(V2.pending?&#x27;Продолжить подключение&#x27;:&#x27;Подключить организацию&#x27;,&#x27;company&#x27;,false)}&lt;/div&gt;&lt;div class=&quot;ap-v2-services&quot;&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Сота&lt;/span&gt;&lt;h3&gt;ОССиГ&lt;/h3&gt;&lt;p&gt;Перевозка и учёт строительных отходов.&lt;/p&gt;${v2Button(V2.service?&#x27;Открыть сервис&#x27;:&#x27;Подключить сервис&#x27;,&#x27;ossig&#x27;)}&lt;/div&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Сота&lt;/span&gt;&lt;h3&gt;Закупки&lt;/h3&gt;&lt;p&gt;Подготовьте личный черновик потребности.&lt;/p&gt;${v2Button(&#x27;Создать черновик&#x27;,&#x27;draft&#x27;,false)}&lt;/div&gt;&lt;/div&gt;`,true);
+ if(q===&#x27;draft&#x27;)body=wrap(&#x27;Черновик потребности&#x27;,`&lt;p&gt;Черновик виден только вам. Он не отправляется поставщикам и не создаёт обязательств компании.&lt;/p&gt;${form(field(&#x27;Что нужно приобрести&#x27;,&#x27;v2-draft&#x27;,V2.draft||&#x27;&#x27;)+submit(&#x27;Сохранить черновик&#x27;,&#x27;v2-draft&#x27;),&#x27;v2-draft&#x27;)}${v2Button(&#x27;В кабинет&#x27;,&#x27;home&#x27;,false)}`);
+ if(q===&#x27;company&#x27;)body=wrap(&#x27;Подключите организацию&#x27;,`&lt;p&gt;Найдём реквизиты по ИНН. Если компания уже подключена, используем её существующий кабинет.&lt;/p&gt;${form(field(&#x27;ИНН организации или ИП&#x27;,&#x27;v2-inn&#x27;,V2.inn)+submit(&#x27;Найти&#x27;,&#x27;v2-company&#x27;),&#x27;v2-company&#x27;)}${v2Button(&#x27;Сделать позже&#x27;,&#x27;home&#x27;,false)}`);
+ if(q===&#x27;record&#x27;)body=wrap(&#x27;Проверьте организацию&#x27;,`&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;${esc(V2.name)}&lt;/strong&gt;&lt;p&gt;ИНН ${esc(V2.inn)}&lt;/p&gt;&lt;/div&gt;&lt;p&gt;Добавление реквизитов не открывает данные компании. Для подключения подтвердите полномочия или передайте подготовку руководителю.&lt;/p&gt;${v2Button(&#x27;Подтвердить полномочия&#x27;,&#x27;authority&#x27;)}${v2Button(&#x27;Сохранить для руководителя&#x27;,&#x27;prepare&#x27;,false)}${v2Button(&#x27;Я сотрудник: как получить доступ&#x27;,&#x27;contact&#x27;,false)}`);
+ if(q===&#x27;authority&#x27;)body=wrap(&#x27;Подтвердите полномочия&#x27;,`&lt;p&gt;Руководитель или ИП использует свою УКЭП. Представитель — личную УКЭП и действующую МЧД с подходящими полномочиями.&lt;/p&gt;${form(select(&#x27;Основание полномочий&#x27;,&#x27;v2-basis&#x27;,[&#x27;Руководитель / ИП&#x27;,&#x27;Представитель с МЧД&#x27;])+submit(&#x27;Проверить и подключить&#x27;,&#x27;v2-authority&#x27;),&#x27;v2-authority&#x27;)}${v2Button(&#x27;Вернуться позже&#x27;,&#x27;home&#x27;,false)}`);
+ if(q===&#x27;prepared&#x27;)body=wrap(&#x27;Подготовка сохранена&#x27;,`&lt;p&gt;Реквизиты доступны в вашем личном кабинете. Передайте руководителю ИНН компании: он сможет войти и подтвердить полномочия. Доступ к данным организации ещё не открыт.&lt;/p&gt;${v2Button(&#x27;В личный кабинет&#x27;,&#x27;home&#x27;)}`);
+ if(q===&#x27;contact&#x27;)body=wrap(&#x27;Обратитесь в организацию&#x27;,`&lt;p&gt;Попросите руководителя или администратора пригласить вас на любую удобную почту. Повторно регистрировать компанию не нужно.&lt;/p&gt;${v2Button(&#x27;В личный кабинет&#x27;,&#x27;home&#x27;)}`);
+ if(q===&#x27;invite-team&#x27;)body=wrap(&#x27;Пригласите сотрудника&#x27;,`${form(field(&#x27;Имя сотрудника&#x27;,&#x27;v2-person&#x27;)+field(&#x27;Email приглашения&#x27;,&#x27;v2-invite-email&#x27;,&#x27;&#x27;,&#x27;email&#x27;)+&#x27;&lt;p&gt;Доступ: внутренние черновики. Полномочия для ОССиГ можно оформить при подключении сервиса.&lt;/p&gt;&#x27;+submit(&#x27;Создать приглашение&#x27;,&#x27;v2-invite&#x27;),&#x27;v2-invite&#x27;)}`);
+ if(q===&#x27;invite-sent&#x27;)body=wrap(&#x27;Приглашение подготовлено&#x27;,`&lt;p&gt;${esc(V2.invitee)} · ${esc(V2.inviteEmail)}&lt;/p&gt;&lt;p&gt;После входа сотрудник примет приглашение и получит назначенный доступ.&lt;/p&gt;${v2Button(&#x27;В кабинет&#x27;,&#x27;home&#x27;)}`);
+ if(q===&#x27;service&#x27;)body=wrap(&#x27;Подключение ОССиГ&#x27;,`&lt;p&gt;Проверим организацию и полномочия для выбранной деятельности. Личный кабинет продолжает работать.&lt;/p&gt;${v2Status(V2.member?&#x27;Связь с организацией подтверждена&#x27;:&#x27;Сначала подтвердите связь с организацией&#x27;)}${V2.member?form(select(&#x27;Роль организации в ОССиГ&#x27;,&#x27;v2-role&#x27;,[&#x27;Отходообразователь&#x27;,&#x27;Отходоперевозчик&#x27;,&#x27;Отходополучатель&#x27;])+check(&#x27;Принимаю условия использования сервиса ОССиГ&#x27;,&#x27;v2-service-terms&#x27;)+submit(&#x27;Проверить готовность&#x27;,&#x27;v2-service&#x27;),&#x27;v2-service&#x27;):v2Button(&#x27;Подключить организацию&#x27;,&#x27;company&#x27;)}${v2Button(&#x27;Позже&#x27;,&#x27;home&#x27;,false)}`);
+ if(q===&#x27;service-check&#x27;)body=wrap(&#x27;Проверка готовности&#x27;,`&lt;p&gt;${esc(V2.role)} · ${esc(V2.name||&#x27;ООО «Пример»&#x27;)}&lt;/p&gt;&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;Для начала работы&lt;/strong&gt;&lt;p&gt;Проверка сведений организации в реестрах ОССиГ, условий сервиса и полномочий пользователя. Состав дополнительных сведений зависит от роли.&lt;/p&gt;&lt;/div&gt;${v2Button(&#x27;Выполнить проверку&#x27;,&#x27;service-verify&#x27;)}${v2Button(&#x27;Вернуться в кабинет&#x27;,&#x27;home&#x27;,false)}`);
+ if(q===&#x27;mchd&#x27;)body=wrap(&#x27;Подтвердите полномочия для ОССиГ&#x27;,`&lt;p&gt;Доступ сотрудника к компании уже есть. Для передачи данных от её имени нужны подходящие полномочия.&lt;/p&gt;${v2Button(&#x27;Проверить действующую МЧД&#x27;,&#x27;mchd-existing&#x27;)}${v2Button(&#x27;Подготовить МЧД руководителю&#x27;,&#x27;mchd-prepare&#x27;,false)}${v2Button(&#x27;Позже&#x27;,&#x27;home&#x27;,false)}`);
+ if(q===&#x27;mchd-existing&#x27;)body=wrap(&#x27;Действующая МЧД&#x27;,`${form(field(&#x27;Номер МЧД&#x27;,&#x27;v2-mchd-id&#x27;)+&#x27;&lt;p&gt;Проверим доверителя, представителя, срок, отсутствие отзыва и соответствие полномочий выбранным операциям.&lt;/p&gt;&#x27;+submit(&#x27;Проверить МЧД&#x27;,&#x27;v2-mchd&#x27;),&#x27;v2-mchd&#x27;)}`);
+ if(q===&#x27;mchd-wait&#x27;)body=wrap(&#x27;МЧД ожидает руководителя&#x27;,`&lt;p&gt;Подготовлена доверенность на передачу данных в рамках выбранной роли ОССиГ. Руководитель проверит сотрудника и полномочия, затем подпишет её.&lt;/p&gt;&lt;p&gt;Вы не подписываете собственную МЧД. Обычный доступ к кабинету сохранён.&lt;/p&gt;${v2Button(&#x27;В кабинет&#x27;,&#x27;home&#x27;)}`);
+ if(q===&#x27;mchd-review&#x27;)body=wrap(&#x27;Проверьте МЧД сотрудника&#x27;,`&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;${esc(V2.name||&#x27;ООО «Пример»&#x27;)} → ${esc(V2.email)}&lt;/strong&gt;&lt;p&gt;${esc(V2.role)}: полномочия на передачу данных в ОССиГ.&lt;/p&gt;&lt;/div&gt;&lt;p&gt;После подписи платформа проверит доверенность. Права администратора сотруднику не назначаются.&lt;/p&gt;${v2Button(&#x27;Подписать УКЭП руководителя&#x27;,&#x27;mchd-sign&#x27;)}${v2Button(&#x27;Отложить&#x27;,&#x27;mchd-wait&#x27;,false)}`);
+ if(q===&#x27;ready&#x27;)body=wrap(&#x27;ОССиГ подключён&#x27;,`${v2Status(&#x27;Необходимые проверки пройдены&#x27;)}&lt;p&gt;${esc(V2.role)}. Доступны только проверенные полномочия сервиса. Для подписи документов потребуется соответствующая УКЭП.&lt;/p&gt;${v2Button(&#x27;В общий кабинет&#x27;,&#x27;home&#x27;)}`);
+ if(q===&#x27;invalid&#x27;)body=wrap(&#x27;Приглашение недоступно&#x27;,`&lt;p&gt;Срок истёк или приглашение отозвано. Попросите отправить новое. Доступ к организации не предоставлен.&lt;/p&gt;${v2Button(&#x27;Перейти к обычному входу&#x27;,&#x27;normal-login&#x27;)}`);
+ if(!body){V2.screen=V2.authenticated?&#x27;home&#x27;:&#x27;login&#x27;;return v2Render();}
+ pane.innerHTML=body+`&lt;div class=&quot;ap-error&quot; role=&quot;alert&quot; hidden&gt;&lt;/div&gt;`;
+ enhance();v2Journey();root.querySelector(&#x27;.ap-brand-mark&#x27;).textContent=&#x27;05&#x27;;root.querySelector(&#x27;#ap-demo&#x27;).hidden=true;
+}
+function v2Outcome(){return root.querySelector(&#x27;#ap-v2-outcome&#x27;).value;}
+function v2Action(action){
+ const authOnly=[&#x27;home&#x27;,&#x27;draft&#x27;,&#x27;company&#x27;,&#x27;record&#x27;,&#x27;authority&#x27;,&#x27;prepare&#x27;,&#x27;contact&#x27;,&#x27;ossig&#x27;,&#x27;service-verify&#x27;,&#x27;mchd-existing&#x27;,&#x27;mchd-prepare&#x27;,&#x27;mchd-sign&#x27;,&#x27;invite-team&#x27;];
+ if(authOnly.includes(action)&amp;&amp;!V2.authenticated)return v2Error(&#x27;Сначала войдите в аккаунт.&#x27;);
+ if(action===&#x27;invite-login&#x27;){if(root.querySelector(&#x27;#ap-v2-invite-state&#x27;).value===&#x27;invalid&#x27;)return v2Go(&#x27;invalid&#x27;);return v2Go(&#x27;login&#x27;);}
+ if(action===&#x27;normal-login&#x27;){resetV2();V2.path=&#x27;personal&#x27;;V2.email=&#x27;&#x27;;return v2Go(&#x27;login&#x27;);}
+ if(action===&#x27;mos&#x27;){if(!pane.querySelector(&#x27;#v2-terms&#x27;)?.checked)return v2Error(&#x27;Примите условия использования платформы.&#x27;);return v2Go(&#x27;mos&#x27;);}
+ if(action===&#x27;mos-return&#x27;){if(V2.path===&#x27;invite&#x27;){V2.email=&#x27;employee@example.test&#x27;;return v2Go(&#x27;code&#x27;);}if(V2.email!==&#x27;mos-user@example.test&#x27;){V2.member=false;V2.authority=false;V2.orgRepresentative=false;V2.service=false;V2.mchd=&#x27;none&#x27;;V2.role=&#x27;&#x27;;V2.history=[];}V2.email=&#x27;mos-user@example.test&#x27;;return v2Authenticated();}
+ if(action===&#x27;email-back&#x27;)return v2Go(&#x27;login&#x27;);
+ if(action===&#x27;resend&#x27;){v2Error(&#x27;Новый код отправлен. Используйте последний код из письма.&#x27;);return;}
+ if(action===&#x27;accept&#x27;){
+  if(!V2.authenticated)return v2Error(&#x27;Сначала подтвердите вход.&#x27;);
+  if(root.querySelector(&#x27;#ap-v2-invite-state&#x27;).value===&#x27;invalid&#x27;)return v2Go(&#x27;invalid&#x27;);
+  if(!pane.querySelector(&#x27;#v2-accept&#x27;)?.checked)return v2Error(&#x27;Подтвердите принятие приглашения.&#x27;);
+  V2.member=true;V2.inn=&#x27;0000000000&#x27;;V2.name=&#x27;ООО «Пример»&#x27;;return v2Go(&#x27;home&#x27;);
+ }
+ if(action===&#x27;decline&#x27;){V2.path=&#x27;personal&#x27;;return v2Go(&#x27;home&#x27;);}
+ if(action===&#x27;prepare&#x27;){V2.pending=true;return v2Go(&#x27;prepared&#x27;);}
+ if(action===&#x27;ossig&#x27;)return v2Go(V2.service?&#x27;ready&#x27;:V2.mchd===&#x27;pending&#x27;?&#x27;mchd-wait&#x27;:&#x27;service&#x27;);
+ if(action===&#x27;service-verify&#x27;){
+  if(!V2.member||!V2.role)return v2Error(&#x27;Сначала подключите организацию и выберите роль.&#x27;);
+  if(v2Outcome()!==&#x27;success&#x27;)return v2Error(&#x27;Проверка не завершена: уточните сведения и повторите. Операции ОССиГ пока недоступны.&#x27;);
+  if(!V2.authority&amp;&amp;V2.mchd!==&#x27;valid&#x27;)return v2Go(&#x27;mchd&#x27;);V2.service=true;return v2Go(&#x27;ready&#x27;);
+ }
+ if(action===&#x27;mchd-prepare&#x27;){if(!V2.member||!V2.role)return;V2.mchd=&#x27;pending&#x27;;return v2Go(&#x27;mchd-wait&#x27;);}
+ if(action===&#x27;director-review&#x27;){if(V2.mchd!==&#x27;pending&#x27;)return;return v2Go(&#x27;mchd-review&#x27;);}
+ if(action===&#x27;mchd-sign&#x27;){
+  if(V2.screen!==&#x27;mchd-review&#x27;||V2.mchd!==&#x27;pending&#x27;)return;
+  if(v2Outcome()!==&#x27;success&#x27;)return v2Error(v2Outcome()===&#x27;no-certificate&#x27;?&#x27;Подключите УКЭП руководителя. МЧД остаётся неподписанной.&#x27;:&#x27;Подпись не прошла проверку. Исправьте ошибку и повторите.&#x27;);
+  V2.mchd=&#x27;valid&#x27;;return v2Go(&#x27;service-check&#x27;);
+ }
+ if(action===&#x27;invite-team&#x27;&amp;&amp;!V2.authority)return v2Error(&#x27;Приглашать сотрудников может уполномоченный администратор.&#x27;);
+ if([&#x27;home&#x27;,&#x27;draft&#x27;,&#x27;company&#x27;,&#x27;authority&#x27;,&#x27;contact&#x27;,&#x27;invite-team&#x27;,&#x27;mchd-existing&#x27;,&#x27;mchd-wait&#x27;].includes(action))return v2Go(action);
+}
+function v2Submit(action,f){
+ const v=id=&gt;f.querySelector(&#x27;#&#x27;+id)?.value.trim()||&#x27;&#x27;;
+ const validEmail=x=&gt;/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x);
+ if(action===&#x27;v2-email&#x27;){
+  if(!validEmail(v(&#x27;v2-email&#x27;)))return v2Error(&#x27;Укажите корректный email.&#x27;);
+  if(!f.querySelector(&#x27;#v2-terms&#x27;).checked)return v2Error(&#x27;Примите условия использования платформы.&#x27;);
+  if(V2.path===&#x27;invite&#x27;&amp;&amp;v(&#x27;v2-email&#x27;).toLowerCase()!==&#x27;employee@example.test&#x27;)return v2Error(&#x27;Для этого приглашения подтвердите почту employee@example.test или попросите новое приглашение.&#x27;);
+  if(V2.email&amp;&amp;V2.email!==v(&#x27;v2-email&#x27;)){V2.member=false;V2.authority=false;V2.orgRepresentative=false;V2.service=false;V2.mchd=&#x27;none&#x27;;V2.role=&#x27;&#x27;;V2.history=[];}V2.authenticated=false;V2.email=v(&#x27;v2-email&#x27;);return v2Go(&#x27;code&#x27;);
+ }
+ if(action===&#x27;v2-code&#x27;){if(v(&#x27;v2-code&#x27;)!==&#x27;123456&#x27;)return v2Error(&#x27;Неверный код. Проверьте письмо и повторите.&#x27;);return v2Authenticated();}
+ if(!V2.authenticated)return v2Error(&#x27;Сначала войдите в аккаунт.&#x27;);
+ if(action===&#x27;v2-company&#x27;){if(!/^(\d{10}|\d{12})$/.test(v(&#x27;v2-inn&#x27;)))return v2Error(&#x27;Введите ИНН из 10 или 12 цифр.&#x27;);if(V2.inn!==v(&#x27;v2-inn&#x27;)){V2.member=false;V2.authority=false;V2.orgRepresentative=false;V2.service=false;V2.mchd=&#x27;none&#x27;;V2.role=&#x27;&#x27;;V2.pending=false;V2.history=[];}V2.inn=v(&#x27;v2-inn&#x27;);V2.name=V2.inn.length===12?&#x27;ИП Иванов И. И.&#x27;:&#x27;ООО «Пример»&#x27;;return v2Go(V2.member?&#x27;home&#x27;:&#x27;record&#x27;);}
+ if(action===&#x27;v2-authority&#x27;){
+  if(!V2.inn)return v2Error(&#x27;Сначала выберите организацию.&#x27;);
+  if(v2Outcome()!==&#x27;success&#x27;)return v2Error(v2Outcome()===&#x27;no-certificate&#x27;?&#x27;Для подтверждения подключите УКЭП. Можно продолжить в личном кабинете.&#x27;:&#x27;Проверка полномочий не пройдена. Доступ не выдан; исправьте данные или передайте подготовку руководителю.&#x27;);
+  V2.member=true;V2.authority=v(&#x27;v2-basis&#x27;)===&#x27;Руководитель / ИП&#x27;;V2.orgRepresentative=!V2.authority;return v2Go(&#x27;home&#x27;);
+ }
+ if(action===&#x27;v2-service&#x27;){if(!V2.member)return v2Error(&#x27;Подтвердите связь с организацией.&#x27;);if(!f.querySelector(&#x27;#v2-service-terms&#x27;).checked)return v2Error(&#x27;Примите условия сервиса.&#x27;);if(V2.role!==v(&#x27;v2-role&#x27;)){V2.service=false;V2.mchd=&#x27;none&#x27;;V2.history=[];}V2.role=v(&#x27;v2-role&#x27;);return v2Go(&#x27;service-check&#x27;);}
+ if(action===&#x27;v2-mchd&#x27;){if(!V2.member||!V2.role)return;if(!v(&#x27;v2-mchd-id&#x27;))return v2Error(&#x27;Укажите номер МЧД.&#x27;);if(v2Outcome()!==&#x27;success&#x27;)return v2Error(&#x27;МЧД не подходит, истекла или отозвана. Проверьте данные либо оформите новую.&#x27;);V2.mchd=&#x27;valid&#x27;;return v2Go(&#x27;service-check&#x27;);}
+ if(action===&#x27;v2-draft&#x27;){if(!v(&#x27;v2-draft&#x27;))return v2Error(&#x27;Опишите потребность.&#x27;);V2.draft=v(&#x27;v2-draft&#x27;);v2Error(&#x27;Черновик сохранён в текущем сеансе.&#x27;);return;}
+ if(action===&#x27;v2-invite&#x27;){if(!V2.authority)return;if(!v(&#x27;v2-person&#x27;)||!validEmail(v(&#x27;v2-invite-email&#x27;)))return v2Error(&#x27;Укажите имя и корректный email сотрудника.&#x27;);V2.invitee=v(&#x27;v2-person&#x27;);V2.inviteEmail=v(&#x27;v2-invite-email&#x27;);return v2Go(&#x27;invite-sent&#x27;);}
+}
+
 function render(){
+ if(S.flow===&#x27;proposal2&#x27;){v2Render();return;}
+ root.querySelector(&#x27;#ap-v2-controls&#x27;).hidden=true;root.querySelector(&#x27;.ap-repeat-label&#x27;).hidden=false;
  if(S.flow===&#x27;proposal&#x27;){proposalRender();return;}
  root.querySelector(&#x27;#ap-proposal-controls&#x27;).hidden=true;root.querySelector(&#x27;#ap-director-review&#x27;).hidden=true;root.querySelector(&#x27;#ap-sign-result-wrap&#x27;).hidden=true;root.querySelector(&#x27;#ap-return-employee&#x27;).hidden=true;root.querySelector(&#x27;#ap-invite-demo-note&#x27;).hidden=true;root.querySelector(&#x27;#ap-mos-org-note&#x27;).hidden=true;root.querySelector(&#x27;#ap-repeat&#x27;).disabled=false;root.querySelector(&#x27;.ap-preview-badge&#x27;).textContent=&#x27;Концепция интерфейса&#x27;;
  const orb=S.flow===&#x27;orb&#x27;;const ep=S.flow===&#x27;ep&#x27;;const q=S.screen;
@@ -2513,6 +2653,8 @@ function render(){
 root.addEventListener(&#x27;click&#x27;,e=&gt;{
  const btn=e.target.closest(&#x27;button&#x27;);if(!btn||btn.disabled)return;
  if(btn.type===&#x27;submit&#x27;&amp;&amp;btn.closest(&#x27;form[data-form]&#x27;)){e.preventDefault();btn.closest(&#x27;form&#x27;).dispatchEvent(new Event(&#x27;submit&#x27;,{bubbles:true,cancelable:true}));return;}
+ if(btn.dataset.v2Action){v2Action(btn.dataset.v2Action);return;}
+ if(S.flow===&#x27;proposal2&#x27;&amp;&amp;btn.id===&#x27;ap-back&#x27;){if(V2.history.length){V2.screen=V2.history.pop();render();}return;}
  if(btn.dataset.pAction){proposalAction(btn.dataset.pAction);return;}
  if(btn.dataset.flow){S.flow=btn.dataset.flow;restart();return;}
  if(btn.dataset.jump){go(btn.dataset.jump);return;}
@@ -2532,6 +2674,8 @@ root.addEventListener(&#x27;click&#x27;,e=&gt;{
  }
 });
 root.addEventListener(&#x27;change&#x27;,e=&gt;{
+ if(e.target.id===&#x27;ap-v2-path&#x27;){resetV2();render();return;}
+
  if(e.target.id===&#x27;ap-proposal-path&#x27;){S.proposalPath=e.target.value;S.orgCase=S.proposalPath===&#x27;employee&#x27;?&#x27;existing&#x27;:&#x27;new&#x27;;restart();return;}
  if(e.target.id===&#x27;ap-proposal-entry&#x27;){S.employeeEntry=e.target.value;restart();return;}
  if(e.target.id===&#x27;ap-existing-access&#x27;){S.existingAccess=e.target.value;restart();return;}
@@ -2543,6 +2687,7 @@ root.addEventListener(&#x27;change&#x27;,e=&gt;{
 });
 root.addEventListener(&#x27;submit&#x27;,e=&gt;{
  e.preventDefault();const f=e.target;const action=f.dataset.form;const val=id=&gt;f.querySelector(&#x27;#&#x27;+id)?.value.trim()||&#x27;&#x27;;
+ if(S.flow===&#x27;proposal2&#x27;&amp;&amp;action?.startsWith(&#x27;v2-&#x27;)){v2Submit(action,f);return;}
  if(S.flow===&#x27;proposal&#x27;&amp;&amp;action?.startsWith(&#x27;p-&#x27;)){proposalSubmit(action,f);return;}
  const err=(msg,ids=[])=&gt;{const box=f.querySelector(&#x27;[role=&quot;alert&quot;]&#x27;);box.textContent=msg;box.hidden=false;ids.forEach(id=&gt;f.querySelector(&#x27;#&#x27;+id)?.setAttribute(&#x27;aria-invalid&#x27;,&#x27;true&#x27;));f.querySelector(&#x27;[aria-invalid=&quot;true&quot;]&#x27;)?.focus();};
  f.querySelectorAll(&#x27;[aria-invalid]&#x27;).forEach(el=&gt;el.removeAttribute(&#x27;aria-invalid&#x27;));
@@ -2572,7 +2717,7 @@ root.addEventListener(&#x27;keydown&#x27;,e=&gt;{if(e.key===&#x27;Enter&#x27;&am
 window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{
  const p=e.detail?.globals?.widgetState?.privateContent;
  if(p?.writer===localWriter)return;
- if(!p||p.version!==2||![&#x27;mos&#x27;,&#x27;ep&#x27;,&#x27;orb&#x27;,&#x27;proposal&#x27;].includes(p.flow))return;
+ if(!p||p.version!==2||![&#x27;mos&#x27;,&#x27;ep&#x27;,&#x27;orb&#x27;,&#x27;proposal&#x27;,&#x27;proposal2&#x27;].includes(p.flow))return;
  if(p.flow===S.flow&amp;&amp;p.screen===S.screen&amp;&amp;!!p.repeat===S.repeat&amp;&amp;p.orgCase===S.orgCase)return;
  capture();S.flow=p.flow;S.repeat=!!p.repeat;S.orgCase=p.orgCase===&#x27;existing&#x27;?&#x27;existing&#x27;:&#x27;new&#x27;;S.screen=typeof p.screen===&#x27;string&#x27;?p.screen:&#x27;entry&#x27;;S.history=[];render();
 });

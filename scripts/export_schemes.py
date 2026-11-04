@@ -11,7 +11,7 @@ def attachment(slug):
     data=base64.b64encode((source/(slug+'.bpmn')).read_bytes()).decode('ascii')
     return f'data:application/octet-stream;base64,{data}'
 panels=[]
-for number,slug,title,description,steps in [
+processes=[
     ('01','organization-registration','Регистрация организации','Новую организацию подключает генеральный директор. Для существующей проверяется сохранённый доступ; приглашение самому гендиректору не требуется.',[
         'Войти или создать личный аккаунт.','Найти организацию по ИНН. Если компания уже подключена и доступ этого аккаунта подтверждён — открыть её кабинет. Если связь не подтверждена — гендиректор подтверждает полномочия УКЭП; сотрудник обращается за приглашением.','Подписать заявление электронной подписью генерального директора.','Дождаться проверки платформой. После подтверждения — открыть кабинет и при необходимости пригласить сотрудников. При отказе — проверить реквизиты и повторно подписать заявление либо завершить без подключения.'
     ]),
@@ -27,7 +27,14 @@ for number,slug,title,description,steps in [
     ('04','employee-mchd','Выдача полномочий и МЧД','Обычный доступ сотрудника уже предоставлен. Дополнительный путь для уже подключённого сотрудника. При новом подключении МЧД встроена в единый процесс.',[
         'Руководитель отмечает полномочия сотрудника чекбоксами.','Платформа формирует предварительный вид МЧД. Руководитель проверяет сотрудника и полномочия.','Руководитель подписывает МЧД электронной подписью. Выбор чекбоксов без подписи не выдаёт эти полномочия.','Сотрудник видит оформленные полномочия. МЧД не добавляет административные права в кабинете.'
     ]),
-]:
+]
+import sys
+v2="--v2" in sys.argv
+if v2:
+    from proposal_v2_diagrams import PANELS
+    processes=PANELS
+    destination=ROOT/"schemes-v2.html"
+for number,slug,title,description,steps in processes:
     svg=(source/(slug+'.svg')).read_text(encoding='utf-8')
     details='<div class=details><h3>Условия, данные и результаты</h3><ul>'+''.join('<li>'+escape(item)+'</li>' for item in DETAILS.get(slug,[]))+'</ul></div>' if slug in DETAILS else ''
     panels.append(f'''<section class="process" id="{slug}">
@@ -60,6 +67,17 @@ document.querySelectorAll('.process').forEach(section=>{
 });
 </script></body></html>'''
 html=html.replace('__VERSION__','v'+VERSION)
+if v2:
+    html=html.replace('Предлагаемый вариант — схемы регистрации','Предлагаемый вариант 2 — схемы регистрации').replace('Предлагаемый вариант ·','Предлагаемый вариант 2 ·')
+    html=html.replace('Как зарегистрировать организацию<br>и подключить сотрудника','Простой вход.<br>Проверки внутри сервисов')
+    html=html.replace('Четыре процесса с отдельными действиями человека и платформы.','Три процесса варианта 2: аккаунт, организация и сота ОССиГ.')
+    a=html.index('<nav aria-label="Разделы">');b=html.index('</nav>',a)+6
+    html=html[:a]+'<nav aria-label="Разделы"><a href="index.html">К прототипу</a><a href="schemes.html">Схемы варианта 1</a>'+''.join(f'<a href="#{slug}">{title}</a>' for _,slug,title,_,_ in processes)+'</nav>'+html[b:]
+    a=html.index('<footer>');b=html.index('</footer>',a)+9
+    html=html[:a]+'<footer><p>Предлагаемый вариант 2. Это проект процесса: email, mos.ru, проверки реестров, УКЭП и МЧД в интерфейсе имитируются. Требования подключения ОССиГ уточняются по соглашению и техническим условиям интеграции.</p><p>Всё встроено: SVG и скачиваемые BPMN. Файл можно переслать целиком.</p></footer>'+html[b:]
+    (ROOT/'web/schemes-v2.html').write_text(html,encoding='utf-8')
+else:
+    html=html.replace('<nav aria-label="Разделы">','<nav aria-label="Разделы"><a href="schemes-v2.html">Предлагаемый вариант 2 ↗</a>')
 destination.write_text(html,encoding='utf-8')
 print(str(destination.resolve()))
 print('Self-contained HTML: embedded SVG and BPMN, no external resources; bytes:',destination.stat().st_size)
