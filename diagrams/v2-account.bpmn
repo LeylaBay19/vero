@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="v2_account_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант 2 · аккаунт и приглашение" isExecutable="false">
-    <bpmn:documentation>Личный кабинет сразу после входа; связь с компанией и доступ к ОССиГ проверяются отдельно. Предлагаемый вариант; версия 1.7.0. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Личный кабинет сразу после входа; связь с компанией и доступ к ОССиГ проверяются отдельно. Предлагаемый вариант; версия 1.7.1. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
     <bpmn:documentation>Войти по email и коду либо через mos.ru. Ветка mos.ru по приглашению дополнительно подтверждает почту получателя; совпадение почт mos.ru и приглашения не требуется.
 При неверном коде повторить ввод. При отмене mos.ru вернуться ко входу. ИНН при обычном входе не запрашивается.
 Если приглашения нет, открыть личный кабинет с каталогом сервисов и личными черновиками.
