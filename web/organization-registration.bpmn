@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="organization_registration_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант · регистрация и доступ к организации" isExecutable="false">
-    <bpmn:documentation>Гендиректору подключённой организации приглашение не требуется: проверяется существующий доступ или подтверждаются полномочия. Предлагаемый вариант; версия 1.3.0. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Гендиректору подключённой организации приглашение не требуется: проверяется существующий доступ или подтверждаются полномочия. Предлагаемый вариант; версия 1.3.1. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
     <bpmn:documentation>Статус: предлагаемый процесс (to-be), а не исполняемая серверная система. Источники: docs/PRODUCT.md, PR-REG-ORG; src/proposal-flow.js.
 Участники: генеральный директор и платформа. Только гендиректор регистрирует юридическое лицо; администратор не приравнивается к гендиректору.
 Входные данные: личный аккаунт, ИНН, реквизиты организации и заявление с ЭП генерального директора. Личный аккаунт можно создать либо войти в существующий; в прототипе доступны email/пароль и демонстрация mos.ru.
@@ -17,6 +17,9 @@
         <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Auth</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>INN</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Applicant</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ContactOrg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ContactEnd</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Record</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Sign</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Cabinet</bpmn:flowNodeRef>
@@ -64,48 +67,60 @@
       <bpmn:outgoing>F7</bpmn:outgoing>
       <bpmn:outgoing>F8</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Record" name="Проверить реквизиты организации">
-      <bpmn:incoming>F4</bpmn:incoming>
+    <bpmn:exclusiveGateway id="Applicant" name="Вы гендиректор?">
       <bpmn:incoming>F8</bpmn:incoming>
       <bpmn:outgoing>F9</bpmn:outgoing>
-      <bpmn:incoming>F18</bpmn:incoming>
-    </bpmn:userTask>
-    <bpmn:userTask id="Sign" name="Подписать заявление УКЭП гендиректора">
-      <bpmn:incoming>F9</bpmn:incoming>
       <bpmn:outgoing>F10</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="Check" name="Проверить подпись, данные и полномочия гендиректора">
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="ContactOrg" name="Обратиться в организацию за приглашением">
       <bpmn:incoming>F10</bpmn:incoming>
       <bpmn:outgoing>F11</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="Valid" name="Проверка пройдена?">
+    </bpmn:userTask>
+    <bpmn:endEvent id="ContactEnd" name="Нужно приглашение">
       <bpmn:incoming>F11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Record" name="Проверить реквизиты организации">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:incoming>F9</bpmn:incoming>
+      <bpmn:incoming>F21</bpmn:incoming>
       <bpmn:outgoing>F12</bpmn:outgoing>
-      <bpmn:outgoing>F15</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="Ready" name="Новая компания: подключить; существующая: подтвердить доступ без дубля">
+    </bpmn:userTask>
+    <bpmn:userTask id="Sign" name="Подписать заявление УКЭП гендиректора">
       <bpmn:incoming>F12</bpmn:incoming>
       <bpmn:outgoing>F13</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="Cabinet" name="Открыть кабинет с подтверждёнными правами">
-      <bpmn:incoming>F7</bpmn:incoming>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Check" name="Проверить подпись, данные и полномочия гендиректора">
       <bpmn:incoming>F13</bpmn:incoming>
       <bpmn:outgoing>F14</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:endEvent id="End" name="Кабинет открыт">
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Valid" name="Проверка пройдена?">
       <bpmn:incoming>F14</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:serviceTask id="Reject" name="Сообщить причину; не выдавать доступ">
+      <bpmn:outgoing>F15</bpmn:outgoing>
+      <bpmn:outgoing>F18</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Ready" name="Новая компания: подключить; существующая: подтвердить доступ без дубля">
       <bpmn:incoming>F15</bpmn:incoming>
       <bpmn:outgoing>F16</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="Retry" name="Повторная подача?">
+    <bpmn:userTask id="Cabinet" name="Открыть кабинет с подтверждёнными правами">
+      <bpmn:incoming>F7</bpmn:incoming>
       <bpmn:incoming>F16</bpmn:incoming>
       <bpmn:outgoing>F17</bpmn:outgoing>
-      <bpmn:outgoing>F18</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="End" name="Кабинет открыт">
+      <bpmn:incoming>F17</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Reject" name="Сообщить причину; не выдавать доступ">
+      <bpmn:incoming>F18</bpmn:incoming>
+      <bpmn:outgoing>F19</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Retry" name="Повторная подача?">
+      <bpmn:incoming>F19</bpmn:incoming>
+      <bpmn:outgoing>F20</bpmn:outgoing>
+      <bpmn:outgoing>F21</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="RejectedEnd" name="Без нового доступа">
-      <bpmn:incoming>F17</bpmn:incoming>
+      <bpmn:incoming>F20</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="F0" sourceRef="Start" targetRef="Auth" />
     <bpmn:sequenceFlow id="F1" sourceRef="Auth" targetRef="INN" />
@@ -115,17 +130,20 @@
     <bpmn:sequenceFlow id="F5" sourceRef="Exists" targetRef="Access" name="Да" />
     <bpmn:sequenceFlow id="F6" sourceRef="Access" targetRef="Known" />
     <bpmn:sequenceFlow id="F7" sourceRef="Known" targetRef="Cabinet" name="Да: без новой регистрации" />
-    <bpmn:sequenceFlow id="F8" sourceRef="Known" targetRef="Record" name="Нет: подтвердить полномочия" />
-    <bpmn:sequenceFlow id="F9" sourceRef="Record" targetRef="Sign" />
-    <bpmn:sequenceFlow id="F10" sourceRef="Sign" targetRef="Check" />
-    <bpmn:sequenceFlow id="F11" sourceRef="Check" targetRef="Valid" />
-    <bpmn:sequenceFlow id="F12" sourceRef="Valid" targetRef="Ready" name="Да" />
-    <bpmn:sequenceFlow id="F13" sourceRef="Ready" targetRef="Cabinet" />
-    <bpmn:sequenceFlow id="F14" sourceRef="Cabinet" targetRef="End" />
-    <bpmn:sequenceFlow id="F15" sourceRef="Valid" targetRef="Reject" name="Нет" />
-    <bpmn:sequenceFlow id="F16" sourceRef="Reject" targetRef="Retry" />
-    <bpmn:sequenceFlow id="F17" sourceRef="Retry" targetRef="RejectedEnd" name="Нет" />
-    <bpmn:sequenceFlow id="F18" sourceRef="Retry" targetRef="Record" name="Да" />
+    <bpmn:sequenceFlow id="F8" sourceRef="Known" targetRef="Applicant" name="Нет" />
+    <bpmn:sequenceFlow id="F9" sourceRef="Applicant" targetRef="Record" name="Да" />
+    <bpmn:sequenceFlow id="F10" sourceRef="Applicant" targetRef="ContactOrg" name="Нет" />
+    <bpmn:sequenceFlow id="F11" sourceRef="ContactOrg" targetRef="ContactEnd" />
+    <bpmn:sequenceFlow id="F12" sourceRef="Record" targetRef="Sign" />
+    <bpmn:sequenceFlow id="F13" sourceRef="Sign" targetRef="Check" />
+    <bpmn:sequenceFlow id="F14" sourceRef="Check" targetRef="Valid" />
+    <bpmn:sequenceFlow id="F15" sourceRef="Valid" targetRef="Ready" name="Да" />
+    <bpmn:sequenceFlow id="F16" sourceRef="Ready" targetRef="Cabinet" />
+    <bpmn:sequenceFlow id="F17" sourceRef="Cabinet" targetRef="End" />
+    <bpmn:sequenceFlow id="F18" sourceRef="Valid" targetRef="Reject" name="Нет" />
+    <bpmn:sequenceFlow id="F19" sourceRef="Reject" targetRef="Retry" />
+    <bpmn:sequenceFlow id="F20" sourceRef="Retry" targetRef="RejectedEnd" name="Нет" />
+    <bpmn:sequenceFlow id="F21" sourceRef="Retry" targetRef="Record" name="Да" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="Diagram">
     <bpmndi:BPMNPlane id="Plane" bpmnElement="Process">
@@ -157,6 +175,21 @@
         <dc:Bounds x="1300" y="910" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1205" y="845" width="240" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Applicant_di" bpmnElement="Applicant">
+        <dc:Bounds x="1060" y="235" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="965" y="170" width="240" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ContactOrg_di" bpmnElement="ContactOrg">
+        <dc:Bounds x="330" y="380" width="270" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ContactEnd_di" bpmnElement="ContactEnd">
+        <dc:Bounds x="250" y="418" width="34" height="34" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="484" width="224" height="50" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Record_di" bpmnElement="Record">
@@ -227,10 +260,16 @@
         <di:waypoint x="1000" y="650" />
         <di:waypoint x="1410" y="650" />
         <di:waypoint x="1410" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1060" y="609" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
         <di:waypoint x="975" y="675" />
         <di:waypoint x="975" y="880" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="905" y="759" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6">
         <di:waypoint x="1220" y="935" />
@@ -242,57 +281,96 @@
         <di:waypoint x="1500" y="500" />
         <di:waypoint x="2400" y="500" />
         <di:waypoint x="2400" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1770" y="459" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F8_di" bpmnElement="F8">
         <di:waypoint x="1325" y="910" />
         <di:waypoint x="1325" y="825" />
         <di:waypoint x="1240" y="825" />
         <di:waypoint x="1240" y="260" />
-        <di:waypoint x="1280" y="260" />
+        <di:waypoint x="1110" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1170" y="764" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9">
+        <di:waypoint x="1085" y="235" />
+        <di:waypoint x="1085" y="170" />
+        <di:waypoint x="1410" y="170" />
+        <di:waypoint x="1410" y="210" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1120" y="134" width="220" height="32" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+        <di:waypoint x="1085" y="285" />
+        <di:waypoint x="1085" y="435" />
+        <di:waypoint x="600" y="435" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="920" y="394" width="220" height="32" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="330" y="435" />
+        <di:waypoint x="284" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
         <di:waypoint x="1540" y="260" />
         <di:waypoint x="1650" y="260" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
         <di:waypoint x="1785" y="310" />
         <di:waypoint x="1785" y="600" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
         <di:waypoint x="1920" y="655" />
         <di:waypoint x="2020" y="655" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
         <di:waypoint x="2070" y="655" />
         <di:waypoint x="2250" y="655" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2050" y="614" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
+      <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
         <di:waypoint x="2400" y="600" />
         <di:waypoint x="2400" y="310" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
+      <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17">
         <di:waypoint x="2550" y="260" />
         <di:waypoint x="2650" y="260" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
         <di:waypoint x="2045" y="680" />
         <di:waypoint x="2045" y="880" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1980" y="759" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
+      <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19">
         <di:waypoint x="2230" y="935" />
         <di:waypoint x="2320" y="935" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17">
+      <bpmndi:BPMNEdge id="F20_di" bpmnElement="F20">
         <di:waypoint x="2370" y="935" />
         <di:waypoint x="2630" y="935" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2380" y="894" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
+      <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21">
         <di:waypoint x="2345" y="960" />
         <di:waypoint x="2345" y="1130" />
         <di:waypoint x="1590" y="1130" />
         <di:waypoint x="1590" y="360" />
         <di:waypoint x="1410" y="360" />
         <di:waypoint x="1410" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2140" y="1084" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

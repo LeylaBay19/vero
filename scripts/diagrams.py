@@ -79,9 +79,9 @@ def diagram(slug,title,precondition,nodes,flows,lanes=None,size=(2300,1060)):
         if kind in ('startEvent','endEvent'):
             d.ellipse((x,y,x+w,y+h),fill='white',outline='#193936',width=5 if kind=='endEvent' else 2)
             svg.append(f'<circle cx="{x+w/2}" cy="{y+h/2}" r="{w/2}" fill="white" stroke="#193936" stroke-width="{5 if kind=="endEvent" else 2}"/>');text(x+w/2,y+h+55,label,18)
-        elif kind=='exclusiveGateway':
+        elif kind in ('exclusiveGateway','parallelGateway'):
             points=[(x+w/2,y),(x+w,y+h/2),(x+w/2,y+h),(x,y+h/2)];d.polygon(points,fill='#f0f6f4',outline='#193936',width=2)
-            svg.append('<polygon points="'+' '.join(f'{a},{b}' for a,b in points)+'" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>');text(x+w/2,y+h/2,'×',28);text(x+w/2,y-40,label,20)
+            svg.append('<polygon points="'+' '.join(f'{a},{b}' for a,b in points)+'" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>');text(x+w/2,y+h/2,'+' if kind=='parallelGateway' else '×',28);text(x+w/2,y-40,label,20)
         else:
             box(x,y,w,h,'#f0f6f4' if lane=='system' else '#ffffff')
             for task_size in range(23,16,-1):
@@ -111,19 +111,22 @@ def diagram(slug,title,precondition,nodes,flows,lanes=None,size=(2300,1060)):
     for nid,(kind,label,_,_) in nodes.items():
         obj=el(proc,'bpmn:'+kind,id=nid,name=label.replace('\n',' '))
         for i,(source,target,*_) in enumerate(flows):
-            if source==nid:el(obj,'bpmn:outgoing').text='F'+str(i)
             if target==nid:el(obj,'bpmn:incoming').text='F'+str(i)
+        for i,(source,target,*_) in enumerate(flows):
+            if source==nid:el(obj,'bpmn:outgoing').text='F'+str(i)
     for i,(source,target,_,label,_) in enumerate(flows):el(proc,'bpmn:sequenceFlow',id='F'+str(i),sourceRef=source,targetRef=target,**({'name':label} if label else {}))
     dia=el(defs,'bpmndi:BPMNDiagram',id='Diagram');plane=el(dia,'bpmndi:BPMNPlane',id='Plane',bpmnElement='Process')
     for nid,(_,label,box_,_) in nodes.items():
         shape=el(plane,'bpmndi:BPMNShape',id=nid+'_di',bpmnElement=nid);x,y,w,h=box_;el(shape,'dc:Bounds',x=x,y=y,width=w,height=h)
-        if nodes[nid][0] in ('exclusiveGateway','startEvent','endEvent'):
-            lab=el(shape,'bpmndi:BPMNLabel');el(lab,'dc:Bounds',x=max(35,x-95),y=y-65 if nodes[nid][0]=='exclusiveGateway' else y+h+32,width=w+190,height=50)
+        if nodes[nid][0] in ('exclusiveGateway','parallelGateway','startEvent','endEvent'):
+            lab=el(shape,'bpmndi:BPMNLabel');el(lab,'dc:Bounds',x=max(35,x-95),y=y-65 if nodes[nid][0] in ('exclusiveGateway','parallelGateway') else y+h+32,width=w+190,height=50)
     for lane,_,y,h in lanes:
         sh=el(plane,'bpmndi:BPMNShape',id=lane+'_di',bpmnElement=lane,isHorizontal='true');el(sh,'dc:Bounds',x=35,y=y,width=W-70,height=h)
-    for i,(_,_,points,_,_) in enumerate(flows):
+    for i,(_,_,points,flow_label,label_pos) in enumerate(flows):
         edge=el(plane,'bpmndi:BPMNEdge',id='F'+str(i)+'_di',bpmnElement='F'+str(i))
         for x,y in points:el(edge,'di:waypoint',x=x,y=y)
+        if flow_label and label_pos:
+            lab=el(edge,'bpmndi:BPMNLabel');el(lab,'dc:Bounds',x=label_pos[0]-110,y=label_pos[1]-16,width=220,height=32)
     E.indent(defs);E.ElementTree(defs).write(OUT/(slug+'.bpmn'),encoding='utf-8',xml_declaration=True)
     ids=[x.attrib['id'] for x in defs.iter() if 'id' in x.attrib];assert len(ids)==len(set(ids))
     for source,target,*_ in flows:assert source in nodes and target in nodes
@@ -142,6 +145,9 @@ diagram('organization-registration','Предлагаемый вариант · 
  'Exists':('exclusiveGateway','Уже подключена?',(770,625,50,50),'system'),
  'Access':('serviceTask','Проверить сохранённую связь аккаунта с организацией и права',(760,880,280,110),'system'),
  'Known':('exclusiveGateway','Доступ уже\nподтверждён?',(1120,910,50,50),'system'),
+ 'Applicant':('exclusiveGateway','Вы гендиректор?',(880,235,50,50),'person'),
+ 'ContactOrg':('userTask','Обратиться в организацию за приглашением',(150,380,270,110),'person'),
+ 'ContactEnd':('endEvent','Нужно приглашение',(70,418,34,34),'person'),
  'Record':('userTask','Проверить реквизиты организации',(1100,210,260,100),'person'),
  'Sign':('userTask','Подписать заявление УКЭП гендиректора',(1470,210,270,100),'person'),
  'Check':('serviceTask','Проверить подпись, данные и полномочия гендиректора',(1470,600,270,110),'system'),
@@ -159,7 +165,10 @@ diagram('organization-registration','Предлагаемый вариант · 
  ('Exists','Access',[(795,675),(795,880)],'Да',(835,775)),
  ('Access','Known',[(1040,935),(1120,935)],'',None),
  ('Known','Cabinet',[(1170,935),(1320,935),(1320,500),(2220,500),(2220,310)],'Да: без новой регистрации',(1700,475)),
- ('Known','Record',[(1145,910),(1145,825),(1060,825),(1060,260),(1100,260)],'Нет: подтвердить полномочия',(1160,780)),
+ ('Known','Applicant',[(1145,910),(1145,825),(1060,825),(1060,260),(930,260)],'Нет',(1100,780)),
+ ('Applicant','Record',[(905,235),(905,170),(1230,170),(1230,210)],'Да',(1050,150)),
+ ('Applicant','ContactOrg',[(905,285),(905,435),(420,435)],'Нет',(850,410)),
+ ('ContactOrg','ContactEnd',[(150,435),(104,435)],'',None),
  ('Record','Sign',[(1360,260),(1470,260)],'',None),('Sign','Check',[(1605,310),(1605,600)],'',None),
  ('Check','Valid',[(1740,655),(1840,655)],'',None),('Valid','Ready',[(1890,655),(2070,655)],'Да',(1980,630)),
  ('Ready','Cabinet',[(2220,600),(2220,310)],'',None),('Cabinet','End',[(2370,260),(2470,260)],'',None),
@@ -184,6 +193,9 @@ diagram('employee-invitation','Предлагаемый вариант · еди
  'Without':('userTask','Открыть кабинет без МЧД',(2240,210,260,110),'person'),
  'EndWithout':('endEvent','Подключён без МЧД',(2590,248,34,34),'person'),
  'Generate':('serviceTask','Сформировать МЧД по полномочиям приглашения; направить руководителю',(1900,790,290,120),'system'),
+ 'Parallel':('parallelGateway','Кабинет и МЧД',(2200,700,50,50),'system'),
+ 'PendingCabinet':('userTask','Работать в кабинете; полномочия МЧД пока не действуют',(2720,210,280,110),'person'),
+ 'PendingEnd':('endEvent','Обычный доступ активен',(3090,248,34,34),'person'),
  'Review':('userTask','Проверить сотрудника и сформированную МЧД',(1900,1080,290,110),'director'),
  'Sign':('userTask','Подписать МЧД УКЭП руководителя',(2280,1080,270,110),'director'),
  'Verify':('serviceTask','Проверить подпись и действительность МЧД',(2280,790,270,120),'system'),
@@ -207,7 +219,10 @@ diagram('employee-invitation','Предлагаемый вариант · еди
  ('Need','Without',[(2030,625),(2370,625),(2370,320)],'Нет',(2200,600)),
  ('Without','EndWithout',[(2500,265),(2590,265)],'',None),
  ('Need','Generate',[(2005,650),(2005,790)],'Да',(2050,720)),
- ('Generate','Review',[(2045,910),(2045,1080)],'',None),
+ ('Generate','Parallel',[(2190,850),(2260,850),(2260,675),(2225,675),(2225,700)],'',None),
+ ('Parallel','Review',[(2225,750),(2225,970),(2045,970),(2045,1080)],'',None),
+ ('Parallel','PendingCabinet',[(2250,725),(2860,725),(2860,320)],'',None),
+ ('PendingCabinet','PendingEnd',[(3000,265),(3090,265)],'',None),
  ('Review','Sign',[(2190,1135),(2280,1135)],'',None),
  ('Sign','Verify',[(2415,1080),(2415,910)],'',None),
  ('Verify','SignatureOK',[(2550,850),(2580,850)],'',None),
@@ -219,6 +234,8 @@ diagram('employee-invitation','Предлагаемый вариант · еди
 diagram('employee-mos-organization','Предлагаемый вариант · организация на mos.ru','Сотрудник добавлен только в организацию на mos.ru. На платформе членство и права ему ещё не назначены.',{
  'Start':('startEvent','Начало',(70,243,34,34),'person'),
  'Auth':('userTask','Войти через\nличный аккаунт mos.ru',(150,210,260,100),'person'),
+ 'AuthOK':('exclusiveGateway','Вход выполнен?',(455,235,50,50),'person'),
+ 'CancelAuth':('userTask','Вернуться к личному входу',(150,340,260,80),'person'),
  'Identity':('task','Получить\nрезультат входа',(450,520,260,100),'system'),
  'Organization':('task','Получить сведения\nоб организации',(800,520,260,100),'system'),
  'View':('userTask','Увидеть свою\nорганизацию',(1160,210,260,100),'person'),
@@ -226,25 +243,42 @@ diagram('employee-mos-organization','Предлагаемый вариант · 
  'Contact':('task','Показать обращение\nв организацию',(1560,520,260,100),'system'),
  'End':('endEvent','Нужно\nприглашение',(2110,553,34,34),'system'),
 },[
- ('Start','Auth',[(104,260),(150,260)],'',None),('Auth','Identity',[(280,310),(280,570),(450,570)],'',None),
+ ('Start','Auth',[(104,260),(150,260)],'',None),('Auth','AuthOK',[(410,260),(455,260)],'',None),
+ ('AuthOK','Identity',[(505,260),(580,260),(580,520)],'Да',(550,235)),
+ ('AuthOK','CancelAuth',[(480,285),(480,380),(410,380)],'Отмена',(535,345)),
+ ('CancelAuth','Auth',[(280,340),(280,310)],'',None),
  ('Identity','Organization',[(710,570),(800,570)],'',None),('Organization','View',[(930,520),(930,260),(1160,260)],'',None),
  ('View','Access',[(1290,310),(1290,520)],'',None),('Access','Contact',[(1420,570),(1560,570)],'Прав нет',(1490,546)),('Contact','End',[(1820,570),(2110,570)],'',None),
 ])
 
-diagram('employee-mchd','Предлагаемый вариант · выдача полномочий сотруднику','Организация и сотрудник уже подключены. Обычный доступ к кабинету не требует оформления этой МЧД.',{
+diagram('employee-mchd','Предлагаемый вариант · выдача полномочий сотруднику','Обычный доступ уже действует. Изменение полномочий требует нового формирования и подписи МЧД.',{
  'Start':('startEvent','Начало',(70,243,34,34),'person'),
- 'Powers':('userTask','Выбрать полномочия\nчекбоксами',(150,210,260,100),'person'),
- 'Generate':('task','Сформировать МЧД\nпо выбранным правам',(450,520,260,100),'system'),
- 'Review':('userTask','Проверить сотрудника\nи полномочия в МЧД',(850,210,260,100),'person'),
- 'Sign':('userTask','Подписать МЧД\nэлектронной подписью',(1240,210,260,100),'person'),
- 'Signed':('task','Сохранить\nподписанную МЧД',(1240,520,260,100),'system'),
- 'Ready':('task','Показать сотруднику\nоформленные полномочия',(1720,520,300,100),'system'),
- 'End':('endEvent','МЧД\nподписана',(2150,553,34,34),'system'),
+ 'Powers':('userTask','Выбрать непустой набор полномочий',(150,210,260,100),'person'),
+ 'Generate':('task','Сформировать МЧД по выбранным полномочиям',(450,520,260,100),'system'),
+ 'Review':('userTask','Проверить сотрудника и полномочия в МЧД',(850,210,260,100),'person'),
+ 'Choice':('exclusiveGateway','Данные верны?',(1180,235,50,50),'person'),
+ 'Sign':('userTask','Подписать МЧД УКЭП руководителя',(1390,210,280,100),'person'),
+ 'Verify':('task','Проверить получение и корректность подписи',(1390,520,280,100),'system'),
+ 'Valid':('exclusiveGateway','Подпись верна?',(1760,545,50,50),'system'),
+ 'Ready':('task','Сохранить МЧД и показать проверенные полномочия',(1950,520,280,100),'system'),
+ 'End':('endEvent','МЧД подписана',(2390,553,34,34),'system'),
+ 'Retry':('exclusiveGateway','Повторить?',(1760,755,50,50),'system'),
+ 'Deferred':('endEvent','Без новых полномочий; кабинет доступен',(2210,763,34,34),'system'),
 },[
- ('Start','Powers',[(104,260),(150,260)],'',None),('Powers','Generate',[(280,310),(280,570),(450,570)],'',None),
- ('Generate','Review',[(580,520),(580,260),(850,260)],'',None),('Review','Sign',[(1110,260),(1240,260)],'',None),
- ('Sign','Signed',[(1370,310),(1370,520)],'',None),('Signed','Ready',[(1500,570),(1720,570)],'',None),('Ready','End',[(2020,570),(2150,570)],'',None),
-])
+ ('Start','Powers',[(104,260),(150,260)],'',None),
+ ('Powers','Generate',[(280,310),(280,570),(450,570)],'',None),
+ ('Generate','Review',[(580,520),(580,260),(850,260)],'',None),
+ ('Review','Choice',[(1110,260),(1180,260)],'',None),
+ ('Choice','Sign',[(1230,260),(1390,260)],'Да',(1300,235)),
+ ('Choice','Powers',[(1205,285),(1205,380),(280,380),(280,310)],'Нет: изменить и сформировать заново',(790,355)),
+ ('Sign','Verify',[(1530,310),(1530,520)],'',None),
+ ('Verify','Valid',[(1670,570),(1760,570)],'',None),
+ ('Valid','Ready',[(1810,570),(1950,570)],'Да',(1880,545)),
+ ('Ready','End',[(2230,570),(2390,570)],'',None),
+ ('Valid','Retry',[(1785,595),(1785,755)],'Ошибка / нет УКЭП',(1930,680)),
+ ('Retry','Sign',[(1760,780),(1310,780),(1310,260),(1390,260)],'Да',(1460,755)),
+ ('Retry','Deferred',[(1810,780),(2210,780)],'Позже',(2000,755)),
+],size=(2600,1070))
 
 from proposal_v2_diagrams import generate
 generate(diagram)

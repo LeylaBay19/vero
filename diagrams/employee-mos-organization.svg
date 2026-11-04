@@ -9,8 +9,16 @@
 <text transform="translate(125.0 665.0) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193936">ПЛАТФОРМА</text>
 <polyline points="284,260 330,260" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="330,260 318.0,255.0 318.0,265.0" fill="#466760"/>
-<polyline points="460,310 460,570 630,570" fill="none" stroke="#466760" stroke-width="2"/>
-<polygon points="630,570 618.0,565.0 618.0,575.0" fill="#466760"/>
+<polyline points="590,260 635,260" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="635,260 623.0,255.0 623.0,265.0" fill="#466760"/>
+<polyline points="685,260 760,260 760,520" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="760,520 765.0,508.0 755.0,508.0" fill="#466760"/>
+<text x="730" y="235.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
+<polyline points="660,285 660,380 590,380" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="590,380 602.0,385.0 602.0,375.0" fill="#466760"/>
+<text x="715" y="345.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Отмена</text>
+<polyline points="460,340 460,310" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="460,310 455.0,322.0 465.0,322.0" fill="#466760"/>
 <polyline points="890,570 980,570" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="980,570 968.0,565.0 968.0,575.0" fill="#466760"/>
 <polyline points="1110,520 1110,260 1340,260" fill="none" stroke="#466760" stroke-width="2"/>
@@ -27,6 +35,12 @@
 <rect x="330" y="210" width="260" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
 <text x="460.0" y="244.82" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Войти через личный</text>
 <text x="460.0" y="275.18" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">аккаунт mos.ru</text>
+<polygon points="660.0,235 685,260.0 660.0,285 635,260.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
+<text x="660.0" y="260.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">×</text>
+<text x="660.0" y="195.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Вход выполнен?</text>
+<rect x="330" y="340" width="260" height="80" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<text x="460.0" y="364.82" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Вернуться к личному</text>
+<text x="460.0" y="395.18" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">входу</text>
 <rect x="630" y="520" width="260" height="100" rx="10" fill="#f0f6f4" stroke="#8ba6a1" stroke-width="2"/>
 <text x="760.0" y="554.82" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Получить результат</text>
 <text x="760.0" y="585.18" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">входа</text>
@@ -45,6 +59,6 @@
 <circle cx="2307.0" cy="570.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
 <text x="2307.0" y="630.12" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Нужно</text>
 <text x="2307.0" y="653.88" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">приглашение</text>
-<text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.3.0 · интерфейс и BPMN одной версии</text>
+<text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.3.1 · интерфейс и BPMN одной версии</text>
 <text x="35" y="986.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Получение организации из mos.ru — гипотеза интеграции, не подтверждённая документами Тринити.</text>
 </svg>

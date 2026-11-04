@@ -62,7 +62,7 @@ function v2Render(){
  if(q==='invalid')body=wrap('Приглашение недоступно',`<p>Срок истёк или приглашение отозвано. Попросите отправить новое. Доступ к организации не предоставлен.</p>${v2Button('Перейти к обычному входу','normal-login')}`);
  if(!body){V2.screen=V2.authenticated?'home':'login';return v2Render();}
  pane.innerHTML=body+`<div class="ap-error" role="alert" hidden></div>`;
- enhance();v2Journey();root.querySelector('.ap-brand-mark').textContent='05';root.querySelector('#ap-demo').hidden=true;
+ enhance();v2Journey();root.querySelector('.ap-brand-mark').textContent='05';root.querySelector('#ap-demo').hidden=!pane.querySelector('form');
 }
 function v2Outcome(){return root.querySelector('#ap-v2-outcome').value;}
 function v2Action(action){
@@ -119,4 +119,19 @@ function v2Submit(action,f){
  if(action==='v2-mchd'){if(!V2.member||!V2.role)return;if(!v('v2-mchd-id'))return v2Error('Укажите номер МЧД.');if(v2Outcome()!=='success')return v2Error('МЧД не подходит, истекла или отозвана. Проверьте данные либо оформите новую.');V2.mchd='valid';return v2Go('service-check');}
  if(action==='v2-draft'){if(!v('v2-draft'))return v2Error('Опишите потребность.');V2.draft=v('v2-draft');v2Error('Черновик сохранён в текущем сеансе.');return;}
  if(action==='v2-invite'){if(!V2.authority)return;if(!v('v2-person')||!validEmail(v('v2-invite-email')))return v2Error('Укажите имя и корректный email сотрудника.');V2.invitee=v('v2-person');V2.inviteEmail=v('v2-invite-email');return v2Go('invite-sent');}
+}
+
+function v2Autofill(){
+ const examples={
+  'v2-email':V2.path==='invite'?'employee@example.test':'ivan@example.test',
+  'v2-code':'123456','v2-inn':'0000000000','v2-person':'Анна Петрова',
+  'v2-invite-email':'anna@example.test','v2-draft':'Песок строительный, 20 м³',
+  'v2-mchd-id':'00000000-0000-4000-8000-000000000001'
+ };
+ pane.querySelectorAll('form input:not([readonly]):not([disabled])').forEach(input=>{
+  if(!Object.hasOwn(examples,input.id)||input.value.trim())return;
+  input.value=examples[input.id];input.removeAttribute('aria-invalid');
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+ });
+ root.querySelector('#ap-demo-message').textContent='Пример заполнен · согласия и отправка — вручную';
 }

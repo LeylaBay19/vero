@@ -1886,7 +1886,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
 &lt;div id=&quot;auth-flow-prototype&quot; aria-label=&quot;Прототип регистрации и входа: Тринити и Орбита&quot;&gt;
   &lt;div class=&quot;ap-bench&quot;&gt;
-    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.3.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.3.1&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&quot;ap-scenarios&quot; aria-label=&quot;Выбор сценария&quot;&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;mos&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;01 · Сотрудник&lt;/span&gt;&lt;strong&gt;Тринити · mos.ru&lt;/strong&gt;&lt;span&gt;Личный вход и доверенность&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;ep&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;02 · Руководитель&lt;/span&gt;&lt;strong&gt;Тринити · УКЭП&lt;/strong&gt;&lt;span&gt;Подключение организации&lt;/span&gt;&lt;/button&gt;
@@ -2503,7 +2503,7 @@ function v2Render(){
  if(q===&#x27;invalid&#x27;)body=wrap(&#x27;Приглашение недоступно&#x27;,`&lt;p&gt;Срок истёк или приглашение отозвано. Попросите отправить новое. Доступ к организации не предоставлен.&lt;/p&gt;${v2Button(&#x27;Перейти к обычному входу&#x27;,&#x27;normal-login&#x27;)}`);
  if(!body){V2.screen=V2.authenticated?&#x27;home&#x27;:&#x27;login&#x27;;return v2Render();}
  pane.innerHTML=body+`&lt;div class=&quot;ap-error&quot; role=&quot;alert&quot; hidden&gt;&lt;/div&gt;`;
- enhance();v2Journey();root.querySelector(&#x27;.ap-brand-mark&#x27;).textContent=&#x27;05&#x27;;root.querySelector(&#x27;#ap-demo&#x27;).hidden=true;
+ enhance();v2Journey();root.querySelector(&#x27;.ap-brand-mark&#x27;).textContent=&#x27;05&#x27;;root.querySelector(&#x27;#ap-demo&#x27;).hidden=!pane.querySelector(&#x27;form&#x27;);
 }
 function v2Outcome(){return root.querySelector(&#x27;#ap-v2-outcome&#x27;).value;}
 function v2Action(action){
@@ -2560,6 +2560,21 @@ function v2Submit(action,f){
  if(action===&#x27;v2-mchd&#x27;){if(!V2.member||!V2.role)return;if(!v(&#x27;v2-mchd-id&#x27;))return v2Error(&#x27;Укажите номер МЧД.&#x27;);if(v2Outcome()!==&#x27;success&#x27;)return v2Error(&#x27;МЧД не подходит, истекла или отозвана. Проверьте данные либо оформите новую.&#x27;);V2.mchd=&#x27;valid&#x27;;return v2Go(&#x27;service-check&#x27;);}
  if(action===&#x27;v2-draft&#x27;){if(!v(&#x27;v2-draft&#x27;))return v2Error(&#x27;Опишите потребность.&#x27;);V2.draft=v(&#x27;v2-draft&#x27;);v2Error(&#x27;Черновик сохранён в текущем сеансе.&#x27;);return;}
  if(action===&#x27;v2-invite&#x27;){if(!V2.authority)return;if(!v(&#x27;v2-person&#x27;)||!validEmail(v(&#x27;v2-invite-email&#x27;)))return v2Error(&#x27;Укажите имя и корректный email сотрудника.&#x27;);V2.invitee=v(&#x27;v2-person&#x27;);V2.inviteEmail=v(&#x27;v2-invite-email&#x27;);return v2Go(&#x27;invite-sent&#x27;);}
+}
+
+function v2Autofill(){
+ const examples={
+  &#x27;v2-email&#x27;:V2.path===&#x27;invite&#x27;?&#x27;employee@example.test&#x27;:&#x27;ivan@example.test&#x27;,
+  &#x27;v2-code&#x27;:&#x27;123456&#x27;,&#x27;v2-inn&#x27;:&#x27;0000000000&#x27;,&#x27;v2-person&#x27;:&#x27;Анна Петрова&#x27;,
+  &#x27;v2-invite-email&#x27;:&#x27;anna@example.test&#x27;,&#x27;v2-draft&#x27;:&#x27;Песок строительный, 20 м³&#x27;,
+  &#x27;v2-mchd-id&#x27;:&#x27;00000000-0000-4000-8000-000000000001&#x27;
+ };
+ pane.querySelectorAll(&#x27;form input:not([readonly]):not([disabled])&#x27;).forEach(input=&gt;{
+  if(!Object.hasOwn(examples,input.id)||input.value.trim())return;
+  input.value=examples[input.id];input.removeAttribute(&#x27;aria-invalid&#x27;);
+  input.dispatchEvent(new Event(&#x27;input&#x27;,{bubbles:true}));
+ });
+ root.querySelector(&#x27;#ap-demo-message&#x27;).textContent=&#x27;Пример заполнен · согласия и отправка — вручную&#x27;;
 }
 
 function render(){
@@ -2653,6 +2668,7 @@ function render(){
 root.addEventListener(&#x27;click&#x27;,e=&gt;{
  const btn=e.target.closest(&#x27;button&#x27;);if(!btn||btn.disabled)return;
  if(btn.type===&#x27;submit&#x27;&amp;&amp;btn.closest(&#x27;form[data-form]&#x27;)){e.preventDefault();btn.closest(&#x27;form&#x27;).dispatchEvent(new Event(&#x27;submit&#x27;,{bubbles:true,cancelable:true}));return;}
+ if(S.flow===&#x27;proposal2&#x27;&amp;&amp;btn.id===&#x27;ap-demo&#x27;){v2Autofill();return;}
  if(btn.dataset.v2Action){v2Action(btn.dataset.v2Action);return;}
  if(S.flow===&#x27;proposal2&#x27;&amp;&amp;btn.id===&#x27;ap-back&#x27;){if(V2.history.length){V2.screen=V2.history.pop();render();}return;}
  if(btn.dataset.pAction){proposalAction(btn.dataset.pAction);return;}

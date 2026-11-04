@@ -19,9 +19,14 @@
 <polyline points="1085,535 1085,300" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="1085,300 1080.0,312.0 1090.0,312.0" fill="#466760"/>
 <text x="1130" y="420.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Нет</text>
-<polyline points="880,250 610,250" fill="none" stroke="#466760" stroke-width="2"/>
-<polygon points="610,250 622.0,255.0 622.0,245.0" fill="#466760"/>
-<text x="740" y="225.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Повторить</text>
+<polyline points="1160,250 1230,250" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1230,250 1218.0,245.0 1218.0,255.0" fill="#466760"/>
+<polyline points="1255,225 1255,160 470,160 470,200" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="470,200 475.0,188.0 465.0,188.0" fill="#466760"/>
+<text x="740" y="145.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
+<polyline points="1255,275 1255,330 1267,330 1267,365" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1267,365 1272.0,353.0 1262.0,353.0" fill="#466760"/>
+<text x="1320" y="320.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Позже</text>
 <polyline points="1110,560 1400,560" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="1400,560 1388.0,555.0 1388.0,565.0" fill="#466760"/>
 <text x="1230" y="535.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
@@ -38,9 +43,9 @@
 <text x="1820" y="395.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
 <polyline points="1890,560 2010,560" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2010,560 1998.0,555.0 1998.0,565.0" fill="#466760"/>
-<polyline points="2035,535 2035,360 3360,360 3360,510" fill="none" stroke="#466760" stroke-width="2"/>
-<polygon points="3360,510 3365.0,498.0 3355.0,498.0" fill="#466760"/>
-<text x="2640" y="335.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
+<polyline points="2035,585 2035,925 640,925 640,570 680,570" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="680,570 668.0,565.0 668.0,575.0" fill="#466760"/>
+<text x="1210" y="900.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да: повторно проверить готовность</text>
 <polyline points="2060,560 2130,560 2130,780 2170,780" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2170,780 2158.0,775.0 2158.0,785.0" fill="#466760"/>
 <text x="2150" y="695.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Нет</text>
@@ -53,12 +58,18 @@
 <polygon points="2690,830 2685.0,842.0 2695.0,842.0" fill="#466760"/>
 <polyline points="2830,780 2940,780" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2940,780 2928.0,775.0 2928.0,785.0" fill="#466760"/>
-<polyline points="2965,805 2965,1170 2690,1170 2690,1120" fill="none" stroke="#466760" stroke-width="2"/>
+<polyline points="2965,805 2965,1070 3080,1070" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="3080,1070 3068.0,1065.0 3068.0,1075.0" fill="#466760"/>
+<text x="3160" y="865.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Ошибка / нет УКЭП</text>
+<polyline points="3105,1095 3105,1170 2690,1170 2690,1120" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2690,1120 2685.0,1132.0 2695.0,1132.0" fill="#466760"/>
-<text x="3230" y="1000.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Нет / нет УКЭП: повторить позже</text>
-<polyline points="2965,755 2965,900 610,900 610,560 680,560" fill="none" stroke="#466760" stroke-width="2"/>
+<text x="2870" y="1145.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
+<polyline points="3130,1070 3480,1070" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="3480,1070 3468.0,1065.0 3468.0,1075.0" fill="#466760"/>
+<text x="3300" y="1045.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Позже</text>
+<polyline points="2965,755 2965,880 610,880 610,560 680,560" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="680,560 668.0,555.0 668.0,565.0" fill="#466760"/>
-<text x="1680" y="875.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да: повторить проверку готовности</text>
+<text x="1680" y="850.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да: повторить проверку готовности</text>
 <polyline points="3500,560 3610,560" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="3610,560 3598.0,555.0 3598.0,565.0" fill="#466760"/>
 <circle cx="267.0" cy="250.0" r="17.0" fill="white" stroke="#193936" stroke-width="2"/>
@@ -78,6 +89,16 @@
 <text x="1020.0" y="219.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Уточнить сведения;</text>
 <text x="1020.0" y="250.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">повторить или</text>
 <text x="1020.0" y="280.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">вернуться в кабинет</text>
+<polygon points="1255.0,225 1280,250.0 1255.0,275 1230,250.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
+<text x="1255.0" y="250.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">×</text>
+<text x="1255.0" y="185.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Повторить?</text>
+<circle cx="1267.0" cy="382.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
+<text x="1267.0" y="454.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Личный кабинет доступен</text>
+<polygon points="3105.0,1045 3130,1070.0 3105.0,1095 3080,1070.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
+<text x="3105.0" y="1070.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">×</text>
+<text x="3105.0" y="1005.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Повторить подпись?</text>
+<circle cx="3497.0" cy="1070.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
+<text x="3497.0" y="1142.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Кабинет работает; МЧД ожидает</text>
 <polygon points="1425.0,535 1450,560.0 1425.0,585 1400,560.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
 <text x="1425.0" y="560.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">×</text>
 <text x="1425.0" y="495.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Полномочия есть?</text>
@@ -116,6 +137,6 @@
 <text x="3360.0" y="590.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">операции ОССиГ</text>
 <circle cx="3627.0" cy="560.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
 <text x="3627.0" y="632.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Сервис доступен</text>
-<text x="35" y="1293.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.3.0 · интерфейс и BPMN одной версии</text>
+<text x="35" y="1293.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.3.1 · интерфейс и BPMN одной версии</text>
 <text x="35" y="1336.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Вариант 2: проверки выполняются по задаче; интеграции и юридические требования требуют уточнения.</text>
 </svg>

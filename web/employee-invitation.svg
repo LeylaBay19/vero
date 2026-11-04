@@ -49,8 +49,14 @@
 <polyline points="2185,650 2185,790" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2185,790 2190.0,778.0 2180.0,778.0" fill="#466760"/>
 <text x="2230" y="720.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
-<polyline points="2225,910 2225,1080" fill="none" stroke="#466760" stroke-width="2"/>
+<polyline points="2370,850 2440,850 2440,675 2405,675 2405,700" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="2405,700 2410.0,688.0 2400.0,688.0" fill="#466760"/>
+<polyline points="2405,750 2405,970 2225,970 2225,1080" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2225,1080 2230.0,1068.0 2220.0,1068.0" fill="#466760"/>
+<polyline points="2430,725 3040,725 3040,320" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="3040,320 3035.0,332.0 3045.0,332.0" fill="#466760"/>
+<polyline points="3180,265 3270,265" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="3270,265 3258.0,260.0 3258.0,270.0" fill="#466760"/>
 <polyline points="2370,1135 2460,1135" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2460,1135 2448.0,1130.0 2448.0,1140.0" fill="#466760"/>
 <polyline points="2595,1080 2595,910" fill="none" stroke="#466760" stroke-width="2"/>
@@ -121,6 +127,15 @@
 <text x="2225.0" y="836.14" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">полномочиям</text>
 <text x="2225.0" y="863.86" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">приглашения; направить</text>
 <text x="2225.0" y="891.58" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">руководителю</text>
+<polygon points="2405.0,700 2430,725.0 2405.0,750 2380,725.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
+<text x="2405.0" y="725.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">+</text>
+<text x="2405.0" y="660.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Кабинет и МЧД</text>
+<rect x="2900" y="210" width="280" height="110" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<text x="3040.0" y="234.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Работать в кабинете;</text>
+<text x="3040.0" y="265.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">полномочия МЧД пока</text>
+<text x="3040.0" y="295.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">не действуют</text>
+<circle cx="3287.0" cy="265.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
+<text x="3287.0" y="337.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Обычный доступ активен</text>
 <rect x="2080" y="1080" width="290" height="110" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
 <text x="2225.0" y="1104.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Проверить сотрудника</text>
 <text x="2225.0" y="1135.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">и сформированную</text>
@@ -141,6 +156,6 @@
 <text x="2995.0" y="879.04" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#193936">только полномочия МЧД</text>
 <circle cx="3287.0" cy="845.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
 <text x="3287.0" y="917.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">МЧД действует</text>
-<text x="35" y="1363.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.3.0 · интерфейс и BPMN одной версии</text>
+<text x="35" y="1363.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.3.1 · интерфейс и BPMN одной версии</text>
 <text x="35" y="1406.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Единый процесс: организация из приглашения; обычный доступ после принятия, полномочия МЧД — после подписи руководителя.</text>
 </svg>

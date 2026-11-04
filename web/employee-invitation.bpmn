@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="employee_invitation_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант · единое подключение сотрудника" isExecutable="false">
-    <bpmn:documentation>Приглашение на любую почту → mos.ru без повторного ИНН → принятие → МЧД руководителю, если нужна. Предлагаемый вариант; версия 1.3.0. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Приглашение на любую почту → mos.ru без повторного ИНН → принятие → МЧД руководителю, если нужна. Предлагаемый вариант; версия 1.3.1. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
     <bpmn:documentation>Предлагаемый процесс ВЕРО по решению пользователя от 04.11.2026. Источники: docs/PRODUCT.md, PR-REG-EMP; src/proposal-flow.js. Это не описание интеграции Тринити.
 Предусловие: организация проверена. Руководитель или уполномоченный администратор создаёт приглашение с ФИО, любой личной/корпоративной почтой, организацией, ИНН, обычными правами и необязательными полномочиями МЧД.
 Полномочия выбираются один раз при приглашении. Сотрудник входит через mos.ru. Почта mos.ru может отличаться от почты приглашения. Организация и ИНН восстанавливаются из сохранённого приглашения; повторного ввода ИНН нет.
@@ -11,7 +11,8 @@
 Руководитель проверяет сотрудника и МЧД, при необходимости исправляет полномочия и подписывает своей УКЭП. Сотрудник МЧД не подписывает. После успешной проверки подписи и действительности МЧД соответствующие полномочия активируются. При ошибке они недоступны; подпись можно повторить.
 МЧД не выдаёт обычные административные права и не присваивает статус гендиректора. Подписывать документы сотрудник далее будет собственной УКЭП в пределах выданных полномочий.
 Без приглашения сотрудник обращается в организацию. Членство на mos.ru само по себе не выдаёт местные права. Получение организации из mos.ru в отдельном кейсе остаётся гипотезой.
-Стенд имитирует mos.ru, доставку, создание МЧД и подпись; хранит контекст в памяти текущего сеанса. Реальная интеграция, привязка личности и почты, срок и отзыв приглашения, реестр МЧД не реализованы. Пересланная ссылка не должна автоматически давать полномочия в промышленной системе.</bpmn:documentation>
+Стенд имитирует mos.ru, доставку, создание МЧД и подпись; хранит контекст в памяти текущего сеанса. Реальная интеграция, привязка личности и почты, срок и отзыв приглашения, реестр МЧД не реализованы. Пересланная ссылка не должна автоматически давать полномочия в промышленной системе.
+После направления МЧД руководителю ветки независимы: сотрудник уже работает с обычным доступом, а полномочия МЧД ожидают проверки подписи. Параллельный шлюз не требует ожидать подпись для входа в кабинет.</bpmn:documentation>
     <bpmn:laneSet id="Lanes">
       <bpmn:lane id="person" name="СОТРУДНИК">
         <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
@@ -21,6 +22,8 @@
         <bpmn:flowNodeRef>Accept</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Without</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndWithout</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PendingCabinet</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>PendingEnd</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="system" name="ПЛАТФОРМА">
         <bpmn:flowNodeRef>AuthOK</bpmn:flowNodeRef>
@@ -32,6 +35,7 @@
         <bpmn:flowNodeRef>Grant</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Need</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Generate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Parallel</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Verify</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>SignatureOK</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activate</bpmn:flowNodeRef>
@@ -47,8 +51,8 @@
     </bpmn:startEvent>
     <bpmn:userTask id="Open" name="Открыть приглашение на личной или рабочей почте">
       <bpmn:incoming>F0</bpmn:incoming>
-      <bpmn:outgoing>F1</bpmn:outgoing>
       <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F1</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Mos" name="Войти через свой аккаунт mos.ru">
       <bpmn:incoming>F1</bpmn:incoming>
@@ -107,30 +111,42 @@
       <bpmn:incoming>F15</bpmn:incoming>
       <bpmn:outgoing>F16</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Review" name="Проверить сотрудника и сформированную МЧД">
+    <bpmn:parallelGateway id="Parallel" name="Кабинет и МЧД">
       <bpmn:incoming>F16</bpmn:incoming>
       <bpmn:outgoing>F17</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:userTask id="Sign" name="Подписать МЧД УКЭП руководителя">
-      <bpmn:incoming>F17</bpmn:incoming>
       <bpmn:outgoing>F18</bpmn:outgoing>
-      <bpmn:incoming>F21</bpmn:incoming>
-    </bpmn:userTask>
-    <bpmn:serviceTask id="Verify" name="Проверить подпись и действительность МЧД">
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="PendingCabinet" name="Работать в кабинете; полномочия МЧД пока не действуют">
       <bpmn:incoming>F18</bpmn:incoming>
       <bpmn:outgoing>F19</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:exclusiveGateway id="SignatureOK" name="Подпись верна?">
+    </bpmn:userTask>
+    <bpmn:endEvent id="PendingEnd" name="Обычный доступ активен">
       <bpmn:incoming>F19</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Review" name="Проверить сотрудника и сформированную МЧД">
+      <bpmn:incoming>F17</bpmn:incoming>
       <bpmn:outgoing>F20</bpmn:outgoing>
-      <bpmn:outgoing>F21</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="Activate" name="После успешной проверки активировать только полномочия МЧД">
+    </bpmn:userTask>
+    <bpmn:userTask id="Sign" name="Подписать МЧД УКЭП руководителя">
       <bpmn:incoming>F20</bpmn:incoming>
+      <bpmn:incoming>F24</bpmn:incoming>
+      <bpmn:outgoing>F21</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Verify" name="Проверить подпись и действительность МЧД">
+      <bpmn:incoming>F21</bpmn:incoming>
       <bpmn:outgoing>F22</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:endEvent id="End" name="МЧД действует">
+    <bpmn:exclusiveGateway id="SignatureOK" name="Подпись верна?">
       <bpmn:incoming>F22</bpmn:incoming>
+      <bpmn:outgoing>F23</bpmn:outgoing>
+      <bpmn:outgoing>F24</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Activate" name="После успешной проверки активировать только полномочия МЧД">
+      <bpmn:incoming>F23</bpmn:incoming>
+      <bpmn:outgoing>F25</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="End" name="МЧД действует">
+      <bpmn:incoming>F25</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="F0" sourceRef="Start" targetRef="Open" />
     <bpmn:sequenceFlow id="F1" sourceRef="Open" targetRef="Mos" />
@@ -148,13 +164,16 @@
     <bpmn:sequenceFlow id="F13" sourceRef="Need" targetRef="Without" name="Нет" />
     <bpmn:sequenceFlow id="F14" sourceRef="Without" targetRef="EndWithout" />
     <bpmn:sequenceFlow id="F15" sourceRef="Need" targetRef="Generate" name="Да" />
-    <bpmn:sequenceFlow id="F16" sourceRef="Generate" targetRef="Review" />
-    <bpmn:sequenceFlow id="F17" sourceRef="Review" targetRef="Sign" />
-    <bpmn:sequenceFlow id="F18" sourceRef="Sign" targetRef="Verify" />
-    <bpmn:sequenceFlow id="F19" sourceRef="Verify" targetRef="SignatureOK" />
-    <bpmn:sequenceFlow id="F20" sourceRef="SignatureOK" targetRef="Activate" name="Да" />
-    <bpmn:sequenceFlow id="F21" sourceRef="SignatureOK" targetRef="Sign" name="Ошибка: исправить и повторить" />
-    <bpmn:sequenceFlow id="F22" sourceRef="Activate" targetRef="End" />
+    <bpmn:sequenceFlow id="F16" sourceRef="Generate" targetRef="Parallel" />
+    <bpmn:sequenceFlow id="F17" sourceRef="Parallel" targetRef="Review" />
+    <bpmn:sequenceFlow id="F18" sourceRef="Parallel" targetRef="PendingCabinet" />
+    <bpmn:sequenceFlow id="F19" sourceRef="PendingCabinet" targetRef="PendingEnd" />
+    <bpmn:sequenceFlow id="F20" sourceRef="Review" targetRef="Sign" />
+    <bpmn:sequenceFlow id="F21" sourceRef="Sign" targetRef="Verify" />
+    <bpmn:sequenceFlow id="F22" sourceRef="Verify" targetRef="SignatureOK" />
+    <bpmn:sequenceFlow id="F23" sourceRef="SignatureOK" targetRef="Activate" name="Да" />
+    <bpmn:sequenceFlow id="F24" sourceRef="SignatureOK" targetRef="Sign" name="Ошибка: исправить и повторить" />
+    <bpmn:sequenceFlow id="F25" sourceRef="Activate" targetRef="End" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="Diagram">
     <bpmndi:BPMNPlane id="Plane" bpmnElement="Process">
@@ -224,6 +243,21 @@
       <bpmndi:BPMNShape id="Generate_di" bpmnElement="Generate">
         <dc:Bounds x="2080" y="790" width="290" height="120" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Parallel_di" bpmnElement="Parallel">
+        <dc:Bounds x="2380" y="700" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2285" y="635" width="240" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PendingCabinet_di" bpmnElement="PendingCabinet">
+        <dc:Bounds x="2900" y="210" width="280" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="PendingEnd_di" bpmnElement="PendingEnd">
+        <dc:Bounds x="3270" y="248" width="34" height="34" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3175" y="314" width="224" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Review_di" bpmnElement="Review">
         <dc:Bounds x="2080" y="1080" width="290" height="110" />
       </bpmndi:BPMNShape>
@@ -274,16 +308,25 @@
         <di:waypoint x="905" y="625" />
         <di:waypoint x="905" y="265" />
         <di:waypoint x="940" y="265" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="770" y="509" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4">
         <di:waypoint x="1065" y="320" />
         <di:waypoint x="1065" y="390" />
         <di:waypoint x="450" y="390" />
         <di:waypoint x="450" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="680" y="349" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
         <di:waypoint x="775" y="625" />
         <di:waypoint x="980" y="625" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="805" y="584" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F6_di" bpmnElement="F6">
         <di:waypoint x="1240" y="625" />
@@ -302,6 +345,9 @@
       <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9">
         <di:waypoint x="1665" y="650" />
         <di:waypoint x="1665" y="790" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1600" y="704" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
         <di:waypoint x="1890" y="845" />
@@ -310,6 +356,9 @@
       <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
         <di:waypoint x="1690" y="625" />
         <di:waypoint x="1790" y="625" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1630" y="584" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
         <di:waypoint x="2070" y="625" />
@@ -319,6 +368,9 @@
         <di:waypoint x="2210" y="625" />
         <di:waypoint x="2550" y="625" />
         <di:waypoint x="2550" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2270" y="584" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
         <di:waypoint x="2680" y="265" />
@@ -327,34 +379,61 @@
       <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
         <di:waypoint x="2185" y="650" />
         <di:waypoint x="2185" y="790" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2120" y="704" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
-        <di:waypoint x="2225" y="910" />
-        <di:waypoint x="2225" y="1080" />
+        <di:waypoint x="2370" y="850" />
+        <di:waypoint x="2440" y="850" />
+        <di:waypoint x="2440" y="675" />
+        <di:waypoint x="2405" y="675" />
+        <di:waypoint x="2405" y="700" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17">
+        <di:waypoint x="2405" y="750" />
+        <di:waypoint x="2405" y="970" />
+        <di:waypoint x="2225" y="970" />
+        <di:waypoint x="2225" y="1080" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
+        <di:waypoint x="2430" y="725" />
+        <di:waypoint x="3040" y="725" />
+        <di:waypoint x="3040" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19">
+        <di:waypoint x="3180" y="265" />
+        <di:waypoint x="3270" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F20_di" bpmnElement="F20">
         <di:waypoint x="2370" y="1135" />
         <di:waypoint x="2460" y="1135" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
+      <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21">
         <di:waypoint x="2595" y="1080" />
         <di:waypoint x="2595" y="910" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19">
+      <bpmndi:BPMNEdge id="F22_di" bpmnElement="F22">
         <di:waypoint x="2730" y="850" />
         <di:waypoint x="2760" y="850" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F20_di" bpmnElement="F20">
+      <bpmndi:BPMNEdge id="F23_di" bpmnElement="F23">
         <di:waypoint x="2810" y="850" />
         <di:waypoint x="2850" y="850" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2720" y="859" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21">
+      <bpmndi:BPMNEdge id="F24_di" bpmnElement="F24">
         <di:waypoint x="2785" y="875" />
         <di:waypoint x="2785" y="1240" />
         <di:waypoint x="2595" y="1240" />
         <di:waypoint x="2595" y="1190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2910" y="999" width="220" height="32" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F22_di" bpmnElement="F22">
+      <bpmndi:BPMNEdge id="F25_di" bpmnElement="F25">
         <di:waypoint x="3140" y="845" />
         <di:waypoint x="3270" y="845" />
       </bpmndi:BPMNEdge>
