@@ -1,3 +1,11 @@
+# v1.9.0 — реестр доверенностей и один пункт организаций
+
+Standalone source src/platform-entry.html. В меню оставлен my-organizations с подписью «Организации», отдельный organization-nav удалён; internal organization screen остаётся деталями компании. Parent active и кнопка назад сохранены. Старые сравнения не переименовываются.
+
+Новый powers-screen: received/issued/signing, фильтр компании, native dialog просмотра, даты/статус/полномочия/представитель/основание. availablePowers проверяет membership и recipientEmail либо canIssuePower. canIssuePower=проверенный director либо явный mayIssuePoa у employee; сам выбор контекста/обычное приглашение это не даёт. Новая bench authorized-fixture иллюстрирует проверенное право выдачи без menu команды/финансов. Реестр глобальный по уже назначенным компаниям, header selector на нём скрыт, локальный фильтр не назначает права.
+
+Данные реестра — отдельные demo fixtures preconnectedemployee/director/multi/authorized. Новый invite, queuedperson и одобрение компании не создают МЧД. Реального XML/API/выпуска/подписи/отзыва нет. Все сервисы сохраняют пустые заглушки; будущий запуск оформления остаётся внутри соответствующего сервиса, а общий раздел — для учёта/просмотра. Проверки/review docs/changes/v1.9.0*.md, previous v1.8.1 сохранён в теге.
+
 # v1.8.1 — ФИО и роли сотрудников в заявке
 
 Две UI-аннотации: «Иванов Иван Иванович» в демонстрационном ФИО; в application-details.invitees выводятся сервис + employeeRoles[x.role] из snapshot. Не меняются поля ролей/права или очередь. Source src/platform-entry.html. Прежний v1.8.0 сохранён в теге. Проверки/review docs/changes/v1.8.1*.md; GitHub ранее требовал авторизации.
