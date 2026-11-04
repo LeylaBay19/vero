@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>ВЕРО — вход в платформу</title>
+<style>
+:root{--bg:#f5f4f0;--paper:#fff;--ink:#22252e;--muted:#6b6e78;--line:#e3e3e8;--accent:#5345cb;--soft:#f0edfc;--green:#16735b;--red:#a33636}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}button,input,select{font:inherit}button,a,input,select{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a89cf0}button{cursor:pointer}button:disabled{cursor:default;opacity:.55}a{color:var(--accent)}[hidden]{display:none!important}.bench{border-bottom:1px solid #d9d7e0;background:#ebe9f0;padding:12px 24px;font-size:12px}.bench-inner{max-width:1240px;margin:auto;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}.bench strong{font-size:12px}.bench label{display:flex;align-items:center;gap:8px}.bench select,.bench button{border:1px solid #cfcbdc;background:#faf9fd;border-radius:6px;padding:6px 10px;color:var(--ink)}.bench small{color:#64616c;flex-basis:100%}.bench .version{margin-left:auto}.shell{max-width:1240px;margin:auto;padding:30px 48px 18px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.09em;font-size:23px}.brand-icon{display:grid;place-items:center;background:var(--ink);color:white;border-radius:10px;width:36px;height:36px;letter-spacing:-.05em;font-size:17px}.top-note{font-size:12px;color:var(--muted)}.text-btn{border:0;background:none;padding:8px 0;color:var(--muted);font-size:13px}.layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;min-height:680px}.intro{max-width:470px}.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:22px}.intro h1{font-size:55px;line-height:1.07;letter-spacing:-.045em;font-weight:600;margin:0 0 24px}.intro>p{font-size:17px;color:var(--muted);max-width:370px;margin:0 0 38px}.service-list{list-style:none;margin:0;padding:0;display:grid;gap:0;border-top:1px solid #dedde3}.service-list li{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid #dedde3;font-size:14px}.service-icon{width:30px;height:30px;background:#eae7f1;border-radius:8px;display:grid;place-items:center;color:var(--accent);font-size:17px}.service-list span:last-child{color:var(--muted);margin-left:auto;font-size:12px}.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:38px;box-shadow:0 12px 40px #25233704;min-width:0}.card h2{font-size:28px;line-height:1.2;letter-spacing:-.035em;margin:0 0 14px;font-weight:600}.card p{color:var(--muted);margin:0 0 22px}.card form{display:grid;gap:18px}.field{display:grid;gap:8px;font-size:13px;font-weight:500}.field input,.field select{width:100%;height:49px;border:1px solid #d8d8e0;border-radius:9px;padding:11px 13px;background:white;color:var(--ink);min-width:0}.field input[aria-invalid=true]{border-color:var(--red)}.primary,.secondary{width:100%;min-height:48px;border-radius:9px;padding:12px 18px;font-size:14px;font-weight:600}.primary{border:1px solid var(--accent);background:var(--accent);color:white}.primary:hover{background:#4537b5}.secondary{border:1px solid var(--line);background:white;color:var(--ink)}.secondary:hover{background:#f7f6fa}.separator{display:flex;gap:14px;align-items:center;color:#85828e;font-size:12px;margin:24px 0}.separator:before,.separator:after{content:"";height:1px;flex:1;background:var(--line)}.legal{font-size:11px!important;line-height:1.6;margin-top:20px!important;margin-bottom:0!important}.check{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--muted);line-height:1.55}.check input{margin-top:3px;accent-color:var(--accent);width:16px;height:16px;flex-shrink:0}.notice{background:#f5f4fa;border:1px solid #e6e2f1;border-radius:9px;padding:14px 16px;margin:18px 0;font-size:13px;color:#514b64}.notice.good{background:#eef6f2;border-color:#d9eae1;color:#28654f}.alert{color:var(--red);font-size:13px;margin:16px 0 0}.status-msg{font-size:13px;color:var(--green);margin:14px 0 0}.row-actions{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px}.mini{font-size:12px!important}.back{margin-bottom:24px}.workspace{padding:65px 0 90px;max-width:1100px}.workspace h1{font-size:38px;line-height:1.15;letter-spacing:-.035em;font-weight:600;margin:0 0 16px}.workspace>p{color:var(--muted);max-width:670px}.context-list{display:grid;gap:12px;max-width:640px;margin:32px 0}.context{display:flex;align-items:center;gap:16px;width:100%;padding:18px 20px;background:white;border:1px solid var(--line);border-radius:12px;text-align:left}.context:hover{border-color:#b9afe7;background:#fdfcff}.context .badge{width:44px;height:44px;border-radius:11px;background:var(--soft);color:var(--accent);display:grid;place-items:center;font-size:18px;flex-shrink:0}.context .label{flex:1;min-width:0}.context strong{display:block;font-size:15px;font-weight:600}.context small{display:block;color:var(--muted);font-size:12px;margin-top:4px}.arrow{font-size:22px;color:#9993a9}.tag{display:inline-flex;font-size:11px;background:var(--soft);color:var(--accent);padding:4px 9px;border-radius:20px}.summary{border:1px solid var(--line);border-radius:10px;padding:18px;margin:22px 0}.summary strong{display:block;margin-bottom:6px}.summary ul{color:var(--muted);padding-left:18px;margin:10px 0 0;font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:30px}.tile{border:1px solid var(--line);border-radius:13px;background:white;padding:24px;display:flex;flex-direction:column;gap:14px;min-width:0}.tile h2{font-size:19px;margin:0;line-height:1.3}.tile p{font-size:13px;color:var(--muted);margin:0 0 12px}.tile button{margin-top:auto}.tasklist{margin-top:22px;border:1px solid var(--line);border-radius:12px;background:white;padding:22px}.tasklist strong{display:block;margin-bottom:8px}.tasklist p{color:var(--muted);font-size:13px;margin:0}.footer{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;border-top:1px solid #dfdde4;padding:20px 0;color:var(--muted);font-size:11px}.code{font-size:25px!important;letter-spacing:.25em;font-variant-numeric:tabular-nums}.pending{border-left:3px solid #d2b872;padding-left:15px}.scope{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.scope span{font-size:12px;border:1px solid var(--line);border-radius:6px;padding:5px 10px}.card>.secondary+.secondary{margin-top:10px}.step{font-size:11px;color:var(--muted);margin-bottom:20px}
+@media(max-width:900px){.shell{padding:24px}.layout{gap:32px}.intro h1{font-size:43px}.card{padding:28px}.grid{grid-template-columns:1fr 1fr}.service-list span:last-child{display:none}}@media(max-width:640px){.bench{padding:10px 16px}.bench .version{margin-left:0}.shell{padding:22px 16px 0}.top-note{display:none}.layout{display:flex;flex-direction:column;align-items:stretch;gap:25px;min-height:0;margin:40px 0}.intro h1{font-size:35px;max-width:360px;margin-bottom:14px}.intro>p{font-size:14px;margin-bottom:0}.intro .eyebrow,.service-list{display:none}.card{padding:25px 22px;border-radius:13px}.card h2{font-size:25px}.workspace{padding:42px 0 60px}.workspace h1{font-size:31px}.grid{grid-template-columns:1fr}.context{padding:16px 13px}.field input,.field select{font-size:16px}.context .tag{display:none}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style></head><body>
+<aside class="bench" aria-label="Управление демонстрацией"><div class="bench-inner"><strong>Прототип · единый вход</strong><label>Сценарий<select id="scenario"><option value="new">Новый пользователь / физлицо</option><option value="invite">Сотрудник по приглашению</option><option value="employee">Подключённый сотрудник</option><option value="director">Подтверждённый гендиректор</option><option value="government">Подключённый госслужащий</option><option value="gov-pending">Госслужащий · доступ ожидается</option></select></label><label>Начатая задача<select id="intent"><option value="">Без выбранной услуги</option><option value="materials">Нерудные материалы</option><option value="ossig">ОССиГ</option><option value="agr">АГР</option></select></label><label id="proof-result-wrap" hidden>Демо: проверка<select id="proof-result"><option value="success">Успешно</option><option value="failure">Ошибка</option></select></label><button id="fill" type="button">Заполнить пример</button><button id="reset" type="button">Начать заново</button><span class="version">v1.4.0</span><small>Демо-данные: код 123456. Вход, письма, mos.ru и проверка полномочий имитируются. Выбор сценария задаёт исходные данные стенда, а не роль пользователя. Данные хранятся до перезагрузки.</small></div></aside>
+<div class="shell"><header class="top"><div class="brand"><span class="brand-icon">в</span>ВЕРО</div><div id="top-context" class="top-note">Платформа для ваших задач</div><button type="button" class="text-btn" data-action="signout" id="signout" hidden>Выйти</button></header><main id="main"></main><footer class="footer"><span>Один аккаунт. Ваши организации, услуги и документы.</span><span>Интерактивный прототип · 1.4.0</span></footer></div>
+<script>
+(()=>{
+'use strict';
+const main=document.querySelector('#main'),scenario=document.querySelector('#scenario');
+const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let state;
+const intentNames={materials:'Покупка нерудных материалов',ossig:'Вывоз и учёт отходов',agr:'Получение АГР'};
+const btn=(text,action,secondary=false)=>`<button type="button" class="${secondary?'secondary':'primary'}" data-action="${action}">${text}</button>`;
+const input=(label,id,value='',type='text',attrs='')=>`<label class="field" for="${id}">${label}<input id="${id}" type="${type}" value="${esc(value)}" ${attrs}></label>`;
+const form=(action,body)=>`<form data-form="${action}" novalidate>${body}<button class="primary" type="submit">${{login:'Продолжить',code:'Войти',company:'Найти организацию',team:'Подготовить приглашение'}[action]}</button></form>`;
+const alertBox='<div id="alert" class="alert" role="alert" hidden></div><div id="status" class="status-msg" role="status" hidden></div>';
+function reset(){state={screen:'login',authenticated:false,email:'',invited:scenario.value==='invite',accepted:false,contexts:[],context:null,history:[],intent:$('intent').value||null,inn:'',company:'',basis:'director',pending:false,terms:false};render();}
+function go(screen){state.history.push(state.screen);state.screen=screen;render();main.querySelector('h1,h2')?.focus();}
+function error(text,id){$('alert').textContent=text;$('alert').hidden=false;if(id){$(id).setAttribute('aria-invalid','true');$(id).focus();}}
+function status(text){$('status').textContent=text;$('status').hidden=false;}
+function auth(){
+ state.authenticated=true;state.context=null;state.history=[];
+ const fixture=scenario.value;
+ state.contexts=[{id:'personal',name:'Личное пространство',role:'Услуги и обращения от своего имени',kind:'personal'}];
+ if(['employee','director'].includes(fixture))state.contexts.push({id:'org',name:'ООО «Пример»',role:fixture==='director'?'Руководитель':'Сотрудник · подготовка заявок',kind:fixture});
+ if(fixture==='government')state.contexts.push({id:'gov',name:'Демонстрационное ведомство',role:'Аналитик · согласованный просмотр',kind:'government'});
+ if(state.invited&&!state.accepted){state.screen='invite';render();return;}
+ state.screen='contexts';render();
+}
+function intro(){return `<section class="intro"><div class="eyebrow">Ваши задачи — в одном месте</div><h1>Начните<br>с одного входа.</h1><p>Покупайте материалы, работайте с отходами и получайте услуги для строительства.</p><ul class="service-list"><li><span class="service-icon">▥</span>Нерудные материалы<span>Подбор и заказ</span></li><li><span class="service-icon">↗</span>ОССиГ<span>Вывоз и учёт</span></li><li><span class="service-icon">⌂</span>АГР в Москве<span>Подготовка и подача</span></li></ul></section>`;}
+function card(title,body){return `<div class="layout">${intro()}<section class="card"><h2 tabindex="-1">${title}</h2>${body}${alertBox}</section></div>`;}
+function back(){return state.history.length?'<button class="text-btn back" type="button" data-action="back">← Назад</button>':'';}
+function contextButton(c){return `<button class="context" type="button" data-context="${c.id}"><span class="badge">${c.kind==='personal'?'○':c.kind==='government'?'▤':'▥'}</span><span class="label"><strong>${esc(c.name)}</strong><small>${esc(c.role)}</small></span>${c.kind==='government'?'<span class="tag">Ведомство</span>':''}<span class="arrow">→</span></button>`;}
+function render(){
+ if(!state.authenticated&&!['login','code','mos'].includes(state.screen))state.screen='login';
+ if(['team','team-sent'].includes(state.screen)&&state.context?.kind!=='director')state.screen='contexts';
+ if(state.screen==='invite'&&state.accepted)state.screen='contexts';
+ if(state.screen==='home'&&!state.context)state.screen='contexts';
+ const q=state.screen,c=state.context;
+ $('proof-result-wrap').hidden=q!=='proof';
+ $('signout').hidden=!state.authenticated;
+ $('top-context').textContent=c&&['home','service','team','team-sent'].includes(q)?c.name:state.authenticated?'Ваш аккаунт':'Платформа для ваших задач';
+ $('fill').hidden=!['login','code','company','team'].includes(q);
+ let html='';
+ if(q==='login')html=card('Войти в ВЕРО',`${state.invited?'<div class="notice">Вас пригласили в ООО «Пример». После входа сможете проверить и принять приглашение.</div>':''}<p>${state.intent?'Войдите, чтобы продолжить: '+esc(intentNames[state.intent])+'.':'Один аккаунт для личных задач и работы с организациями.'}</p>${form('login',input('Email','email',state.email,'email','autocomplete="email" inputmode="email"')+'<p class="mini" style="margin:0">Пришлём код для входа. Пароль не нужен.</p>')}<div class="separator">или</div>${btn('Войти через mos.ru','mos',true)}<p class="legal">Условия использования и информация об обработке данных доступны перед созданием аккаунта.</p>`);
+ if(q==='code')html=card('Проверьте почту',`${back()}<p>Код отправлен на <strong>${esc(state.email)}</strong>.</p>${state.invited?'<p class="mini">Подтверждаем почту employee@example.test, на которую направлено приглашение. Повторный ИНН не понадобится.</p>':''}${form('code',input('Код из письма','code','','text','class="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6"')+(scenario.value==='new'||state.invited?'<label class="check"><input id="terms" type="checkbox"><span>Принимаю условия использования ВЕРО. <button type="button" class="text-btn" style="padding:0;font-size:12px" data-action="terms">Прочитать условия</button></span></label>':''))}<div class="row-actions"><button type="button" class="text-btn" data-action="resend">Отправить код ещё раз</button><button type="button" class="text-btn" data-action="change-email">Изменить email</button></div>`);
+ if(q==='mos')html=card('Вход через mos.ru',`${back()}<p>В рабочей системе здесь откроется mos.ru для подтверждения личности.</p><div class="notice">mos.ru подтверждает личность. Доступ к компании или ведомству определяется отдельно.</div>${scenario.value==='new'||state.invited?'<label class="check" style="margin:20px 0"><input id="mos-terms" type="checkbox"><span>Принимаю условия использования ВЕРО. <button type="button" class="text-btn" style="padding:0;font-size:12px" data-action="terms">Прочитать условия</button></span></label>':''}${btn('Продолжить с аккаунтом mos.ru','mos-return')}${btn('Отменить и вернуться','change-email',true)}`);
+ if(q==='invite')html=card('Вас приглашают в команду',`<span class="tag">Приглашение для ${esc(state.email)}</span><div class="summary"><strong>ООО «Пример»</strong><span class="mini">Пригласил Иван Иванов · руководитель</span><ul><li>Подготовка заявок организации</li><li>Просмотр документов в пределах назначенного доступа</li></ul></div><p class="mini">Подписание и отправка регулируемых документов доступны после проверки соответствующих полномочий.</p>${btn('Принять и открыть рабочее пространство','accept')}${btn('Не сейчас — в личное пространство','decline',true)}`);
+ if(q==='contexts')html=`<section class="workspace"><div class="eyebrow">Вход выполнен</div><h1 tabindex="-1">Где продолжим?</h1><p>Выберите пространство. В каждом доступны свои задачи и документы.</p><div class="context-list">${state.contexts.map(contextButton).join('')}</div>${state.invited&&!state.accepted?'<button class="text-btn" data-action="show-invite">Есть приглашение в ООО «Пример» →</button><br>':''}${scenario.value==='gov-pending'?'<div class="notice pending" style="max-width:640px"><strong>Доступ к ведомству ещё не назначен</strong><br>Обратитесь к ответственному за доступ в вашем ведомстве. Согласованный доступ появится в этом аккаунте.<br>Личное пространство уже доступно.</div>':''}${state.pending?'<button class="text-btn" data-action="resume">Продолжить подключение: '+esc(state.company)+' →</button><br>':''}<button class="text-btn" data-action="add-company">+ Подключить организацию</button>${alertBox}</section>`;
+ if(q==='home'){
+ const gov=c.kind==='government';
+ html=`<section class="workspace"><button class="text-btn back" data-action="switch">← Сменить пространство</button><div class="eyebrow">${gov?'Ведомственное пространство':c.kind==='personal'?'Личное пространство':'Рабочее пространство'}</div><h1 tabindex="-1">${gov?'Обзор по вашему ведомству':c.kind==='personal'?'С чего начнём?':esc(c.name)}</h1><p>${gov?'Здесь доступны сводные данные в согласованном объёме.':c.kind==='personal'?'Выберите задачу. Сведения и полномочия запросим по мере необходимости.':esc(c.role)+'. Доступ к действиям определяется назначенными правами.'}</p>${gov?`<div class="notice good">Доступ назначен на основании подтверждённой заявки ведомства. Режим: просмотр.</div><div class="scope"><span>Сводные показатели ОССиГ</span><span>Согласованная территория</span><span>Доступные периоды</span></div><div class="tasklist"><strong>Кабинет аналитики</strong><p>После входа здесь откроются согласованные отчёты. В этом прототипе показана только точка входа; реальные данные не подключены.</p></div>`:`${state.pending?'<div class="notice pending">Подготовка подключения организации сохранена. Требуется подтверждение полномочий.</div>':''}${state.intent?'<div class="notice">Вы начали: '+esc(intentNames[state.intent])+'. Продолжите с соответствующей карточки.</div>':''}<div class="grid"><article class="tile"><span class="tag">Материалы</span><h2>Нерудные стройматериалы</h2><p>Подбор материалов и оформление заказа.</p>${btn('Подобрать материалы','service-materials',true)}</article><article class="tile"><span class="tag">ОССиГ</span><h2>Вывоз и учёт отходов</h2><p>Работа с перевозками и документами.</p>${btn('Начать работу','service-ossig',true)}</article><article class="tile"><span class="tag">АГР</span><h2>Архитектурное решение</h2><p>Подготовка и сопровождение или самостоятельная подача.</p>${btn('Выбрать способ','service-agr',true)}</article></div>${c.kind==='director'?'<div class="tasklist"><strong>Команда организации</strong><p>Пригласите сотрудников и назначьте им доступ.</p><button class="text-btn" data-action="team">Пригласить сотрудника →</button></div>':c.kind==='personal'?'<div class="tasklist"><strong>Работа от имени компании</strong><p>Подключите организацию или примите приглашение от её администратора.</p><button class="text-btn" data-action="add-company">Подключить организацию →</button></div>':''}`}${alertBox}</section>`;
+ }
+ if(q==='company')html=card('Найдём вашу организацию',`${back()}<p>Укажите ИНН компании или ИП. Реквизиты подставятся автоматически.</p>${form('company',input('ИНН организации или ИП','inn',state.inn,'text','inputmode="numeric" maxlength="12" autocomplete="off"'))}<p class="legal">Добавление реквизитов не предоставляет доступ к данным организации.</p>`);
+ if(q==='company-found')html=card('Как подключиться?',`${back()}<div class="summary"><strong>${esc(state.company)}</strong><span class="mini">ИНН ${esc(state.inn)}</span></div>${btn('Я руководитель — подтвердить полномочия','proof')}${btn('Я сотрудник — получить приглашение','ask-invite',true)}${btn('Подготовить подключение для руководителя','prepare',true)}`);
+ if(q==='proof')html=card('Подтвердите полномочия',`${back()}<p>Для управления организацией нужно подтвердить право действовать от её имени.</p><div class="summary"><strong>${esc(state.company)}</strong><span class="mini">Руководитель или ИП подтверждает полномочия УКЭП. Доступ представителя зависит от подтверждённых полномочий.</span></div>${btn('Проверить УКЭП руководителя','verify')}${btn('Сейчас нет УКЭП — сохранить подготовку','prepare',true)}`);
+ if(q==='ask-invite')html=card('Попросите приглашение',`${back()}<p>Руководитель или администратор пригласит вас на удобную почту. После входа вы сможете принять назначенный доступ.</p><div class="notice">Одного ИНН или корпоративной почты недостаточно для доступа к компании.</div>${btn('Вернуться к своим пространствам','switch')}`);
+ if(q==='prepared')html=card('Подготовка сохранена',`<div class="notice good">${esc(state.company)} · ИНН ${esc(state.inn)}</div><p>Вы сможете вернуться к подключению позже. Пока доступны ваши прежние пространства.</p>${btn('К моим пространствам','switch')}`);
+ if(q==='service')html=card(intentNames[state.intent],`${back()}<div class="notice">Вы действуете: ${esc(c?.name)}.</div><p>${state.intent==='agr'?'Можно заказать подготовку и сопровождение или перейти к подготовке собственного заявления.':state.intent==='materials'?'Дальше откроется подбор материалов и условия заказа.':'Дальше проверим готовность организации и полномочия для работы с ОССиГ.'}</p><div class="summary"><strong>Вход завершён</strong><span class="mini">Это граница прототипа входа. Анкеты, проверки сервиса, оплата и городская интеграция будут проработаны отдельно.</span></div>${btn('В рабочее пространство','home')}`);
+ if(q==='team')html=card('Пригласите сотрудника',`${back()}<p>${esc(c?.name)} · доступ к подготовке заявок.</p>${form('team',input('Имя сотрудника','employee-name')+input('Email приглашения','employee-email','','email','autocomplete="off"'))}<p class="legal">Личная или корпоративная почта. Дополнительные полномочия оформляются для соответствующих действий.</p>`);
+ if(q==='team-sent')html=card('Приглашение подготовлено',`<div class="notice good">${esc(state.invitee)} · ${esc(state.inviteEmail)}</div><p>Сотрудник войдёт тем же способом, проверит приглашение и примет доступ.</p>${btn('Вернуться в организацию','home')}<p class="legal">В стенде письмо не отправляется. Сценарий «Сотрудник по приглашению» доступен в панели демонстрации.</p>`);
+ main.innerHTML=html;$('fill').disabled=!main.querySelector('form');
+}
+function selectContext(id){const c=state.contexts.find(c=>c.id===id);if(!c)return;state.context=c;go(state.intent&&c.kind!=='government'?'service':'home');}
+main.addEventListener('click',e=>{
+ const b=e.target.closest('button');if(!b)return;
+ const a=b.dataset.action;
+ if(b.dataset.context)return selectContext(b.dataset.context);
+ if(a==='back'){const q=state.history.pop();if(q){state.screen=q;render();}return;}
+ if(a==='terms'){status('Демонстрация: здесь откроются условия ВЕРО и информация об обработке данных. Перед запуском требуется утверждённый текст.');return;}
+ if(a==='resend'){status('Новый код отправлен. В демонстрации используйте 123456.');return;}
+ if(a==='change-email'){state.screen='login';render();return;}
+ if(a==='mos')return go('mos');
+ if(a==='mos-return'){
+  if((scenario.value==='new'||state.invited)&&!$('mos-terms')?.checked)return error('Примите условия использования, чтобы создать аккаунт.');
+  state.email=state.invited?'employee@example.test':'mos-user@example.test';
+  if(state.invited)return go('code');
+  return auth();
+ }
+ if(!state.authenticated)return;
+ if(a==='accept'){
+  if(!state.invited||state.accepted)return;
+  state.accepted=true;const c={id:'org',name:'ООО «Пример»',role:'Сотрудник · подготовка заявок',kind:'employee'};state.contexts.push(c);return selectContext(c.id);
+ }
+ if(a==='decline'){go('contexts');return;}
+ if(a==='show-invite')return go('invite');
+ if(a==='switch')return go('contexts');
+ if(a==='home')return go('home');
+ if(a==='add-company')return go('company');
+ if(a==='resume')return go('company-found');
+ if(a==='proof')return go('proof');
+ if(a==='ask-invite')return go('ask-invite');
+ if(a==='prepare'){state.pending=true;return go('prepared');}
+ if(a==='verify'){
+  if(state.screen!=='proof'||!state.inn)return;
+  if($('proof-result').value==='failure')return error('Полномочия не подтверждены. Проверьте сертификат или сохраните подготовку. Доступ к компании не предоставлен.');
+  const c={id:'company-'+state.inn,name:state.company,role:'Руководитель · полномочия подтверждены',kind:'director'};
+  if(!state.contexts.some(x=>x.id===c.id))state.contexts.push(c);state.pending=false;return selectContext(c.id);
+ }
+ if(a==='team'){if(state.context?.kind!=='director')return;return go('team');}
+ if(a?.startsWith('service-')){if(state.context?.kind==='government')return;state.intent=a.slice(8);return go('service');}
+});
+main.addEventListener('submit',e=>{
+ e.preventDefault();const f=e.target,v=id=>$(id)?.value.trim()||'';
+ if(f.dataset.form==='login'){
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email')))return error('Проверьте адрес электронной почты.','email');
+  if(state.invited&&v('email').toLowerCase()!=='employee@example.test')return error('Приглашение адресовано employee@example.test. Войдите с этой почтой или попросите новое приглашение.','email');
+  state.email=v('email');return go('code');
+ }
+ if(f.dataset.form==='code'){
+  if(v('code')!=='123456')return error('Код не подошёл. Проверьте письмо и попробуйте ещё раз.','code');
+  if((scenario.value==='new'||state.invited)&&!$('terms')?.checked)return error('Примите условия использования, чтобы создать аккаунт.');
+  return auth();
+ }
+ if(!state.authenticated)return;
+ if(f.dataset.form==='company'){
+  if(!/^(\d{10}|\d{12})$/.test(v('inn')))return error('Укажите ИНН из 10 или 12 цифр.','inn');
+  state.inn=v('inn');const known=state.contexts.find(c=>c.id==='company-'+state.inn||(c.id==='org'&&state.inn==='0000000000'));if(known)return selectContext(known.id);state.company=state.inn.length===12?'ИП Иванов И. И.':'ООО «Пример»';return go('company-found');
+ }
+ if(f.dataset.form==='team'){
+  if(state.context?.kind!=='director')return;
+  if(!v('employee-name'))return error('Укажите имя сотрудника.','employee-name');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('employee-email')))return error('Укажите корректный email.','employee-email');
+  state.invitee=v('employee-name');state.inviteEmail=v('employee-email');return go('team-sent');
+ }
+});
+$('fill').addEventListener('click',()=>{
+ const values={email:state.invited?'employee@example.test':'ivan@example.test',code:'123456',inn:'0000000000','employee-name':'Анна Петрова','employee-email':'anna@example.test'};
+ main.querySelectorAll('input').forEach(x=>{if(values[x.id]&&!x.value.trim()){x.value=values[x.id];x.removeAttribute('aria-invalid');}});
+});
+$('reset').addEventListener('click',reset);scenario.addEventListener('change',reset);$('intent').addEventListener('change',reset);
+$('signout').addEventListener('click',()=>{const intent=state.intent;reset();state.intent=intent;render();});
+reset();
+})();
+</script></body></html>
