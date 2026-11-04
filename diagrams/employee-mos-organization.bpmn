@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="employee_mos_organization_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант · организация на mos.ru" isExecutable="false">
-    <bpmn:documentation>Сотрудник добавлен только в организацию на mos.ru. На платформе членство и права ему ещё не назначены. Предлагаемый вариант по решению пользователя, 03.11.2026. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Сотрудник добавлен только в организацию на mos.ru. На платформе членство и права ему ещё не назначены. Предлагаемый вариант; версия 1.1.0. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
     <bpmn:laneSet id="Lanes">
-      <bpmn:lane id="person" name="Сотрудник">
+      <bpmn:lane id="person" name="СОТРУДНИК">
         <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Auth</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>View</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="system" name="Платформа">
+      <bpmn:lane id="system" name="ПЛАТФОРМА">
         <bpmn:flowNodeRef>Identity</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Organization</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Access</bpmn:flowNodeRef>

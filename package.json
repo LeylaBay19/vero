@@ -1,10 +1,10 @@
 {
   "name": "auth-registration-prototype",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Interactive registration and authorization prototype with editable BPMN process diagrams",
   "scripts": {
-    "test": "node tests/mchd.cjs && node tests/mos-org.cjs && node tests/sandbox.cjs && node tests/schemes.cjs"
+    "test": "node tests/unified-invitation.cjs && node tests/mchd.cjs && node tests/mos-org.cjs && node tests/sandbox.cjs && node tests/schemes.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

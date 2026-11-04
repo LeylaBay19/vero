@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="employee_mchd_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант · выдача полномочий сотруднику" isExecutable="false">
-    <bpmn:documentation>Организация и сотрудник уже подключены. Обычный доступ к кабинету не требует оформления этой МЧД. Предлагаемый вариант по решению пользователя, 03.11.2026. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Организация и сотрудник уже подключены. Обычный доступ к кабинету не требует оформления этой МЧД. Предлагаемый вариант; версия 1.1.0. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
     <bpmn:laneSet id="Lanes">
-      <bpmn:lane id="person" name="Генеральный директор">
+      <bpmn:lane id="person" name="ГЕНЕРАЛЬНЫЙ ДИРЕКТОР">
         <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Powers</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Review</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Sign</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="system" name="Платформа">
+      <bpmn:lane id="system" name="ПЛАТФОРМА">
         <bpmn:flowNodeRef>Generate</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Signed</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Ready</bpmn:flowNodeRef>

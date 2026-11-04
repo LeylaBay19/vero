@@ -3,7 +3,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 base=ROOT/'build'
 base.mkdir(parents=True,exist_ok=True)
+version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
 src=(ROOT/'src/base-three-flows.html').read_text(encoding='utf-8')
+src=src.replace('<small>v2</small>',f'<small>v{version}</small>',1)
 src=src.replace('<span class="ap-scenario-kicker">Сотрудник</span>','<span class="ap-scenario-kicker">01 · Сотрудник</span>',1)
 src=src.replace('<span class="ap-scenario-kicker">Руководитель</span>','<span class="ap-scenario-kicker">02 · Руководитель</span>',1)
 src=src.replace('<span class="ap-scenario-kicker">Новый пользователь</span>','<span class="ap-scenario-kicker">03 · Новый пользователь</span>',1)
@@ -14,6 +16,11 @@ src=src[:pos]+tab+src[pos:]
 controls='''      <div id="ap-proposal-controls" hidden>
         <label>Путь<select id="ap-proposal-path"><option value="company">Регистрация организации</option><option value="employee">Регистрация сотрудника</option><option value="powers">Полномочия сотрудника · МЧД</option></select></label>
         <label id="ap-proposal-entry-wrap">Подключение<select id="ap-proposal-entry"><option value="invite">По приглашению</option><option value="contact">Нет приглашения</option><option value="mos-org">Организация есть на mos.ru</option></select></label>
+        <label id="ap-invite-mchd-wrap">МЧД в приглашении<select id="ap-invite-mchd-mode"><option value="yes">Нужна</option><option value="no">Не нужна</option></select></label>
+        <button type="button" id="ap-director-review" data-p-action="invite-director-review" hidden>Демо: перейти к руководителю</button>
+        <button type="button" id="ap-return-employee" data-p-action="invite-employee-return" hidden>Демо: вернуться к сотруднику</button>
+        <label id="ap-sign-result-wrap" hidden>Проверка подписи<select id="ap-sign-result"><option value="success">Успешно</option><option value="failure">Ошибка</option></select></label>
+        <span id="ap-invite-demo-note" class="ap-mos-assumption" hidden>Стенд: mos.ru, доставка приглашений и подпись МЧД имитируются. Личная почта mos.ru отличается от почты приглашения; контекст сохраняется в памяти текущего сеанса.</span>
       </div>
       <span id="ap-mos-org-note" class="ap-mos-assumption" hidden>Проект кейса: получение организации из mos.ru — предположение интеграции; у Тринити не подтверждено.</span>
 '''
@@ -49,12 +56,13 @@ src=src.replace("e.type!=='password'&&!e.dataset.wasPassword","e.type!=='passwor
 src=src.replace("function restart(){S.screen='entry';S.history=[];render();persist();}","function restart(){if(S.flow==='proposal')resetProposal();S.screen='entry';S.history=[];render();persist();}",1)
 src=src.replace(" journey(S.screen);"," if(S.flow==='proposal'){root.querySelector('.ap-brand-mark').textContent='04';proposalJourney();}else journey(S.screen);",1)
 module=(ROOT/'src/proposal-flow.js').read_text(encoding='utf-8')
-src=src.replace('function render(){',module+"\nfunction render(){\n if(S.flow==='proposal'){proposalRender();return;}\n root.querySelector('#ap-proposal-controls').hidden=true;root.querySelector('#ap-mos-org-note').hidden=true;root.querySelector('#ap-repeat').disabled=false;root.querySelector('.ap-preview-badge').textContent='Концепция интерфейса';",1)
+src=src.replace('function render(){',module+"\nfunction render(){\n if(S.flow==='proposal'){proposalRender();return;}\n root.querySelector('#ap-proposal-controls').hidden=true;root.querySelector('#ap-director-review').hidden=true;root.querySelector('#ap-sign-result-wrap').hidden=true;root.querySelector('#ap-return-employee').hidden=true;root.querySelector('#ap-invite-demo-note').hidden=true;root.querySelector('#ap-mos-org-note').hidden=true;root.querySelector('#ap-repeat').disabled=false;root.querySelector('.ap-preview-badge').textContent='Концепция интерфейса';",1)
 src=src.replace(" if(btn.dataset.flow)"," if(btn.dataset.pAction){proposalAction(btn.dataset.pAction);return;}\n if(btn.dataset.flow)",1)
 src=src.replace(" if(input.type==='checkbox')return;"," if(input.type==='checkbox'||input.type==='file'||input.type==='radio')return;",1) if " if(input.type==='checkbox')return;" in src else src.replace("if(input.type==='checkbox')return;","if(input.type==='checkbox'||input.type==='file'||input.type==='radio')return;",1)
 change='''
  if(e.target.id==='ap-proposal-path'){S.proposalPath=e.target.value;S.orgCase=S.proposalPath==='employee'?'existing':'new';restart();return;}
  if(e.target.id==='ap-proposal-entry'){S.employeeEntry=e.target.value;restart();return;}
+ if(e.target.id==='ap-invite-mchd-mode'){S.invitation.powers=e.target.value==='yes'?['contracts']:[];restart();return;}
  if(e.target.id?.startsWith('p-mchd-power-')){S.mchd.status='draft';}
 '''
 src=src.replace("root.addEventListener('change',e=>{","root.addEventListener('change',e=>{"+change,1)

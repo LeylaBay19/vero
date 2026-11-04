@@ -1,0 +1,31 @@
+const fs=require('node:fs'),path=require('node:path'),{pathToFileURL}=require('node:url'),{chromium}=require('playwright');
+fs.mkdirSync('test-results',{recursive:true});
+(async()=>{const b=await chromium.launch({headless:true,...(process.env.PROTOTYPE_BROWSER?{executablePath:process.env.PROTOTYPE_BROWSER}:{})});try{
+ const p=await b.newPage({viewport:{width:1280,height:1100}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.route(/^https?:/,r=>r.abort());await p.goto(pathToFileURL(path.resolve('index.html')).href);
+ const act=id=>p.locator(`[data-p-action="${id}"]`).click(),go=id=>p.locator(`[data-go="${id}"]`).click(),submit=id=>p.locator(`[data-form="${id}"] button[type=submit]`).click();
+ const title=async expected=>{const actual=await p.locator('#ap-screen h2').textContent();if(actual!==expected)throw Error(`Expected ${expected}, got ${actual}`)};
+ const noINN=async()=>{if(await p.locator('#p-inn,#p-inn-view').count())throw Error('Invited employee asked to enter INN')};
+ // Create a real demonstration invitation from the director workspace, selecting powers once.
+ await p.selectOption('#ap-proposal-path','powers');await p.locator('.ap-map summary').click();await p.locator('[data-jump="p-workspace"]').click();await go('p-invite-team');
+ await p.fill('#p-employee-name','Анна Петрова');await p.fill('#p-employee-email','anna@company.example');await p.check('#p-invite-finance');await p.uncheck('#p-invite-requests');await p.check('#p-invite-power-contracts');await p.check('#p-invite-power-acts');await p.uncheck('#p-invite-power-applications');await submit('p-invite');await title('Приглашение отправлено');
+ await act('handoff-employee');await title('Вас пригласили в организацию');await noINN();
+ if(await p.locator('#p-password,#p-email').count())throw Error('Old email/password invitation remains');
+ // Screen map cannot grant access before mos.ru authentication and acceptance.
+ await p.locator('[data-jump="p-accept-invite"]').click();await title('Сначала войдите в личный аккаунт');await go('p-login');
+ await act('start-mos');await title('Вход через mos.ru');await act('mos-cancel');await title('Вас пригласили в организацию');if(!(await p.locator('#ap-screen').innerText()).includes('anna@company.example'))throw Error('Cancel lost invitation');
+ await act('start-mos');await act('mos-return');await title('Примите приглашение');await noINN();let text=await p.locator('#ap-screen').innerText();if(!text.includes('personal.mos@example.test')||!text.includes('anna@company.example')||!text.includes('Анна Петрова'))throw Error('Different mos email or invited identity lost');
+ await act('accept-invite');if(!(await p.locator('[role=alert]').innerText()).includes('Подтвердите'))throw Error('Unconfirmed acceptance allowed');
+ await p.check('#p-invite-confirm');await act('accept-invite');await title('Приглашение принято');await p.screenshot({path:'test-results/unified-pending.png',fullPage:true});
+ await go('p-workspace');await title('Личный кабинет');text=await p.locator('#ap-screen').innerText();if(!text.includes('МЧД ожидает подписи')||!text.includes('Просмотр расчётов')||text.includes('Работа с заявками')||text.includes('МЧД подписана руководителем'))throw Error('Pending or ordinary rights incorrect');
+ // Employee cannot jump directly to successful signing or act as director.
+ await p.locator('[data-jump="p-accept-invite"]').click();await title('Приглашение уже принято');
+ await p.locator('[data-jump="p-workspace"]').click();await act('invite-director-review');await title('Проверьте сформированную МЧД');text=await p.locator('#ap-screen').innerText();if(!text.includes('Анна Петрова')||!text.includes('Подписывать договоры')||!text.includes('Подписывать акты')||text.includes('Подписывать заявки'))throw Error('Powers selected twice or employee lost');
+ await p.locator('[data-jump="p-mchd-done"]').click();await title('МЧД ещё не подписана');await p.locator('[data-jump="p-mchd-review"]').click();await go('p-mchd-sign');await p.selectOption('#ap-sign-result','failure');await act('mchd-sign');await title('Подпишите МЧД электронной подписью');if(!(await p.locator('[role=alert]').innerText()).includes('не прошла проверку'))throw Error('Signature failure activated powers');
+ await p.selectOption('#ap-sign-result','success');await act('mchd-sign');await title('МЧД подписана');await act('mchd-employee-view');await title('Личный кабинет');text=await p.locator('#ap-screen').innerText();if(!text.includes('МЧД подписана руководителем')||!text.includes('Просмотр расчётов')||text.includes('Работа с заявками')||await p.locator('[data-go="p-invite-team"]').count())throw Error('Signed MCD changed ordinary rights');await p.screenshot({path:'test-results/unified-signed.png',fullPage:true});
+ // No-powers branch completes without generation or director signature.
+ await p.selectOption('#ap-invite-mchd-mode','no');await act('start-mos');await act('mos-return');await p.check('#p-invite-confirm');await act('accept-invite');await title('Личный кабинет');if(!(await p.locator('#ap-screen').innerText()).includes('МЧД не запрашивались'))throw Error('No-MCD branch failed');if(await p.locator('#ap-director-review').isVisible())throw Error('Unnecessary director signature');
+ for(const width of [320,736,1280])for(const colorScheme of ['light','dark']){await p.setViewportSize({width,height:1100});await p.emulateMedia({colorScheme});if(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Overflow '+width);}
+ // Competitor screens remain available after the new branch.
+ for(const flow of ['mos','ep','orb']){await p.locator(`[data-flow="${flow}"]`).click();if(!await p.locator('#ap-screen h2').isVisible())throw Error('Competitor flow missing '+flow);if(await p.locator('#ap-director-review').isVisible())throw Error('Demo controls leaked into competitor flow');}
+ if(errors.length)throw Error(errors.join(';'));console.log('Passed: invitation from director, different emails, mos cancel/context, no repeated INN, guarded acceptance, optional MCD, director-only signature, signature failure/retry, selected powers and ordinary rights preserved, mobile/themes, competitor flows, no page errors.');
+}finally{await b.close()}})().catch(e=>{console.error(e);process.exit(1)});

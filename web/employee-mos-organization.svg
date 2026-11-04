@@ -2,9 +2,9 @@
 <text x="35" y="40.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#193936">Предлагаемый вариант · организация на mos.ru</text>
 <text x="35" y="88.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="22" font-weight="400" fill="#193936">Сотрудник добавлен только в организацию на mos.ru. На платформе членство и права ему ещё не назначены.</text>
 <rect x="35" y="130" width="2230" height="760" rx="0" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<text x="1150.0" y="154.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193936">СОТРУДНИК</text>
 <polyline points="35,440 2265,440" fill="none" stroke="#466760" stroke-width="2"/>
-<text x="1150" y="154.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193936">СОТРУДНИК</text>
-<text x="1150" y="466.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193936">ПЛАТФОРМА</text>
+<text x="1150.0" y="464.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#193936">ПЛАТФОРМА</text>
 <polyline points="104,260 150,260" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="150,260 138.0,255.0 138.0,265.0" fill="#466760"/>
 <polyline points="280,310 280,570 450,570" fill="none" stroke="#466760" stroke-width="2"/>
@@ -43,6 +43,6 @@
 <circle cx="2127.0" cy="570.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
 <text x="2127.0" y="630.12" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Нужно</text>
 <text x="2127.0" y="653.88" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">приглашение</text>
-<text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · проект поведения после правок пользователя от 03.11.2026</text>
+<text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.1.0 · интерфейс и BPMN одной версии</text>
 <text x="35" y="986.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Получение организации из mos.ru — гипотеза интеграции, не подтверждённая документами Тринити.</text>
 </svg>
