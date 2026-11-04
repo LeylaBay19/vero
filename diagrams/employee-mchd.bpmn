@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="employee_mchd_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант · выдача полномочий сотруднику" isExecutable="false">
-    <bpmn:documentation>Обычный доступ уже действует. Изменение полномочий требует нового формирования и подписи МЧД. Предлагаемый вариант; версия 1.4.1. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Обычный доступ уже действует. Изменение полномочий требует нового формирования и подписи МЧД. Предлагаемый вариант; версия 1.4.2. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
     <bpmn:documentation>При ошибке подписи или отсутствии УКЭП новые полномочия не активируются: можно повторить либо отложить. Изменение данных возвращает к выбору полномочий и формированию новой МЧД.</bpmn:documentation>
     <bpmn:laneSet id="Lanes">
       <bpmn:lane id="person" name="ГЕНЕРАЛЬНЫЙ ДИРЕКТОР">
