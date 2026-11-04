@@ -16,10 +16,11 @@ src=src[:pos]+tab+src[pos:]
 controls='''      <div id="ap-proposal-controls" hidden>
         <label>Путь<select id="ap-proposal-path"><option value="company">Регистрация организации</option><option value="employee">Регистрация сотрудника</option><option value="powers">Полномочия сотрудника · МЧД</option></select></label>
         <label id="ap-proposal-entry-wrap">Подключение<select id="ap-proposal-entry"><option value="invite">По приглашению</option><option value="contact">Нет приглашения</option><option value="mos-org">Организация есть на mos.ru</option></select></label>
+        <label id="ap-existing-access-wrap" hidden>Сохранённая связь аккаунта<select id="ap-existing-access"><option value="unlinked">Не подтверждена</option><option value="director">Подтверждённый гендиректор</option><option value="employee">Подключённый сотрудник</option></select></label>
         <label id="ap-invite-mchd-wrap">МЧД в приглашении<select id="ap-invite-mchd-mode"><option value="yes">Нужна</option><option value="no">Не нужна</option></select></label>
         <button type="button" id="ap-director-review" data-p-action="invite-director-review" hidden>Демо: перейти к руководителю</button>
         <button type="button" id="ap-return-employee" data-p-action="invite-employee-return" hidden>Демо: вернуться к сотруднику</button>
-        <label id="ap-sign-result-wrap" hidden>Проверка подписи<select id="ap-sign-result"><option value="success">Успешно</option><option value="failure">Ошибка</option></select></label>
+        <label id="ap-sign-result-wrap" hidden>Проверка подписи<select id="ap-sign-result"><option value="success">Успешно</option><option value="failure">Ошибка</option><option value="no-certificate">Нет УКЭП</option></select></label>
         <span id="ap-invite-demo-note" class="ap-mos-assumption" hidden>Стенд: mos.ru, доставка приглашений и подпись МЧД имитируются. Личная почта mos.ru отличается от почты приглашения; контекст сохраняется в памяти текущего сеанса.</span>
       </div>
       <span id="ap-mos-org-note" class="ap-mos-assumption" hidden>Проект кейса: получение организации из mos.ru — предположение интеграции; у Тринити не подтверждено.</span>
@@ -62,6 +63,7 @@ src=src.replace(" if(input.type==='checkbox')return;"," if(input.type==='checkbo
 change='''
  if(e.target.id==='ap-proposal-path'){S.proposalPath=e.target.value;S.orgCase=S.proposalPath==='employee'?'existing':'new';restart();return;}
  if(e.target.id==='ap-proposal-entry'){S.employeeEntry=e.target.value;restart();return;}
+ if(e.target.id==='ap-existing-access'){S.existingAccess=e.target.value;restart();return;}
  if(e.target.id==='ap-invite-mchd-mode'){S.invitation.powers=e.target.value==='yes'?['contracts']:[];restart();return;}
  if(e.target.id?.startsWith('p-mchd-power-')){S.mchd.status='draft';}
 '''

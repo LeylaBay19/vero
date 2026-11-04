@@ -1,6 +1,7 @@
 from pathlib import Path
 from html import escape
 import base64
+VERSION=(Path(__file__).resolve().parents[1]/'VERSION').read_text(encoding='utf-8').strip()
 from process_details import DETAILS
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -11,8 +12,8 @@ def attachment(slug):
     return f'data:application/octet-stream;base64,{data}'
 panels=[]
 for number,slug,title,description,steps in [
-    ('01','organization-registration','Регистрация организации','Организацию подключает генеральный директор. До успешной проверки платформой управление кабинетом недоступно.',[
-        'Войти или создать личный аккаунт.','Найти организацию по ИНН и проверить реквизиты.','Подписать заявление электронной подписью генерального директора.','Дождаться проверки платформой. После подтверждения — открыть кабинет и при необходимости пригласить сотрудников. При отказе — проверить реквизиты и повторно подписать заявление либо завершить без подключения.'
+    ('01','organization-registration','Регистрация организации','Новую организацию подключает генеральный директор. Для существующей проверяется сохранённый доступ; приглашение самому гендиректору не требуется.',[
+        'Войти или создать личный аккаунт.','Найти организацию по ИНН. Если компания уже подключена и доступ этого аккаунта подтверждён — открыть её кабинет. Если связь не подтверждена — гендиректор подтверждает полномочия УКЭП; сотрудник обращается за приглашением.','Подписать заявление электронной подписью генерального директора.','Дождаться проверки платформой. После подтверждения — открыть кабинет и при необходимости пригласить сотрудников. При отказе — проверить реквизиты и повторно подписать заявление либо завершить без подключения.'
     ]),
     ('02','employee-invitation','Единое подключение сотрудника','Приглашение на любую почту → mos.ru без повторного ИНН → принятие → МЧД на подпись руководителю, если нужна.',[
         'Открыть приглашение и войти через mos.ru. Почта mos.ru может отличаться от почты доставки.',
@@ -44,7 +45,7 @@ html='''<!doctype html>
 <style>
 :root{color-scheme:light;--ink:#193936;--muted:#536c68;--line:#cedbd7;--accent:#12665d}*{box-sizing:border-box}body{margin:0;background:#f3f6f4;color:var(--ink);font:16px/1.6 Arial,sans-serif}main{max-width:1720px;margin:auto;padding:48px 36px 40px}header{margin-bottom:36px;max-width:1000px}.eyebrow{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700}h1{font-size:36px;line-height:1.2;letter-spacing:-.02em;margin:12px 0 16px}h2{font-size:25px;line-height:1.3;margin:0 0 8px}p{margin:0;color:var(--muted)}nav{display:flex;gap:12px 24px;flex-wrap:wrap;margin-top:22px}a{color:var(--accent);text-underline-offset:3px}.process{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;margin:24px 0}.section-heading{display:flex;gap:16px;align-items:flex-start;max-width:1100px}.number{font:700 16px/1 Arial,sans-serif;display:grid;place-items:center;background:#e4efeb;width:44px;height:44px;border-radius:12px;flex-shrink:0}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin:24px 0 12px}.zoom-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}button,.download{font:inherit;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:8px 14px;text-decoration:none;min-height:42px;cursor:pointer}.download{color:var(--accent)}button:hover,.download:hover{background:#edf4f0}button:focus-visible,a:focus-visible,.diagram-viewport:focus-visible{outline:3px solid #8db7ac;outline-offset:3px}button:disabled{opacity:.4;cursor:default}output{width:58px;text-align:center;font-variant-numeric:tabular-nums;color:var(--muted)}.diagram-viewport{overflow:auto;border:1px solid var(--line);border-radius:10px;background:white}.diagram-canvas{width:100%;min-width:100%;transform-origin:top left}.diagram-canvas svg{display:block;width:100%;height:auto}.steps{margin:24px 0 0;padding-left:24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 38px;max-width:1200px}.steps li{padding-left:4px}footer{font-size:14px;color:var(--muted);max-width:1000px;margin-top:28px}footer p+p{margin-top:8px}@media(max-width:700px){main{padding:26px 12px}h1{font-size:28px}h2{font-size:21px}.process{padding:18px 14px;border-radius:12px}.steps{grid-template-columns:1fr}.toolbar{gap:12px}.download{width:100%;text-align:center}.section-heading{gap:12px}}@media print{body{background:white}main{padding:0}.process{break-inside:avoid;border:0;padding:0;margin:32px 0}.toolbar,nav{display:none}.diagram-viewport{overflow:visible;border:0}.diagram-canvas{width:100%!important}.steps{font-size:12px}header{margin-bottom:20px}h1{font-size:26px}h2{font-size:20px}footer{font-size:11px}}
 </style></head><body><main>
-<header><span class="eyebrow">Предлагаемый вариант · v1.1.0 · 04.11.2026</span><h1>Как зарегистрировать организацию<br>и подключить сотрудника</h1><p>Четыре процесса с отдельными действиями человека и платформы. Схемы можно увеличить, а исходники BPMN — скачать для редактирования.</p><nav aria-label="Разделы"><a href="#organization-registration">Регистрация организации</a><a href="#employee-invitation">Сотрудник по приглашению</a><a href="#employee-mos-organization">Организация на mos.ru</a><a href="#employee-mchd">Полномочия и МЧД</a></nav></header>
+<header><span class="eyebrow">Предлагаемый вариант · __VERSION__ · 04.11.2026</span><h1>Как зарегистрировать организацию<br>и подключить сотрудника</h1><p>Четыре процесса с отдельными действиями человека и платформы. Схемы можно увеличить, а исходники BPMN — скачать для редактирования.</p><nav aria-label="Разделы"><a href="#organization-registration">Регистрация организации</a><a href="#employee-invitation">Сотрудник по приглашению</a><a href="#employee-mos-organization">Организация на mos.ru</a><a href="#employee-mchd">Полномочия и МЧД</a></nav></header>
 '''+''.join(panels)+'''
 <footer><p>Схемы описывают предлагаемый процесс. Способ и сроки проверки генерального директора платформой ещё не определены.</p><p>Автоматическое получение организации из mos.ru показано как гипотеза интеграции. В <a href="https://trinityeco.ru/api/trinity-auth-documents/">инструкции Тринити</a> описаны ввод ИНН и оформление МЧД; автоматическое получение организации из mos.ru не подтверждено.</p><p>Все схемы и файлы BPMN встроены. Этот HTML можно переслать одним файлом и открыть в браузере без подключения к интернету.</p></footer>
 </main><script>
@@ -58,6 +59,7 @@ document.querySelectorAll('.process').forEach(section=>{
  }));section.querySelector('[data-scale="out"]').disabled=true;
 });
 </script></body></html>'''
+html=html.replace('__VERSION__','v'+VERSION)
 destination.write_text(html,encoding='utf-8')
 print(str(destination.resolve()))
 print('Self-contained HTML: embedded SVG and BPMN, no external resources; bytes:',destination.stat().st_size)

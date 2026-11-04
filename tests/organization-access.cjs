@@ -1,0 +1,22 @@
+const fs=require('node:fs'),path=require('node:path'),{pathToFileURL}=require('node:url'),{chromium}=require('playwright');fs.mkdirSync('test-results',{recursive:true});
+(async()=>{const b=await chromium.launch({headless:true,...(process.env.PROTOTYPE_BROWSER?{executablePath:process.env.PROTOTYPE_BROWSER}:{})});try{
+ const p=await b.newPage({viewport:{width:1280,height:1100}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.route(/^https?:/,r=>r.abort());await p.goto(pathToFileURL(path.resolve('index.html')).href);
+ const act=id=>p.locator(`[data-p-action="${id}"]`).click(),go=id=>p.locator(`[data-go="${id}"]`).click(),submit=id=>p.locator(`[data-form="${id}"] button[type=submit]`).click();
+ const title=async t=>{const actual=await p.locator('#ap-screen h2').innerText();if(actual!==t)throw Error(`Expected ${t}; got ${actual}`)};
+ const register=async()=>{await p.locator('#ap-demo').click();await p.check('#p-consent');await submit('p-register');await act('connect-company');await submit('p-find-company')};
+ // Unlinked applicant must verify authority; declaring a director role does not grant access.
+ await p.selectOption('#ap-org-case','existing');await register();await title('Организация уже подключена');await p.screenshot({path:'test-results/existing-organization-options.png',fullPage:true});
+ if(await p.locator('[data-go=p-workspace],[data-go=p-invite-team]').count())throw Error('Unverified applicant already has rights');
+ await act('confirm-existing-director');await submit('p-company-record');await act('choose-ep');if(!(await p.locator('#ap-screen').innerText()).includes('Новая компания создана не будет'))throw Error('Duplicate organization may be created');await act('verify-ep');await act('company-rejected');await title('Подключение не подтверждено');
+ await go('p-company-record');await submit('p-company-record');await act('choose-ep');await act('verify-ep');await act('company-approved');await title('Доступ к организации подтверждён');await go('p-workspace');if(!(await p.locator('#ap-screen').innerText()).includes('Генеральный директор'))throw Error('Verified director missing');
+ // Existing verified director logs in with email/password and can invite/prepare MCD, without signing in by UKЭP.
+ await p.locator('#ap-repeat').check();await p.fill('#p-password','demo');await submit('p-login');await title('Выберите организацию');await act('pick-admin');await title('Личный кабинет');await go('p-invite-team');await title('Пригласите сотрудника');
+ await p.locator('.ap-map summary').click();await p.locator('[data-jump=p-workspace]').click();await act('mchd-start');await p.check('#p-mchd-power-contracts');await submit('p-mchd-generate');await go('p-mchd-sign');await p.selectOption('#ap-sign-result','no-certificate');await act('mchd-sign');await title('Подпишите МЧД электронной подписью');if(!(await p.locator('[role=alert]').innerText()).includes('подключите УКЭП'))throw Error('MCD signed without a certificate');
+ await p.selectOption('#ap-sign-result','success');await act('mchd-sign');await title('МЧД подписана');
+ // Previously connected employee gets only saved ordinary rights, never director powers.
+ await p.selectOption('#ap-proposal-path','company');await p.locator('#ap-repeat').uncheck();await p.selectOption('#ap-org-case','existing');await p.selectOption('#ap-existing-access','employee');await register();await title('Личный кабинет');if(await p.locator('[data-go=p-invite-team],[data-p-action=mchd-start]').count())throw Error('Existing employee received director rights');
+ // Existing verified director bypasses re-registration after organization lookup too.
+ await p.selectOption('#ap-existing-access','director');await register();await title('Личный кабинет');if(!(await p.locator('#ap-screen').innerText()).includes('Генеральный директор'))throw Error('Known director asked for invitation');
+ for(const width of [320,736,1280]){await p.setViewportSize({width,height:1100});if(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Overflow '+width);}
+ if(errors.length)throw Error(errors.join(';'));console.log('Passed: existing organization without duplicate, unlinked director requires proof, rejection/retry, verified role survives password login, invitation/MCD preparation without login certificate, signature requires UKЭP, employee rights remain limited.');
+}finally{await b.close()}})().catch(e=>{console.error(e);process.exit(1)});

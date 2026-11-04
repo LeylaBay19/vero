@@ -31,7 +31,12 @@ def font_file(bold=False):
     raise RuntimeError('Install Arial/DejaVu Sans or set PROTOTYPE_FONT_DIR to an Arial font directory.')
 
 def diagram(slug,title,precondition,nodes,flows,lanes=None,size=(2300,1060)):
+    # Reserve a separate left column for role labels; shift all process content.
+    gutter=180
     W,H=size
+    W+=gutter
+    nodes={nid:(kind,label,(x+gutter,y,w,h),lane) for nid,(kind,label,(x,y,w,h),lane) in nodes.items()}
+    flows=[(source,target,[(x+gutter,y) for x,y in points],label,(labelpos[0]+gutter,labelpos[1]) if labelpos else None) for source,target,points,label,labelpos in flows]
     lanes=lanes or [('person','ГЕНЕРАЛЬНЫЙ ДИРЕКТОР' if slug in ('organization-registration','employee-mchd') else 'СОТРУДНИК',130,310),('system','ПЛАТФОРМА',440,450)]
     im=Image.new('RGB',(W,H),'white');d=ImageDraw.Draw(im)
     svg=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img"><title>{escape(title)}</title><rect width="100%" height="100%" fill="white"/>']
@@ -56,7 +61,17 @@ def diagram(slug,title,precondition,nodes,flows,lanes=None,size=(2300,1060)):
     box(35,130,W-70,lanes[-1][2]+lanes[-1][3]-130,'#ffffff',0)
     for lane,label,y,h in lanes:
         if y!=130:line([(35,y),(W-35,y)],False)
-        text(W/2,y+24,label,18,True)
+        line([(35+gutter,y),(35+gutter,y+h)],False)
+        label_size=18
+        while ImageFont.truetype(font_file(True),label_size).getlength(label)>h-36:label_size-=1
+        ft=ImageFont.truetype(font_file(True),label_size)
+        length=int(ft.getlength(label))+12
+        tile=Image.new('RGBA',(length,label_size*2),(255,255,255,0))
+        ImageDraw.Draw(tile).text((length/2,label_size),label,font=ft,fill='#193936',anchor='mm')
+        tile=tile.rotate(90,expand=True)
+        cx,cy=35+gutter/2,y+h/2
+        im.paste(tile,(int(cx-tile.width/2),int(cy-tile.height/2)),tile)
+        svg.append(f'<text transform="translate({cx} {cy}) rotate(-90)" text-anchor="middle" dominant-baseline="central" font-family="Arial,sans-serif" font-size="{label_size}" font-weight="700" fill="#193936">{escape(label)}</text>')
     for source,target,points,label,labelpos in flows:
         line(points)
         if label:text(*labelpos,label,20)
@@ -119,33 +134,39 @@ def diagram(slug,title,precondition,nodes,flows,lanes=None,size=(2300,1060)):
         seen.add(cur);todo += [t for s,t,*_ in flows if s==cur]
     assert seen==set(nodes),(set(nodes)-seen)
 
-diagram('organization-registration','Предлагаемый вариант · регистрация организации','Организацию регистрирует только генеральный директор. Сотрудники не могут создать её кабинет.',{
+diagram('organization-registration','Предлагаемый вариант · регистрация и доступ к организации','Гендиректору подключённой организации приглашение не требуется: проверяется существующий доступ или подтверждаются полномочия.',{
  'Start':('startEvent','Начало',(70,243,34,34),'person'),
- 'Auth':('task','Войти / создать\nличный аккаунт',(150,210,210,100),'person'),
- 'INN':('userTask','Ввести ИНН\nорганизации',(420,210,210,100),'person'),
- 'Lookup':('task','Найти\nорганизацию',(420,520,210,100),'system'),
- 'Exists':('exclusiveGateway','Уже подключена?',(750,545,50,50),'system'),
- 'Request':('userTask','Обратиться\nв свою организацию',(680,210,220,100),'person'),
- 'ExistingEnd':('endEvent','Нужно\nприглашение',(940,243,34,34),'person'),
- 'Record':('userTask','Проверить\nреквизиты',(1000,210,210,100),'person'),
- 'Sign':('userTask','Подписать заявление\nЭП гендиректора',(1280,210,235,100),'person'),
- 'Check':('task','Проверить данные\nи полномочия',(1280,520,235,100),'system'),
- 'Valid':('exclusiveGateway','Проверка пройдена?',(1600,545,50,50),'system'),
- 'Ready':('task','Подключить компанию\nи дать права админа',(1810,520,260,100),'system'),
- 'Invite':('userTask','Открыть кабинет; при необходимости пригласить сотрудников',(1810,210,260,100),'person'),
- 'End':('endEvent','Кабинет готов',(2160,243,34,34),'person'),
- 'Reject':('task','Отклонить заявку:\nуказать причину',(1510,730,260,100),'system'),
- 'Retry':('exclusiveGateway','Исправить данные?',(1840,755,50,50),'system'),
- 'RejectedEnd':('endEvent','Не подключена',(2110,763,34,34),'system'),
+ 'Auth':('userTask','Войти / создать личный аккаунт',(150,210,220,100),'person'),
+ 'INN':('userTask','Указать организацию по ИНН',(440,210,240,100),'person'),
+ 'Lookup':('serviceTask','Найти организацию',(440,600,240,100),'system'),
+ 'Exists':('exclusiveGateway','Уже подключена?',(770,625,50,50),'system'),
+ 'Access':('serviceTask','Проверить сохранённую связь аккаунта с организацией и права',(760,880,280,110),'system'),
+ 'Known':('exclusiveGateway','Доступ уже\nподтверждён?',(1120,910,50,50),'system'),
+ 'Record':('userTask','Проверить реквизиты организации',(1100,210,260,100),'person'),
+ 'Sign':('userTask','Подписать заявление УКЭП гендиректора',(1470,210,270,100),'person'),
+ 'Check':('serviceTask','Проверить подпись, данные и полномочия гендиректора',(1470,600,270,110),'system'),
+ 'Valid':('exclusiveGateway','Проверка пройдена?',(1840,630,50,50),'system'),
+ 'Ready':('serviceTask','Новая компания: подключить; существующая: подтвердить доступ без дубля',(2070,600,300,120),'system'),
+ 'Cabinet':('userTask','Открыть кабинет с подтверждёнными правами',(2070,210,300,100),'person'),
+ 'End':('endEvent','Кабинет открыт',(2470,243,34,34),'person'),
+ 'Reject':('serviceTask','Сообщить причину; не выдавать доступ',(1770,880,280,110),'system'),
+ 'Retry':('exclusiveGateway','Повторная подача?',(2140,910,50,50),'system'),
+ 'RejectedEnd':('endEvent','Без нового доступа',(2450,918,34,34),'system'),
 },[
- ('Start','Auth',[(104,260),(150,260)],'',None),('Auth','INN',[(360,260),(420,260)],'',None),('INN','Lookup',[(525,310),(525,520)],'',None),
- ('Lookup','Exists',[(630,570),(750,570)],'',None),('Exists','Request',[(775,545),(775,310)],'Да',(805,395)),('Request','ExistingEnd',[(900,260),(940,260)],'',None),
- ('Exists','Record',[(800,570),(1105,570),(1105,310)],'Нет',(965,549)),('Record','Sign',[(1210,260),(1280,260)],'',None),('Sign','Check',[(1397,310),(1397,520)],'',None),
- ('Check','Valid',[(1515,570),(1600,570)],'',None),('Valid','Ready',[(1650,570),(1810,570)],'Да',(1725,548)),('Ready','Invite',[(1940,520),(1940,310)],'',None),('Invite','End',[(2070,260),(2160,260)],'',None),
- ('Valid','Reject',[(1625,595),(1625,730)],'Нет',(1657,666)),('Reject','Retry',[(1770,780),(1840,780)],'',None),
- ('Retry','RejectedEnd',[(1890,780),(2110,780)],'Нет',(1990,755)),
- ('Retry','Record',[(1865,805),(1865,865),(1240,865),(1240,350),(1105,350),(1105,310)],'Да',(1780,842)),
-])
+ ('Start','Auth',[(104,260),(150,260)],'',None),('Auth','INN',[(370,260),(440,260)],'',None),
+ ('INN','Lookup',[(560,310),(560,600)],'',None),('Lookup','Exists',[(680,650),(770,650)],'',None),
+ ('Exists','Record',[(820,650),(1230,650),(1230,310)],'Нет',(990,625)),
+ ('Exists','Access',[(795,675),(795,880)],'Да',(835,775)),
+ ('Access','Known',[(1040,935),(1120,935)],'',None),
+ ('Known','Cabinet',[(1170,935),(1320,935),(1320,500),(2220,500),(2220,310)],'Да: без новой регистрации',(1700,475)),
+ ('Known','Record',[(1145,910),(1145,825),(1060,825),(1060,260),(1100,260)],'Нет: подтвердить полномочия',(1160,780)),
+ ('Record','Sign',[(1360,260),(1470,260)],'',None),('Sign','Check',[(1605,310),(1605,600)],'',None),
+ ('Check','Valid',[(1740,655),(1840,655)],'',None),('Valid','Ready',[(1890,655),(2070,655)],'Да',(1980,630)),
+ ('Ready','Cabinet',[(2220,600),(2220,310)],'',None),('Cabinet','End',[(2370,260),(2470,260)],'',None),
+ ('Valid','Reject',[(1865,680),(1865,880)],'Нет',(1910,775)),('Reject','Retry',[(2050,935),(2140,935)],'',None),
+ ('Retry','RejectedEnd',[(2190,935),(2450,935)],'Нет',(2310,910)),
+ ('Retry','Record',[(2165,960),(2165,1130),(1410,1130),(1410,360),(1230,360),(1230,310)],'Да',(2070,1100)),
+],lanes=[('person','ПОЛЬЗОВАТЕЛЬ / ГЕНДИРЕКТОР',130,410),('system','ПЛАТФОРМА',540,650)],size=(2750,1370))
 diagram('employee-invitation','Предлагаемый вариант · единое подключение сотрудника','Приглашение на любую почту → mos.ru без повторного ИНН → принятие → МЧД руководителю, если нужна.',{
  'Start':('startEvent','Приглашение\nполучено',(70,243,34,34),'person'),
  'Open':('userTask','Открыть приглашение на личной или рабочей почте',(150,210,240,110),'person'),
@@ -191,7 +212,7 @@ diagram('employee-invitation','Предлагаемый вариант · еди
  ('Sign','Verify',[(2415,1080),(2415,910)],'',None),
  ('Verify','SignatureOK',[(2550,850),(2580,850)],'',None),
  ('SignatureOK','Activate',[(2630,850),(2670,850)],'Да',(2650,875)),
- ('SignatureOK','Sign',[(2605,875),(2605,1000),(2600,1000),(2600,1240),(2415,1240),(2415,1190)],'Ошибка: исправить и повторить',(2840,1015)),
+ ('SignatureOK','Sign',[(2605,875),(2605,1240),(2415,1240),(2415,1190)],'Ошибка: исправить и повторить',(2840,1015)),
  ('Activate','End',[(2960,845),(3090,845)],'',None),
 ],lanes=[('person','СОТРУДНИК',130,350),('system','ПЛАТФОРМА',480,560),('director','ГЕНЕРАЛЬНЫЙ ДИРЕКТОР',1040,260)],size=(3250,1480))
 

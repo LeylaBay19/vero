@@ -1886,7 +1886,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
 &lt;div id=&quot;auth-flow-prototype&quot; aria-label=&quot;Прототип регистрации и входа: Тринити и Орбита&quot;&gt;
   &lt;div class=&quot;ap-bench&quot;&gt;
-    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.1.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.2.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&quot;ap-scenarios&quot; aria-label=&quot;Выбор сценария&quot;&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;mos&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;01 · Сотрудник&lt;/span&gt;&lt;strong&gt;Тринити · mos.ru&lt;/strong&gt;&lt;span&gt;Личный вход и доверенность&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;ep&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;02 · Руководитель&lt;/span&gt;&lt;strong&gt;Тринити · УКЭП&lt;/strong&gt;&lt;span&gt;Подключение организации&lt;/span&gt;&lt;/button&gt;
@@ -1901,10 +1901,11 @@ html&gt;body{padding:0}&lt;/style&gt;
       &lt;div id=&quot;ap-proposal-controls&quot; hidden&gt;
         &lt;label&gt;Путь&lt;select id=&quot;ap-proposal-path&quot;&gt;&lt;option value=&quot;company&quot;&gt;Регистрация организации&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Регистрация сотрудника&lt;/option&gt;&lt;option value=&quot;powers&quot;&gt;Полномочия сотрудника · МЧД&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
         &lt;label id=&quot;ap-proposal-entry-wrap&quot;&gt;Подключение&lt;select id=&quot;ap-proposal-entry&quot;&gt;&lt;option value=&quot;invite&quot;&gt;По приглашению&lt;/option&gt;&lt;option value=&quot;contact&quot;&gt;Нет приглашения&lt;/option&gt;&lt;option value=&quot;mos-org&quot;&gt;Организация есть на mos.ru&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
+        &lt;label id=&quot;ap-existing-access-wrap&quot; hidden&gt;Сохранённая связь аккаунта&lt;select id=&quot;ap-existing-access&quot;&gt;&lt;option value=&quot;unlinked&quot;&gt;Не подтверждена&lt;/option&gt;&lt;option value=&quot;director&quot;&gt;Подтверждённый гендиректор&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Подключённый сотрудник&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
         &lt;label id=&quot;ap-invite-mchd-wrap&quot;&gt;МЧД в приглашении&lt;select id=&quot;ap-invite-mchd-mode&quot;&gt;&lt;option value=&quot;yes&quot;&gt;Нужна&lt;/option&gt;&lt;option value=&quot;no&quot;&gt;Не нужна&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
         &lt;button type=&quot;button&quot; id=&quot;ap-director-review&quot; data-p-action=&quot;invite-director-review&quot; hidden&gt;Демо: перейти к руководителю&lt;/button&gt;
         &lt;button type=&quot;button&quot; id=&quot;ap-return-employee&quot; data-p-action=&quot;invite-employee-return&quot; hidden&gt;Демо: вернуться к сотруднику&lt;/button&gt;
-        &lt;label id=&quot;ap-sign-result-wrap&quot; hidden&gt;Проверка подписи&lt;select id=&quot;ap-sign-result&quot;&gt;&lt;option value=&quot;success&quot;&gt;Успешно&lt;/option&gt;&lt;option value=&quot;failure&quot;&gt;Ошибка&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
+        &lt;label id=&quot;ap-sign-result-wrap&quot; hidden&gt;Проверка подписи&lt;select id=&quot;ap-sign-result&quot;&gt;&lt;option value=&quot;success&quot;&gt;Успешно&lt;/option&gt;&lt;option value=&quot;failure&quot;&gt;Ошибка&lt;/option&gt;&lt;option value=&quot;no-certificate&quot;&gt;Нет УКЭП&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
         &lt;span id=&quot;ap-invite-demo-note&quot; class=&quot;ap-mos-assumption&quot; hidden&gt;Стенд: mos.ru, доставка приглашений и подпись МЧД имитируются. Личная почта mos.ru отличается от почты приглашения; контекст сохраняется в памяти текущего сеанса.&lt;/span&gt;
       &lt;/div&gt;
       &lt;span id=&quot;ap-mos-org-note&quot; class=&quot;ap-mos-assumption&quot; hidden&gt;Проект кейса: получение организации из mos.ru — предположение интеграции; у Тринити не подтверждено.&lt;/span&gt;
@@ -2136,7 +2137,7 @@ function route(){
  return [[&#x27;entry&#x27;,&#x27;Вход&#x27;],[&#x27;register&#x27;,&#x27;Регистрация&#x27;],[&#x27;email&#x27;,&#x27;Письмо&#x27;],[&#x27;letter&#x27;,&#x27;Подтверждение&#x27;],[&#x27;confirmed&#x27;,&#x27;Email подтверждён&#x27;],[&#x27;orb-login&#x27;,&#x27;Вход&#x27;],[&#x27;first&#x27;,&#x27;Анкета&#x27;],[&#x27;search&#x27;,&#x27;Поиск компании&#x27;],[&#x27;result&#x27;,&#x27;Результат&#x27;],[&#x27;person&#x27;,&#x27;Данные человека&#x27;],...(S.orgCase===&#x27;new&#x27;?[[&#x27;company&#x27;,&#x27;Компания&#x27;],[&#x27;sign&#x27;,&#x27;Подпись&#x27;]]:[[&#x27;waiting&#x27;,&#x27;Проверка&#x27;],[&#x27;review&#x27;,&#x27;Администратор&#x27;]]),[&#x27;role&#x27;,&#x27;Роль&#x27;],[&#x27;role-confirm&#x27;,&#x27;Подтверждение&#x27;],[&#x27;done&#x27;,&#x27;Личный кабинет&#x27;]];
 }
 function resetProposal(){
- S.pIdentity=(S.pIdentity||0)+1;S.accountVerified=false;S.memberActive=false;S.isAdmin=false;S.orgVerified=false;S.pendingCompany=false;S.externalOrgPresent=false;
+ S.existingAccess=S.existingAccess||&#x27;unlinked&#x27;;S.connectingExisting=false;S.savedAccessVerified=false;S.pIdentity=(S.pIdentity||0)+1;S.accountVerified=false;S.memberActive=false;S.isAdmin=false;S.orgVerified=false;S.pendingCompany=false;S.externalOrgPresent=false;
  S.proposalPath=S.proposalPath||&#x27;company&#x27;;S.employeeEntry=S.employeeEntry===&#x27;request&#x27;?&#x27;contact&#x27;:S.employeeEntry||&#x27;invite&#x27;;S.verification=&#x27;ep&#x27;;S.applicant=&#x27;director&#x27;;S.inviteContext=false;S.inviteHasAccount=false;S.inviteUnified=false;S.pendingInvite=null;S.inviteBinding=null;S.inviteSession=null;S.mosIdentity=null;
  S.invitation=S.invitation||{name:&#x27;Петров Пётр&#x27;,email:&#x27;petr@example.test&#x27;,company:&#x27;ООО «Пример»&#x27;,objects:true,requests:true,people:false,finance:false,powers:[&#x27;contracts&#x27;]};
  S.invitation={...S.invitation,id:&#x27;invite-&#x27;+S.pIdentity,inn:S.invitation.inn||&#x27;0000000000&#x27;,powers:S.invitation.powers||[],accepted:false};
@@ -2166,7 +2167,7 @@ function proposalRoute(){
  if(S.repeat)return [[&#x27;p-login&#x27;,&#x27;Вход&#x27;],...(S.authMethod===&#x27;mos&#x27;?[[&#x27;p-mos&#x27;,&#x27;mos.ru&#x27;]]:[]),[&#x27;p-company-picker&#x27;,&#x27;Выбор компании&#x27;],[&#x27;p-workspace&#x27;,&#x27;Личный кабинет&#x27;]];
  const auth=[[&#x27;p-register&#x27;,&#x27;Личный аккаунт&#x27;],...(S.authMethod===&#x27;mos&#x27;?[[&#x27;p-mos&#x27;,&#x27;mos.ru&#x27;],[&#x27;p-mos-profile&#x27;,&#x27;Данные аккаунта&#x27;]]:[])];
  if(S.proposalPath===&#x27;employee&#x27;)return [[&#x27;p-invitation&#x27;,&#x27;Приглашение&#x27;],[&#x27;p-mos&#x27;,&#x27;Вход через mos.ru&#x27;],[&#x27;p-accept-invite&#x27;,&#x27;Принятие&#x27;],...(S.invitation.powers.length?[[&#x27;p-invite-pending&#x27;,&#x27;МЧД руководителю&#x27;]]:[]),[&#x27;p-workspace&#x27;,&#x27;Личный кабинет&#x27;]];
- return [...auth,[&#x27;p-account&#x27;,&#x27;Подключение&#x27;],[&#x27;p-company-search&#x27;,&#x27;Поиск по ИНН&#x27;],...(S.orgCase===&#x27;existing&#x27;?[[&#x27;p-company-found&#x27;,&#x27;Компания найдена&#x27;]]:[[&#x27;p-company-record&#x27;,&#x27;Реквизиты&#x27;],[&#x27;p-authority&#x27;,&#x27;Генеральный директор&#x27;],[&#x27;p-sign&#x27;,&#x27;Электронная подпись&#x27;],[&#x27;p-company-pending&#x27;,&#x27;Проверка платформой&#x27;],[&#x27;p-company-ready&#x27;,&#x27;Компания подключена&#x27;],[&#x27;p-invite-team&#x27;,&#x27;Сотрудники&#x27;],[&#x27;p-invite-sent&#x27;,&#x27;Приглашение отправлено&#x27;]]),[&#x27;p-workspace&#x27;,&#x27;Личный кабинет&#x27;]];
+ return [...auth,[&#x27;p-account&#x27;,&#x27;Подключение&#x27;],[&#x27;p-company-search&#x27;,&#x27;Поиск по ИНН&#x27;],...(S.orgCase===&#x27;existing&#x27;?[[&#x27;p-company-found&#x27;,&#x27;Существующая организация&#x27;]]:[]),...([[&#x27;p-company-record&#x27;,&#x27;Реквизиты&#x27;],[&#x27;p-authority&#x27;,&#x27;Генеральный директор&#x27;],[&#x27;p-sign&#x27;,&#x27;Электронная подпись&#x27;],[&#x27;p-company-pending&#x27;,&#x27;Проверка платформой&#x27;],[&#x27;p-company-ready&#x27;,&#x27;Компания подключена&#x27;],[&#x27;p-invite-team&#x27;,&#x27;Сотрудники&#x27;],[&#x27;p-invite-sent&#x27;,&#x27;Приглашение отправлено&#x27;]]),[&#x27;p-workspace&#x27;,&#x27;Личный кабинет&#x27;]];
 }
 function proposalJourney(){
  const q=S.screen;let steps,title,intro;
@@ -2241,6 +2242,8 @@ function proposalRender(){
  root.querySelector(&#x27;#ap-invite-demo-note&#x27;).hidden=!(S.proposalPath===&#x27;employee&#x27;&amp;&amp;S.employeeEntry===&#x27;invite&#x27;||S.inviteUnified);
  root.querySelector(&#x27;#ap-org-control&#x27;).hidden=S.proposalPath!==&#x27;company&#x27;||S.repeat;
  root.querySelector(&#x27;#ap-org-case&#x27;).value=S.orgCase;
+ root.querySelector(&#x27;#ap-existing-access-wrap&#x27;).hidden=!(S.proposalPath===&#x27;company&#x27;&amp;&amp;(S.repeat||S.orgCase===&#x27;existing&#x27;));
+ root.querySelector(&#x27;#ap-existing-access&#x27;).value=S.existingAccess;
  root.querySelector(&#x27;#ap-brand&#x27;).textContent=&#x27;Предлагаемый вариант&#x27;;
  root.querySelector(&#x27;.ap-preview-badge&#x27;).textContent=&#x27;Проект решения&#x27;;
  root.querySelector(&#x27;#ap-context&#x27;).textContent=q===&#x27;p-mos-orgs&#x27;?&#x27;Сведения mos.ru&#x27;:S.isAdmin&amp;&amp;[&#x27;p-company-ready&#x27;,&#x27;p-invite-team&#x27;,&#x27;p-invite-sent&#x27;,&#x27;p-workspace&#x27;].includes(q)?&#x27;Кабинет администратора&#x27;:q===&#x27;p-invitation&#x27;?&#x27;Приглашение&#x27;:S.repeat?&#x27;Повторный вход&#x27;:S.proposalPath===&#x27;employee&#x27;?&#x27;Сотрудник&#x27;:&#x27;Организация&#x27;;
@@ -2267,13 +2270,13 @@ function proposalRender(){
  }else if(q===&#x27;p-authority&#x27;){
   html=wrap(&#x27;Подключение организации гендиректором&#x27;,pCompany()+`&lt;p&gt;Зарегистрировать организацию может только её генеральный директор.&lt;/p&gt;${field(&#x27;Генеральный директор&#x27;,&#x27;p-applicant-name&#x27;,S.personalName,&#x27;text&#x27;,true)}&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Электронная подпись гендиректора&lt;/h3&gt;&lt;p&gt;После подписания платформа проверит данные организации и полномочия руководителя.&lt;/p&gt;${pActions(&#x27;Продолжить с электронной подписью&#x27;,&#x27;choose-ep&#x27;)}&lt;/div&gt;`,true);
  }else if(q===&#x27;p-sign&#x27;){
-  html=wrap(&#x27;Электронная подпись гендиректора&#x27;,pCompany()+`&lt;div class=&quot;ap-description&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Пример сертификата&lt;/span&gt;&lt;strong&gt;${esc(S.personalName)}&lt;/strong&gt;&lt;p&gt;Генеральный директор&lt;/p&gt;&lt;/div&gt;&lt;p&gt;Подпишите заявление на подключение. Доступ к управлению организацией откроется после проверки платформой.&lt;/p&gt;${pActions(&#x27;Подписать и передать на проверку&#x27;,&#x27;verify-ep&#x27;)}${pAlert()}`);
+  html=wrap(&#x27;Электронная подпись гендиректора&#x27;,pCompany()+`&lt;div class=&quot;ap-description&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Пример сертификата&lt;/span&gt;&lt;strong&gt;${esc(S.personalName)}&lt;/strong&gt;&lt;p&gt;Генеральный директор&lt;/p&gt;&lt;/div&gt;&lt;p&gt;${S.connectingExisting?&#x27;Подпишите заявление на подтверждение полномочий в существующей организации. Новая компания создана не будет.&#x27;:&#x27;Подпишите заявление на подключение.&#x27;} Доступ к управлению организацией откроется после проверки платформой.&lt;/p&gt;${pActions(&#x27;Подписать и передать на проверку&#x27;,&#x27;verify-ep&#x27;)}${pAlert()}`);
  }else if(q===&#x27;p-company-pending&#x27;){
   html=wrap(&#x27;Организация на проверке&#x27;,pCompany()+`&lt;div class=&quot;ap-status&quot;&gt;Платформа проверяет данные организации и полномочия генерального директора.&lt;/div&gt;&lt;p&gt;До завершения проверки приглашение сотрудников и работа с данными компании недоступны.&lt;/p&gt;&lt;div class=&quot;ap-divider&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Демонстрация результата проверки&lt;/span&gt;${pActions(&#x27;Показать: проверка пройдена&#x27;,&#x27;company-approved&#x27;,false)}${pActions(&#x27;Показать: проверка не пройдена&#x27;,&#x27;company-rejected&#x27;,false)}&lt;/div&gt;`);
  }else if(q===&#x27;p-company-rejected&#x27;){
   html=wrap(&#x27;Подключение не подтверждено&#x27;,`&lt;div class=&quot;ap-status&quot;&gt;${esc(S.companyReason||&#x27;Не подтверждено, что заявитель является генеральным директором организации.&#x27;)}&lt;/div&gt;&lt;p&gt;Доступ к данным организации и приглашение сотрудников не предоставлены.&lt;/p&gt;${B(&#x27;Проверить данные организации&#x27;,&#x27;p-company-record&#x27;)}`);
  }else if(q===&#x27;p-company-ready&#x27;){
-  html=wrap(&#x27;Организация подключена&#x27;,pCompany()+`&lt;div class=&quot;ap-status&quot;&gt;Полномочия подтверждены. Вам доступно администрирование кабинета.&lt;/div&gt;&lt;p&gt;Пригласите сотрудников и назначьте им права. Подписание документов требует отдельного подтверждения полномочий.&lt;/p&gt;${B(&#x27;Пригласить сотрудника&#x27;,&#x27;p-invite-team&#x27;)}${B(&#x27;Перейти в кабинет&#x27;,&#x27;p-workspace&#x27;,false)}`);
+  html=wrap(S.connectingExisting?&#x27;Доступ к организации подтверждён&#x27;:&#x27;Организация подключена&#x27;,pCompany()+`&lt;div class=&quot;ap-status&quot;&gt;Полномочия подтверждены. Вам доступно администрирование кабинета.&lt;/div&gt;&lt;p&gt;Пригласите сотрудников и назначьте им права. Подписание документов требует отдельного подтверждения полномочий.&lt;/p&gt;${B(&#x27;Пригласить сотрудника&#x27;,&#x27;p-invite-team&#x27;)}${B(&#x27;Перейти в кабинет&#x27;,&#x27;p-workspace&#x27;,false)}`);
  }else if(q===&#x27;p-invite-team&#x27;){
   html=wrap(&#x27;Пригласите сотрудника&#x27;,form(field(&#x27;ФИО сотрудника&#x27;,&#x27;p-employee-name&#x27;,S.invitation.name)+field(&#x27;Email сотрудника&#x27;,&#x27;p-employee-email&#x27;,S.invitation.email,&#x27;email&#x27;)+`&lt;p&gt;Личная или корпоративная почта. Её совпадение с почтой mos.ru не требуется.&lt;/p&gt;`+pRights(&#x27;p-invite&#x27;,S.invitation)+pInvitePowers()+submit(&#x27;Отправить приглашение&#x27;,&#x27;p-invite&#x27;),&#x27;p-invite&#x27;),true);
  }else if(q===&#x27;p-invite-sent&#x27;){
@@ -2286,7 +2289,7 @@ function proposalRender(){
  }else if(q===&#x27;p-invite-pending&#x27;){
   html=wrap(&#x27;Приглашение принято&#x27;,pInviteCompany()+`&lt;div class=&quot;ap-status&quot;&gt;Доступ к кабинету предоставлен. МЧД ожидает подписи руководителя.&lt;/div&gt;&lt;p&gt;Платформа сформировала доверенность по выбранным полномочиям и направила её руководителю. Повторно вводить организацию или запрашивать полномочия не нужно.&lt;/p&gt;${pMchdList()}&lt;p&gt;Сотрудник не подписывает эту МЧД. До подписи руководителя указанные полномочия недоступны.&lt;/p&gt;${B(&#x27;Перейти в кабинет&#x27;,&#x27;p-workspace&#x27;)}`,true);
  }else if(q===&#x27;p-company-found&#x27;){
-  html=wrap(&#x27;Организация уже подключена&#x27;,pCompany()+pContactNotice());
+  html=wrap(&#x27;Организация уже подключена&#x27;,pCompany()+`&lt;p&gt;Повторно регистрировать компанию не нужно.&lt;/p&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Вы генеральный директор?&lt;/h3&gt;&lt;p&gt;Если аккаунт ещё не связан с организацией, подтвердите полномочия своей УКЭП. После проверки откроется существующий кабинет.&lt;/p&gt;${pActions(&#x27;Подтвердить полномочия гендиректора&#x27;,&#x27;confirm-existing-director&#x27;)}&lt;/div&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Вы сотрудник?&lt;/h3&gt;${pContactNotice()}&lt;/div&gt;${pAlert()}`,true);
  }else if(q===&#x27;p-contact-org&#x27;){
   html=wrap(&#x27;Подключение сотрудника&#x27;,`${S.externalOrgPresent?pCompany():&#x27;&#x27;}${pContactNotice()}${S.externalOrgPresent?&#x27;&lt;p class=&quot;ap-muted&quot;&gt;Ваша организация найдена на mos.ru. Доступ к данным компании на платформе ещё не назначен.&lt;/p&gt;&#x27;:&#x27;&#x27;}${B(&#x27;Вернуться ко входу&#x27;,&#x27;p-login&#x27;,false)}`);
  }else if(q===&#x27;p-mos-orgs&#x27;){
@@ -2301,10 +2304,10 @@ function proposalRender(){
  }else if(q===&#x27;p-mchd-done&#x27;){
   html=wrap(&#x27;МЧД подписана&#x27;,`&lt;div class=&quot;ap-status&quot;&gt;Доверенность подписана электронной подписью руководителя&lt;/div&gt;`+pMchdSummary()+`&lt;p&gt;Сотруднику оформлены выбранные полномочия. Назначенный доступ к кабинету сохранён. Сотруднику не нужно подписывать эту доверенность.&lt;/p&gt;${B(&#x27;В кабинет руководителя&#x27;,&#x27;p-workspace&#x27;)}&lt;div class=&quot;ap-divider&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Продолжение за сотрудника · демонстрация&lt;/span&gt;${pActions(&#x27;Посмотреть кабинет сотрудника&#x27;,&#x27;mchd-employee-view&#x27;,false)}&lt;/div&gt;`,true);
  }else if(q===&#x27;p-company-picker&#x27;){
-  html=wrap(&#x27;Выберите организацию&#x27;,`&lt;p&gt;Вы вошли как ${esc(S.email)}. Один аккаунт может быть подключён к нескольким компаниям.&lt;/p&gt;&lt;div class=&quot;ap-grid&quot;&gt;${pActions(&#x27;ООО «Пример» · администратор&#x27;,&#x27;pick-admin&#x27;,false)}${pActions(&#x27;ООО «Пример 2» · сотрудник&#x27;,&#x27;pick-employee&#x27;,false)}&lt;/div&gt;`,true);
+  html=wrap(&#x27;Выберите организацию&#x27;,`&lt;p&gt;Вы вошли как ${esc(S.email)}. Показаны только сохранённые подключения этого аккаунта.&lt;/p&gt;&lt;div class=&quot;ap-grid&quot;&gt;${S.existingAccess===&#x27;director&#x27;?pActions(&#x27;ООО «Пример» · генеральный директор&#x27;,&#x27;pick-admin&#x27;,false):S.existingAccess===&#x27;employee&#x27;?pActions(&#x27;ООО «Пример» · сотрудник&#x27;,&#x27;pick-employee&#x27;,false):&#x27;&lt;p&gt;Подтверждённых подключений пока нет.&lt;/p&gt;&#x27;+B(&#x27;Найти свою организацию&#x27;,&#x27;p-company-search&#x27;)}&lt;/div&gt;&lt;p&gt;Вход по email или через mos.ru сам по себе не назначает права организации.&lt;/p&gt;`,true);
  }else if(q===&#x27;p-workspace&#x27;){
   const rights=S.employeeRights||{};
-  html=wrap(&#x27;Личный кабинет&#x27;,pCompany()+`&lt;div class=&quot;ap-status&quot;&gt;Вход выполнен. Вы работаете в выбранной организации.&lt;/div&gt;&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;${esc(S.personalName)}&lt;/strong&gt;&lt;p&gt;${esc(S.email)}&lt;/p&gt;&lt;p&gt;${S.isAdmin?&#x27;Администратор кабинета&#x27;:&#x27;Сотрудник организации&#x27;}&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Доступные действия&lt;/h3&gt;${S.isAdmin||rights.objects?&#x27;&lt;p&gt;Работа с объектами&lt;/p&gt;&#x27;:&#x27;&#x27;}${S.isAdmin||rights.requests?&#x27;&lt;p&gt;Работа с заявками&lt;/p&gt;&#x27;:&#x27;&#x27;}${rights.finance?&#x27;&lt;p&gt;Просмотр расчётов&lt;/p&gt;&#x27;:&#x27;&#x27;}${S.isAdmin?B(&#x27;Пригласить сотрудника&#x27;,&#x27;p-invite-team&#x27;,false):&#x27;&lt;p&gt;Управление сотрудниками не назначено.&lt;/p&gt;&#x27;}&lt;p class=&quot;ap-muted&quot;&gt;Полномочия МЧД активируются после подписи руководителя.&lt;/p&gt;&lt;/div&gt;`,true);
+  html=wrap(&#x27;Личный кабинет&#x27;,pCompany()+`&lt;div class=&quot;ap-status&quot;&gt;Вход выполнен. Вы работаете в выбранной организации.&lt;/div&gt;&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;${esc(S.personalName)}&lt;/strong&gt;&lt;p&gt;${esc(S.email)}&lt;/p&gt;&lt;p&gt;${S.isDirector?&#x27;Генеральный директор&#x27;:S.isAdmin?&#x27;Администратор кабинета&#x27;:&#x27;Сотрудник организации&#x27;}&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Доступные действия&lt;/h3&gt;${S.isAdmin||rights.objects?&#x27;&lt;p&gt;Работа с объектами&lt;/p&gt;&#x27;:&#x27;&#x27;}${S.isAdmin||rights.requests?&#x27;&lt;p&gt;Работа с заявками&lt;/p&gt;&#x27;:&#x27;&#x27;}${rights.finance?&#x27;&lt;p&gt;Просмотр расчётов&lt;/p&gt;&#x27;:&#x27;&#x27;}${S.isAdmin?B(&#x27;Пригласить сотрудника&#x27;,&#x27;p-invite-team&#x27;,false):&#x27;&lt;p&gt;Управление сотрудниками не назначено.&lt;/p&gt;&#x27;}&lt;p class=&quot;ap-muted&quot;&gt;Полномочия МЧД активируются после подписи руководителя.&lt;/p&gt;${S.isDirector?&#x27;&lt;p&gt;Приглашения и подготовка МЧД доступны по подтверждённой роли. Для подписания МЧД потребуется УКЭП руководителя.&lt;/p&gt;&#x27;:&#x27;&#x27;}&lt;/div&gt;`,true);
  }else{S.screen=&#x27;entry&#x27;;proposalRender();return;}
  if(q===&#x27;p-workspace&#x27;)html=html.replace(&#x27;&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Доступные действия&lt;/h3&gt;&#x27;,&#x27;&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Доступные действия&lt;/h3&gt;&#x27;+pMchdWorkspace());
  if(S.inviteUnified&amp;&amp;q===&#x27;p-workspace&#x27;&amp;&amp;!S.invitation.powers.length)html=html.replace(&#x27;&lt;h3&gt;Доступные действия&lt;/h3&gt;&#x27;,&#x27;&lt;h3&gt;Доступные действия&lt;/h3&gt;&lt;p&gt;Полномочия МЧД не запрашивались.&lt;/p&gt;&#x27;);
@@ -2335,6 +2338,7 @@ function proposalAction(action){
  }else if(action===&#x27;mchd-start&#x27;){S.legalFlow=true;go(&#x27;p-mchd-powers&#x27;);}
  else if(action===&#x27;mchd-sign&#x27;){
   if(!S.isDirector||!S.orgVerified||!pMchdEmployee()||S.mchd.status!==&#x27;prepared&#x27;||!S.mchd.powers.length)return proposalError(&#x27;Сначала сформируйте МЧД и войдите как генеральный директор.&#x27;);
+  if(root.querySelector(&#x27;#ap-sign-result&#x27;).value===&#x27;no-certificate&#x27;)return proposalError(&#x27;Для подписания МЧД подключите УКЭП руководителя. Вход в кабинет не заменяет подпись.&#x27;);
   if(root.querySelector(&#x27;#ap-sign-result&#x27;).value===&#x27;failure&#x27;)return proposalError(&#x27;Подпись не прошла проверку. Полномочия не активированы. Повторите подписание.&#x27;);
   S.mchd.status=&#x27;signed&#x27;;go(&#x27;p-mchd-done&#x27;);
  }else if(action===&#x27;mchd-employee-view&#x27;){
@@ -2346,6 +2350,7 @@ function proposalAction(action){
   if(!S.inviteContext||S.pendingInvite?.id!==S.invitation.id)return proposalError(&#x27;Приглашение изменилось. Откройте его заново.&#x27;);
   S.mosIdentity={id:&#x27;mos-demo-person&#x27;,name:S.invitation.name,email:&#x27;personal.mos@example.test&#x27;};S.inviteBinding=S.pendingInvite.id;S.companyName=S.pendingInvite.company;S.companyINN=S.pendingInvite.inn;S.pendingInvite=null;S.personalName=S.mosIdentity.name;S.email=S.mosIdentity.email;S.accountVerified=true;S.authMethod=&#x27;mos&#x27;;go(&#x27;p-accept-invite&#x27;);
  }else if(pMosOrgCase()){S.accountVerified=true;S.externalOrgPresent=true;S.companyName=&#x27;ООО «Пример»&#x27;;S.companyINN=&#x27;0000000000&#x27;;S.memberActive=false;S.isAdmin=false;S.orgVerified=false;go(&#x27;p-mos-orgs&#x27;);}else if(S.mosIntent===&#x27;register&#x27;)go(&#x27;p-mos-profile&#x27;);else{S.accountVerified=true;go(pAfterLogin());}}
+ else if(action===&#x27;confirm-existing-director&#x27;){if(!S.accountVerified||S.orgCase!==&#x27;existing&#x27;)return;S.connectingExisting=true;go(&#x27;p-company-record&#x27;);}
  else if(action===&#x27;connect-company&#x27;){S.proposalPath=&#x27;company&#x27;;go(&#x27;p-company-search&#x27;);}
  else if(action===&#x27;open-invitation&#x27;){S.proposalPath=&#x27;employee&#x27;;S.employeeEntry=&#x27;invite&#x27;;S.inviteContext=true;go(&#x27;p-invitation&#x27;);}
  else if(action===&#x27;invite-existing&#x27;||action===&#x27;invite-new&#x27;){S.inviteHasAccount=action===&#x27;invite-existing&#x27;;S.pIdentity++;proposalRender();}
@@ -2354,6 +2359,7 @@ function proposalAction(action){
  else if(action===&#x27;company-approved&#x27;||action===&#x27;company-rejected&#x27;){
   if(!S.pendingCompany)return proposalError(&#x27;Сначала подпишите заявление на подключение.&#x27;);
   S.pendingCompany=false;S.orgVerified=action===&#x27;company-approved&#x27;;S.memberActive=S.orgVerified;S.isAdmin=S.orgVerified;S.isDirector=S.orgVerified;
+  if(S.orgVerified)S.existingAccess=&#x27;director&#x27;;
   S.companyReason=&#x27;Не подтверждено, что заявитель является генеральным директором организации.&#x27;;go(S.orgVerified?&#x27;p-company-ready&#x27;:&#x27;p-company-rejected&#x27;);
  }else if(action===&#x27;handoff-employee&#x27;){
   S.proposalPath=&#x27;employee&#x27;;S.employeeEntry=&#x27;invite&#x27;;S.accountVerified=false;S.memberActive=false;S.isAdmin=false;S.email=S.invitation.email;S.personalName=S.invitation.name;S.pIdentity++;S.inviteContext=true;S.inviteHasAccount=false;S.inviteUnified=false;S.mosIdentity=null;S.inviteBinding=null;S.pendingInvite=null;S.mchd={status:&#x27;draft&#x27;,powers:[]};S.invitation.accepted=false;S.repeat=false;S.legalFlow=false;S.isDirector=false;S.history=[];go(&#x27;p-invitation&#x27;);
@@ -2365,7 +2371,7 @@ function proposalAction(action){
   S.connectedEmployee={name:S.mosIdentity.name,email:S.mosIdentity.email,invitationEmail:S.invitation.email,id:S.mosIdentity.id,company:S.companyName};
   S.mchd={status:S.invitation.powers.length?&#x27;pending&#x27;:&#x27;not-required&#x27;,powers:[...S.invitation.powers]};go(S.invitation.powers.length?&#x27;p-invite-pending&#x27;:&#x27;p-workspace&#x27;);
  }else if(action===&#x27;pick-admin&#x27;||action===&#x27;pick-employee&#x27;){
-  S.companyName=action===&#x27;pick-admin&#x27;?&#x27;ООО «Пример»&#x27;:&#x27;ООО «Пример 2»&#x27;;S.orgVerified=true;S.memberActive=true;S.isAdmin=action===&#x27;pick-admin&#x27;;S.employeeRights={objects:true,requests:true,people:S.isAdmin,finance:false};go(&#x27;p-workspace&#x27;);
+  const expected=action===&#x27;pick-admin&#x27;?&#x27;director&#x27;:&#x27;employee&#x27;;if(!pUseSavedAccess(expected))return;go(&#x27;p-workspace&#x27;);
  }
  persist();
 }
@@ -2394,7 +2400,8 @@ function proposalSubmit(action,f){
  }else if(action===&#x27;p-find-company&#x27;){
   const inn=v(&#x27;p-inn&#x27;);if(!/^\d{10}$/.test(inn))return proposalError(&#x27;Введите ИНН юридического лица из 10 цифр.&#x27;,[&#x27;p-inn&#x27;]);
   S.companyINN=inn;S.companyType=inn.length===12?&#x27;ip&#x27;:&#x27;legal&#x27;;S.companyName=S.companyType===&#x27;ip&#x27;?&#x27;ИП Иванов Иван Иванович&#x27;:&#x27;ООО «Пример»&#x27;;
-  go(S.orgCase===&#x27;existing&#x27;?&#x27;p-company-found&#x27;:&#x27;p-company-record&#x27;);
+  S.connectingExisting=S.orgCase===&#x27;existing&#x27;;
+  if(S.orgCase===&#x27;existing&#x27;&amp;&amp;pUseSavedAccess(S.existingAccess))go(&#x27;p-workspace&#x27;);else go(S.orgCase===&#x27;existing&#x27;?&#x27;p-company-found&#x27;:&#x27;p-company-record&#x27;);
  }else if(action===&#x27;p-company-record&#x27;){
   if(!v(&#x27;p-contact-email&#x27;))return proposalError(&#x27;Укажите email для связи.&#x27;,[&#x27;p-contact-email&#x27;]);go(&#x27;p-authority&#x27;);
  }else if(action===&#x27;p-invite&#x27;){
@@ -2408,6 +2415,14 @@ function proposalSubmit(action,f){
 
 function pInviteCompany(){return `&lt;div class=&quot;ap-description&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Организация из приглашения&lt;/span&gt;&lt;strong&gt;${esc(S.invitation.company)}&lt;/strong&gt;&lt;p&gt;ИНН ${esc(S.invitation.inn)}&lt;/p&gt;&lt;/div&gt;`;}
 function pInvitePowers(){return `&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Полномочия для МЧД — если нужны&lt;/h3&gt;&lt;p&gt;Выберите один раз. После принятия приглашения платформа сформирует МЧД и направит её руководителю на подпись. Без выбранных полномочий сотрудник подключится без МЧД.&lt;/p&gt;${Object.entries(pMchdPowerLabels).map(([k,label])=&gt;`&lt;label class=&quot;ap-check&quot;&gt;&lt;input type=&quot;checkbox&quot; id=&quot;p-invite-power-${k}&quot; ${S.invitation.powers.includes(k)?&#x27;checked&#x27;:&#x27;&#x27;}&gt;&lt;span&gt;${label}&lt;/span&gt;&lt;/label&gt;`).join(&#x27;&#x27;)}&lt;/div&gt;`;}
+
+function pUseSavedAccess(role){
+ if(!S.accountVerified||![&#x27;director&#x27;,&#x27;employee&#x27;].includes(role)||role!==S.existingAccess)return false;
+ S.companyName=&#x27;ООО «Пример»&#x27;;S.orgVerified=true;S.memberActive=true;S.isDirector=role===&#x27;director&#x27;;S.isAdmin=S.isDirector;S.savedAccessVerified=true;
+ S.employeeRights={objects:true,requests:true,people:S.isDirector,finance:false};
+ if(S.isDirector&amp;&amp;!S.connectedEmployee)S.connectedEmployee={name:&#x27;Петров Пётр&#x27;,email:&#x27;petr@example.test&#x27;,company:S.companyName};
+ return true;
+}
 
 function render(){
  if(S.flow===&#x27;proposal&#x27;){proposalRender();return;}
@@ -2519,6 +2534,7 @@ root.addEventListener(&#x27;click&#x27;,e=&gt;{
 root.addEventListener(&#x27;change&#x27;,e=&gt;{
  if(e.target.id===&#x27;ap-proposal-path&#x27;){S.proposalPath=e.target.value;S.orgCase=S.proposalPath===&#x27;employee&#x27;?&#x27;existing&#x27;:&#x27;new&#x27;;restart();return;}
  if(e.target.id===&#x27;ap-proposal-entry&#x27;){S.employeeEntry=e.target.value;restart();return;}
+ if(e.target.id===&#x27;ap-existing-access&#x27;){S.existingAccess=e.target.value;restart();return;}
  if(e.target.id===&#x27;ap-invite-mchd-mode&#x27;){S.invitation.powers=e.target.value===&#x27;yes&#x27;?[&#x27;contracts&#x27;]:[];restart();return;}
  if(e.target.id?.startsWith(&#x27;p-mchd-power-&#x27;)){S.mchd.status=&#x27;draft&#x27;;}
 
