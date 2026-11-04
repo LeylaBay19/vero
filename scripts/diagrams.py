@@ -2,6 +2,7 @@ from pathlib import Path
 from html import escape
 import xml.etree.ElementTree as E
 from PIL import Image,ImageDraw,ImageFont
+from process_details import DETAILS
 import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -77,11 +78,13 @@ def diagram(slug,title,precondition,nodes,flows):
             assert len(lines)*task_size*1.32<=h-8,(nid,lines)
             text(x+w/2,y+h/2,'\n'.join(lines),task_size)
     text(35,943,'Предлагаемый процесс · проект поведения после правок пользователя от 03.11.2026',23,True,False)
-    text(35,986,'Выбор полномочий чекбоксами не заменяет подписание МЧД электронной подписью руководителя.' if slug=='employee-mchd' else 'Получение организации из mos.ru — гипотеза интеграции, не подтверждённая документами Тринити.' if slug=='employee-mos-organization' else 'Проверка платформой обязательна; способ её реализации и сроки здесь не определяются.',21,False,False)
+    text(35,986,'Выбор полномочий чекбоксами не заменяет подписание МЧД электронной подписью руководителя.' if slug=='employee-mchd' else 'Получение организации из mos.ru — гипотеза интеграции, не подтверждённая документами Тринити.' if slug=='employee-mos-organization' else 'Доступ — только по приглашению и с назначенными правами. Полномочия МЧД оформляются отдельно.' if slug=='employee-invitation' else 'Проверка платформой обязательна; способ её реализации и сроки здесь не определяются.',21,False,False)
     svg.append('</svg>');(OUT/(slug+'.svg')).write_text('\n'.join(svg),encoding='utf-8');im.save(OUT/(slug+'.png'))
     defs=E.Element('{'+NS['bpmn']+'}definitions',id=slug.replace('-','_')+'_defs',targetNamespace='urn:proposed:registration')
     proc=el(defs,'bpmn:process',id='Process',name=title,isExecutable='false')
     el(proc,'bpmn:documentation').text=precondition+' Предлагаемый вариант по решению пользователя, 03.11.2026. Технический механизм проверки платформой и сроки не определены.'
+    if slug in DETAILS:
+        el(proc,'bpmn:documentation').text='\n'.join(DETAILS[slug])
     ls=el(proc,'bpmn:laneSet',id='Lanes')
     for lane,label in [('person','Генеральный директор' if slug in ('organization-registration','employee-mchd') else 'Сотрудник'),('system','Платформа')]:
         row=el(ls,'bpmn:lane',id=lane,name=label)
@@ -126,37 +129,44 @@ diagram('organization-registration','Предлагаемый вариант · 
  'Check':('task','Проверить данные\nи полномочия',(1280,520,235,100),'system'),
  'Valid':('exclusiveGateway','Проверка пройдена?',(1600,545,50,50),'system'),
  'Ready':('task','Подключить компанию\nи дать права админа',(1810,520,260,100),'system'),
- 'Invite':('userTask','Пригласить сотрудников\nи назначить права',(1810,210,260,100),'person'),
+ 'Invite':('userTask','Открыть кабинет; при необходимости пригласить сотрудников',(1810,210,260,100),'person'),
  'End':('endEvent','Кабинет готов',(2160,243,34,34),'person'),
  'Reject':('task','Отклонить заявку:\nуказать причину',(1510,730,260,100),'system'),
- 'RejectedEnd':('endEvent','Не подключена',(1840,763,34,34),'system'),
+ 'Retry':('exclusiveGateway','Исправить данные?',(1840,755,50,50),'system'),
+ 'RejectedEnd':('endEvent','Не подключена',(2110,763,34,34),'system'),
 },[
  ('Start','Auth',[(104,260),(150,260)],'',None),('Auth','INN',[(360,260),(420,260)],'',None),('INN','Lookup',[(525,310),(525,520)],'',None),
  ('Lookup','Exists',[(630,570),(750,570)],'',None),('Exists','Request',[(775,545),(775,310)],'Да',(805,395)),('Request','ExistingEnd',[(900,260),(940,260)],'',None),
  ('Exists','Record',[(800,570),(1105,570),(1105,310)],'Нет',(965,549)),('Record','Sign',[(1210,260),(1280,260)],'',None),('Sign','Check',[(1397,310),(1397,520)],'',None),
  ('Check','Valid',[(1515,570),(1600,570)],'',None),('Valid','Ready',[(1650,570),(1810,570)],'Да',(1725,548)),('Ready','Invite',[(1940,520),(1940,310)],'',None),('Invite','End',[(2070,260),(2160,260)],'',None),
- ('Valid','Reject',[(1625,595),(1625,730)],'Нет',(1657,666)),('Reject','RejectedEnd',[(1770,780),(1840,780)],'',None),
+ ('Valid','Reject',[(1625,595),(1625,730)],'Нет',(1657,666)),('Reject','Retry',[(1770,780),(1840,780)],'',None),
+ ('Retry','RejectedEnd',[(1890,780),(2110,780)],'Нет',(1990,755)),
+ ('Retry','Record',[(1865,805),(1865,865),(1240,865),(1240,350),(1105,350),(1105,310)],'Да',(1780,842)),
 ])
 diagram('employee-invitation','Предлагаемый вариант · сотрудник по приглашению','Организация подключена. Администратор указал email сотрудника и назначил права в приглашении.',{
  'Start':('startEvent','Приглашение\nполучено',(70,243,34,34),'person'),
  'Open':('userTask','Открыть ссылку\nприглашения',(150,210,210,100),'person'),
  'Account':('exclusiveGateway','Есть аккаунт?',(450,235,50,50),'person'),
  'Login':('userTask','Ввести email\nи существующий пароль',(620,175,255,100),'person'),
- 'Password':('userTask','Задать пароль\nи принять условия',(620,325,255,100),'person'),
+ 'Password':('userTask','Задать и повторить пароль; принять условия',(620,325,255,100),'person'),
  'Merge':('exclusiveGateway','',(980,265,50,50),'person'),
  'Accept':('userTask','Принять приглашение\nи назначенные права',(1100,240,260,100),'person'),
  'Check':('task','Сопоставить аккаунт\nс email приглашения',(1100,520,260,100),'system'),
  'Match':('exclusiveGateway','Email совпадает?',(1470,545,50,50),'system'),
- 'Ready':('task','Предоставить\nназначенные права',(1680,520,270,100),'system'),
- 'End':('endEvent','Доступ предоставлен',(2110,553,34,34),'system'),
+ 'Ready':('task','Предоставить назначенные права',(1630,520,240,100),'system'),
+ 'Workspace':('userTask','Открыть кабинет организации',(1940,210,220,100),'person'),
+ 'End':('endEvent','Кабинет открыт',(2210,243,34,34),'person'),
  'Reject':('task','Сообщить:\nemail не совпадает',(1370,730,270,100),'system'),
- 'RejectedEnd':('endEvent','Доступ не предоставлен',(1790,763,34,34),'system'),
+ 'Retry':('exclusiveGateway','Другой email?',(1790,755,50,50),'system'),
+ 'RejectedEnd':('endEvent','Без доступа',(2110,763,34,34),'system'),
 },[
  ('Start','Open',[(104,260),(150,260)],'',None),('Open','Account',[(360,260),(450,260)],'',None),
  ('Account','Login',[(475,235),(475,220),(620,220)],'Да',(565,241)),('Account','Password',[(475,285),(475,370),(620,370)],'Нет',(542,350)),
  ('Login','Merge',[(875,220),(1005,220),(1005,265)],'',None),('Password','Merge',[(875,370),(1005,370),(1005,315)],'',None),('Merge','Accept',[(1030,290),(1100,290)],'',None),
- ('Accept','Check',[(1230,340),(1230,520)],'',None),('Check','Match',[(1360,570),(1470,570)],'',None),('Match','Ready',[(1520,570),(1680,570)],'Да',(1590,546)),('Ready','End',[(1950,570),(2110,570)],'',None),
- ('Match','Reject',[(1495,595),(1495,730)],'Нет',(1525,666)),('Reject','RejectedEnd',[(1640,780),(1790,780)],'',None),
+ ('Accept','Check',[(1230,340),(1230,520)],'',None),('Check','Match',[(1360,570),(1470,570)],'',None),('Match','Ready',[(1520,570),(1630,570)],'Да',(1570,546)),('Ready','Workspace',[(1870,570),(2050,570),(2050,310)],'',None),('Workspace','End',[(2160,260),(2210,260)],'',None),
+ ('Match','Reject',[(1495,595),(1495,730)],'Нет',(1525,666)),('Reject','Retry',[(1640,780),(1790,780)],'',None),
+ ('Retry','RejectedEnd',[(1840,780),(2110,780)],'Нет',(1970,755)),
+ ('Retry','Login',[(1815,805),(1815,855),(580,855),(580,220),(620,220)],'Да',(1720,832)),
 ])
 
 diagram('employee-mos-organization','Предлагаемый вариант · организация на mos.ru','Сотрудник добавлен только в организацию на mos.ru. На платформе членство и права ему ещё не назначены.',{

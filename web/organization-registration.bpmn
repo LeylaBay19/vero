@@ -2,6 +2,16 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="organization_registration_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант · регистрация организации" isExecutable="false">
     <bpmn:documentation>Организацию регистрирует только генеральный директор. Сотрудники не могут создать её кабинет. Предлагаемый вариант по решению пользователя, 03.11.2026. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Статус: предлагаемый процесс (to-be), а не исполняемая серверная система. Источники: docs/PRODUCT.md, PR-REG-ORG; src/proposal-flow.js.
+Участники: генеральный директор и платформа. Только гендиректор регистрирует юридическое лицо; администратор не приравнивается к гендиректору.
+Входные данные: личный аккаунт, ИНН, реквизиты организации и заявление с ЭП генерального директора. Личный аккаунт можно создать либо войти в существующий; в прототипе доступны email/пароль и демонстрация mos.ru.
+Если организация уже подключена, повторная регистрация прекращается: пользователь обращается в организацию за приглашением. Самостоятельный запрос доступа не создаётся.
+Новая организация: проверить реквизиты → подписать заявление ЭП гендиректора → дождаться обязательной проверки платформой. До успешного результата кабинет организации и приглашение сотрудников недоступны.
+При отказе платформа показывает причину; организация и административные права не предоставляются. Можно вернуться к реквизитам и повторно пройти подписание и проверку либо завершить без подключения.
+После положительной проверки платформа подключает организацию и назначает гендиректору права администратора. Он может открыть кабинет; приглашение сотрудников — последующее необязательное действие.
+Для приглашения указываются ФИО, email и обычные права кабинета. Отправка приглашения не подключает сотрудника автоматически: он должен войти и принять его в отдельном процессе.
+Обычные права кабинета отделены от полномочий подписи документов. МЧД оформляется отдельно и действует в прототипе только после подписи руководителя.
+Не определены: технический способ и сроки проверки платформой, полные требования к паролю и восстановлению доступа. Реальные ЭП и серверная проверка в прототипе не подключены.</bpmn:documentation>
     <bpmn:laneSet id="Lanes">
       <bpmn:lane id="person" name="Генеральный директор">
         <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
@@ -21,6 +31,7 @@
         <bpmn:flowNodeRef>Valid</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Ready</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Reject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Retry</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>RejectedEnd</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
@@ -54,6 +65,7 @@
     <bpmn:userTask id="Record" name="Проверить реквизиты">
       <bpmn:incoming>F6</bpmn:incoming>
       <bpmn:outgoing>F7</bpmn:outgoing>
+      <bpmn:incoming>F16</bpmn:incoming>
     </bpmn:userTask>
     <bpmn:userTask id="Sign" name="Подписать заявление ЭП гендиректора">
       <bpmn:incoming>F7</bpmn:incoming>
@@ -72,7 +84,7 @@
       <bpmn:incoming>F10</bpmn:incoming>
       <bpmn:outgoing>F11</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:userTask id="Invite" name="Пригласить сотрудников и назначить права">
+    <bpmn:userTask id="Invite" name="Открыть кабинет; при необходимости пригласить сотрудников">
       <bpmn:incoming>F11</bpmn:incoming>
       <bpmn:outgoing>F12</bpmn:outgoing>
     </bpmn:userTask>
@@ -83,8 +95,13 @@
       <bpmn:incoming>F13</bpmn:incoming>
       <bpmn:outgoing>F14</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="RejectedEnd" name="Не подключена">
+    <bpmn:exclusiveGateway id="Retry" name="Исправить данные?">
       <bpmn:incoming>F14</bpmn:incoming>
+      <bpmn:outgoing>F15</bpmn:outgoing>
+      <bpmn:outgoing>F16</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="RejectedEnd" name="Не подключена">
+      <bpmn:incoming>F15</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="F0" sourceRef="Start" targetRef="Auth" />
     <bpmn:sequenceFlow id="F1" sourceRef="Auth" targetRef="INN" />
@@ -100,7 +117,9 @@
     <bpmn:sequenceFlow id="F11" sourceRef="Ready" targetRef="Invite" />
     <bpmn:sequenceFlow id="F12" sourceRef="Invite" targetRef="End" />
     <bpmn:sequenceFlow id="F13" sourceRef="Valid" targetRef="Reject" name="Нет" />
-    <bpmn:sequenceFlow id="F14" sourceRef="Reject" targetRef="RejectedEnd" />
+    <bpmn:sequenceFlow id="F14" sourceRef="Reject" targetRef="Retry" />
+    <bpmn:sequenceFlow id="F15" sourceRef="Retry" targetRef="RejectedEnd" name="Нет" />
+    <bpmn:sequenceFlow id="F16" sourceRef="Retry" targetRef="Record" name="Да" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="Diagram">
     <bpmndi:BPMNPlane id="Plane" bpmnElement="Process">
@@ -164,10 +183,16 @@
       <bpmndi:BPMNShape id="Reject_di" bpmnElement="Reject">
         <dc:Bounds x="1510" y="730" width="260" height="100" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="RejectedEnd_di" bpmnElement="RejectedEnd">
-        <dc:Bounds x="1840" y="763" width="34" height="34" />
+      <bpmndi:BPMNShape id="Retry_di" bpmnElement="Retry">
+        <dc:Bounds x="1840" y="755" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1745" y="829" width="224" height="50" />
+          <dc:Bounds x="1745" y="690" width="240" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RejectedEnd_di" bpmnElement="RejectedEnd">
+        <dc:Bounds x="2110" y="763" width="34" height="34" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2015" y="829" width="224" height="50" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="person_di" bpmnElement="person" isHorizontal="true">
@@ -236,6 +261,18 @@
       <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
         <di:waypoint x="1770" y="780" />
         <di:waypoint x="1840" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+        <di:waypoint x="1890" y="780" />
+        <di:waypoint x="2110" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
+        <di:waypoint x="1865" y="805" />
+        <di:waypoint x="1865" y="865" />
+        <di:waypoint x="1240" y="865" />
+        <di:waypoint x="1240" y="350" />
+        <di:waypoint x="1105" y="350" />
+        <di:waypoint x="1105" y="310" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

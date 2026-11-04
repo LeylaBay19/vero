@@ -39,6 +39,12 @@
 <text x="1657" y="666.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Нет</text>
 <polyline points="1770,780 1840,780" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="1840,780 1828.0,775.0 1828.0,785.0" fill="#466760"/>
+<polyline points="1890,780 2110,780" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="2110,780 2098.0,775.0 2098.0,785.0" fill="#466760"/>
+<text x="1990" y="755.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Нет</text>
+<polyline points="1865,805 1865,865 1240,865 1240,350 1105,350 1105,310" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1105,310 1100.0,322.0 1110.0,322.0" fill="#466760"/>
+<text x="1780" y="842.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
 <circle cx="87.0" cy="260.0" r="17.0" fill="white" stroke="#193936" stroke-width="2"/>
 <text x="87.0" y="332.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Начало</text>
 <rect x="150" y="210" width="210" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
@@ -78,16 +84,19 @@
 <text x="1940.0" y="570.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">компанию и дать</text>
 <text x="1940.0" y="600.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">права админа</text>
 <rect x="1810" y="210" width="260" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
-<text x="1940.0" y="229.64" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Пригласить</text>
-<text x="1940.0" y="260.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">сотрудников и</text>
-<text x="1940.0" y="290.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">назначить права</text>
+<text x="1940.0" y="233.6" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Открыть кабинет; при</text>
+<text x="1940.0" y="260.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">необходимости</text>
+<text x="1940.0" y="286.4" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">пригласить сотрудников</text>
 <circle cx="2177.0" cy="260.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
 <text x="2177.0" y="332.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Кабинет готов</text>
 <rect x="1510" y="730" width="260" height="100" rx="10" fill="#f0f6f4" stroke="#8ba6a1" stroke-width="2"/>
 <text x="1640.0" y="764.82" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Отклонить заявку:</text>
 <text x="1640.0" y="795.18" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">указать причину</text>
-<circle cx="1857.0" cy="780.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
-<text x="1857.0" y="852.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Не подключена</text>
+<polygon points="1865.0,755 1890,780.0 1865.0,805 1840,780.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
+<text x="1865.0" y="780.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">×</text>
+<text x="1865.0" y="715.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Исправить данные?</text>
+<circle cx="2127.0" cy="780.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
+<text x="2127.0" y="852.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Не подключена</text>
 <text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · проект поведения после правок пользователя от 03.11.2026</text>
 <text x="35" y="986.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Проверка платформой обязательна; способ её реализации и сроки здесь не определяются.</text>
 </svg>

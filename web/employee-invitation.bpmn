@@ -2,6 +2,17 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="employee_invitation_defs" targetNamespace="urn:proposed:registration">
   <bpmn:process id="Process" name="Предлагаемый вариант · сотрудник по приглашению" isExecutable="false">
     <bpmn:documentation>Организация подключена. Администратор указал email сотрудника и назначил права в приглашении. Предлагаемый вариант по решению пользователя, 03.11.2026. Технический механизм проверки платформой и сроки не определены.</bpmn:documentation>
+    <bpmn:documentation>Статус: предлагаемый процесс (to-be). Источники: docs/PRODUCT.md, PR-REG-EMP и PR-REG-CONTACT; src/proposal-flow.js.
+Предусловие: организация уже подключена, уполномоченный администратор сформировал приглашение. Участники регистрации: сотрудник и платформа; создание приглашения выполняется до её начала.
+Данные приглашения: ФИО, email получателя, организация, назначенные обычные права кабинета. Права включают работу с объектами, заявками, командой и финансами в пределах выбранного администратором набора.
+Существующий аккаунт: ввести email и действующий пароль. Новый аккаунт: ФИО и email берутся из приглашения, сотрудник задаёт и повторяет пароль и принимает условия. Отдельные страницы подтверждения email и успешного создания аккаунта не используются.
+После входа или создания аккаунта сотрудник просматривает организацию и назначенные права, затем принимает приглашение. Платформа сопоставляет email аккаунта и приглашения.
+При несовпадении email членство и доступ не предоставляются. Пользователь может войти с адресом получателя и повторно принять приглашение либо завершить без доступа.
+При совпадении платформа подключает сотрудника к организации и предоставляет только назначенные права, после чего открывается кабинет. Административные возможности возможны только при соответствующем назначении; статус гендиректора не присваивается.
+Без приглашения показывается обращение к руководителю или администратору организации. Самостоятельных поиска работодателя и запроса доступа нет; эта ветка не запускает регистрацию.
+Членство в организации на mos.ru не выдаёт местные права. Отдельная схема mos.ru описывает этот случай; получение сведений об организации остаётся гипотезой интеграции.
+Полномочия подписи через МЧД оформляются отдельно руководителем после подключения сотрудника. Они не возникают из обычного приглашения.
+Не определены: срок действия и повторная отправка приглашения, восстановление пароля, серверные контракты. Эти правила не добавлены в BPMN как утверждённое поведение.</bpmn:documentation>
     <bpmn:laneSet id="Lanes">
       <bpmn:lane id="person" name="Сотрудник">
         <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
@@ -11,13 +22,15 @@
         <bpmn:flowNodeRef>Password</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Merge</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Accept</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Workspace</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="system" name="Платформа">
         <bpmn:flowNodeRef>Check</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Match</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Ready</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Reject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Retry</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>RejectedEnd</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
@@ -36,8 +49,9 @@
     <bpmn:userTask id="Login" name="Ввести email и существующий пароль">
       <bpmn:incoming>F2</bpmn:incoming>
       <bpmn:outgoing>F4</bpmn:outgoing>
+      <bpmn:incoming>F15</bpmn:incoming>
     </bpmn:userTask>
-    <bpmn:userTask id="Password" name="Задать пароль и принять условия">
+    <bpmn:userTask id="Password" name="Задать и повторить пароль; принять условия">
       <bpmn:incoming>F3</bpmn:incoming>
       <bpmn:outgoing>F5</bpmn:outgoing>
     </bpmn:userTask>
@@ -57,21 +71,30 @@
     <bpmn:exclusiveGateway id="Match" name="Email совпадает?">
       <bpmn:incoming>F8</bpmn:incoming>
       <bpmn:outgoing>F9</bpmn:outgoing>
-      <bpmn:outgoing>F11</bpmn:outgoing>
+      <bpmn:outgoing>F12</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:task id="Ready" name="Предоставить назначенные права">
       <bpmn:incoming>F9</bpmn:incoming>
       <bpmn:outgoing>F10</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:endEvent id="End" name="Доступ предоставлен">
+    <bpmn:userTask id="Workspace" name="Открыть кабинет организации">
       <bpmn:incoming>F10</bpmn:incoming>
+      <bpmn:outgoing>F11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="End" name="Кабинет открыт">
+      <bpmn:incoming>F11</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:task id="Reject" name="Сообщить: email не совпадает">
-      <bpmn:incoming>F11</bpmn:incoming>
-      <bpmn:outgoing>F12</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:endEvent id="RejectedEnd" name="Доступ не предоставлен">
       <bpmn:incoming>F12</bpmn:incoming>
+      <bpmn:outgoing>F13</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Retry" name="Другой email?">
+      <bpmn:incoming>F13</bpmn:incoming>
+      <bpmn:outgoing>F14</bpmn:outgoing>
+      <bpmn:outgoing>F15</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="RejectedEnd" name="Без доступа">
+      <bpmn:incoming>F14</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="F0" sourceRef="Start" targetRef="Open" />
     <bpmn:sequenceFlow id="F1" sourceRef="Open" targetRef="Account" />
@@ -83,9 +106,12 @@
     <bpmn:sequenceFlow id="F7" sourceRef="Accept" targetRef="Check" />
     <bpmn:sequenceFlow id="F8" sourceRef="Check" targetRef="Match" />
     <bpmn:sequenceFlow id="F9" sourceRef="Match" targetRef="Ready" name="Да" />
-    <bpmn:sequenceFlow id="F10" sourceRef="Ready" targetRef="End" />
-    <bpmn:sequenceFlow id="F11" sourceRef="Match" targetRef="Reject" name="Нет" />
-    <bpmn:sequenceFlow id="F12" sourceRef="Reject" targetRef="RejectedEnd" />
+    <bpmn:sequenceFlow id="F10" sourceRef="Ready" targetRef="Workspace" />
+    <bpmn:sequenceFlow id="F11" sourceRef="Workspace" targetRef="End" />
+    <bpmn:sequenceFlow id="F12" sourceRef="Match" targetRef="Reject" name="Нет" />
+    <bpmn:sequenceFlow id="F13" sourceRef="Reject" targetRef="Retry" />
+    <bpmn:sequenceFlow id="F14" sourceRef="Retry" targetRef="RejectedEnd" name="Нет" />
+    <bpmn:sequenceFlow id="F15" sourceRef="Retry" targetRef="Login" name="Да" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="Diagram">
     <bpmndi:BPMNPlane id="Plane" bpmnElement="Process">
@@ -129,21 +155,30 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Ready_di" bpmnElement="Ready">
-        <dc:Bounds x="1680" y="520" width="270" height="100" />
+        <dc:Bounds x="1630" y="520" width="240" height="100" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Workspace_di" bpmnElement="Workspace">
+        <dc:Bounds x="1940" y="210" width="220" height="100" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_di" bpmnElement="End">
-        <dc:Bounds x="2110" y="553" width="34" height="34" />
+        <dc:Bounds x="2210" y="243" width="34" height="34" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2015" y="619" width="224" height="50" />
+          <dc:Bounds x="2115" y="309" width="224" height="50" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Reject_di" bpmnElement="Reject">
         <dc:Bounds x="1370" y="730" width="270" height="100" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="RejectedEnd_di" bpmnElement="RejectedEnd">
-        <dc:Bounds x="1790" y="763" width="34" height="34" />
+      <bpmndi:BPMNShape id="Retry_di" bpmnElement="Retry">
+        <dc:Bounds x="1790" y="755" width="50" height="50" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1695" y="829" width="224" height="50" />
+          <dc:Bounds x="1695" y="690" width="240" height="50" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="RejectedEnd_di" bpmnElement="RejectedEnd">
+        <dc:Bounds x="2110" y="763" width="34" height="34" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2015" y="829" width="224" height="50" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="person_di" bpmnElement="person" isHorizontal="true">
@@ -194,19 +229,35 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F9_di" bpmnElement="F9">
         <di:waypoint x="1520" y="570" />
-        <di:waypoint x="1680" y="570" />
+        <di:waypoint x="1630" y="570" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
-        <di:waypoint x="1950" y="570" />
-        <di:waypoint x="2110" y="570" />
+        <di:waypoint x="1870" y="570" />
+        <di:waypoint x="2050" y="570" />
+        <di:waypoint x="2050" y="310" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="2160" y="260" />
+        <di:waypoint x="2210" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
         <di:waypoint x="1495" y="595" />
         <di:waypoint x="1495" y="730" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
         <di:waypoint x="1640" y="780" />
         <di:waypoint x="1790" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
+        <di:waypoint x="1840" y="780" />
+        <di:waypoint x="2110" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+        <di:waypoint x="1815" y="805" />
+        <di:waypoint x="1815" y="855" />
+        <di:waypoint x="580" y="855" />
+        <di:waypoint x="580" y="220" />
+        <di:waypoint x="620" y="220" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
