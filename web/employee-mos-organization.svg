@@ -59,6 +59,6 @@
 <circle cx="2307.0" cy="570.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
 <text x="2307.0" y="630.12" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Нужно</text>
 <text x="2307.0" y="653.88" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">приглашение</text>
-<text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.7.1 · интерфейс и BPMN одной версии</text>
+<text x="35" y="943.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.8.0 · интерфейс и BPMN одной версии</text>
 <text x="35" y="986.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Получение организации из mos.ru — гипотеза интеграции, не подтверждённая документами Тринити.</text>
 </svg>
