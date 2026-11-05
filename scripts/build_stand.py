@@ -13,14 +13,15 @@ def build_document(wrapper,comparison,schemes):
     current_bridge="""<style>.registration-variants{display:none!important}</style><script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:select-registration'||!['1','2'].includes(e.data.variant))return;const b=document.querySelector('[data-registration-variant="'+e.data.variant+'"]');if(b&&b.getAttribute('aria-pressed')!=='true')b.click();document.documentElement.dataset.activeRegistration=e.data.variant;});</script>"""
     authored=re.search(r'data-srcdoc="([\s\S]*?)"',wrapper)
     assert authored
-    content=html.unescape(authored.group(1)).replace('</body>',current_bridge+fill_bridge+'</body>',1)
+    content=html.unescape(authored.group(1)).replace('Вариант 2','Вариант 1').replace('</body>',current_bridge+fill_bridge+'</body>',1)
     wrapper=wrapper[:authored.start(1)]+html.escape(content,quote=True)+wrapper[authored.end(1):]
     def subset(page,keep,initial):
         pattern=r'<button\b[^>]*\bdata-flow="([^"]+)"[^>]*>[\s\S]*?</button>'
         assert len(re.findall(pattern,page))==5
         page=re.sub(pattern,lambda m:m.group(0) if m.group(1) in keep else '',page)
         return page.replace("flow:location.hash==='#variant2'?'proposal2':'proposal'","flow:'"+initial+"'",1)
-    proposal_source=subset(comparison,{'proposal','proposal2'},'proposal').replace('Предлагаемый вариант 2','Вариант 4').replace('Предлагаемый вариант','Вариант 3')
+    proposal_source=subset(comparison,{'proposal','proposal2'},'proposal').replace('Предлагаемый вариант 2','Вариант 3').replace('Предлагаемый вариант','Вариант 2')
+    proposal_source=proposal_source.replace("querySelector('#ap-screen-count').textContent='Вариант 2'","querySelector('#ap-screen-count').textContent='Вариант 3'").replace('Проект решения · вариант 2','Проект решения · вариант 3').replace('Флоу 04 · проект решения','Вариант 2 · проект решения').replace("textContent='04'","textContent='02'").replace("textContent='05'","textContent='03'")
     comparison=subset(comparison,{'mos','ep','orb'},'mos')
 
     legacy_style='''<style>html,body{height:100%;min-height:0;overflow:auto}body{margin:0;padding:16px;background:#fafafa;font:14px Arial,sans-serif}#auth-flow-prototype{font-family:Arial,sans-serif;--ap-button:#2563eb;--ap-line:#d8dde5;--ap-ink:#20242c}#auth-flow-prototype *{box-shadow:none!important}#auth-flow-prototype button,#auth-flow-prototype input,#auth-flow-prototype select{border-radius:4px!important}#auth-flow-prototype h1{font-size:24px}#auth-flow-prototype .ap-scenarios{display:flex;flex-wrap:wrap;gap:6px}#auth-flow-prototype .ap-scenarios button{flex:1;min-width:130px;padding:9px!important}#auth-flow-prototype .ap-scenarios button strong{font-size:13px}</style>'''
@@ -33,10 +34,10 @@ def build_document(wrapper,comparison,schemes):
     frame=re.search(r'<iframe\b[^>]*id="codex-visualization"[\s\S]*?</iframe>',wrapper)
     assert frame
     descriptions=['Email и пароль','Письмо → логин и пароль','Компания и сотрудники','Код → пароль','ЛК и кошелёк по ТЗ']
-    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}"><span>Вариант {n}</span><small>{descriptions[n-1]}</small></button>' for n in range(2,6))+'</nav>'
+    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}"><span>Вариант {n-1}</span><small>{descriptions[n-1]}</small></button>' for n in range(2,6))+'</nav>'
     proposal_frame=f'<iframe id="stand-frame-proposals" title="Предлагаемые варианты" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(proposals,quote=True)}" hidden></iframe>'
     brief=(ROOT/'cabinet-brief.html').read_text(encoding='utf-8').replace('</body>',bridge+fill_bridge+'</body>',1)
-    brief_frame=f'<iframe id="stand-frame-brief" title="Вариант 5 — по ТЗ" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(brief,quote=True)}" hidden></iframe>'
+    brief_frame=f'<iframe id="stand-frame-brief" title="Вариант 4 — по ТЗ" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(brief,quote=True)}" hidden></iframe>'
     panels='<section class="stand-panel" id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">'+switcher+'<div class="cabinet-stage">'+frame.group(0)+proposal_frame+brief_frame+'</div></section>'
     for name,content,title in [('comparison',comparison,'Сравнение: Тринити и Орбита'),('schemes',schemes,'Семь схем процессов')]:
         panels+=f'<section class="stand-panel" id="stand-{name}" role="tabpanel" aria-labelledby="stand-tab-{name}" hidden><iframe id="stand-frame-{name}" title="{title}" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(content,quote=True)}"></iframe></section>'
@@ -63,6 +64,6 @@ def main():
     result=build_document(wrap((ROOT/'platform-entry-variant2.html').read_text(encoding='utf-8')),(ROOT/'index.html').read_text(encoding='utf-8'),(ROOT/'schemes-all.html').read_text(encoding='utf-8'))
     for target in [ROOT/'prototype.html',ROOT/'web/prototype.html',ROOT/'deliverables'/f'vero-unified-v{version}.html']:
         target.parent.mkdir(parents=True,exist_ok=True);target.write_text(result,encoding='utf-8')
-    print('Built unified stand: variants 2–5, 3 competitors, summary window and 7 diagrams, all embedded.')
+    print('Built unified stand: variants 1–4, 3 competitors, summary window and 7 diagrams, all embedded.')
 
 if __name__=='__main__':main()
