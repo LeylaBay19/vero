@@ -1,3 +1,7 @@
+# Публикация v1.13.0 завершена · 05.11.2026
+
+Native Sites подтвердил succeeded: appgdep_6aec5ee8373c8191ad47735741a9fddd, исходники bb7f57e4723980c5ebfb9a9dedddb543b3beb571. Сайт: https://registration-four-flows-prototype.leyla-bairamkulova.chatgpt.site/. Два отдельных ЛК: /cabinet-overview.html и /cabinet-brief.html. Прежний статус HTTP403 ниже исторический и больше не блокирует эту публикацию.
+
 # Актуальная передача · 05.11.2026
 
 Сначала откройте [handoff/START-HERE.md](handoff/START-HERE.md) и [изменения относительно исходного ZIP](handoff/CHANGES-SINCE-ARCHIVE.md). Последняя версия UI — v1.9.0. Полный доступный архив предыдущей и текущей переписки объединён в history/conversation.html, .md и .json; точные числа и ограничения — history/manifest.json. Исходный более ранний JSON сохранён отдельно в history/source-archive-2026-11-03.json.
