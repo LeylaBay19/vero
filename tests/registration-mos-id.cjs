@@ -8,6 +8,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
   const file=n=>pathToFileURL(path.resolve(n)).href,click=a=>p.locator(`[data-r2-action="${a}"]`).click(),submit=k=>p.locator(`[data-r2-form="${k}"] button[type=submit]`).click(),screen=s=>p.locator(`[data-registration-screen="${s}"]`).waitFor(),profile=()=>p.locator('.r2-profile').first().waitFor(),logout=()=>p.locator('[data-sidebar-logout]').click();
   const fillRegistration=async(login='anna',email='anna@example.test')=>{await p.locator('#r2-login').fill(login);await p.locator('#r2-email').fill(email);await p.locator('#r2-new-password').fill('Local-2026!');await p.locator('#r2-confirm-password').fill('Local-2026!');};
   await p.goto(file('platform-entry.html'));await p.locator('[data-registration-variant="2"]').click();await screen('entry');
+  await click('login');await p.locator('#fill').click();assert.equal(await p.locator('#r2-login').inputValue(),'demo.user');await submit('login');await profile();await logout();
   await p.screenshot({path:'test-results/registration-v2-entry.png',fullPage:true});
   await click('mos-login');await screen('mos');await click('cancel-mos');await screen('entry');assert.match(await p.locator('#r2-status').innerText(),/отменён/);
   await click('mos-login');await click('mos-return');assert.match(await p.locator('#r2-alert').innerText(),/Примите/);assert.equal(await p.locator('[data-registration-screen="created"]').count(),0);
@@ -27,6 +28,7 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
   await click('link');await p.locator('#r2-mos-outcome').selectOption('error');await click('mos-return');await screen('oauth-error');await click('retry-mos');await p.locator('#r2-mos-outcome').selectOption('success');await click('cancel-mos');await profile();assert.match(await p.locator('.r2-method').last().innerText(),/Не подключён/);
   await click('link');await click('mos-return');await screen('linked');await click('cabinet');await profile();assert.match(await p.locator('.r2-profile').innerText(),/anna/);assert.match(await p.locator('main').innerText(),/anna@example.test/);assert.match(await p.locator('.r2-method').last().innerText(),/Подключён/);
   await logout();await click('mos-login');await click('mos-return');await profile();assert.match(await p.locator('main').innerText(),/anna@example.test/);
+  await logout();await click('login');await p.locator('#fill').click();assert.equal(await p.locator('#r2-login').inputValue(),'anna');await submit('login');await profile();
   await click('unlink');await p.locator('#r2-dialog').waitFor();await p.keyboard.press('Escape');assert.match(await p.locator('.r2-method').last().innerText(),/Подключён/);await click('unlink');await click('unlink-confirm');await profile();assert.match(await p.locator('.r2-method').last().innerText(),/Не подключён/);
   await logout();await click('login');await p.locator('#r2-login').fill('anna');await p.locator('#r2-password').fill('Local-2026!');await submit('login');await profile();
   // Explicit conflict fixture cannot silently reassign the Mos ID or merge accounts.

@@ -11,7 +11,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
   const demoMos = {id:'mos-demo-001', name:'Иванов Иван Иванович', email:'ivan.mos@example.test', phone:'+7 000 000-00-00'};
   let screen, accounts, current, origin, purpose, oneTimePassword, draft, notice, sequence;
   function reset() {
-    screen='entry'; accounts=[]; current=null; origin='entry'; purpose='login';
+    screen='entry'; accounts=[{id:'demo-existing-account',login:'demo.user',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:''}]; current=null; origin='entry'; purpose='login';
     oneTimePassword=''; draft={}; notice=''; sequence=0;
     if($('r2-mos-outcome'))$('r2-mos-outcome').value='success';
   }
@@ -174,8 +174,12 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
     if(screen==='register'||screen==='login'){draft.login=$('r2-login')?.value||'';draft.email=$('r2-email')?.value||'';}
   });
   function fill() {
-    const values={login:screen==='login'?(accounts[accounts.length-1]?.login||'ivan'):'ivan',email:'ivan@example.test',password:'Example-2026!','new-password':'Example-2026!','confirm-password':'Example-2026!','current-password':current?.password||'Example-2026!'};
-    for(const [id,value] of Object.entries(values)){const el=$('r2-'+id);if(el&&!el.value.trim())el.value=value;}
+    const enteredLogin=$('r2-login')?.value.trim();
+    const demoAccount=accounts.find(a=>a.login===enteredLogin)||(!enteredLogin?accounts[accounts.length-1]:null);
+    let registrationLogin='ivan',registrationEmail='ivan@example.test',suffix=1;
+    while(accounts.some(a=>a.login===registrationLogin||a.email===registrationEmail)){registrationLogin='ivan'+suffix;registrationEmail='ivan'+suffix+'@example.test';suffix+=1;}
+    const values={login:screen==='login'?demoAccount?.login:registrationLogin,email:registrationEmail,password:demoAccount?.password,'new-password':'Example-2026!','confirm-password':'Example-2026!','current-password':current?.password||'Example-2026!'};
+    for(const [id,value] of Object.entries(values)){const el=$('r2-'+id);if(value&&el&&!el.value.trim())el.value=value;}
   }
   reset();
   function mount(){const dialog=$('r2-dialog');if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();openCabinet();});}}

@@ -385,6 +385,13 @@ $('sidebar').addEventListener('click',e=>{if(e.target.closest('[data-account-pro
 $('account-select').addEventListener('change',e=>{if(!state.authenticated)return;const c=state.contexts.find(x=>x.id===e.target.value);if(!c)return;state.context=c;state.history=[];state.modal=null;go('home');});
 $('reset').addEventListener('click',reset);scenario.addEventListener('change',reset);$('intent').addEventListener('change',reset);
 $('signout').addEventListener('click',()=>{const intent=state.intent,password=state.demoPassword;registration2.signout();reset(true);state.demoPassword=password;state.intent=intent;render();});
+// Sandboxed publication allows scripts, while native form submission stays disabled.
+// Dispatch only the prototype's local submit handler; never send a form or navigate.
+if(window!==window.top){
+ const localSubmit=form=>form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
+ document.addEventListener('click',e=>{const button=e.target.closest('button[type="submit"]'),form=button?.form;if(form&&main.contains(form)){e.preventDefault();localSubmit(form);}},true);
+ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target.matches('input:not([type="checkbox"]):not([type="radio"])')&&e.target.form&&main.contains(e.target.form)){e.preventDefault();localSubmit(e.target.form);}},true);
+}
 document.querySelectorAll('[data-registration-variant]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.registrationVariant===registrationVariant)return;registrationVariant=b.dataset.registrationVariant;reset();}));
 const mosOutcome=document.createElement('label');mosOutcome.id='r2-mos-outcome-wrap';mosOutcome.hidden=true;mosOutcome.innerHTML='Демо: результат Mos ID <select id="r2-mos-outcome"><option value="success">Успешно</option><option value="conflict">Mos ID занят другим аккаунтом</option><option value="error">Ошибка подключения</option></select>';document.querySelector('.bench-inner').insertBefore(mosOutcome,$('fill'));
 reset();
