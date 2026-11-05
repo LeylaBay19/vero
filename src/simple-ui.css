@@ -1,0 +1,21 @@
+/* Shared plain UI for fast scenario work; no decorative artwork or effects. */
+:root{--accent:#2563eb;--soft:#f4f6f8;--line:#d8dde5;--ink:#20242c;--muted:#647084;--bg:#fafafa}
+body,button,input,select,textarea{font-family:Arial,sans-serif}
+.card,dialog,.tile,.org-sheet,.access-card,.power-card,.power-request-card,.r2-profile-grid,.r2-credentials{box-shadow:none;border-radius:6px;border-color:var(--line)}
+.primary{background:#2563eb;border-color:#2563eb;border-radius:5px}
+.primary:hover{background:#1d4ed8}
+.secondary,.field input,.field select,.field textarea,.registration-variants button{border-radius:5px;box-shadow:none}
+.brand-wordmark{color:#20242c;font-size:24px;letter-spacing:0}
+.registration-variants button[aria-pressed=true]{box-shadow:none}
+.card h2,.workspace h1{font-size:24px;letter-spacing:0}
+.r2-card[data-registration-screen=entry],.r2-card[data-registration-screen=login]{padding:28px}
+.service-art{display:none}
+.product-visual{height:auto;min-height:0;padding:12px;background:#f4f6f8;border-radius:4px}
+.product-status{position:static;background:transparent;border:0;padding:0}
+.product-tile h2{font-size:19px}
+.product-tile,.add-product{box-shadow:none;border:1px solid var(--line)}
+.notice,.summary,.tasklist,.correction-callout,.access-card,.power-request-card{border-radius:5px;box-shadow:none}
+.mos-dialog{box-shadow:none;border-radius:6px}
+.mos-dialog::backdrop{backdrop-filter:none;background:rgba(20,27,38,.4)}
+.sidebar nav button{border-radius:4px}
+@media(max-width:700px){.r2-card[data-registration-screen=entry],.r2-card[data-registration-screen=login]{padding:22px}}

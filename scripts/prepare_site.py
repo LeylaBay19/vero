@@ -2,12 +2,7 @@
 from pathlib import Path
 import argparse, html, re, shutil
 
-parser=argparse.ArgumentParser()
-parser.add_argument('--target',type=Path,required=True,help='Existing Sites checkout with .openai/hosting.json')
-args=parser.parse_args()
 project=Path(__file__).resolve().parents[1]
-site=args.target.resolve()
-assert (site/'.openai/hosting.json').is_file(), 'Use the existing Sites project checkout'
 shell=(project/'templates/sandbox-shell.html').read_text(encoding='utf-8')
 match=re.search(r'data-srcdoc="([\s\S]*?)"',shell)
 assert match
@@ -34,13 +29,18 @@ def wrap(page):
     assert sandbox(result)==sandbox(shell)
     return result
 
-dist=site/'dist'
-dist.mkdir(exist_ok=True)
-for page in (project/'web').iterdir():
-    if page.is_file() and page.name!='index.html':
-        shutil.copy2(page,dist/page.name)
-shutil.copy2(project/'web/index.html',dist/'comparison.html')
-shutil.copy2(project/'schemes-all.html',dist/'processes.html')
-(dist/'index.html').write_text(wrap((project/'platform-entry.html').read_text(encoding='utf-8')),encoding='utf-8')
-(dist/'registration-2.html').write_text(wrap((project/'platform-entry-variant2.html').read_text(encoding='utf-8')),encoding='utf-8')
-print('Prepared screen-sized Site with internal scrolling, unchanged sandbox/CSP, registration variants, comparisons and 7 BPMN.')
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--target',type=Path,required=True,help='Existing Sites checkout with .openai/hosting.json')
+    args=parser.parse_args();site=args.target.resolve()
+    assert (site/'.openai/hosting.json').is_file(), 'Use the existing Sites project checkout'
+    dist=site/'dist';dist.mkdir(exist_ok=True)
+    for page in (project/'web').iterdir():
+        if page.is_file() and page.name!='index.html':shutil.copy2(page,dist/page.name)
+    shutil.copy2(project/'web/index.html',dist/'comparison.html')
+    shutil.copy2(project/'schemes-all.html',dist/'processes.html')
+    stand=(project/'prototype.html').read_text(encoding='utf-8')
+    for name in ['index.html','registration-2.html']:(dist/name).write_text(stand,encoding='utf-8')
+    print('Prepared unified Site; existing hosting identity, sandbox, CSP and audience retained.')
+
+if __name__=='__main__':main()
