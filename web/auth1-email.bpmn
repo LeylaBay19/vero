@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_EMAIL_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.21.0">
+  <bpmn:process id="AUTH1_EMAIL" name="Регистрация по email" isExecutable="false">
+    <bpmn:documentation>Создать подтверждённый личный аккаунт перед подключением организации. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
+    <bpmn:startEvent id="AUTH1_EMAIL_start" name="Начать регистрацию">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="AUTH1_EMAIL_email" name="Указать email">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_0</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_EMAIL_mail" name="Показать отправку письма">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_1</bpmn:incoming>
+      <bpmn:incoming>AUTH1_EMAIL_flow_6</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_EMAIL_open" name="Открыть письмо и подтвердить email">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_2</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_EMAIL_valid_link" name="Ссылка действительна?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_3</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_4</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_EMAIL_expired" name="Запросить новое письмо">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_5</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_EMAIL_password" name="Задать пароль, повторить и принять условия">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_4</bpmn:incoming>
+      <bpmn:incoming>AUTH1_EMAIL_flow_10</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_EMAIL_valid_form" name="Данные и согласие верны?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_7</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_8</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_EMAIL_fix" name="Исправить ввод; остальные данные сохранены">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_9</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_EMAIL_create" name="Создать аккаунт; email становится логином">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_8</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_EMAIL_mos_offer" name="Подключить Mos ID или сделать позже">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_11</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_EMAIL_flow_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_EMAIL_done" name="Аккаунт готов; далее подключение организации">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_EMAIL_flow_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_0" sourceRef="AUTH1_EMAIL_start" targetRef="AUTH1_EMAIL_email" name="" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_1" sourceRef="AUTH1_EMAIL_email" targetRef="AUTH1_EMAIL_mail" name="" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_2" sourceRef="AUTH1_EMAIL_mail" targetRef="AUTH1_EMAIL_open" name="" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_3" sourceRef="AUTH1_EMAIL_open" targetRef="AUTH1_EMAIL_valid_link" name="" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_4" sourceRef="AUTH1_EMAIL_valid_link" targetRef="AUTH1_EMAIL_password" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_5" sourceRef="AUTH1_EMAIL_valid_link" targetRef="AUTH1_EMAIL_expired" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_6" sourceRef="AUTH1_EMAIL_expired" targetRef="AUTH1_EMAIL_mail" name="Новое письмо" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_7" sourceRef="AUTH1_EMAIL_password" targetRef="AUTH1_EMAIL_valid_form" name="" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_8" sourceRef="AUTH1_EMAIL_valid_form" targetRef="AUTH1_EMAIL_create" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_9" sourceRef="AUTH1_EMAIL_valid_form" targetRef="AUTH1_EMAIL_fix" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_10" sourceRef="AUTH1_EMAIL_fix" targetRef="AUTH1_EMAIL_password" name="Повторить" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_11" sourceRef="AUTH1_EMAIL_create" targetRef="AUTH1_EMAIL_mos_offer" name="" />
+    <bpmn:sequenceFlow id="AUTH1_EMAIL_flow_12" sourceRef="AUTH1_EMAIL_mos_offer" targetRef="AUTH1_EMAIL_done" name="" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="AUTH1_EMAIL_diagram">
+    <bpmndi:BPMNPlane id="AUTH1_EMAIL_plane" bpmnElement="AUTH1_EMAIL">
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_start_di" bpmnElement="AUTH1_EMAIL_start">
+        <dc:Bounds x="472.0" y="117.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="520" y="115" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_email_di" bpmnElement="AUTH1_EMAIL_email">
+        <dc:Bounds x="370.0" y="280.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_mail_di" bpmnElement="AUTH1_EMAIL_mail">
+        <dc:Bounds x="370.0" y="470.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_open_di" bpmnElement="AUTH1_EMAIL_open">
+        <dc:Bounds x="370.0" y="660.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_valid_link_di" bpmnElement="AUTH1_EMAIL_valid_link">
+        <dc:Bounds x="460.0" y="865.0" width="60" height="60" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="805" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_expired_di" bpmnElement="AUTH1_EMAIL_expired">
+        <dc:Bounds x="60.0" y="850.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_password_di" bpmnElement="AUTH1_EMAIL_password">
+        <dc:Bounds x="370.0" y="1040.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_valid_form_di" bpmnElement="AUTH1_EMAIL_valid_form">
+        <dc:Bounds x="460.0" y="1245.0" width="60" height="60" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="1185" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_fix_di" bpmnElement="AUTH1_EMAIL_fix">
+        <dc:Bounds x="680.0" y="1230.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_create_di" bpmnElement="AUTH1_EMAIL_create">
+        <dc:Bounds x="370.0" y="1420.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_mos_offer_di" bpmnElement="AUTH1_EMAIL_mos_offer">
+        <dc:Bounds x="370.0" y="1610.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_EMAIL_done_di" bpmnElement="AUTH1_EMAIL_done">
+        <dc:Bounds x="472.0" y="1827.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="1870" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_0_di" bpmnElement="AUTH1_EMAIL_flow_0">
+        <di:waypoint x="490" y="153" />
+        <di:waypoint x="490" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_1_di" bpmnElement="AUTH1_EMAIL_flow_1">
+        <di:waypoint x="490" y="370" />
+        <di:waypoint x="490" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_2_di" bpmnElement="AUTH1_EMAIL_flow_2">
+        <di:waypoint x="490" y="560" />
+        <di:waypoint x="490" y="660" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_3_di" bpmnElement="AUTH1_EMAIL_flow_3">
+        <di:waypoint x="490" y="750" />
+        <di:waypoint x="490" y="865" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_4_di" bpmnElement="AUTH1_EMAIL_flow_4">
+        <di:waypoint x="490" y="925" />
+        <di:waypoint x="490" y="1040" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="400.0" y="967.5" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_5_di" bpmnElement="AUTH1_EMAIL_flow_5">
+        <di:waypoint x="460" y="895" />
+        <di:waypoint x="300" y="895" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="290.0" y="880.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_6_di" bpmnElement="AUTH1_EMAIL_flow_6">
+        <di:waypoint x="180" y="940" />
+        <di:waypoint x="180" y="970" />
+        <di:waypoint x="20" y="970" />
+        <di:waypoint x="20" y="515" />
+        <di:waypoint x="370" y="515" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="10.0" y="955.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_7_di" bpmnElement="AUTH1_EMAIL_flow_7">
+        <di:waypoint x="490" y="1130" />
+        <di:waypoint x="490" y="1245" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_8_di" bpmnElement="AUTH1_EMAIL_flow_8">
+        <di:waypoint x="490" y="1305" />
+        <di:waypoint x="490" y="1420" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="400.0" y="1347.5" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_9_di" bpmnElement="AUTH1_EMAIL_flow_9">
+        <di:waypoint x="520" y="1275" />
+        <di:waypoint x="680" y="1275" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510.0" y="1260.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_10_di" bpmnElement="AUTH1_EMAIL_flow_10">
+        <di:waypoint x="920" y="1275" />
+        <di:waypoint x="1010" y="1275" />
+        <di:waypoint x="1010" y="1085" />
+        <di:waypoint x="610" y="1085" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="875.0" y="1260.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_11_di" bpmnElement="AUTH1_EMAIL_flow_11">
+        <di:waypoint x="490" y="1510" />
+        <di:waypoint x="490" y="1610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_12_di" bpmnElement="AUTH1_EMAIL_flow_12">
+        <di:waypoint x="490" y="1700" />
+        <di:waypoint x="490" y="1827" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -52,7 +52,11 @@
     if(!['comparison','proposals','schemes'].some(n=>document.getElementById('stand-frame-'+n).contentWindow===e.source))return;
     const data=e.data;
     if(data?.type==='vero:navigate'&&['current','schemes'].includes(data.view))select(data.view);
-    if(data?.type==='vero:download'){const a=[...document.querySelectorAll('.stand-downloads a[download]')].find(a=>a.getAttribute('download')===data.name);a?.click();}
+    if(data?.type==='vero:download'){
+      const a=[...document.querySelectorAll('#stand-scheme-downloads a[download]')].find(a=>a.getAttribute('download')===data.name);
+      if(!a)return;const match=/^data:(application\/xml|image\/svg\+xml);charset=utf-8,([\s\S]*)$/.exec(a.getAttribute('href'));
+      if(!match)return;const url=URL.createObjectURL(new Blob([decodeURIComponent(match[2])],{type:match[1]})),link=document.createElement('a');link.href=url;link.download=a.download;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+    }
   });
   document.querySelectorAll('[data-stand-window]').forEach(a=>a.addEventListener('click',e=>{
     if(location.protocol!=='file:')return;

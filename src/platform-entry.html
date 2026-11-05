@@ -191,6 +191,7 @@ function renderNavigation(q){
 function closeModal(){const kind=state.modal;state.modal=null;render();if(kind==='certificate'){main.querySelector('[data-action=choose-certificate]')?.focus();return;}main.querySelector(kind==='invite'?(state.screen==='setup-team'?'[data-action=setup-invite]':'[data-action=invite-open]'):kind==='organization'?'[data-action=edit-organization]':kind==='support'?'[data-action=support-open],[data-action=support-question]':kind==='power-request'?'[data-action=power-request]':kind==='power'?`[data-power="${state.selectedPower}"]`:'[data-action=product-picker]')?.focus();}
 function render(){
  document.dispatchEvent(new Event('vero:history-update'));
+ if(authOnly){$('intent').closest('label').hidden=true;$('intent').value='';}
  document.querySelectorAll('[data-registration-variant]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.registrationVariant===registrationVariant)));
  if(!state.authenticated&&!['login','register','mos'].includes(state.screen))state.screen='login';
  if(state.screen==='data-access'&&state.context?.kind!=='government')state.screen='home';
@@ -237,7 +238,10 @@ function render(){
  if(q==='setup-team')html=connectionTeam();
  if(authOnly&&q==='review-company'){
   const a=state.application,submitted=a?.inn===state.inn,approved=submitted&&a.status==='approved',rejected=submitted&&a.status==='rejected';
-  html=card('Проверьте данные',`<p>Данные получены после выбора сертификата УКЭП. Организацию подключает генеральный директор.</p>${reviewData()}${submitted?`<div class="notice ${approved?'good':''}" role="status">${approved?'Организация подключена. Полномочия генерального директора подтверждены. Регистрация завершена.':rejected?'Проверка не пройдена. Проверьте актуальность сертификата и сведений о руководителе.':'Данные отправлены на проверку. До подтверждения права управления организацией не предоставлены.'}</div>${rejected?btn('Выбрать другой сертификат','choose-certificate',true):''}`:`<form data-form="application" novalidate><label class="check"><input id="confirm-company-data" type="checkbox"><span>Проверил(а) данные, всё верно</span></label><button class="primary" type="submit">Подтвердить и отправить на проверку</button></form>`}`);
+  let result='';
+  if(submitted)result=approved?'<div class="notice good" role="status">Организация подключена. Полномочия генерального директора подтверждены. Регистрация завершена.</div>':rejected?'<div class="notice" role="status">Проверка не пройдена. Проверьте актуальность сертификата и сведений о руководителе.</div>'+btn('Выбрать другой сертификат','choose-certificate',true):'<button type="button" class="secondary" data-connection-sent disabled>Отправлено</button>';
+  else result='<form data-form="application" novalidate><label class="check"><input id="confirm-company-data" type="checkbox"><span>Проверил(а) данные, всё верно</span></label><button class="primary" type="submit">Подтвердить и отправить на проверку</button></form>';
+  html=card('Проверьте данные',`<p>Данные получены после выбора сертификата УКЭП. Организацию подключает генеральный директор.</p>${reviewData()}${result}`);
  }
  if(authOnly&&q==='auth-complete')html=`<section class="workspace" data-auth-complete><h1 tabindex="-1">Вход выполнен</h1>${['director','employee'].includes(c?.kind)?`<p>${esc(c.name)} · ${esc(c.kind==='director'?'Генеральный директор':'Сотрудник организации')}</p>`:''}<p>Сценарий входа завершён.</p></section>`;
  if(q==='invitations')html=invitationList();

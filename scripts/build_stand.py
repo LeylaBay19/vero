@@ -1,4 +1,4 @@
-"""One self-contained stand: current cabinet, historic comparisons, seven diagrams."""
+"""One self-contained stand: authentication, historic comparisons, current variant 1 diagrams."""
 from pathlib import Path
 import html,re
 
@@ -7,7 +7,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def build_document(wrapper,comparison,schemes):
     from prepare_site import inner,csp
     policy=csp(inner)[0]
-    schemes=(ROOT/'src/schemes-empty.html').read_text(encoding='utf-8')
+    assert 'data-variant1-schemes' in schemes
     fill_bridge="""<script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:fill')return;const button=document.getElementById('fill')||document.getElementById('ap-demo');button?.click();});</script>"""
     # The standalone current prototype retains its own two-option navigation.
     # In the combined stand the parent is the single source of variant selection.
@@ -63,7 +63,7 @@ def build_document(wrapper,comparison,schemes):
     styles+='<style>@media(max-width:700px){.entry-variants{position:relative}.stand-archive{position:static}.stand-archive>div{left:10px;right:10px;top:100%;min-width:0;max-width:none}}</style>'
     styles+='<style>#stand-history{display:flex;align-items:center;gap:5px}#stand-history button{white-space:nowrap}#stand-history button:disabled{opacity:.4;cursor:default}#stand-history-position{font-size:11px;color:#647084;white-space:nowrap;min-width:26px}#stand-history[hidden]{display:none!important}@media(max-width:700px){#stand-history{flex-wrap:nowrap}}</style>'
     styles=styles.replace('cabinet-switcher','entry-variants').replace('#2563eb','#242b36').replace('background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1','background:#242b36;color:#fff;border-color:#242b36')
-    result=wrapper[:frame.start()]+header+panels+wrapper[frame.end():]
+    result=wrapper[:frame.start()]+header+panels+'<div id="stand-scheme-downloads" hidden>'+downloads+'</div>'+wrapper[frame.end():]
     result=result.replace('</head>',styles+'</head>',1).replace('</body>',script+'</body>',1)
     result=re.sub(r'<title>[^<]*</title>','<title>ВЕРО — единый прототип</title>',result,count=1)
     return re.sub(r'(?m)^[ \t]+$','',result)
@@ -74,6 +74,6 @@ def main():
     result=build_document(wrap((ROOT/'platform-entry-variant2.html').read_text(encoding='utf-8')),(ROOT/'index.html').read_text(encoding='utf-8'),(ROOT/'schemes-all.html').read_text(encoding='utf-8'))
     for target in [ROOT/'prototype.html',ROOT/'web/prototype.html',ROOT/'deliverables'/f'vero-unified-v{version}.html']:
         target.parent.mkdir(parents=True,exist_ok=True);target.write_text(result,encoding='utf-8')
-    print('Built unified stand: active 1/4, archive 2/3, testing history, 3 competitors and empty schemes.')
+    print('Built unified stand: active 1/4, archive 2/3, testing history, 3 competitors and six current variant 1 schemes.')
 
 if __name__=='__main__':main()

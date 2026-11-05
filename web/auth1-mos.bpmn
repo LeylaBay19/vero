@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_MOS_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.21.0">
+  <bpmn:process id="AUTH1_MOS" name="Регистрация и вход через mos.ru" isExecutable="false">
+    <bpmn:documentation>Войти по Mos ID или создать личный аккаунт при первом входе. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
+    <bpmn:startEvent id="AUTH1_MOS_start" name="Выбрать вход через mos.ru">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:outgoing>AUTH1_MOS_flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="AUTH1_MOS_provider" name="Ввести данные учётной записи mos.ru">
+      <bpmn:documentation>Участник: Пользователь / mos.ru</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_0</bpmn:incoming>
+      <bpmn:incoming>AUTH1_MOS_flow_5</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_MOS_consent" name="Разрешить передачу данных; для нового аккаунта принять условия">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_1</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_MOS_response" name="Вход подтверждён и данные разрешены?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_2</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_3</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_MOS_flow_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_MOS_error" name="Показать ошибку или отмену; аккаунт не менять">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_3</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_MOS_retry" name="Повторить вход?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_4</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_5</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_MOS_flow_6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="AUTH1_MOS_cancel" name="Вход не выполнен">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="AUTH1_MOS_known" name="Mos ID уже связан с аккаунтом?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_7</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_8</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_MOS_flow_10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_MOS_existing" name="Сохранить существующие организацию и роль">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_8</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_MOS_entered" name="Вход выполнен; сценарий завершён">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="AUTH1_MOS_new" name="Создать аккаунт без локального пароля">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_10</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_MOS_flow_11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_MOS_registered" name="Аккаунт создан; предложить подключение организации">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_MOS_flow_11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_0" sourceRef="AUTH1_MOS_start" targetRef="AUTH1_MOS_provider" name="" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_1" sourceRef="AUTH1_MOS_provider" targetRef="AUTH1_MOS_consent" name="" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_2" sourceRef="AUTH1_MOS_consent" targetRef="AUTH1_MOS_response" name="" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_3" sourceRef="AUTH1_MOS_response" targetRef="AUTH1_MOS_error" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_4" sourceRef="AUTH1_MOS_error" targetRef="AUTH1_MOS_retry" name="" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_5" sourceRef="AUTH1_MOS_retry" targetRef="AUTH1_MOS_provider" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_6" sourceRef="AUTH1_MOS_retry" targetRef="AUTH1_MOS_cancel" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_7" sourceRef="AUTH1_MOS_response" targetRef="AUTH1_MOS_known" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_8" sourceRef="AUTH1_MOS_known" targetRef="AUTH1_MOS_existing" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_9" sourceRef="AUTH1_MOS_existing" targetRef="AUTH1_MOS_entered" name="" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_10" sourceRef="AUTH1_MOS_known" targetRef="AUTH1_MOS_new" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_MOS_flow_11" sourceRef="AUTH1_MOS_new" targetRef="AUTH1_MOS_registered" name="" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="AUTH1_MOS_diagram">
+    <bpmndi:BPMNPlane id="AUTH1_MOS_plane" bpmnElement="AUTH1_MOS">
+      <bpmndi:BPMNShape id="AUTH1_MOS_start_di" bpmnElement="AUTH1_MOS_start">
+        <dc:Bounds x="472.0" y="117.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="520" y="115" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_provider_di" bpmnElement="AUTH1_MOS_provider">
+        <dc:Bounds x="370.0" y="280.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_consent_di" bpmnElement="AUTH1_MOS_consent">
+        <dc:Bounds x="370.0" y="470.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_response_di" bpmnElement="AUTH1_MOS_response">
+        <dc:Bounds x="460.0" y="675.0" width="60" height="60" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="615" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_error_di" bpmnElement="AUTH1_MOS_error">
+        <dc:Bounds x="60.0" y="660.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_retry_di" bpmnElement="AUTH1_MOS_retry">
+        <dc:Bounds x="150.0" y="865.0" width="60" height="60" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="60" y="805" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_cancel_di" bpmnElement="AUTH1_MOS_cancel">
+        <dc:Bounds x="162.0" y="1067.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="60" y="1110" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_known_di" bpmnElement="AUTH1_MOS_known">
+        <dc:Bounds x="460.0" y="865.0" width="60" height="60" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="805" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_existing_di" bpmnElement="AUTH1_MOS_existing">
+        <dc:Bounds x="680.0" y="850.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_entered_di" bpmnElement="AUTH1_MOS_entered">
+        <dc:Bounds x="782.0" y="1067.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="680" y="1110" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_new_di" bpmnElement="AUTH1_MOS_new">
+        <dc:Bounds x="370.0" y="1040.0" width="240" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_MOS_registered_di" bpmnElement="AUTH1_MOS_registered">
+        <dc:Bounds x="472.0" y="1257.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="370" y="1300" width="240" height="42" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_0_di" bpmnElement="AUTH1_MOS_flow_0">
+        <di:waypoint x="490" y="153" />
+        <di:waypoint x="490" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_1_di" bpmnElement="AUTH1_MOS_flow_1">
+        <di:waypoint x="490" y="370" />
+        <di:waypoint x="490" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_2_di" bpmnElement="AUTH1_MOS_flow_2">
+        <di:waypoint x="490" y="560" />
+        <di:waypoint x="490" y="675" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_3_di" bpmnElement="AUTH1_MOS_flow_3">
+        <di:waypoint x="460" y="705" />
+        <di:waypoint x="300" y="705" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="290.0" y="690.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_4_di" bpmnElement="AUTH1_MOS_flow_4">
+        <di:waypoint x="180" y="750" />
+        <di:waypoint x="180" y="865" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_5_di" bpmnElement="AUTH1_MOS_flow_5">
+        <di:waypoint x="150" y="895" />
+        <di:waypoint x="20" y="895" />
+        <di:waypoint x="20" y="325" />
+        <di:waypoint x="370" y="325" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-5.0" y="880.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_6_di" bpmnElement="AUTH1_MOS_flow_6">
+        <di:waypoint x="180" y="925" />
+        <di:waypoint x="180" y="1067" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="90.0" y="981.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_7_di" bpmnElement="AUTH1_MOS_flow_7">
+        <di:waypoint x="490" y="735" />
+        <di:waypoint x="490" y="865" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="400.0" y="764.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_8_di" bpmnElement="AUTH1_MOS_flow_8">
+        <di:waypoint x="520" y="895" />
+        <di:waypoint x="680" y="895" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="510.0" y="880.0" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_9_di" bpmnElement="AUTH1_MOS_flow_9">
+        <di:waypoint x="800" y="940" />
+        <di:waypoint x="800" y="1067" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_10_di" bpmnElement="AUTH1_MOS_flow_10">
+        <di:waypoint x="490" y="925" />
+        <di:waypoint x="490" y="1040" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="400.0" y="967.5" width="180" height="30" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_MOS_flow_11_di" bpmnElement="AUTH1_MOS_flow_11">
+        <di:waypoint x="490" y="1130" />
+        <di:waypoint x="490" y="1257" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

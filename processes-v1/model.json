@@ -1,0 +1,1526 @@
+[
+  {
+    "id": "AUTH1_EMAIL",
+    "title": "Регистрация по email",
+    "goal": "Создать подтверждённый личный аккаунт перед подключением организации.",
+    "nodes": [
+      {
+        "id": "start",
+        "text": "Начать регистрацию",
+        "col": 1,
+        "row": 0,
+        "kind": "start",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 90,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "email",
+        "text": "Указать email",
+        "col": 1,
+        "row": 1,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 280,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "mail",
+        "text": "Показать отправку письма",
+        "col": 1,
+        "row": 2,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "open",
+        "text": "Открыть письмо и подтвердить email",
+        "col": 1,
+        "row": 3,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "valid_link",
+        "text": "Ссылка действительна?",
+        "col": 1,
+        "row": 4,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "expired",
+        "text": "Запросить новое письмо",
+        "col": 0,
+        "row": 4,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "password",
+        "text": "Задать пароль, повторить и принять условия",
+        "col": 1,
+        "row": 5,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "valid_form",
+        "text": "Данные и согласие верны?",
+        "col": 1,
+        "row": 6,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "fix",
+        "text": "Исправить ввод; остальные данные сохранены",
+        "col": 2,
+        "row": 6,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 680,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "create",
+        "text": "Создать аккаунт; email становится логином",
+        "col": 1,
+        "row": 7,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1420,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "mos_offer",
+        "text": "Подключить Mos ID или сделать позже",
+        "col": 1,
+        "row": 8,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1610,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "done",
+        "text": "Аккаунт готов; далее подключение организации",
+        "col": 1,
+        "row": 9,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1800,
+        "w": 240,
+        "h": 90
+      }
+    ],
+    "edges": [
+      {
+        "source": "start",
+        "target": "email",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "email",
+        "target": "mail",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "mail",
+        "target": "open",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "open",
+        "target": "valid_link",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "valid_link",
+        "target": "password",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "valid_link",
+        "target": "expired",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "expired",
+        "target": "mail",
+        "label": "Новое письмо",
+        "route": "left"
+      },
+      {
+        "source": "password",
+        "target": "valid_form",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "valid_form",
+        "target": "create",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "valid_form",
+        "target": "fix",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "fix",
+        "target": "password",
+        "label": "Повторить",
+        "route": "right"
+      },
+      {
+        "source": "create",
+        "target": "mos_offer",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "mos_offer",
+        "target": "done",
+        "label": "",
+        "route": null
+      }
+    ],
+    "notes": [
+      "Поле логина после подтверждения email заблокировано. Пароль задаётся пользователем, согласие не отмечается автоматически.",
+      "Необязательная привязка Mos ID раскрыта в схеме «Привязка mos.ru». При отказе от неё аккаунт сохраняется.",
+      "Ошибка сервиса оставляет пользователя на текущей форме с введёнными данными. Реальные письма в прототипе не отправляются."
+    ]
+  },
+  {
+    "id": "AUTH1_MOS",
+    "title": "Регистрация и вход через mos.ru",
+    "goal": "Войти по Mos ID или создать личный аккаунт при первом входе.",
+    "nodes": [
+      {
+        "id": "start",
+        "text": "Выбрать вход через mos.ru",
+        "col": 1,
+        "row": 0,
+        "kind": "start",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 90,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "provider",
+        "text": "Ввести данные учётной записи mos.ru",
+        "col": 1,
+        "row": 1,
+        "kind": "task",
+        "role": "Пользователь / mos.ru",
+        "x": 370,
+        "y": 280,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "consent",
+        "text": "Разрешить передачу данных; для нового аккаунта принять условия",
+        "col": 1,
+        "row": 2,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "response",
+        "text": "Вход подтверждён и данные разрешены?",
+        "col": 1,
+        "row": 3,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "error",
+        "text": "Показать ошибку или отмену; аккаунт не менять",
+        "col": 0,
+        "row": 3,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 60,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "retry",
+        "text": "Повторить вход?",
+        "col": 0,
+        "row": 4,
+        "kind": "gateway",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "cancel",
+        "text": "Вход не выполнен",
+        "col": 0,
+        "row": 5,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "known",
+        "text": "Mos ID уже связан с аккаунтом?",
+        "col": 1,
+        "row": 4,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "existing",
+        "text": "Сохранить существующие организацию и роль",
+        "col": 2,
+        "row": 4,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 680,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "entered",
+        "text": "Вход выполнен; сценарий завершён",
+        "col": 2,
+        "row": 5,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 680,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "new",
+        "text": "Создать аккаунт без локального пароля",
+        "col": 1,
+        "row": 5,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "registered",
+        "text": "Аккаунт создан; предложить подключение организации",
+        "col": 1,
+        "row": 6,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      }
+    ],
+    "edges": [
+      {
+        "source": "start",
+        "target": "provider",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "provider",
+        "target": "consent",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "consent",
+        "target": "response",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "response",
+        "target": "error",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "error",
+        "target": "retry",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "retry",
+        "target": "provider",
+        "label": "Да",
+        "route": "left"
+      },
+      {
+        "source": "retry",
+        "target": "cancel",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "response",
+        "target": "known",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "known",
+        "target": "existing",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "existing",
+        "target": "entered",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "known",
+        "target": "new",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "new",
+        "target": "registered",
+        "label": "",
+        "route": null
+      }
+    ],
+    "notes": [
+      "ФИО и email в предлагаемом варианте обязательны для передачи; телефон и сведения об организациях необязательны.",
+      "Сведения об организации на mos.ru сами по себе не назначают права на ВЕРО. Это предлагаемый сценарий интеграции, не подтверждение фактического API.",
+      "Пароль не генерируется и не показывается. Позже его можно задать в профиле. После успешного обычного входа кабинет на этом стенде не открывается."
+    ]
+  },
+  {
+    "id": "AUTH1_COMPANY",
+    "title": "Подключение организации через УКЭП",
+    "goal": "Подключить организацию и получить подтверждённые полномочия генерального директора.",
+    "nodes": [
+      {
+        "id": "start",
+        "text": "Аккаунт создан; подключить организацию",
+        "col": 1,
+        "row": 0,
+        "kind": "start",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 90,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "select",
+        "text": "Выбрать сертификат УКЭП",
+        "col": 1,
+        "row": 1,
+        "kind": "task",
+        "role": "Генеральный директор",
+        "x": 370,
+        "y": 280,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "certificate",
+        "text": "Сертификат действующий и принадлежит гендиректору?",
+        "col": 1,
+        "row": 2,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "invalid",
+        "text": "Показать причину; доступ не предоставлять",
+        "col": 0,
+        "row": 2,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 60,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "review",
+        "text": "Проверить полученные сведения организации и владельца",
+        "col": 1,
+        "row": 3,
+        "kind": "task",
+        "role": "Генеральный директор",
+        "x": 370,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "confirm",
+        "text": "Подтвердить корректность данных",
+        "col": 1,
+        "row": 4,
+        "kind": "task",
+        "role": "Генеральный директор",
+        "x": 370,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "send",
+        "text": "Принять данные на проверку",
+        "col": 1,
+        "row": 5,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "decision",
+        "text": "Проверка пройдена?",
+        "col": 1,
+        "row": 6,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "reject",
+        "text": "Сообщить причину отказа; права не выдавать",
+        "col": 0,
+        "row": 6,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 60,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "again",
+        "text": "Выбрать другой сертификат?",
+        "col": 0,
+        "row": 7,
+        "kind": "gateway",
+        "role": "Генеральный директор",
+        "x": 60,
+        "y": 1420,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "no_access",
+        "text": "Организация не подключена",
+        "col": 0,
+        "row": 8,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 1610,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "approve",
+        "text": "Подключить организацию и сохранить роль руководителя",
+        "col": 1,
+        "row": 7,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1420,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "done",
+        "text": "Организация подключена; регистрация завершена",
+        "col": 1,
+        "row": 8,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1610,
+        "w": 240,
+        "h": 90
+      }
+    ],
+    "edges": [
+      {
+        "source": "start",
+        "target": "select",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "select",
+        "target": "certificate",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "certificate",
+        "target": "review",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "certificate",
+        "target": "invalid",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "invalid",
+        "target": "select",
+        "label": "Другой сертификат",
+        "route": "left"
+      },
+      {
+        "source": "review",
+        "target": "confirm",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "confirm",
+        "target": "send",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "send",
+        "target": "decision",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "decision",
+        "target": "approve",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "decision",
+        "target": "reject",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "reject",
+        "target": "again",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "again",
+        "target": "select",
+        "label": "Да",
+        "route": "left"
+      },
+      {
+        "source": "again",
+        "target": "no_access",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "approve",
+        "target": "done",
+        "label": "",
+        "route": null
+      }
+    ],
+    "notes": [
+      "Нет поиска по ИНН, кнопки «Исправить данные», приглашения команды и отдельной страницы ожидания.",
+      "После отправки остаются данные и нейтральная кнопка «Отправлено». До положительного решения права руководителя не выдаются.",
+      "ТЗ §6.2/LK-06 предусматривает проверку, но не устанавливает её длительность. В прототипе результат задаёт демонстрационная панель; реальные проверки не подключены."
+    ]
+  },
+  {
+    "id": "AUTH1_INVITE",
+    "title": "Подключение сотрудника по приглашению",
+    "goal": "Получить только назначенный организацией доступ после принятия действующего приглашения.",
+    "nodes": [
+      {
+        "id": "start",
+        "text": "Открыть приглашение организации",
+        "col": 1,
+        "row": 0,
+        "kind": "start",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 90,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "form",
+        "text": "Показать приглашение и неизменяемый email",
+        "col": 1,
+        "row": 1,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 280,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "account",
+        "text": "Уже есть аккаунт?",
+        "col": 1,
+        "row": 2,
+        "kind": "gateway",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "new_password",
+        "text": "Задать пароль, повторить и принять условия",
+        "col": 0,
+        "row": 3,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "login",
+        "text": "Ввести пароль существующего аккаунта",
+        "col": 2,
+        "row": 3,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 680,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "merge",
+        "text": "Продолжить выбранный путь",
+        "col": 1,
+        "row": 4,
+        "kind": "gateway",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "valid",
+        "text": "Данные входа / регистрации верны?",
+        "col": 1,
+        "row": 5,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "fix",
+        "text": "Показать ошибку; исправить ввод",
+        "col": 0,
+        "row": 5,
+        "kind": "task",
+        "role": "Платформа / пользователь",
+        "x": 60,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "invitation",
+        "text": "Приглашение действует?",
+        "col": 1,
+        "row": 6,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "expired",
+        "text": "Сообщить об истечении / отзыве; обратиться к организации",
+        "col": 2,
+        "row": 6,
+        "kind": "task",
+        "role": "Платформа / сотрудник",
+        "x": 680,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "denied",
+        "text": "Без доступа к организации",
+        "col": 2,
+        "row": 7,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 680,
+        "y": 1420,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "accept",
+        "text": "Создать аккаунт при необходимости; принять приглашение",
+        "col": 1,
+        "row": 7,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1420,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "done",
+        "text": "Вход выполнен с назначенными правами сотрудника",
+        "col": 1,
+        "row": 8,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1610,
+        "w": 240,
+        "h": 90
+      }
+    ],
+    "edges": [
+      {
+        "source": "start",
+        "target": "form",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "form",
+        "target": "account",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "account",
+        "target": "new_password",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "account",
+        "target": "login",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "new_password",
+        "target": "merge",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "login",
+        "target": "merge",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "merge",
+        "target": "valid",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "valid",
+        "target": "fix",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "fix",
+        "target": "form",
+        "label": "Исправить",
+        "route": "left"
+      },
+      {
+        "source": "valid",
+        "target": "invitation",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "invitation",
+        "target": "expired",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "expired",
+        "target": "denied",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "invitation",
+        "target": "accept",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "accept",
+        "target": "done",
+        "label": "",
+        "route": null
+      }
+    ],
+    "notes": [
+      "Логин — email, на который отправлено приглашение; в новой регистрации сотрудника поле заблокировано.",
+      "Просроченное или отозванное приглашение не выдаёт доступ. Самостоятельного запроса доступа нет: сотрудник обращается к организации.",
+      "Принятие приглашения не назначает административную роль и не создаёт МЧД. Дополнительные полномочия вне области этих схем."
+    ]
+  },
+  {
+    "id": "AUTH1_PASSWORD",
+    "title": "Вход по email и восстановление пароля",
+    "goal": "Войти в существующий аккаунт; при необходимости восстановить пароль.",
+    "nodes": [
+      {
+        "id": "start",
+        "text": "Начать вход",
+        "col": 1,
+        "row": 0,
+        "kind": "start",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 90,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "login",
+        "text": "Ввести email и пароль",
+        "col": 1,
+        "row": 1,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 280,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "valid",
+        "text": "Данные входа верны?",
+        "col": 1,
+        "row": 2,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "done",
+        "text": "Вход выполнен; организация и роль сохранены",
+        "col": 2,
+        "row": 2,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 680,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "error",
+        "text": "Сообщить об ошибке входа",
+        "col": 1,
+        "row": 3,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "recover",
+        "text": "Восстановить пароль?",
+        "col": 1,
+        "row": 4,
+        "kind": "gateway",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "email",
+        "text": "Указать email аккаунта",
+        "col": 1,
+        "row": 5,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "mail",
+        "text": "Показать нейтральное сообщение об отправке письма",
+        "col": 1,
+        "row": 6,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "open",
+        "text": "Открыть письмо и ссылку восстановления",
+        "col": 1,
+        "row": 7,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1420,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "link",
+        "text": "Ссылка действительна?",
+        "col": 1,
+        "row": 8,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1610,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "expired",
+        "text": "Запросить новое письмо",
+        "col": 0,
+        "row": 8,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 1610,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "password",
+        "text": "Задать новый пароль и повторить",
+        "col": 1,
+        "row": 9,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1800,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "match",
+        "text": "Новый пароль корректен и совпадает?",
+        "col": 1,
+        "row": 10,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1990,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "fix",
+        "text": "Исправить пароль; остальные данные сохранены",
+        "col": 0,
+        "row": 10,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 1990,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "save",
+        "text": "Сохранить новый пароль; старый больше не подходит",
+        "col": 1,
+        "row": 11,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 2180,
+        "w": 240,
+        "h": 90
+      }
+    ],
+    "edges": [
+      {
+        "source": "start",
+        "target": "login",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "login",
+        "target": "valid",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "valid",
+        "target": "done",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "valid",
+        "target": "error",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "error",
+        "target": "recover",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "recover",
+        "target": "login",
+        "label": "Нет",
+        "route": "left"
+      },
+      {
+        "source": "recover",
+        "target": "email",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "email",
+        "target": "mail",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "mail",
+        "target": "open",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "open",
+        "target": "link",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "link",
+        "target": "expired",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "expired",
+        "target": "email",
+        "label": "Новое письмо",
+        "route": "left"
+      },
+      {
+        "source": "link",
+        "target": "password",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "password",
+        "target": "match",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "match",
+        "target": "fix",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "fix",
+        "target": "password",
+        "label": "Исправить",
+        "route": "left"
+      },
+      {
+        "source": "match",
+        "target": "save",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "save",
+        "target": "login",
+        "label": "Войти с новым паролем",
+        "route": "right"
+      }
+    ],
+    "notes": [
+      "При обычном входе организация уже подключена; новый поиск или повторная регистрация организации не предлагаются.",
+      "После восстановления нет автоматического входа: пользователь возвращается к форме и вводит новый пароль.",
+      "Неизвестный email получает такое же нейтральное сообщение, но не позволяет сменить пароль другого аккаунта. Ошибка сервиса сохраняет форму."
+    ]
+  },
+  {
+    "id": "AUTH1_LINK",
+    "title": "Необязательная привязка mos.ru",
+    "goal": "Добавить вход через mos.ru к существующему аккаунту без создания дубля.",
+    "nodes": [
+      {
+        "id": "start",
+        "text": "Аккаунт уже создан",
+        "col": 1,
+        "row": 0,
+        "kind": "start",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 90,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "choose",
+        "text": "Выбрать «Подключить Mos ID»",
+        "col": 1,
+        "row": 1,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 280,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "provider",
+        "text": "Войти в mos.ru",
+        "col": 1,
+        "row": 2,
+        "kind": "task",
+        "role": "Пользователь / mos.ru",
+        "x": 370,
+        "y": 470,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "consent",
+        "text": "Разрешить передачу данных",
+        "col": 1,
+        "row": 3,
+        "kind": "task",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 660,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "valid",
+        "text": "Авторизация подтверждена?",
+        "col": 1,
+        "row": 4,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "error",
+        "text": "Ошибка / отмена; аккаунт не изменён",
+        "col": 0,
+        "row": 4,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 60,
+        "y": 850,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "retry",
+        "text": "Повторить?",
+        "col": 0,
+        "row": 5,
+        "kind": "gateway",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "cancel",
+        "text": "Привязка не выполнена",
+        "col": 0,
+        "row": 6,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 60,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "free",
+        "text": "Mos ID свободен для этого аккаунта?",
+        "col": 1,
+        "row": 5,
+        "kind": "gateway",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "conflict",
+        "text": "Сообщить о другой привязке; аккаунты не объединять",
+        "col": 2,
+        "row": 5,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 680,
+        "y": 1040,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "no_change",
+        "text": "Существующий аккаунт сохранён",
+        "col": 2,
+        "row": 6,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 680,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "link",
+        "text": "Сохранить Mos ID в текущем аккаунте",
+        "col": 1,
+        "row": 6,
+        "kind": "task",
+        "role": "Платформа",
+        "x": 370,
+        "y": 1230,
+        "w": 240,
+        "h": 90
+      },
+      {
+        "id": "done",
+        "text": "Дополнительный способ входа подключён",
+        "col": 1,
+        "row": 7,
+        "kind": "end",
+        "role": "Пользователь",
+        "x": 370,
+        "y": 1420,
+        "w": 240,
+        "h": 90
+      }
+    ],
+    "edges": [
+      {
+        "source": "start",
+        "target": "choose",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "choose",
+        "target": "provider",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "provider",
+        "target": "consent",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "consent",
+        "target": "valid",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "valid",
+        "target": "error",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "error",
+        "target": "retry",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "retry",
+        "target": "provider",
+        "label": "Да",
+        "route": "left"
+      },
+      {
+        "source": "retry",
+        "target": "cancel",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "valid",
+        "target": "free",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "free",
+        "target": "conflict",
+        "label": "Нет",
+        "route": null
+      },
+      {
+        "source": "conflict",
+        "target": "no_change",
+        "label": "",
+        "route": null
+      },
+      {
+        "source": "free",
+        "target": "link",
+        "label": "Да",
+        "route": null
+      },
+      {
+        "source": "link",
+        "target": "done",
+        "label": "",
+        "route": null
+      }
+    ],
+    "notes": [
+      "Привязка не меняет существующий локальный пароль, организацию и назначенные права.",
+      "При конфликте Mos ID другой аккаунт не объединяется с текущим. Можно отменить либо отдельно войти через mos.ru.",
+      "Отвязка mos.ru в профиле допускается после задания локального пароля, чтобы сохранить способ входа."
+    ]
+  }
+]

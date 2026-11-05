@@ -8,4 +8,5 @@ subprocess.run([sys.executable,str(root/"scripts/export_delivery.py")],cwd=root,
 
 subprocess.run([sys.executable,str(root/"scripts/build_platform_entry.py")],cwd=root,check=True)
 subprocess.run([sys.executable,str(root/"scripts/build_cabinets.py")],cwd=root,check=True)
+subprocess.run([sys.executable,str(root/"scripts/auth_v1_diagrams.py")],cwd=root,check=True)
 subprocess.run([sys.executable,str(root/"scripts/build_stand.py")],cwd=root,check=True)
