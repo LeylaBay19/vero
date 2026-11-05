@@ -4,7 +4,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const button = (label, action, secondary = false) => `<button type="button" class="${secondary ? 'secondary' : 'primary'}" data-r2-action="${action}">${label}</button>`;
   const field = (label, id, type = 'text', attrs = '') => `<label class="field" for="r2-${id}">${label}<input id="r2-${id}" type="${type}" ${attrs}></label>`;
-  const password = (label, id, autocomplete = 'new-password') => `<label class="field" for="r2-${id}">${label}<span class="password-wrap"><input id="r2-${id}" type="password" autocomplete="${autocomplete}"><button type="button" class="password-toggle" data-r2-password="${id}" aria-label="Показать пароль" aria-pressed="false">Показать</button></span></label>`;
+  const password = (label, id, autocomplete = 'new-password', value = '') => `<label class="field" for="r2-${id}">${label}<span class="password-wrap"><input id="r2-${id}" type="password" autocomplete="${autocomplete}" value="${esc(value)}"><button type="button" class="password-toggle" data-r2-password="${id}" aria-label="Показать пароль" aria-pressed="false">Показать</button></span></label>`;
   const agreement = '<label class="check"><input id="r2-terms" type="checkbox"><span>Принимаю условия использования ВЕРО и обработки персональных данных.</span></label>';
   const message = '<div id="r2-alert" class="alert" role="alert" hidden></div><div id="r2-status" class="status-msg" role="status" hidden></div>';
   const form = (name, content, label) => `<form data-r2-form="${name}" novalidate>${content}<button class="primary" type="submit">${label}</button></form>`;
@@ -26,15 +26,18 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
   }
   function openCabinet() {
     if(!current)return;
-    oneTimePassword=''; screen=null; enter({...current});
+    oneTimePassword=''; draft={}; screen=null; enter({...current});
   }
   function startMos(mode) {
     if(mode==='link' && (!isAuthenticated() || !current))return;
+    if(['entry','login','register'].includes(screen))draft={login:$('r2-login')?.value||'',email:$('r2-email')?.value||'',password:$('r2-password')?.value||'',newPassword:$('r2-new-password')?.value||'',confirmPassword:$('r2-confirm-password')?.value||'',terms:!!$('r2-terms')?.checked};
     origin=screen||'profile'; purpose=mode; show('mos');
   }
   function finishMos() {
     if(screen!=='mos')return;
-    const outcome=$('r2-mos-outcome').value;
+    if(!$('r2-mos-login')?.value.trim())return error('Укажите телефон, email или СНИЛС.','mos-login');
+    if(!$('r2-mos-password')?.value)return error('Введите пароль mos.ru.','mos-password');
+    const outcome=$('r2-mos-result').value;
     if(outcome==='error')return show('oauth-error');
     if(purpose==='link') {
       if(!current || !isAuthenticated())return show('entry');
@@ -54,58 +57,60 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
     current={id:'demo-account-'+sequence,login:'mos_7f2a9c'+String(sequence).padStart(2,'0'),email:demoMos.email,name:demoMos.name,phone:demoMos.phone,password:'Example-2026!',mosId:demoMos.id,provider:'mos_auto'};
     accounts.push(current); oneTimePassword=current.password; show('created');
   }
-  function view() {
-    if(!screen)return null;
+  function view(screenOverride, background=false) {
+    const shown=screenOverride||screen;
+    if(!shown)return null;
     let title='',body='';
     const back=button('← Назад','back',true);
-    if(screen==='entry') {
+    if(shown==='entry'||shown==='login') {
       title='Войти в ВЕРО';
-      body='<p>Используйте Mos ID или свой логин и пароль.</p>'+button('<span class="r2-mos-brand">mos.ru</span> Войти через Mos ID','mos-login')+'<div class="separator">или</div>'+button('Войти по логину и паролю','login',true)+'<p class="signup">Нет аккаунта? <button type="button" class="text-btn" data-r2-action="register">Зарегистрироваться</button></p>';
+      body=form('login',field('Email','login','email',`autocomplete="username" value="${esc(draft.login||'')}"`)+password('Пароль','password','current-password',draft.password||''),'Войти')+'<div class="separator">или</div>'+button('Войти через mos.ru','mos-login',true)+'<p class="signup">Нет аккаунта? <button class="text-btn" type="button" data-r2-action="register">Зарегистрироваться</button></p>';
     }
-    if(screen==='login') {
-      title='Вход по логину и паролю';
-      body=form('login',field('Логин','login','text',`autocomplete="username" value="${esc(draft.login||'')}"`)+password('Пароль','password','current-password'),'Войти')+'<div class="separator">или</div>'+button('Войти через Mos ID','mos-login',true)+'<p class="signup">Нет аккаунта? <button class="text-btn" type="button" data-r2-action="register">Зарегистрироваться</button></p>';
-    }
-    if(screen==='register') {
+    if(shown==='register') {
       title='Регистрация';
-      body=form('register',field('Логин','login','text',`autocomplete="username" value="${esc(draft.login||'')}"`)+field('Email','email','email',`autocomplete="email" value="${esc(draft.email||'')}"`)+password('Пароль','new-password')+'<p class="mini" style="margin:0">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password')+agreement,'Зарегистрироваться')+'<div class="separator">или</div>'+button('Зарегистрироваться через Mos ID','mos-login',true)+'<p class="signup">Уже есть аккаунт? <button type="button" class="text-btn" data-r2-action="login">Войти</button></p>';
+      body=form('register',field('Логин','login','text',`autocomplete="username" value="${esc(draft.login||'')}"`)+field('Email','email','email',`autocomplete="email" value="${esc(draft.email||'')}"`)+password('Пароль','new-password','new-password',draft.newPassword||'')+'<p class="mini" style="margin:0">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password','new-password',draft.confirmPassword||'')+(draft.terms?agreement.replace('type="checkbox"','type="checkbox" checked'):agreement),'Зарегистрироваться')+'<div class="separator">или</div>'+button('Зарегистрироваться через Mos ID','mos-login',true)+'<p class="signup">Уже есть аккаунт? <button type="button" class="text-btn" data-r2-action="login">Войти</button></p>';
     }
-    if(screen==='mos') {
+    if(shown==='mos') {
       const returning=accounts.some(a=>a.mosId===demoMos.id);
-      title=purpose==='link'?'Подключение Mos ID':'Вход через Mos ID';
-      body='<p>Подтвердите вход в аккаунт mos.ru.</p><div class="summary"><strong>'+esc(demoMos.name)+'</strong><span>'+esc(demoMos.email)+'</span></div>'+ (purpose==='link'?'<p>Подключим Mos ID к вашему текущему аккаунту. Логин, организации и права сохранятся.</p>':!returning?agreement:'<p>Вы уже входили с этим Mos ID. Откроется ваш существующий аккаунт.</p>')+button(purpose==='link'?'Подтвердить подключение':'Продолжить','mos-return')+button('Отменить и вернуться','cancel-mos',true);
+      title='Вход на mos.ru';
+      body='<div class="mos-demo-url">login.mos.ru · демонстрация</div><div class="mos-brand">mos.ru</div><p>Введите данные учётной записи mos.ru.</p><div class="mos-demo-tools"><button type="button" class="text-btn" data-r2-action="mos-fill">Заполнить пример</button><label class="field">Демо: результат<select id="r2-mos-result"><option value="success">Успешно</option><option value="conflict">Mos ID занят</option><option value="error">Ошибка подключения</option></select></label></div>'+field('Телефон, email или СНИЛС','mos-login','text','autocomplete="off" autofocus')+password('Пароль','mos-password','off')+(purpose==='link'?'<p class="mini">После входа подключим Mos ID к вашему аккаунту ВЕРО.</p>':!returning?'<div class="mos-consent">'+agreement+'</div>':'<p class="mini">Откроется ваш существующий аккаунт ВЕРО.</p>')+button(purpose==='link'?'Войти и подключить Mos ID':'Войти','mos-return')+button('Отменить и вернуться','cancel-mos',true);
     }
-    if(screen==='created') {
+    if(shown==='created') {
       title='Аккаунт создан';
       body='<div class="r2-success" aria-hidden="true">✓</div><p>Вы вошли через Mos ID. Сохраните логин и пароль, чтобы входить и без mos.ru.</p><div class="r2-credentials"><h3>Данные для входа</h3><label class="field" for="r2-generated-login">Логин<div class="r2-copy-row"><input id="r2-generated-login" readonly value="'+esc(current.login)+'"><button type="button" class="secondary" data-r2-copy="login" aria-label="Копировать логин">Копировать</button></div></label><label class="field" for="r2-generated-password">Пароль<span class="password-wrap"><input id="r2-generated-password" type="password" readonly autocomplete="off" value="'+esc(oneTimePassword)+'"><button type="button" class="password-toggle" data-r2-password="generated-password" aria-label="Показать пароль" aria-pressed="false">Показать</button></span></label><button class="text-btn" type="button" data-r2-copy="password" aria-label="Копировать пароль">Копировать пароль</button></div><div class="r2-warning">Пароль показывается только один раз. Сохраните его в надёжном месте.</div>'+button('Продолжить','cabinet');
     }
-    if(screen==='offer') {
+    if(shown==='offer') {
       title='Добро пожаловать!';
       body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан. Подключите Mos ID, чтобы входить через mos.ru в этот же аккаунт.</p><div class="summary"><strong>Что даёт Mos ID</strong><span>Ещё один способ входа</span><span>Вход без ввода пароля ВЕРО</span></div>'+button('Подключить Mos ID','link')+button('Сделать позже','cabinet',true);
     }
-    if(screen==='linked') {
+    if(shown==='linked') {
       title='Mos ID подключён';
       body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+button('Перейти в профиль','cabinet');
     }
-    if(screen==='conflict') {
+    if(shown==='conflict') {
       title='Этот Mos ID уже привязан к другому аккаунту';
       body='<p>Войдите через Mos ID в тот аккаунт или обратитесь в поддержку. Текущий аккаунт и его данные не изменились.</p>'+button('Войти через Mos ID','conflict-login')+button('Вернуться в профиль','cabinet',true);
     }
-    if(screen==='oauth-error') {
+    if(shown==='oauth-error') {
       title='Не удалось подключиться к Mos ID';
       body='<p>Попробуйте ещё раз. Ваш аккаунт и способы входа не изменились.</p>'+button('Повторить','retry-mos')+button('Вернуться','cancel-mos',true);
     }
-    if(screen==='unlink') {
+    if(shown==='unlink') {
       title='Отвязать Mos ID?';
       body='<p>Вы сможете входить по своему логину и паролю. Для входа через mos.ru потребуется снова подключить Mos ID.</p>'+button('Отвязать','unlink-confirm')+button('Отмена','cabinet',true);
     }
-    if(screen==='password') {
+    if(shown==='password') {
       title='Сменить пароль';
       body=form('password',password('Текущий пароль','current-password','current-password')+password('Новый пароль','new-password')+password('Повторите новый пароль','confirm-password'),'Сохранить пароль')+button('Отмена','cabinet',true);
     }
-    const content=`<div class="eyebrow">Вариант 2 · регистрация</div><h2 id="r2-title" tabindex="-1">${title}</h2>${body}${message}${notice?'<p class="status-msg" role="status">'+esc(notice)+'</p>':''}${['login','register'].includes(screen)?back:''}`;
-    if(['unlink','password'].includes(screen))return `<section class="workspace"><h1>Профиль</h1>${profile()}</section><dialog id="r2-dialog" class="app-dialog r2-card" aria-labelledby="r2-title" data-registration-screen="${screen}">${content}</dialog>`;
-    return `<div class="layout"><section class="card r2-card" data-registration-screen="${screen}">${content}</section></div>`;
+    const content=`${['entry','login','mos'].includes(shown)?'':'<div class="eyebrow">Вариант 2 · регистрация</div>'}<h2 id="${shown==='mos'?'r2-mos-title':'r2-title'}" tabindex="-1">${title}</h2>${body}${background?'':message}${notice&&!background?'<p class="status-msg" role="status">'+esc(notice)+'</p>':''}${shown==='register'?back:''}`;
+    if(shown==='mos'){
+      const beneath=origin==='profile'?`<section class="workspace"><h1>Профиль</h1>${profile()}</section>`:view(origin,true);
+      return `${beneath}<dialog id="r2-dialog" class="app-dialog r2-card mos-dialog" aria-labelledby="r2-mos-title" data-registration-screen="mos"><button type="button" class="dialog-close" data-r2-action="close-mos" aria-label="Закрыть авторизацию mos.ru">×</button>${content}</dialog>`;
+    }
+    if(['unlink','password'].includes(shown))return `<section class="workspace"><h1>Профиль</h1>${profile()}</section><dialog id="r2-dialog" class="app-dialog r2-card" aria-labelledby="r2-title" data-registration-screen="${shown}">${content}</dialog>`;
+    const panel=`<div class="layout"><section class="card r2-card" data-registration-screen="${shown}">${content}</section></div>`;
+    return background?panel.replaceAll('id="r2-','id="r2-bg-').replaceAll('for="r2-','for="r2-bg-'):panel;
   }
   function profile() {
     if(!current)return '';
@@ -132,8 +137,9 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
     if(action==='login'||action==='register'){draft={};return show(action);}
     if(action==='back')return show('entry');
     if(action==='mos-login')return startMos('login');
+    if(action==='mos-fill'){if($('r2-mos-login')&&!$('r2-mos-login').value)$('r2-mos-login').value=demoMos.email;if($('r2-mos-password')&&!$('r2-mos-password').value)$('r2-mos-password').value='Example-2026!';$('r2-mos-login')?.removeAttribute('aria-invalid');$('r2-mos-password')?.removeAttribute('aria-invalid');if($('r2-alert'))$('r2-alert').hidden=true;return;}
     if(action==='mos-return')return finishMos();
-    if(action==='cancel-mos')return cancelMos();
+    if(action==='cancel-mos'||action==='close-mos')return cancelMos();
     if(action==='retry-mos')return show('mos');
     if(action==='cabinet')return openCabinet();
     if(action==='link')return startMos('link');
@@ -146,8 +152,9 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
     const kind=e.target.dataset.r2Form;if(!kind)return;e.preventDefault();
     const value=id=>$('r2-'+id)?.value||'';
     if(kind==='login'){
-      const account=accounts.find(a=>a.login===value('login').trim()&&a.password===value('password'));
-      if(!account)return error('Неверный логин или пароль.','password');current=account;return openCabinet();
+      const identifier=value('login').trim();
+      const account=accounts.find(a=>(a.email.toLowerCase()===identifier.toLowerCase()||a.login===identifier)&&a.password===value('password'));
+      if(!account)return error('Неверный email или пароль.','password');current=account;return openCabinet();
     }
     if(kind==='register'){
       const login=value('login').trim(),email=value('email').trim();
@@ -171,17 +178,17 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
   main.addEventListener('input',e=>{
     if(!e.target.id.startsWith('r2-'))return;
     e.target.removeAttribute('aria-invalid');if($('r2-alert'))$('r2-alert').hidden=true;
-    if(screen==='register'||screen==='login'){draft.login=$('r2-login')?.value||'';draft.email=$('r2-email')?.value||'';}
+    if(['entry','register','login'].includes(screen)){draft.login=$('r2-login')?.value||'';draft.email=$('r2-email')?.value||'';draft.password=$('r2-password')?.value||'';}
   });
   function fill() {
     const enteredLogin=$('r2-login')?.value.trim();
-    const demoAccount=accounts.find(a=>a.login===enteredLogin)||(!enteredLogin?accounts[accounts.length-1]:null);
+    const demoAccount=accounts.find(a=>a.login===enteredLogin||a.email.toLowerCase()===enteredLogin?.toLowerCase())||(!enteredLogin?accounts[accounts.length-1]:null);
     let registrationLogin='ivan',registrationEmail='ivan@example.test',suffix=1;
     while(accounts.some(a=>a.login===registrationLogin||a.email===registrationEmail)){registrationLogin='ivan'+suffix;registrationEmail='ivan'+suffix+'@example.test';suffix+=1;}
-    const values={login:screen==='login'?demoAccount?.login:registrationLogin,email:registrationEmail,password:demoAccount?.password,'new-password':'Example-2026!','confirm-password':'Example-2026!','current-password':current?.password||'Example-2026!'};
+    const values={login:['entry','login'].includes(screen)?demoAccount?.email:registrationLogin,email:registrationEmail,password:demoAccount?.password,'new-password':'Example-2026!','confirm-password':'Example-2026!','current-password':current?.password||'Example-2026!'};
     for(const [id,value] of Object.entries(values)){const el=$('r2-'+id);if(value&&el&&!el.value.trim())el.value=value;}
   }
   reset();
-  function mount(){const dialog=$('r2-dialog');if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();openCabinet();});}}
+  function mount(){const dialog=$('r2-dialog');if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(screen==='mos')cancelMos();else openCabinet();});}}
   return {reset,view,profile,signout,fill,mount,hasScreen:()=>!!screen,screen:()=>screen};
 }

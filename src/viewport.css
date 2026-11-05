@@ -1,0 +1,76 @@
+/* A screen-sized prototype. Only the application content and dialogs scroll. */
+html,body{height:100%;min-height:0;overflow:hidden}
+body{height:100dvh;display:flex;flex-direction:column}
+.registration-variants{width:100%;max-width:1440px;flex:none;padding:8px 16px;gap:10px}
+.registration-variants button{padding:8px 14px;font-size:13px}
+.registration-variants small{font-size:10px}
+.bench{flex:none;padding:8px 16px;max-height:150px;overflow:auto}
+.bench-inner{gap:6px 14px;line-height:1.4}
+.bench-info{flex-basis:100%;color:#65748a}
+.bench-info summary{cursor:pointer;font-size:11px}
+.bench-info small{display:block;padding-top:6px}
+.shell,.shell.signed-shell{display:flex;flex-direction:column;flex:1;min-height:0;height:auto;max-width:1440px;width:100%;margin:0 auto;padding:0 32px;overflow:hidden}
+.shell.signed-shell{padding:0}
+.shell .top{flex:none;display:flex;width:100%;padding:18px 0;min-height:64px;height:auto;gap:16px}
+.signed-shell .top{padding:14px 24px;min-height:64px;position:static}
+.signed-shell .brand{padding:0}
+.signed-shell #top-context{position:static;align-self:center;margin-left:12px;flex:1;background:transparent;padding:0;border:0;text-align:left}
+.signed-shell #account-select-wrap{position:static;margin-left:auto}
+.app-body,.signed-shell .app-body.signed{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);flex:1;min-height:0;overflow:hidden}
+.signed-shell .app-body.signed{grid-template-columns:220px minmax(0,1fr)}
+#main,.signed-shell #main{height:100%;min-height:0;min-width:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;grid-column:1;grid-row:1;padding:0}
+.signed-shell #main{grid-column:2;padding:28px}
+.signed-shell #sidebar{display:flex;flex-direction:column;grid-column:1;grid-row:1;position:static;height:100%;min-height:0;overflow:auto;padding:22px 16px}
+.layout,.signed-shell .layout{min-height:100%;margin:0;padding:24px 12px;align-items:center}
+.layout>.card{margin-block:auto;flex-shrink:0}
+.workspace{padding:16px 0 32px;min-height:0}
+.shell .footer,.signed-shell .footer{display:flex;flex:none;position:static;grid-column:auto;width:100%;margin:0;padding:10px 0;font-size:11px}
+.signed-shell .footer{padding:10px 24px}
+.r2-card[data-registration-screen=entry],.r2-card[data-registration-screen=login]{padding:38px;max-width:460px}
+.r2-card[data-registration-screen=entry] h2,.r2-card[data-registration-screen=login] h2{margin-bottom:22px}
+.r2-card[data-registration-screen=entry] form,.r2-card[data-registration-screen=login] form{gap:20px}
+.r2-card[data-registration-screen=entry] .secondary,.r2-card[data-registration-screen=login] .secondary{margin-top:0}
+.r2-card[data-registration-screen=entry] .signup,.r2-card[data-registration-screen=login] .signup{margin-bottom:0}
+dialog{max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain}
+.mos-dialog{position:fixed;border:1px solid #dce2ea;border-radius:16px;padding:32px;width:min(440px,calc(100vw - 28px));max-height:calc(100dvh - 28px);overflow:auto;box-sizing:border-box}
+.mos-dialog::backdrop{background:rgba(18,32,53,.48);backdrop-filter:blur(2px)}
+.mos-dialog>.dialog-close{position:absolute;right:14px;top:10px;width:32px;height:32px;font-size:25px}
+.mos-dialog h2{font-size:24px;margin:14px 0 12px}
+.mos-dialog .field{margin:18px 0}
+.mos-dialog .field input{width:100%}
+.mos-demo-url{font-size:11px;color:#697a90;margin-top:12px}
+.mos-brand{font-size:38px;font-weight:800;letter-spacing:-2px;color:#df2441;margin:18px 0}
+.mos-demo-tools{background:#f2f6fb;padding:10px 12px;border-radius:8px;font-size:11px}
+.mos-demo-tools .field{margin:8px 0 0;font-size:11px}
+.mos-demo-tools select{height:34px;padding:4px 8px}
+.mos-consent{margin:20px 0}
+.mos-dialog .primary{margin-top:12px}
+.power-requests{margin-top:32px}
+.power-requests>h2{font-size:20px}
+.power-request-card{border:1px solid #cadcf4;border-radius:10px;padding:22px;margin:16px 0;background:#fff}
+.power-request-card h3{font-size:17px;margin:16px 0 8px}
+.power-request-card p{font-size:13px;color:#617089}
+.field textarea{font:inherit;line-height:1.5;resize:vertical;min-height:90px;width:100%;border:1px solid #d8d8e0;border-radius:8px;padding:12px}
+#app-dialog[data-purpose=request] form{gap:18px}
+@media(max-width:700px){
+ .registration-variants{padding:6px 10px;gap:8px}
+ .registration-variants button{padding:7px 9px}
+ .bench{padding:7px 10px;max-height:136px}
+ .bench-inner{gap:6px 10px}
+ .bench label{font-size:11px}
+ .bench select,.bench button{padding:5px 7px;font-size:11px}
+ .shell,.shell.signed-shell{padding:0 12px}
+ .shell.signed-shell{padding:0}
+ .shell .top{padding:12px 4px;min-height:52px}
+ .signed-shell .top{padding:10px 16px}
+ .signed-shell .app-body.signed{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+ .signed-shell #sidebar{display:block;grid-column:1;grid-row:1;height:auto;max-height:148px;padding:6px 10px;border-bottom:1px solid #e3e7ed}
+ .signed-shell #main{grid-column:1;grid-row:2;padding:18px 16px}
+ .signed-shell .sidebar-account{margin-top:0;padding:3px 0}
+ .layout,.signed-shell .layout{padding:16px 0;align-items:flex-start}
+ .layout>.card{margin-block:auto}
+ .r2-card[data-registration-screen=entry],.r2-card[data-registration-screen=login]{padding:26px}
+ .shell .footer,.signed-shell .footer{padding:7px 12px;font-size:9px;gap:8px}
+ .mos-dialog{padding:24px}
+ .power-request-card{padding:18px}
+}
