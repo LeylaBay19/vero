@@ -32,8 +32,8 @@ def build_document(wrapper,comparison,schemes):
     proposals=proposal_source.replace('</head>',policy+legacy_style+'<style>.ap-scenarios{display:none!important}</style></head>',1).replace('</body>',bridge+navigation_bridge+proposal_bridge+fill_bridge+'</body>',1)
     frame=re.search(r'<iframe\b[^>]*id="codex-visualization"[\s\S]*?</iframe>',wrapper)
     assert frame
-    descriptions=['Email и пароль','Письмо → логин и пароль','Компания и сотрудники','Вход по коду','ЛК и кошелёк по ТЗ']
-    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}"><span>Вариант {n}</span><small>{descriptions[n-1]}</small></button>' for n in range(1,6))+'</nav>'
+    descriptions=['Email и пароль','Письмо → логин и пароль','Компания и сотрудники','Код → пароль','ЛК и кошелёк по ТЗ']
+    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}"><span>Вариант {n}</span><small>{descriptions[n-1]}</small></button>' for n in range(2,6))+'</nav>'
     proposal_frame=f'<iframe id="stand-frame-proposals" title="Предлагаемые варианты" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(proposals,quote=True)}" hidden></iframe>'
     brief=(ROOT/'cabinet-brief.html').read_text(encoding='utf-8').replace('</body>',bridge+fill_bridge+'</body>',1)
     brief_frame=f'<iframe id="stand-frame-brief" title="Вариант 5 — по ТЗ" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(brief,quote=True)}" hidden></iframe>'
@@ -63,6 +63,6 @@ def main():
     result=build_document(wrap((ROOT/'platform-entry-variant2.html').read_text(encoding='utf-8')),(ROOT/'index.html').read_text(encoding='utf-8'),(ROOT/'schemes-all.html').read_text(encoding='utf-8'))
     for target in [ROOT/'prototype.html',ROOT/'web/prototype.html',ROOT/'deliverables'/f'vero-unified-v{version}.html']:
         target.parent.mkdir(parents=True,exist_ok=True);target.write_text(result,encoding='utf-8')
-    print('Built unified stand: one row with variants 1–5, 3 competitors, summary window and 7 diagrams, all embedded.')
+    print('Built unified stand: variants 2–5, 3 competitors, summary window and 7 diagrams, all embedded.')
 
 if __name__=='__main__':main()

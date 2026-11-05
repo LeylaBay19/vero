@@ -7,7 +7,7 @@
     if(frame?.dataset.standSrcdoc){frame.srcdoc=frame.dataset.standSrcdoc;delete frame.dataset.standSrcdoc;}
   }
   function selectCabinet(name){
-    if(!['1','2','3','4','5'].includes(name))return;
+    if(!['2','3','4','5'].includes(name))return;
     cabinet=name;
     choices.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cabinetView===name)));
     const kind=['1','2'].includes(name)?'current':name==='5'?'brief':'proposals';

@@ -19,9 +19,17 @@
 <polyline points="880,250 570,250" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="570,250 582.0,255.0 582.0,245.0" fill="#466760"/>
 <text x="720" y="225.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Повторить</text>
-<polyline points="1030,560 1280,560" fill="none" stroke="#466760" stroke-width="2"/>
+<polyline points="1030,560 1130,560" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1130,560 1118.0,555.0 1118.0,565.0" fill="#466760"/>
+<text x="1055" y="535.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
+<polyline points="1155,535 1155,250 1180,250" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1180,250 1168.0,245.0 1168.0,255.0" fill="#466760"/>
+<text x="1155" y="390.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
+<polyline points="1180,560 1280,560" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="1280,560 1268.0,555.0 1268.0,565.0" fill="#466760"/>
-<text x="1150" y="535.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Да</text>
+<text x="1210" y="535.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Нет</text>
+<polyline points="1300,300 1300,450 1305,450 1305,535" fill="none" stroke="#466760" stroke-width="2"/>
+<polygon points="1305,535 1310.0,523.0 1300.0,523.0" fill="#466760"/>
 <polyline points="1305,535 1305,360 2670,360 2670,300" fill="none" stroke="#466760" stroke-width="2"/>
 <polygon points="2670,300 2665.0,312.0 2675.0,312.0" fill="#466760"/>
 <text x="2360" y="335.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Нет: личный кабинет</text>
@@ -63,6 +71,13 @@
 <polygon points="1005.0,535 1030,560.0 1005.0,585 980,560.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
 <text x="1005.0" y="560.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">×</text>
 <text x="1005.0" y="495.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Вход подтверждён?</text>
+<polygon points="1155.0,535 1180,560.0 1155.0,585 1130,560.0" fill="#f0f6f4" stroke="#193936" stroke-width="2"/>
+<text x="1155.0" y="560.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" font-weight="400" fill="#193936">×</text>
+<text x="1155.0" y="495.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#193936">Первый вход по email?</text>
+<rect x="1180" y="200" width="240" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
+<text x="1300.0" y="227.56" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="400" fill="#193936">Задать и подтвердить</text>
+<text x="1300.0" y="250.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="400" fill="#193936">пароль; исправить ошибки</text>
+<text x="1300.0" y="272.44" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" font-weight="400" fill="#193936">при необходимости</text>
 <rect x="880" y="200" width="240" height="100" rx="10" fill="#ffffff" stroke="#8ba6a1" stroke-width="2"/>
 <text x="1000.0" y="234.82" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">Повторить вход /</text>
 <text x="1000.0" y="265.18" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">ввод кода</text>
@@ -99,6 +114,6 @@
 <text x="1810.0" y="820.36" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="400" fill="#193936">приглашение</text>
 <circle cx="2047.0" cy="790.0" r="17.0" fill="white" stroke="#193936" stroke-width="5"/>
 <text x="2047.0" y="862.0" dominant-baseline="central" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" font-weight="400" fill="#193936">Без доступа к компании</text>
-<text x="35" y="973.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.9.0 · интерфейс и BPMN одной версии</text>
+<text x="35" y="973.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#193936">Предлагаемый процесс · v1.15.1 · интерфейс и BPMN одной версии</text>
 <text x="35" y="1016.0" dominant-baseline="central" text-anchor="start" font-family="Arial,sans-serif" font-size="21" font-weight="400" fill="#193936">Вариант 2: проверки выполняются по задаче; интеграции и юридические требования требуют уточнения.</text>
 </svg>

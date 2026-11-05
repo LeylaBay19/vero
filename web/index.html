@@ -1886,7 +1886,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
 &lt;div id=&quot;auth-flow-prototype&quot; aria-label=&quot;Прототип регистрации и входа: Тринити и Орбита&quot;&gt;
   &lt;div class=&quot;ap-bench&quot;&gt;
-    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.15.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.15.1&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&quot;ap-scenarios&quot; aria-label=&quot;Выбор сценария&quot;&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;mos&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;01 · Сотрудник&lt;/span&gt;&lt;strong&gt;Тринити · mos.ru&lt;/strong&gt;&lt;span&gt;Личный вход и доверенность&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;ep&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;02 · Руководитель&lt;/span&gt;&lt;strong&gt;Тринити · УКЭП&lt;/strong&gt;&lt;span&gt;Подключение организации&lt;/span&gt;&lt;/button&gt;
@@ -2443,7 +2443,7 @@ function pUseSavedAccess(role){
 let V2;
 function resetV2(){
  const path=root.querySelector(&#x27;#ap-v2-path&#x27;)?.value||&#x27;personal&#x27;;
- V2={path,screen:path===&#x27;invite&#x27;?&#x27;invite&#x27;:&#x27;login&#x27;,email:path===&#x27;invite&#x27;?&#x27;employee@example.test&#x27;:&#x27;&#x27;,authenticated:false,member:false,authority:false,service:false,mchd:&#x27;none&#x27;,invitationValid:true,inn:&#x27;&#x27;,name:&#x27;&#x27;,role:&#x27;&#x27;,pending:false,history:[],message:&#x27;&#x27;};
+ V2={path,screen:path===&#x27;invite&#x27;?&#x27;invite&#x27;:&#x27;login&#x27;,email:path===&#x27;invite&#x27;?&#x27;employee@example.test&#x27;:&#x27;&#x27;,emailVerified:false,password:&#x27;&#x27;,passwordEmail:&#x27;&#x27;,authenticated:false,member:false,authority:false,service:false,mchd:&#x27;none&#x27;,invitationValid:true,inn:&#x27;&#x27;,name:&#x27;&#x27;,role:&#x27;&#x27;,pending:false,history:[],message:&#x27;&#x27;};
 }
 const v2Button=(label,action,primary=true)=&gt;`&lt;button type=&quot;button&quot; ${primary?&#x27;class=&quot;ap-primary&quot;&#x27;:&#x27;&#x27;} data-v2-action=&quot;${action}&quot;&gt;${label}&lt;/button&gt;`;
 const v2Status=text=&gt;`&lt;div class=&quot;ap-status&quot;&gt;${esc(text)}&lt;/div&gt;`;
@@ -2451,13 +2451,14 @@ function v2Go(screen){V2.history.push(V2.screen);V2.screen=screen;V2.message=&#x
 function v2Error(message){const e=pane.querySelector(&#x27;[role=alert]&#x27;);if(e){e.hidden=false;e.textContent=message;}}
 function v2Authenticated(){V2.authenticated=true;if(V2.path===&#x27;personal&#x27;){const link=root.querySelector(&#x27;#ap-v2-membership&#x27;).value;if(link!==&#x27;none&#x27;){V2.member=true;V2.authority=link===&#x27;director&#x27;;V2.inn=&#x27;0000000000&#x27;;V2.name=&#x27;ООО «Пример»&#x27;;}}v2Go(V2.path===&#x27;invite&#x27;&amp;&amp;!V2.member?&#x27;accept&#x27;:&#x27;home&#x27;);}
 function v2Journey(){
- const stages=[[&#x27;Аккаунт&#x27;,&#x27;Вход по email или mos.ru&#x27;],[&#x27;Организация&#x27;,&#x27;Подтвердить связь с компанией&#x27;],[&#x27;Сота&#x27;,&#x27;Настроить выбранный сервис&#x27;]];
- const current=[&#x27;login&#x27;,&#x27;code&#x27;,&#x27;mos&#x27;,&#x27;invite&#x27;,&#x27;accept&#x27;].includes(V2.screen)?0:[&#x27;company&#x27;,&#x27;record&#x27;,&#x27;authority&#x27;,&#x27;invite-team&#x27;,&#x27;invite-sent&#x27;].includes(V2.screen)?1:2;
+ const stages=[[&#x27;Аккаунт&#x27;,&#x27;Email → код → пароль или mos.ru&#x27;],[&#x27;Организация&#x27;,&#x27;Подтвердить связь с компанией&#x27;],[&#x27;Сота&#x27;,&#x27;Настроить выбранный сервис&#x27;]];
+ const current=[&#x27;login&#x27;,&#x27;code&#x27;,&#x27;password&#x27;,&#x27;mos&#x27;,&#x27;invite&#x27;,&#x27;accept&#x27;].includes(V2.screen)?0:[&#x27;company&#x27;,&#x27;record&#x27;,&#x27;authority&#x27;,&#x27;invite-team&#x27;,&#x27;invite-sent&#x27;].includes(V2.screen)?1:2;
  root.querySelector(&#x27;#ap-journey&#x27;).innerHTML=`&lt;div&gt;&lt;span class=&quot;ap-label&quot;&gt;Предлагаемый вариант 2&lt;/span&gt;&lt;h3&gt;Начните с простого&lt;/h3&gt;&lt;p class=&quot;ap-journey-intro&quot;&gt;Общий кабинет сразу после входа. Дополнительные сведения — для выбранной задачи.&lt;/p&gt;&lt;/div&gt;&lt;ol class=&quot;ap-stage-list&quot;&gt;${stages.map(([name,desc],i)=&gt;`&lt;li data-current=&quot;${i===current}&quot; data-past=&quot;${i&lt;current}&quot;&gt;&lt;span class=&quot;ap-stage-dot&quot;&gt;${i+1}&lt;/span&gt;&lt;div&gt;&lt;strong&gt;${name}&lt;/strong&gt;&lt;small&gt;${desc}&lt;/small&gt;&lt;/div&gt;&lt;/li&gt;`).join(&#x27;&#x27;)}&lt;/ol&gt;&lt;div class=&quot;ap-journey-foot&quot;&gt;Аккаунт, связь с компанией и полномочия сервиса проверяются отдельно.&lt;/div&gt;`;
 }
 function v2Render(){
  if(!V2)resetV2();
- if(!V2.authenticated&amp;&amp;![&#x27;login&#x27;,&#x27;code&#x27;,&#x27;mos&#x27;,&#x27;invite&#x27;,&#x27;invalid&#x27;].includes(V2.screen))V2.screen=&#x27;login&#x27;;
+ if(!V2.authenticated&amp;&amp;![&#x27;login&#x27;,&#x27;code&#x27;,&#x27;password&#x27;,&#x27;mos&#x27;,&#x27;invite&#x27;,&#x27;invalid&#x27;].includes(V2.screen))V2.screen=&#x27;login&#x27;;
+ if(V2.screen===&#x27;password&#x27;&amp;&amp;!V2.emailVerified)V2.screen=&#x27;login&#x27;;
  if(V2.screen===&#x27;ready&#x27;&amp;&amp;!V2.service)V2.screen=&#x27;service&#x27;;
  if(V2.screen===&#x27;mchd-review&#x27;&amp;&amp;V2.mchd!==&#x27;pending&#x27;)V2.screen=V2.service?&#x27;ready&#x27;:&#x27;service&#x27;;
  const q=V2.screen;
@@ -2482,6 +2483,7 @@ function v2Render(){
  if(q===&#x27;invite&#x27;)body=wrap(&#x27;Вас приглашают в команду&#x27;,`&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;ООО «Пример»&lt;/strong&gt;&lt;p&gt;Доступ: внутренние черновики. Операции ОССиГ подключаются отдельно.&lt;/p&gt;&lt;p&gt;Приглашение для employee@example.test&lt;/p&gt;&lt;/div&gt;${v2Button(&#x27;Войти и принять приглашение&#x27;,&#x27;invite-login&#x27;)}`);
  if(q===&#x27;login&#x27;)body=wrap(&#x27;Добро пожаловать&#x27;,`&lt;p&gt;Войдите, чтобы выбрать сервис и начать работу. Данные компании можно добавить позже.&lt;/p&gt;${form(field(&#x27;Email&#x27;,&#x27;v2-email&#x27;,V2.email,&#x27;email&#x27;)+check(&#x27;Принимаю условия использования платформы&#x27;,&#x27;v2-terms&#x27;)+submit(&#x27;Получить код&#x27;,&#x27;v2-email&#x27;),&#x27;v2-email&#x27;)}&lt;div class=&quot;ap-auth-separator&quot;&gt;или&lt;/div&gt;${v2Button(&#x27;Войти через mos.ru&#x27;,&#x27;mos&#x27;,false)}`);
  if(q===&#x27;code&#x27;)body=wrap(&#x27;Проверьте почту&#x27;,`&lt;p&gt;Код отправлен на ${esc(V2.email)}.&lt;/p&gt;${V2.path===&#x27;invite&#x27;?&#x27;&lt;p&gt;Подтвердите почту получателя приглашения. Компания уже указана, вводить ИНН не нужно.&lt;/p&gt;&#x27;:&#x27;&#x27;}${form(field(&#x27;Код из письма&#x27;,&#x27;v2-code&#x27;,&#x27;&#x27;,&#x27;text&#x27;)+submit(&#x27;Продолжить&#x27;,&#x27;v2-code&#x27;),&#x27;v2-code&#x27;)}${v2Button(&#x27;Отправить код ещё раз&#x27;,&#x27;resend&#x27;,false)}${v2Button(&#x27;Изменить email&#x27;,&#x27;email-back&#x27;,false)}`);
+ if(q===&#x27;password&#x27;)body=wrap(&#x27;Задайте пароль&#x27;,`&lt;p&gt;Почта подтверждена. Придумайте пароль для аккаунта ВЕРО.&lt;/p&gt;${form(field(&#x27;Логин — ваш email&#x27;,&#x27;v2-verified-email&#x27;,V2.email,&#x27;email&#x27;,true)+field(&#x27;Пароль&#x27;,&#x27;v2-password&#x27;,&#x27;&#x27;,&#x27;password&#x27;)+&#x27;&lt;p class=&quot;ap-muted&quot;&gt;Не менее 8 символов.&lt;/p&gt;&#x27;+field(&#x27;Повторите пароль&#x27;,&#x27;v2-password-repeat&#x27;,&#x27;&#x27;,&#x27;password&#x27;)+submit(&#x27;Создать аккаунт и продолжить&#x27;,&#x27;v2-password&#x27;),&#x27;v2-password&#x27;)}`);
  if(q===&#x27;mos&#x27;)body=wrap(&#x27;Вход через mos.ru&#x27;,`&lt;p&gt;Подтвердите вход в своём аккаунте mos.ru. Права на компанию назначаются отдельно.&lt;/p&gt;${v2Button(&#x27;Продолжить&#x27;,&#x27;mos-return&#x27;)}${v2Button(&#x27;Отменить&#x27;,&#x27;email-back&#x27;,false)}`);
  if(q===&#x27;accept&#x27;)body=wrap(&#x27;Примите приглашение&#x27;,`&lt;div class=&quot;ap-description&quot;&gt;&lt;strong&gt;ООО «Пример»&lt;/strong&gt;&lt;p&gt;ИНН 0000000000 · сотрудник&lt;/p&gt;&lt;p&gt;Внутренние черновики. Управление командой и операции ОССиГ пока недоступны.&lt;/p&gt;&lt;/div&gt;${check(&#x27;Присоединиться к организации с указанным доступом&#x27;,&#x27;v2-accept&#x27;)}${v2Button(&#x27;Принять приглашение&#x27;,&#x27;accept&#x27;)}${v2Button(&#x27;Отклонить&#x27;,&#x27;decline&#x27;,false)}`);
  if(q===&#x27;home&#x27;)body=wrap(&#x27;Ваш личный кабинет&#x27;,`${v2Status(V2.member?`${V2.name||&#x27;ООО «Пример»&#x27;} · ${V2.authority?&#x27;полномочия руководителя подтверждены&#x27;:V2.orgRepresentative?&#x27;полномочия представителя подтверждены&#x27;:&#x27;доступ сотрудника подтверждён&#x27;}`:&#x27;Аккаунт создан. Организация пока не подключена.&#x27;)}&lt;div class=&quot;ap-group&quot;&gt;&lt;h3&gt;Организация&lt;/h3&gt;&lt;p&gt;${V2.member?&#x27;Вы работаете с назначенным доступом.&#x27;:&#x27;Для действий от имени компании подтвердите связь с ней.&#x27;}&lt;/p&gt;${V2.member?(V2.authority?v2Button(&#x27;Пригласить сотрудника&#x27;,&#x27;invite-team&#x27;,false):&#x27;&#x27;):v2Button(V2.pending?&#x27;Продолжить подключение&#x27;:&#x27;Подключить организацию&#x27;,&#x27;company&#x27;,false)}&lt;/div&gt;&lt;div class=&quot;ap-v2-services&quot;&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Сота&lt;/span&gt;&lt;h3&gt;ОССиГ&lt;/h3&gt;&lt;p&gt;Перевозка и учёт строительных отходов.&lt;/p&gt;${v2Button(V2.service?&#x27;Открыть сервис&#x27;:&#x27;Подключить сервис&#x27;,&#x27;ossig&#x27;)}&lt;/div&gt;&lt;div class=&quot;ap-group&quot;&gt;&lt;span class=&quot;ap-label&quot;&gt;Сота&lt;/span&gt;&lt;h3&gt;Закупки&lt;/h3&gt;&lt;p&gt;Подготовьте личный черновик потребности.&lt;/p&gt;${v2Button(&#x27;Создать черновик&#x27;,&#x27;draft&#x27;,false)}&lt;/div&gt;&lt;/div&gt;`,true);
@@ -2513,7 +2515,7 @@ function v2Action(action){
  if(action===&#x27;normal-login&#x27;){resetV2();V2.path=&#x27;personal&#x27;;V2.email=&#x27;&#x27;;return v2Go(&#x27;login&#x27;);}
  if(action===&#x27;mos&#x27;){if(!pane.querySelector(&#x27;#v2-terms&#x27;)?.checked)return v2Error(&#x27;Примите условия использования платформы.&#x27;);return v2Go(&#x27;mos&#x27;);}
  if(action===&#x27;mos-return&#x27;){if(V2.path===&#x27;invite&#x27;){V2.email=&#x27;employee@example.test&#x27;;return v2Go(&#x27;code&#x27;);}if(V2.email!==&#x27;mos-user@example.test&#x27;){V2.member=false;V2.authority=false;V2.orgRepresentative=false;V2.service=false;V2.mchd=&#x27;none&#x27;;V2.role=&#x27;&#x27;;V2.history=[];}V2.email=&#x27;mos-user@example.test&#x27;;return v2Authenticated();}
- if(action===&#x27;email-back&#x27;)return v2Go(&#x27;login&#x27;);
+ if(action===&#x27;email-back&#x27;){V2.emailVerified=false;return v2Go(&#x27;login&#x27;);}
  if(action===&#x27;resend&#x27;){v2Error(&#x27;Новый код отправлен. Используйте последний код из письма.&#x27;);return;}
  if(action===&#x27;accept&#x27;){
   if(!V2.authenticated)return v2Error(&#x27;Сначала подтвердите вход.&#x27;);
@@ -2546,9 +2548,16 @@ function v2Submit(action,f){
   if(!validEmail(v(&#x27;v2-email&#x27;)))return v2Error(&#x27;Укажите корректный email.&#x27;);
   if(!f.querySelector(&#x27;#v2-terms&#x27;).checked)return v2Error(&#x27;Примите условия использования платформы.&#x27;);
   if(V2.path===&#x27;invite&#x27;&amp;&amp;v(&#x27;v2-email&#x27;).toLowerCase()!==&#x27;employee@example.test&#x27;)return v2Error(&#x27;Для этого приглашения подтвердите почту employee@example.test или попросите новое приглашение.&#x27;);
-  if(V2.email&amp;&amp;V2.email!==v(&#x27;v2-email&#x27;)){V2.member=false;V2.authority=false;V2.orgRepresentative=false;V2.service=false;V2.mchd=&#x27;none&#x27;;V2.role=&#x27;&#x27;;V2.history=[];}V2.authenticated=false;V2.email=v(&#x27;v2-email&#x27;);return v2Go(&#x27;code&#x27;);
+  if(V2.email&amp;&amp;V2.email!==v(&#x27;v2-email&#x27;)){V2.member=false;V2.authority=false;V2.orgRepresentative=false;V2.service=false;V2.mchd=&#x27;none&#x27;;V2.role=&#x27;&#x27;;V2.history=[];V2.password=&#x27;&#x27;;V2.passwordEmail=&#x27;&#x27;;}V2.authenticated=false;V2.emailVerified=false;V2.email=v(&#x27;v2-email&#x27;);return v2Go(&#x27;code&#x27;);
  }
- if(action===&#x27;v2-code&#x27;){if(v(&#x27;v2-code&#x27;)!==&#x27;123456&#x27;)return v2Error(&#x27;Неверный код. Проверьте письмо и повторите.&#x27;);return v2Authenticated();}
+ if(action===&#x27;v2-code&#x27;){if(v(&#x27;v2-code&#x27;)!==&#x27;123456&#x27;)return v2Error(&#x27;Неверный код. Проверьте письмо и повторите.&#x27;);V2.emailVerified=true;return V2.passwordEmail===V2.email&amp;&amp;V2.password?v2Authenticated():v2Go(&#x27;password&#x27;);}
+ if(action===&#x27;v2-password&#x27;){
+  if(V2.screen!==&#x27;password&#x27;||!V2.emailVerified)return v2Error(&#x27;Сначала подтвердите email кодом из письма.&#x27;);
+  const password=f.querySelector(&#x27;#v2-password&#x27;).value,repeat=f.querySelector(&#x27;#v2-password-repeat&#x27;).value;
+  if(password.length&lt;8||!password.trim())return v2Error(&#x27;Используйте пароль не короче 8 символов.&#x27;);
+  if(password!==repeat)return v2Error(&#x27;Пароли не совпадают.&#x27;);
+  V2.password=password;V2.passwordEmail=V2.email;return v2Authenticated();
+ }
  if(!V2.authenticated)return v2Error(&#x27;Сначала войдите в аккаунт.&#x27;);
  if(action===&#x27;v2-company&#x27;){if(!/^(\d{10}|\d{12})$/.test(v(&#x27;v2-inn&#x27;)))return v2Error(&#x27;Введите ИНН из 10 или 12 цифр.&#x27;);if(V2.inn!==v(&#x27;v2-inn&#x27;)){V2.member=false;V2.authority=false;V2.orgRepresentative=false;V2.service=false;V2.mchd=&#x27;none&#x27;;V2.role=&#x27;&#x27;;V2.pending=false;V2.history=[];}V2.inn=v(&#x27;v2-inn&#x27;);V2.name=V2.inn.length===12?&#x27;ИП Иванов И. И.&#x27;:&#x27;ООО «Пример»&#x27;;return v2Go(V2.member?&#x27;home&#x27;:&#x27;record&#x27;);}
  if(action===&#x27;v2-authority&#x27;){
@@ -2565,7 +2574,7 @@ function v2Submit(action,f){
 function v2Autofill(){
  const examples={
   &#x27;v2-email&#x27;:V2.path===&#x27;invite&#x27;?&#x27;employee@example.test&#x27;:&#x27;ivan@example.test&#x27;,
-  &#x27;v2-code&#x27;:&#x27;123456&#x27;,&#x27;v2-inn&#x27;:&#x27;0000000000&#x27;,&#x27;v2-person&#x27;:&#x27;Анна Петрова&#x27;,
+  &#x27;v2-code&#x27;:&#x27;123456&#x27;,&#x27;v2-password&#x27;:&#x27;Example-2026!&#x27;,&#x27;v2-password-repeat&#x27;:&#x27;Example-2026!&#x27;,&#x27;v2-inn&#x27;:&#x27;0000000000&#x27;,&#x27;v2-person&#x27;:&#x27;Анна Петрова&#x27;,
   &#x27;v2-invite-email&#x27;:&#x27;anna@example.test&#x27;,&#x27;v2-draft&#x27;:&#x27;Песок строительный, 20 м³&#x27;,
   &#x27;v2-mchd-id&#x27;:&#x27;00000000-0000-4000-8000-000000000001&#x27;
  };
