@@ -1,0 +1,47 @@
+{
+  "commit": "b5ad5cc11eec64d48155c05f8579a28a211da0a5",
+  "archive": "vero-handoff-v1.9.0-2026-11-05.zip",
+  "bytes": 37155592,
+  "sha256": "92471e137e2e5faee955ebfa711260e5faafd8f0f138f334ec06872e3cc463ba",
+  "bundle_bytes": 19105330,
+  "zip_crc": "passed",
+  "tracked_files": 438,
+  "chat_snapshot": {
+    "schema_version": 2,
+    "thread_title": "ВЕРО — регистрация и единый вход в платформу",
+    "thread_id": "01a1a2ee-86d2-7bb0-81f8-8d3f7ff68ad5",
+    "snapshot_moscow": "2026-11-05T10:53:36+03:00",
+    "last_message_timestamp": "2026-11-05T07:53:26.045Z",
+    "messages": 335,
+    "user_messages": 106,
+    "assistant_messages": 229,
+    "prior_messages": 181,
+    "current_chat_messages": 154,
+    "current_source_role_counts": {
+      "user": 50,
+      "assistant": 104
+    },
+    "image_references": 57,
+    "unique_referenced_images": 56,
+    "current_image_references": 48,
+    "redacted_secret_patterns": 0,
+    "source_rollout_sha256": "6ddfbd72bada0290bfd3974abde9f5f290bd5c80648b0ed89f95f95cfe2eba52",
+    "skipped": {
+      "automatic_empty_message": 13
+    },
+    "format": "Visible user and assistant text, commentary/final replies and available user image attachments. Readable export, not a native chat import.",
+    "excluded": [
+      "system/developer messages",
+      "reasoning and reasoning summaries",
+      "tool calls and command output",
+      "credentials and local application databases",
+      "automatic ambient browser/environment state"
+    ],
+    "limitations": [
+      "Snapshot covers messages present at export time; later replies in this export task are not included.",
+      "Referenced documents beyond included original ZIP and images are not automatically copied.",
+      "Runtime account state, live sessions, GitHub/mos.ru connections and in-memory demo data are not transferred.",
+      "Historic assistant proposals may be superseded; use docs/PRODUCT.md and docs/HANDOFF.md for current decisions."
+    ]
+  }
+}
