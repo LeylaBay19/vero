@@ -173,10 +173,12 @@ function organizationCard(){
 }
 function renderNavigation(q){
  const active=state.authenticated,c=state.context;
- $('sidebar').hidden=!active;document.querySelector('.app-body').classList.toggle('signed',active);
- $('account-select-wrap').hidden=!active||q==='powers'||state.contexts.length<2||(scenario.value==='multi'&&$('catalog-mode').value==='service'&&['home','services'].includes(q));
+ const onboarding=registrationVariant==='2'&&(['offer','organization-offer','linked','created'].includes(registration2.screen())||['company','company-found','proof','review-company','setup-team','application-status','ask-invite'].includes(q));
+ const signed=active&&!onboarding;
+ $('sidebar').hidden=!signed;document.querySelector('.app-body').classList.toggle('signed',signed);
+ $('account-select-wrap').hidden=!signed||q==='powers'||state.contexts.length<2||(scenario.value==='multi'&&$('catalog-mode').value==='service'&&['home','services'].includes(q));
  $('account-select').innerHTML=state.contexts.map(x=>`<option value="${esc(x.id)}" ${c?.id===x.id?'selected':''}>${esc(x.kind==='personal'?'От своего имени':x.name)}</option>`).join('');
- if(!active){document.querySelector('.shell').classList.remove('signed-shell');$('sidebar').innerHTML='';return;}
+ if(!signed){document.querySelector('.shell').classList.remove('signed-shell');$('sidebar').innerHTML='';if(onboarding)$('top-context').textContent='Подключение организации';return;}
  const nav=c?.kind==='government'?[['home','Обзор'],['data-access','Доступ к данным'],['profile','Профиль']]:[['home','Сервисы'],['my-organizations','Организации'],['powers','Доверенности'],['invitations','Приглашения'+(state.invited&&!state.accepted?' · 1':'')],...(c?.kind==='director'?[['team','Сотрудники']]:[]),['objects','Мои объекты'],...(c?.kind==='director'?[['finance','Баланс и финансы']]:[])];
  const titles=Object.fromEntries(nav);$('top-context').textContent=titles[q]||({services:'Сервисы',service:intentNames[state.intent],profile:'Профиль',organization:'Организации / '+(c?.name||''),company:'Организация',team:'Сотрудники'})[q]||'Личный кабинет';
  document.querySelector('.shell').classList.toggle('signed-shell',active);

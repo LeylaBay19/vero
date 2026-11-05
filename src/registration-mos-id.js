@@ -12,7 +12,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   const invitationEmail='employee@example.test';
   let screen, accounts, current, origin, purpose, oneTimePassword, draft, notice, sequence;
   function reset() {
-    screen=getScenario()==='invite'?'invitation':'entry'; accounts=[{id:'demo-existing-account',login:'demo.user',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:''}];
+    screen=getScenario()==='invite'?'invitation':'entry'; accounts=[{id:'demo-existing-account',login:'demo@example.test',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:''}];
     if(getScenario()==='employee')accounts.push({id:'demo-employee',login:invitationEmail,email:invitationEmail,password:'Example-2026!',provider:'local_only',mosId:null,name:'Анна Петрова',phone:''});
     current=null; origin=screen; purpose='login';
     oneTimePassword=''; draft={}; notice=''; sequence=0;
@@ -55,7 +55,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       if(!current || !isAuthenticated())return show('entry');
       const owner=accounts.find(a=>a.mosId===demoMos.id && a.id!==current.id);
       if(outcome==='conflict' || owner){
-        if(!owner)accounts.push({id:'demo-other-account',login:'other_user',email:'other@example.test',password:'Example-2026!',mosId:demoMos.id,provider:'mos_linked',name:demoMos.name,phone:demoMos.phone});
+        if(!owner)accounts.push({id:'demo-other-account',login:'other@example.test',email:'other@example.test',password:'Example-2026!',mosId:demoMos.id,provider:'mos_linked',name:demoMos.name,phone:demoMos.phone});
         return show('conflict');
       }
       current.mosId=demoMos.id; current.provider='mos_linked';
@@ -66,7 +66,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(found){current=found;return openCabinet();}
     if(!$('r2-terms')?.checked)return error('Примите условия, чтобы создать аккаунт.','terms');
     sequence+=1;
-    current={id:'demo-account-'+sequence,login:'mos_7f2a9c'+String(sequence).padStart(2,'0'),email:demoMos.email,name:demoMos.name,phone:grant.phone?demoMos.phone:'',mosGrants:grant,password:'Example-2026!',mosId:demoMos.id,provider:'mos_auto'};
+    current={id:'demo-account-'+sequence,login:demoMos.email,email:demoMos.email,name:demoMos.name,phone:grant.phone?demoMos.phone:'',mosGrants:grant,password:'Example-2026!',mosId:demoMos.id,provider:'mos_auto'};
     accounts.push(current); oneTimePassword=current.password; show('created');
   }
   function view(screenOverride, background=false) {
@@ -77,24 +77,24 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(shown==='entry'||shown==='login') {
       title='Войти в ВЕРО';
       const invited=getScenario()==='invite';
-      body=(invited?'<div class="notice">Вы приглашены в ООО «Пример». Войдите с почтой, на которую пришло приглашение.</div>':'')+form('login',field('Логин или email','login','text',`autocomplete="username" value="${esc(invited?invitationEmail:draft.login||'')}" ${invited?'readonly':''}`)+password('Пароль','password','current-password',draft.password||''),invited?'Войти и присоединиться':'Войти')+(invited?'<p class="signup">Нет аккаунта? '+button('Задать пароль','invitation',true)+'</p>':'<div class="separator">или</div>'+button('Войти через mos.ru','mos-login',true)+'<p class="signup">Нет аккаунта? <button class="text-btn" type="button" data-r2-action="register">Зарегистрироваться</button></p>');
+      body=(invited?'<div class="notice">Вы приглашены в ООО «Пример». Войдите с почтой, на которую пришло приглашение.</div>':'')+form('login',field('Логин (email)','login','email',`autocomplete="username" value="${esc(invited?invitationEmail:draft.login||'')}" ${invited?'readonly':''}`)+password('Пароль','password','current-password',draft.password||''),invited?'Войти и присоединиться':'Войти')+(invited?'<p class="signup">Нет аккаунта? '+button('Задать пароль','invitation',true)+'</p>':'<div class="separator">или</div>'+button('Войти через mos.ru','mos-login',true)+'<p class="signup">Нет аккаунта? <button class="text-btn" type="button" data-r2-action="register">Зарегистрироваться</button></p>');
     }
     if(shown==='email'){
       title='Регистрация';
-      body='<p>Укажите почту. Отправим письмо для подтверждения адреса, затем вы зададите логин и пароль.</p>'+form('email',field('Email','email','email',`autocomplete="email" value="${esc(draft.email||'')}"`),'Получить письмо')+'<p class="signup">Уже есть аккаунт? <button class="text-btn" type="button" data-r2-action="login">Войти</button></p>';
+      body='<p>Укажите почту. Отправим письмо для подтверждения адреса, затем вы зададите пароль.</p>'+form('email',field('Email','email','email',`autocomplete="email" value="${esc(draft.email||'')}"`),'Получить письмо')+'<p class="signup">Уже есть аккаунт? <button class="text-btn" type="button" data-r2-action="login">Войти</button></p>';
     }
     if(shown==='email-sent'){
       title='Проверьте почту';body='<p>Отправили ссылку на <strong>'+esc(draft.email)+'</strong>. Перейдите по ней, чтобы продолжить регистрацию.</p>'+button('Открыть письмо','open-email')+button('Изменить email','edit-email',true)+'<p class="mini">Демонстрация письма: реальная отправка не подключена.</p>';
     }
     if(shown==='email-letter'){
-      title='Подтвердите email';body='<p class="mini">Письмо от ВЕРО · демонстрация</p><p>Кому: '+esc(draft.email)+'</p><p>Подтвердите адрес, чтобы задать логин и пароль для входа.</p>'+button('Подтвердить email','confirm-email');
+      title='Подтвердите email';body='<p class="mini">Письмо от ВЕРО · демонстрация</p><p>Кому: '+esc(draft.email)+'</p><p>Подтвердите адрес, чтобы задать пароль для входа.</p>'+button('Подтвердить email','confirm-email');
     }
     if(shown==='invitation'){
       title='Вас пригласили на платформу ВЕРО';body='<p>ООО «Пример» приглашает вас для совместной работы. Придумайте пароль. Логином будет почта, на которую пришло приглашение.</p>'+form('invitation',field('Логин — email приглашения','invite-login','email',`value="${invitationEmail}" disabled`)+password('Придумайте пароль','new-password')+'<p class="mini">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password')+agreement,'Создать аккаунт и присоединиться')+'<p class="signup">Уже зарегистрированы? <button class="text-btn" type="button" data-r2-action="invite-login">Войти</button></p>';
     }
     if(shown==='register') {
       title='Регистрация';
-      body='<p class="notice good">Email '+esc(draft.verifiedEmail)+' подтверждён.</p>'+form('register',field('Логин','login','text',`autocomplete="username" value="${esc(draft.login||'')}"`)+field('Email','email','email',`autocomplete="email" value="${esc(draft.verifiedEmail||'')}" readonly`)+password('Пароль','new-password','new-password',draft.newPassword||'')+'<p class="mini" style="margin:0">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password','new-password',draft.confirmPassword||'')+(draft.terms?agreement.replace('type="checkbox"','type="checkbox" checked'):agreement),'Создать аккаунт');
+      body='<p class="notice good">Email '+esc(draft.verifiedEmail)+' подтверждён.</p>'+form('register',field('Логин (email)','login','email',`autocomplete="username" value="${esc(draft.verifiedEmail||'')}" disabled`)+password('Пароль','new-password','new-password',draft.newPassword||'')+'<p class="mini" style="margin:0">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password','new-password',draft.confirmPassword||'')+(draft.terms?agreement.replace('type="checkbox"','type="checkbox" checked'):agreement),'Создать аккаунт');
     }
     if(shown==='mos') {
       title='Вход на mos.ru';
@@ -105,16 +105,20 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       body='<div class="mos-brand">mos.ru</div><p>ВЕРО запрашивает данные вашего профиля. Выберите, что разрешаете передать.</p><fieldset class="mos-permissions"><legend>Данные для ВЕРО</legend><label class="check"><input id="r2-share-name" type="checkbox"><span>ФИО — для идентификации пользователя</span></label><label class="check"><input id="r2-share-email" type="checkbox"><span>Email — для аккаунта и связи</span></label><label class="check"><input id="r2-share-phone" type="checkbox"><span>Телефон — необязательно</span></label><label class="check"><input id="r2-share-organization" type="checkbox"><span>Сведения об организациях — необязательно</span></label></fieldset><p class="mini">Для входа нужны ФИО и email. Сведения об организации не назначают роль или права доступа на ВЕРО. Состав данных показан как предлагаемый вариант интеграции.</p>'+(!accounts.some(a=>a.mosId===demoMos.id)&&purpose!=='link'?agreement:'')+button('Разрешить и продолжить','mos-allow')+button('Отменить','cancel-mos',true);
     }
     if(shown==='created') {
-      title='Аккаунт создан';
-      body='<div class="r2-success" aria-hidden="true">✓</div><p>Вы вошли через Mos ID. Сохраните логин и пароль, чтобы входить и без mos.ru.</p><div class="r2-credentials"><h3>Данные для входа</h3><label class="field" for="r2-generated-login">Логин<div class="r2-copy-row"><input id="r2-generated-login" readonly value="'+esc(current.login)+'"><button type="button" class="secondary" data-r2-copy="login" aria-label="Копировать логин">Копировать</button></div></label><label class="field" for="r2-generated-password">Пароль<span class="password-wrap"><input id="r2-generated-password" type="password" readonly autocomplete="off" value="'+esc(oneTimePassword)+'"><button type="button" class="password-toggle" data-r2-password="generated-password" aria-label="Показать пароль" aria-pressed="false">Показать</button></span></label><button class="text-btn" type="button" data-r2-copy="password" aria-label="Копировать пароль">Копировать пароль</button></div><div class="r2-warning">Пароль показывается только один раз. Сохраните его в надёжном месте.</div>'+button('Продолжить','cabinet');
+      title='Подключите организацию';
+      body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан через mos.ru. Подключите организацию, чтобы работать от её имени.</p>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true)+'<p class="mini">Сохраните данные для входа без mos.ru.</p><div class="r2-credentials"><h3>Данные для входа</h3><label class="field" for="r2-generated-login">Логин<div class="r2-copy-row"><input id="r2-generated-login" readonly value="'+esc(current.login)+'"><button type="button" class="secondary" data-r2-copy="login" aria-label="Копировать логин">Копировать</button></div></label><label class="field" for="r2-generated-password">Пароль<span class="password-wrap"><input id="r2-generated-password" type="password" readonly autocomplete="off" value="'+esc(oneTimePassword)+'"><button type="button" class="password-toggle" data-r2-password="generated-password" aria-label="Показать пароль" aria-pressed="false">Показать</button></span></label><button class="text-btn" type="button" data-r2-copy="password" aria-label="Копировать пароль">Копировать пароль</button></div><div class="r2-warning">Пароль показывается только один раз. Сохраните его в надёжном месте.</div>';
     }
     if(shown==='offer') {
       title='Добро пожаловать!';
       body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан. Подключите Mos ID, чтобы входить через mos.ru в этот же аккаунт.</p><div class="summary r2-mos-benefits"><strong>Что даёт Mos ID</strong><span>Ещё один способ входа</span><span>Вход без ввода пароля ВЕРО</span></div>'+button('Подключить Mos ID','link')+button('Сделать позже','cabinet',true);
     }
     if(shown==='linked') {
-      title='Mos ID подключён';
+      title=hasOrganization()?'Mos ID подключён':'Подключите организацию';
       body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+(hasOrganization()?button('К сервисам','cabinet'):'<div class="summary"><strong>Подключите организацию</strong><p>Найдите компанию по ИНН и подтвердите полномочия, чтобы работать от её имени. Если вы сотрудник, попросите приглашение у организации.</p></div>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true));
+    }
+    if(shown==='organization-offer'){
+      title='Подключите организацию';
+      body='<p>Аккаунт готов к работе. Найдите компанию по ИНН и пройдите проверку полномочий, чтобы работать от её имени.</p><p class="mini">Если вы сотрудник, попросите приглашение у руководителя или администратора.</p>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true);
     }
     if(shown==='conflict') {
       title='Этот Mos ID уже привязан к другому аккаунту';
@@ -177,8 +181,8 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(action==='mos-allow')return allowMos();
     if(action==='cancel-mos'||action==='close-mos')return cancelMos();
     if(action==='retry-mos')return show('mos');
-    if(action==='cabinet')return openCabinet();
-    if(action==='connect-organization'&&current&&isAuthenticated())return openCabinet('company');
+    if(action==='cabinet'){if(screen==='offer'&&!hasOrganization())return show('organization-offer');return openCabinet();}
+    if(action==='connect-organization'&&current&&(isAuthenticated()||screen==='created'))return openCabinet('company');
     if(action==='link')return startMos('link');
     if(action==='conflict-login'){current=null;return startMos('login');}
     if(!current||!isAuthenticated())return;
@@ -190,7 +194,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     const value=id=>$('r2-'+id)?.value||'';
     if(kind==='login'){
       const identifier=value('login').trim();
-      const account=accounts.find(a=>(a.email.toLowerCase()===identifier.toLowerCase()||a.login===identifier)&&a.password===value('password'));
+      const account=accounts.find(a=>a.email.toLowerCase()===identifier.toLowerCase()&&a.password===value('password'));
       if(!account)return error('Неверный email или пароль.','password');current=account;return openCabinet();
     }
     if(kind==='email'){
@@ -208,12 +212,9 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       current={id:'invited-'+(++sequence),login:invitationEmail,email:invitationEmail,password:value('new-password'),provider:'local_only',mosId:null,name:'Анна Петрова',phone:''};accounts.push(current);return openCabinet();
     }
     if(kind==='register'){
-      const login=value('login').trim(),email=value('email').trim();
-      if(!draft.verifiedEmail||email!==draft.verifiedEmail)return error('Сначала подтвердите email по ссылке из письма.','email');
-      if(!login)return error('Укажите логин.','login');
-      if(accounts.some(a=>a.login===login))return error('Этот логин уже занят. Выберите другой.','login');
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return error('Проверьте email.','email');
-      if(accounts.some(a=>a.email.toLowerCase()===email.toLowerCase()))return error('Этот email уже используется. Войдите в существующий аккаунт.','email');
+      const email=draft.verifiedEmail,login=email;
+      if(!email||value('login').trim()!==email)return error('Сначала подтвердите email по ссылке из письма.','login');
+      if(accounts.some(a=>a.email.toLowerCase()===email.toLowerCase()))return error('Этот email уже используется. Войдите в существующий аккаунт.','login');
       if(value('new-password').length<8||!value('new-password').trim())return error('Используйте пароль не короче 8 символов.','new-password');
       if(value('new-password')!==value('confirm-password'))return error('Пароли не совпадают.','confirm-password');
       if(!$('r2-terms').checked)return error('Примите условия, чтобы создать аккаунт.','terms');

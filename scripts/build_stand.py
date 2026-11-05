@@ -33,8 +33,10 @@ def build_document(wrapper,comparison,schemes):
     proposals=proposal_source.replace('</head>',policy+legacy_style+'<style>.ap-scenarios{display:none!important}</style></head>',1).replace('</body>',bridge+navigation_bridge+proposal_bridge+fill_bridge+'</body>',1)
     frame=re.search(r'<iframe\b[^>]*id="codex-visualization"[\s\S]*?</iframe>',wrapper)
     assert frame
-    descriptions=['Email и пароль','Письмо → логин и пароль','Компания и сотрудники','Код → пароль','ЛК и кошелёк по ТЗ']
-    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}"><span>Вариант {n-1}</span><small>{descriptions[n-1]}</small></button>' for n in range(2,6))+'</nav>'
+    descriptions=['Email и пароль','Письмо → пароль','Компания и сотрудники','Код → пароль','ЛК и кошелёк по ТЗ']
+    def variant_button(n,archived=False):
+        return f'<button type="button" data-cabinet-view="{n}"'+(' data-archived="true"' if archived else '')+f' aria-pressed="{str(n==2).lower()}"><span>Вариант {n-1}</span><small>{descriptions[n-1]}</small></button>'
+    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(variant_button(n) for n in [2,5])+'<details class="stand-archive"><summary>Архив (2)</summary><div>'+''.join(variant_button(n,True) for n in [3,4])+'</div></details></nav>'
     proposal_frame=f'<iframe id="stand-frame-proposals" title="Предлагаемые варианты" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(proposals,quote=True)}" hidden></iframe>'
     brief=(ROOT/'cabinet-brief.html').read_text(encoding='utf-8').replace('</body>',bridge+fill_bridge+'</body>',1)
     brief_frame=f'<iframe id="stand-frame-brief" title="Вариант 4 — по ТЗ" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(brief,quote=True)}" hidden></iframe>'
@@ -52,6 +54,8 @@ def build_document(wrapper,comparison,schemes):
     header=re.sub(r'<a\b[^>]*data-stand-window="stand-brief-data"[\s\S]*?</a>','',header)
     header=header.replace('<a class="stand-window"','<button type="button" id="stand-fill" title="Заполняет только пример данных; согласия отметьте самостоятельно">Заполнить пример</button><a class="stand-window"',1)
     styles+='<style>.entry-variants button{text-align:left}.entry-variants small{display:block;font-size:11px;margin-top:4px;font-weight:normal}.entry-variants button[aria-pressed=true] small{color:inherit}.stand-header{flex-wrap:wrap;gap:10px}#stand-fill{margin-left:auto;background:#f4f6f8}.stand-header [hidden]{display:none!important}</style>'
+    styles+='<style>.stand-archive{position:relative;align-self:stretch;font:13px Arial,sans-serif}.stand-archive summary{cursor:pointer;padding:14px 12px;border:1px solid #d8dde5;border-radius:4px;background:#f4f6f8}.stand-archive.is-selected summary{background:#242b36;color:white}.stand-archive>div{position:absolute;top:100%;left:0;z-index:20;min-width:220px;max-width:calc(100vw - 24px);padding:8px;background:white;border:1px solid #d8dde5}.stand-archive button{display:block;width:100%;margin:4px 0}</style>'
+    styles+='<style>@media(max-width:700px){.entry-variants{position:relative}.stand-archive{position:static}.stand-archive>div{left:10px;right:10px;top:100%;min-width:0;max-width:none}}</style>'
     styles=styles.replace('cabinet-switcher','entry-variants').replace('#2563eb','#242b36').replace('background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1','background:#242b36;color:#fff;border-color:#242b36')
     result=wrapper[:frame.start()]+header+panels+wrapper[frame.end():]
     result=result.replace('</head>',styles+'</head>',1).replace('</body>',script+'</body>',1)
@@ -64,6 +68,6 @@ def main():
     result=build_document(wrap((ROOT/'platform-entry-variant2.html').read_text(encoding='utf-8')),(ROOT/'index.html').read_text(encoding='utf-8'),(ROOT/'schemes-all.html').read_text(encoding='utf-8'))
     for target in [ROOT/'prototype.html',ROOT/'web/prototype.html',ROOT/'deliverables'/f'vero-unified-v{version}.html']:
         target.parent.mkdir(parents=True,exist_ok=True);target.write_text(result,encoding='utf-8')
-    print('Built unified stand: variants 1–4, 3 competitors, summary window and 7 diagrams, all embedded.')
+    print('Built unified stand: active variants 1/4, archived 2/3, 3 competitors, summary window and 7 diagrams, all embedded.')
 
 if __name__=='__main__':main()

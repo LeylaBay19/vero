@@ -2,6 +2,7 @@
   const tabs=[...document.querySelectorAll('[data-stand-tab]')];
   const choices=[...document.querySelectorAll('[data-cabinet-view]')];
   const fill=document.getElementById('stand-fill');
+  const archive=document.querySelector('.stand-archive');
   let cabinet='2';
   function load(frame){
     if(frame?.dataset.standSrcdoc){frame.srcdoc=frame.dataset.standSrcdoc;delete frame.dataset.standSrcdoc;}
@@ -10,6 +11,8 @@
     if(!['2','3','4','5'].includes(name))return;
     cabinet=name;
     choices.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cabinetView===name)));
+    archive.querySelector('summary').textContent=['3','4'].includes(name)?`Архив · Вариант ${Number(name)-1}`:'Архив (2)';
+    archive.classList.toggle('is-selected',['3','4'].includes(name));archive.open=false;
     const kind=['1','2'].includes(name)?'current':name==='5'?'brief':'proposals';
     const frames={current:document.getElementById('codex-visualization'),proposals:document.getElementById('stand-frame-proposals'),brief:document.getElementById('stand-frame-brief')};
     Object.entries(frames).forEach(([key,f])=>f.hidden=key!==kind);
