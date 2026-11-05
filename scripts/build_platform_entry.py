@@ -6,6 +6,8 @@ html=html.replace('__REGISTRATION_VARIANT2_SCRIPT__',(ROOT/'src/registration-mos
 html=html.replace('__VIEWPORT_CSS__',(ROOT/'src/viewport.css').read_text(encoding='utf-8'))
 html=html.replace('__SIMPLE_UI_CSS__',(ROOT/'src/simple-ui.css').read_text(encoding='utf-8'))
 html=html.replace('__PLATFORM_HELP__',(ROOT/'src/platform-help.html').read_text(encoding='utf-8').strip())
+history=(ROOT/'src/prototype-history.js').read_text(encoding='utf-8')+'\n'+(ROOT/'src/history-entry-adapter.js').read_text(encoding='utf-8')
+html=html.replace('reset();\n})();','reset();\n'+history+'\n})();',1)
 for path in [ROOT/'platform-entry.html',ROOT/'web/platform-entry.html',ROOT/'deliverables'/f'vero-platform-entry-v{version}.html']:
  path.parent.mkdir(exist_ok=True,parents=True);path.write_text(html,encoding='utf-8')
 variant2=html.replace('<body>','<body data-default-registration="2">',1)

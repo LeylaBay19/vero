@@ -35,8 +35,13 @@ def main():
     args=parser.parse_args();site=args.target.resolve()
     assert (site/'.openai/hosting.json').is_file(), 'Use the existing Sites project checkout'
     dist=site/'dist';dist.mkdir(exist_ok=True)
+    retired={p.name for p in (project/'diagrams').iterdir() if p.suffix in ['.bpmn','.svg','.png']}
+    retired.add('business-processes.md')
+    for name in retired:
+        target=(dist/name).resolve();assert target.parent==dist.resolve()
+        if target.is_file():target.unlink()
     for page in (project/'web').iterdir():
-        if page.is_file() and page.name!='index.html':shutil.copy2(page,dist/page.name)
+        if page.is_file() and page.name!='index.html' and page.name not in retired:shutil.copy2(page,dist/page.name)
     shutil.copy2(project/'web/index.html',dist/'comparison.html')
     shutil.copy2(project/'schemes-all.html',dist/'processes.html')
     stand=(project/'prototype.html').read_text(encoding='utf-8')

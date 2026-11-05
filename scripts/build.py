@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 
 ROOT=Path(__file__).resolve().parents[1]
 base=ROOT/'build'
@@ -90,6 +91,10 @@ src=src.replace(" const err=(msg,ids=[])=>",submit+" const err=(msg,ids=[])=>",1
 for word in ['Наша платформа','ap-comments','ap-evidence\'','вопросы к аналитику']:
     assert word not in src,word
 src=src.replace('__PLATFORM_HELP__',(ROOT/'src/platform-help.html').read_text(encoding='utf-8').strip())
+src=re.sub(r'<a\b[^>]*href="schemes[^\"]*\.html[^\"]*"[^>]*>[\s\S]*?</a>','',src)
+src=re.sub(r'(?m)^[ \t]+$','',src)
+history=(ROOT/'src/prototype-history.js').read_text(encoding='utf-8')+'\n'+(ROOT/'src/history-legacy-adapter.js').read_text(encoding='utf-8')
+src=src.replace('render();\n})();','render();\n'+history+'\n})();',1)
 out=base/'auth-registration-four-flows.html'
 out.write_text(src,encoding='utf-8')
 

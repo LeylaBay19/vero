@@ -245,5 +245,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   }
   reset();
   function mount(){const dialog=$('r2-dialog');if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(['mos','mos-consent'].includes(screen))cancelMos();else openCabinet();});}}
-  return {reset,view,profile,signout,fill,mount,hasScreen:()=>!!screen,screen:()=>screen};
+  function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,oneTimePassword,draft,notice,sequence});}
+  function restore(value){({screen,accounts,current,origin,purpose,oneTimePassword,draft,notice,sequence}=structuredClone(value));}
+  return {reset,view,profile,signout,fill,mount,snapshot,restore,hasScreen:()=>!!screen,screen:()=>screen};
 }

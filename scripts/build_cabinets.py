@@ -12,6 +12,8 @@ overview=overview.replace('Операцию юридически выполня�
 overview=re.sub(r'<title>[^<]*</title>','<title>ВЕРО — вариант ЛК со сводкой</title>',overview,count=1)
 catalog=json.loads((ROOT/'src/brief-catalog.json').read_text(encoding='utf-8'))
 script=(ROOT/'src/cabinet-brief.js').read_text(encoding='utf-8').replace('__BRIEF_CATALOG__',json.dumps(catalog,ensure_ascii=False))
+history=(ROOT/'src/prototype-history.js').read_text(encoding='utf-8')+'\n'+(ROOT/'src/history-brief-adapter.js').read_text(encoding='utf-8')
+script=script.replace('reset();\n})();','reset();\n'+history+'\n})();',1)
 brief=(ROOT/'src/cabinet-brief.html').read_text(encoding='utf-8').replace('__VERSION__',version).replace('__BRIEF_CSS__',(ROOT/'src/cabinet-brief.css').read_text(encoding='utf-8')).replace('__BRIEF_JS__',script)
 for name,content in [('cabinet-overview.html',overview),('cabinet-brief.html',brief)]:
  for folder in [ROOT,ROOT/'web',ROOT/'deliverables']:

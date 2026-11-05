@@ -1886,7 +1886,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
 &lt;div id=&quot;auth-flow-prototype&quot; aria-label=&quot;Прототип регистрации и входа: Тринити и Орбита&quot;&gt;
   &lt;div class=&quot;ap-bench&quot;&gt;
-    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.16.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.17.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&quot;ap-scenarios&quot; aria-label=&quot;Выбор сценария&quot;&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;mos&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;01 · Сотрудник&lt;/span&gt;&lt;strong&gt;Тринити · mos.ru&lt;/strong&gt;&lt;span&gt;Личный вход и доверенность&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;ep&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;02 · Руководитель&lt;/span&gt;&lt;strong&gt;Тринити · УКЭП&lt;/strong&gt;&lt;span&gt;Подключение организации&lt;/span&gt;&lt;/button&gt;
@@ -1906,7 +1906,7 @@ html&gt;body{padding:0}&lt;/style&gt;
         &lt;label id=&quot;ap-v2-invite-state-wrap&quot; hidden&gt;Демо: приглашение&lt;select id=&quot;ap-v2-invite-state&quot;&gt;&lt;option value=&quot;valid&quot;&gt;Действует&lt;/option&gt;&lt;option value=&quot;invalid&quot;&gt;Истекло / отозвано&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;
         &lt;button type=&quot;button&quot; id=&quot;ap-v2-director&quot; data-v2-action=&quot;director-review&quot; hidden&gt;Демо: руководитель проверяет МЧД&lt;/button&gt;
         &lt;span id=&quot;ap-v2-code-note&quot; hidden&gt;Демо-код: 123456. Письмо не отправляется.&lt;/span&gt;
-        &lt;a href=&quot;schemes-v2.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;BPMN варианта 2 ↗&lt;/a&gt;
+
         &lt;span class=&quot;ap-mos-assumption&quot;&gt;Стенд: email, mos.ru, реестры, УКЭП и МЧД имитируются. Данные живут в текущем сеансе. Требования интеграции ОССиГ требуют согласования.&lt;/span&gt;
       &lt;/div&gt;
       &lt;div id=&quot;ap-proposal-controls&quot; hidden&gt;
@@ -2748,6 +2748,34 @@ window.addEventListener(&#x27;openai:set_globals&#x27;,e=&gt;{
 });
 if(saved?.version===2&amp;&amp;typeof saved.screen===&#x27;string&#x27;)S.screen=saved.screen;
 render();
+/* In-memory testing history. State and field values never leave the child frame. */
+function createPrototypeHistory({read,write,scope}){
+ const clone=x=&gt;structuredClone(x),stacks=new Map();let restoring=false,queued=false;
+ const fields=()=&gt;[...document.querySelectorAll(&#x27;input,select,textarea&#x27;)];
+ function ui(){return {fields:fields().map((el,index)=&gt;({id:el.id,index,value:el.type===&#x27;file&#x27;?null:el.value,checked:el.checked,selected:el.tagName===&#x27;SELECT&#x27;&amp;&amp;el.multiple?[...el.selectedOptions].map(o=&gt;o.value):null})),details:[...document.querySelectorAll(&#x27;details&#x27;)].map((el,index)=&gt;({id:el.id,index,open:el.open})),scroll:[...document.querySelectorAll(&#x27;#main,dialog,[data-history-scroll]&#x27;)].map((el,index)=&gt;({id:el.id,index,left:el.scrollLeft,top:el.scrollTop})),window:{left:scrollX,top:scrollY}};}
+ function capture(){return {...clone(read()),ui:ui()};}
+ function stack(){const key=String(scope());if(!stacks.has(key))stacks.set(key,{entries:[],index:-1});return stacks.get(key);}
+ function emit(){const s=stack();if(parent!==window)parent.postMessage({type:&#x27;vero:history-state&#x27;,back:s.index&gt;0,forward:s.index&lt;s.entries.length-1,position:s.index+1,total:s.entries.length,scope:String(scope())},&#x27;*&#x27;);}
+ function checkpoint(){if(restoring)return;const s=stack(),now=capture();if(s.index&gt;=0&amp;&amp;s.entries[s.index].signature===now.signature)s.entries[s.index]=now;}
+ function flush(){queued=false;if(restoring)return;const s=stack(),now=capture();if(s.index&gt;=0&amp;&amp;s.entries[s.index].signature===now.signature)s.entries[s.index]=now;else{s.entries.splice(s.index+1);s.entries.push(now);if(s.entries.length&gt;80)s.entries.shift();s.index=s.entries.length-1;}emit();}
+ function record(){if(restoring||queued)return;queued=true;queueMicrotask(flush);}
+ function restoreUI(saved){const inputs=fields();for(const v of saved.fields){const el=v.id?document.getElementById(v.id):inputs[v.index];if(!el||v.value===null)continue;if(v.selected&amp;&amp;el.multiple)[...el.options].forEach(o=&gt;o.selected=v.selected.includes(o.value));else el.value=v.value;if([&#x27;checkbox&#x27;,&#x27;radio&#x27;].includes(el.type))el.checked=v.checked;}
+  const details=[...document.querySelectorAll(&#x27;details&#x27;)];for(const v of saved.details){const el=v.id?document.getElementById(v.id):details[v.index];if(el)el.open=v.open;}
+  const scrollers=[...document.querySelectorAll(&#x27;#main,dialog,[data-history-scroll]&#x27;)];for(const v of saved.scroll){const el=v.id?document.getElementById(v.id):scrollers[v.index];if(el){el.scrollLeft=v.left;el.scrollTop=v.top;}}window.scrollTo(saved.window.left,saved.window.top);
+ }
+ function travel(direction){flush();const s=stack(),next=s.index+direction;if(next&lt;0||next&gt;=s.entries.length)return emit();restoring=true;try{s.index=next;const saved=clone(s.entries[next]);write(saved.model);restoreUI(saved.ui);}finally{restoring=false;}emit();}
+ function reset(){if(restoring)return;stacks.delete(String(scope()));flush();}
+ for(const type of [&#x27;click&#x27;,&#x27;submit&#x27;,&#x27;input&#x27;,&#x27;change&#x27;,&#x27;cancel&#x27;])document.addEventListener(type,e=&gt;{if(restoring)return;checkpoint();const resetClick=type===&#x27;click&#x27;&amp;&amp;e.target.closest?.(&#x27;#reset,#ap-start&#x27;);const fixture=type===&#x27;change&#x27;&amp;&amp;e.target.matches?.(&#x27;#scenario,#intent,#ap-v2-path,#ap-proposal-path,#ap-proposal-entry,#ap-org-case,#ap-repeat&#x27;);if(resetClick||fixture)queueMicrotask(reset);else record();},true);
+ addEventListener(&#x27;message&#x27;,e=&gt;{if(e.source!==parent||e.data?.type!==&#x27;vero:history&#x27;)return;const action=e.data.action;if(action===&#x27;back&#x27;)travel(-1);else if(action===&#x27;forward&#x27;)travel(1);else if(action===&#x27;status&#x27;){if(!stack().entries.length)flush();else emit();}});
+ flush();return {record,reset};
+}
+
+createPrototypeHistory({
+ scope:()=&gt;`legacy:${S.flow}`,
+ read:()=&gt;({signature:[S.screen,S.flow===&#x27;proposal2&#x27;?V2?.screen:&#x27;&#x27;,S.isDirector,document.querySelector(&#x27;dialog[open]&#x27;)?.textContent.slice(0,60)].join(&#x27;|&#x27;),model:{S,V2,drafts}}),
+ write:model=&gt;{Object.keys(S).forEach(k=&gt;delete S[k]);Object.assign(S,model.S);V2=model.V2;Object.keys(drafts).forEach(k=&gt;delete drafts[k]);Object.assign(drafts,model.drafts);render();}
+});
+
 })();
 &lt;/script&gt;
 
