@@ -1886,7 +1886,7 @@ html&gt;body{padding:0}&lt;/style&gt;
 
 &lt;div id=&quot;auth-flow-prototype&quot; aria-label=&quot;Прототип регистрации и входа: Тринити и Орбита&quot;&gt;
   &lt;div class=&quot;ap-bench&quot;&gt;
-    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.14.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;ap-bench-head&quot;&gt;&lt;strong&gt;Регистрация и вход &lt;small&gt;v1.15.0&lt;/small&gt;&lt;/strong&gt;&lt;span&gt;Интерактивный прототип · демонстрационные данные&lt;/span&gt;&lt;/div&gt;
     &lt;div class=&quot;ap-scenarios&quot; aria-label=&quot;Выбор сценария&quot;&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;mos&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;01 · Сотрудник&lt;/span&gt;&lt;strong&gt;Тринити · mos.ru&lt;/strong&gt;&lt;span&gt;Личный вход и доверенность&lt;/span&gt;&lt;/button&gt;
       &lt;button type=&quot;button&quot; data-flow=&quot;ep&quot;&gt;&lt;span class=&quot;ap-scenario-kicker&quot;&gt;02 · Руководитель&lt;/span&gt;&lt;strong&gt;Тринити · УКЭП&lt;/strong&gt;&lt;span&gt;Подключение организации&lt;/span&gt;&lt;/button&gt;
@@ -2503,7 +2503,7 @@ function v2Render(){
  if(q===&#x27;invalid&#x27;)body=wrap(&#x27;Приглашение недоступно&#x27;,`&lt;p&gt;Срок истёк или приглашение отозвано. Попросите отправить новое. Доступ к организации не предоставлен.&lt;/p&gt;${v2Button(&#x27;Перейти к обычному входу&#x27;,&#x27;normal-login&#x27;)}`);
  if(!body){V2.screen=V2.authenticated?&#x27;home&#x27;:&#x27;login&#x27;;return v2Render();}
  pane.innerHTML=body+`&lt;div class=&quot;ap-error&quot; role=&quot;alert&quot; hidden&gt;&lt;/div&gt;`;
- enhance();v2Journey();root.querySelector(&#x27;.ap-brand-mark&#x27;).textContent=&#x27;05&#x27;;root.querySelector(&#x27;#ap-demo&#x27;).hidden=!pane.querySelector(&#x27;form&#x27;);
+ enhance();v2Journey();if([&#x27;login&#x27;,&#x27;invite&#x27;,&#x27;code&#x27;].includes(q))pane.querySelector(&#x27;.ap-form&#x27;).insertAdjacentHTML(&#x27;beforeend&#x27;,`&lt;details class=&quot;platform-help ap-auth-help&quot;&gt;&lt;summary&gt;Как пользоваться платформой&lt;/summary&gt;&lt;ol&gt;&lt;li&gt;&lt;strong&gt;Войдите или зарегистрируйтесь.&lt;/strong&gt; Используйте свой аккаунт или mos.ru.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Если вы генеральный директор:&lt;/strong&gt; найдите организацию по ИНН, подпишите заявление и дождитесь проверки платформой. Затем пригласите сотрудников.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Если вы сотрудник:&lt;/strong&gt; откройте приглашение от организации. Если приглашения нет, обратитесь к руководителю или администратору.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Начните работу.&lt;/strong&gt; После подключения будут доступны назначенные вам действия.&lt;/li&gt;&lt;/ol&gt;&lt;p&gt;Вход через mos.ru подтверждает личность. Наличие организации на mos.ru само по себе не назначает права в её кабинете на платформе.&lt;/p&gt;&lt;/details&gt;`);root.querySelector(&#x27;.ap-brand-mark&#x27;).textContent=&#x27;05&#x27;;root.querySelector(&#x27;#ap-demo&#x27;).hidden=!pane.querySelector(&#x27;form&#x27;);
 }
 function v2Outcome(){return root.querySelector(&#x27;#ap-v2-outcome&#x27;).value;}
 function v2Action(action){

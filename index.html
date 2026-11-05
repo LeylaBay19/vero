@@ -1,6 +1,6 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Регистрация и вход — 5 вариантов</title><style>body{margin:0;padding:24px;background:light-dark(#fff,#141518);color-scheme:light dark}#auth-flow-prototype{max-width:1100px;margin:auto}@media(max-width:580px){body{padding:10px}}</style></head><body><div id="auth-flow-prototype" aria-label="Прототип регистрации и входа: Тринити и Орбита">
   <div class="ap-bench">
-    <div class="ap-bench-head"><strong>Регистрация и вход <small>v1.14.0</small></strong><span>Интерактивный прототип · демонстрационные данные</span></div>
+    <div class="ap-bench-head"><strong>Регистрация и вход <small>v1.15.0</small></strong><span>Интерактивный прототип · демонстрационные данные</span></div>
     <div class="ap-scenarios" aria-label="Выбор сценария">
       <button type="button" data-flow="mos"><span class="ap-scenario-kicker">01 · Сотрудник</span><strong>Тринити · mos.ru</strong><span>Личный вход и доверенность</span></button>
       <button type="button" data-flow="ep"><span class="ap-scenario-kicker">02 · Руководитель</span><strong>Тринити · УКЭП</strong><span>Подключение организации</span></button>
@@ -617,7 +617,7 @@ function v2Render(){
  if(q==='invalid')body=wrap('Приглашение недоступно',`<p>Срок истёк или приглашение отозвано. Попросите отправить новое. Доступ к организации не предоставлен.</p>${v2Button('Перейти к обычному входу','normal-login')}`);
  if(!body){V2.screen=V2.authenticated?'home':'login';return v2Render();}
  pane.innerHTML=body+`<div class="ap-error" role="alert" hidden></div>`;
- enhance();v2Journey();root.querySelector('.ap-brand-mark').textContent='05';root.querySelector('#ap-demo').hidden=!pane.querySelector('form');
+ enhance();v2Journey();if(['login','invite','code'].includes(q))pane.querySelector('.ap-form').insertAdjacentHTML('beforeend',`<details class="platform-help ap-auth-help"><summary>Как пользоваться платформой</summary><ol><li><strong>Войдите или зарегистрируйтесь.</strong> Используйте свой аккаунт или mos.ru.</li><li><strong>Если вы генеральный директор:</strong> найдите организацию по ИНН, подпишите заявление и дождитесь проверки платформой. Затем пригласите сотрудников.</li><li><strong>Если вы сотрудник:</strong> откройте приглашение от организации. Если приглашения нет, обратитесь к руководителю или администратору.</li><li><strong>Начните работу.</strong> После подключения будут доступны назначенные вам действия.</li></ol><p>Вход через mos.ru подтверждает личность. Наличие организации на mos.ru само по себе не назначает права в её кабинете на платформе.</p></details>`);root.querySelector('.ap-brand-mark').textContent='05';root.querySelector('#ap-demo').hidden=!pane.querySelector('form');
 }
 function v2Outcome(){return root.querySelector('#ap-v2-outcome').value;}
 function v2Action(action){

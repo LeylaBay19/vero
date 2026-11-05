@@ -89,6 +89,7 @@ submit=" if(S.flow==='proposal2'&&action?.startsWith('v2-')){v2Submit(action,f);
 src=src.replace(" const err=(msg,ids=[])=>",submit+" const err=(msg,ids=[])=>",1)
 for word in ['Наша платформа','ap-comments','ap-evidence\'','вопросы к аналитику']:
     assert word not in src,word
+src=src.replace('__PLATFORM_HELP__',(ROOT/'src/platform-help.html').read_text(encoding='utf-8').strip())
 out=base/'auth-registration-four-flows.html'
 out.write_text(src,encoding='utf-8')
 

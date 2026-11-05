@@ -7,12 +7,13 @@ ROOT=Path(__file__).resolve().parents[1]
 def build_document(wrapper,comparison,schemes):
     from prepare_site import inner,csp
     policy=csp(inner)[0]
+    fill_bridge="""<script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:fill')return;const button=document.getElementById('fill')||document.getElementById('ap-demo');button?.click();});</script>"""
     # The standalone current prototype retains its own two-option navigation.
     # In the combined stand the parent is the single source of variant selection.
     current_bridge="""<style>.registration-variants{display:none!important}</style><script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:select-registration'||!['1','2'].includes(e.data.variant))return;const b=document.querySelector('[data-registration-variant="'+e.data.variant+'"]');if(b&&b.getAttribute('aria-pressed')!=='true')b.click();document.documentElement.dataset.activeRegistration=e.data.variant;});</script>"""
     authored=re.search(r'data-srcdoc="([\s\S]*?)"',wrapper)
     assert authored
-    content=html.unescape(authored.group(1)).replace('</body>',current_bridge+'</body>',1)
+    content=html.unescape(authored.group(1)).replace('</body>',current_bridge+fill_bridge+'</body>',1)
     wrapper=wrapper[:authored.start(1)]+html.escape(content,quote=True)+wrapper[authored.end(1):]
     def subset(page,keep,initial):
         pattern=r'<button\b[^>]*\bdata-flow="([^"]+)"[^>]*>[\s\S]*?</button>'
@@ -25,15 +26,16 @@ def build_document(wrapper,comparison,schemes):
     legacy_style='''<style>html,body{height:100%;min-height:0;overflow:auto}body{margin:0;padding:16px;background:#fafafa;font:14px Arial,sans-serif}#auth-flow-prototype{font-family:Arial,sans-serif;--ap-button:#2563eb;--ap-line:#d8dde5;--ap-ink:#20242c}#auth-flow-prototype *{box-shadow:none!important}#auth-flow-prototype button,#auth-flow-prototype input,#auth-flow-prototype select{border-radius:4px!important}#auth-flow-prototype h1{font-size:24px}#auth-flow-prototype .ap-scenarios{display:flex;flex-wrap:wrap;gap:6px}#auth-flow-prototype .ap-scenarios button{flex:1;min-width:130px;padding:9px!important}#auth-flow-prototype .ap-scenarios button strong{font-size:13px}</style>'''
     bridge='''<script>document.addEventListener('click',e=>{const b=e.target.closest('button[type="submit"]');if(b?.form){e.preventDefault();b.form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}},true);document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target.matches('input:not([type="checkbox"]):not([type="radio"])')&&e.target.form){e.preventDefault();e.target.form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}},true);</script>'''
     navigation_bridge='''<script>document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;const href=a.getAttribute('href');if(a.hasAttribute('download')){e.preventDefault();parent.postMessage({type:'vero:download',name:a.getAttribute('download')},'*');}else if(['schemes-v2.html','schemes.html','schemes-all.html','index.html'].includes(href)){e.preventDefault();parent.postMessage({type:'vero:navigate',view:href==='index.html'?'current':'schemes'},'*');}},true);</script>'''
-    comparison=comparison.replace('</head>',policy+legacy_style+'</head>',1).replace('</body>',bridge+navigation_bridge+'</body>',1)
+    comparison=comparison.replace('</head>',policy+legacy_style+'</head>',1).replace('</body>',bridge+navigation_bridge+fill_bridge+'</body>',1)
     schemes=schemes.replace('</head>',policy+'<style>body{margin:0;padding:20px;font-family:Arial,sans-serif}header{margin-bottom:20px}</style></head>',1).replace('</body>',navigation_bridge+'</body>',1)
     proposal_bridge="""<script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:select-proposal'||!['proposal','proposal2'].includes(e.data.flow))return;const b=document.querySelector('[data-flow="'+e.data.flow+'"]');if(b&&b.getAttribute('aria-pressed')!=='true')b.click();document.documentElement.dataset.activeProposal=e.data.flow;});</script>"""
-    proposals=proposal_source.replace('</head>',policy+legacy_style+'<style>.ap-scenarios{display:none!important}</style></head>',1).replace('</body>',bridge+navigation_bridge+proposal_bridge+'</body>',1)
+    proposals=proposal_source.replace('</head>',policy+legacy_style+'<style>.ap-scenarios{display:none!important}</style></head>',1).replace('</body>',bridge+navigation_bridge+proposal_bridge+fill_bridge+'</body>',1)
     frame=re.search(r'<iframe\b[^>]*id="codex-visualization"[\s\S]*?</iframe>',wrapper)
     assert frame
-    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}">Вариант {n}</button>' for n in range(1,6))+'</nav>'
+    descriptions=['Email и пароль','Письмо → логин и пароль','Компания и сотрудники','Вход по коду','ЛК и кошелёк по ТЗ']
+    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}"><span>Вариант {n}</span><small>{descriptions[n-1]}</small></button>' for n in range(1,6))+'</nav>'
     proposal_frame=f'<iframe id="stand-frame-proposals" title="Предлагаемые варианты" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(proposals,quote=True)}" hidden></iframe>'
-    brief=(ROOT/'cabinet-brief.html').read_text(encoding='utf-8').replace('</body>',bridge+'</body>',1)
+    brief=(ROOT/'cabinet-brief.html').read_text(encoding='utf-8').replace('</body>',bridge+fill_bridge+'</body>',1)
     brief_frame=f'<iframe id="stand-frame-brief" title="Вариант 5 — по ТЗ" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(brief,quote=True)}" hidden></iframe>'
     panels='<section class="stand-panel" id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">'+switcher+'<div class="cabinet-stage">'+frame.group(0)+proposal_frame+brief_frame+'</div></section>'
     for name,content,title in [('comparison',comparison,'Сравнение: Тринити и Орбита'),('schemes',schemes,'Семь схем процессов')]:
@@ -47,6 +49,8 @@ def build_document(wrapper,comparison,schemes):
     styles+='<style>#stand-current{display:flex;flex-direction:column}.cabinet-switcher{display:flex;gap:6px;flex:none;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid #d8dde5}.cabinet-switcher button{font:13px Arial,sans-serif;background:white;border:1px solid #d8dde5;border-radius:4px;padding:8px 10px;cursor:pointer}.cabinet-switcher [aria-pressed=true]{background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1}.cabinet-stage{flex:1;min-height:0;overflow:hidden}.cabinet-stage iframe[hidden]{display:none!important}.stand-window{font-size:12px;color:#1d4ed8;white-space:nowrap}@media(max-width:700px){.cabinet-switcher{padding:6px 10px}.cabinet-switcher button{font-size:11px;padding:7px}}</style>'
 
     header=re.sub(r'<a\b[^>]*data-stand-window="stand-brief-data"[\s\S]*?</a>','',header)
+    header=header.replace('<a class="stand-window"','<button type="button" id="stand-fill" title="Заполняет только пример данных; согласия отметьте самостоятельно">Заполнить пример</button><a class="stand-window"',1)
+    styles+='<style>.entry-variants button{text-align:left}.entry-variants small{display:block;font-size:11px;margin-top:4px;font-weight:normal}.entry-variants button[aria-pressed=true] small{color:inherit}.stand-header{flex-wrap:wrap;gap:10px}#stand-fill{margin-left:auto;background:#f4f6f8}.stand-header [hidden]{display:none!important}</style>'
     styles=styles.replace('cabinet-switcher','entry-variants').replace('#2563eb','#242b36').replace('background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1','background:#242b36;color:#fff;border-color:#242b36')
     result=wrapper[:frame.start()]+header+panels+wrapper[frame.end():]
     result=result.replace('</head>',styles+'</head>',1).replace('</body>',script+'</body>',1)

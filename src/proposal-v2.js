@@ -62,7 +62,7 @@ function v2Render(){
  if(q==='invalid')body=wrap('Приглашение недоступно',`<p>Срок истёк или приглашение отозвано. Попросите отправить новое. Доступ к организации не предоставлен.</p>${v2Button('Перейти к обычному входу','normal-login')}`);
  if(!body){V2.screen=V2.authenticated?'home':'login';return v2Render();}
  pane.innerHTML=body+`<div class="ap-error" role="alert" hidden></div>`;
- enhance();v2Journey();root.querySelector('.ap-brand-mark').textContent='05';root.querySelector('#ap-demo').hidden=!pane.querySelector('form');
+ enhance();v2Journey();if(['login','invite','code'].includes(q))pane.querySelector('.ap-form').insertAdjacentHTML('beforeend',`__PLATFORM_HELP__`);root.querySelector('.ap-brand-mark').textContent='05';root.querySelector('#ap-demo').hidden=!pane.querySelector('form');
 }
 function v2Outcome(){return root.querySelector('#ap-v2-outcome').value;}
 function v2Action(action){
