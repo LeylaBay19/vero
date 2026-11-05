@@ -1,3 +1,5 @@
 * text=auto eol=lf
 *.png binary
 sources/registration-mos-id-2026-11-05.html -text
+sources/cabinet-overview-original-2026-11-05.html -text
+*.docx binary

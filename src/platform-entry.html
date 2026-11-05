@@ -36,12 +36,12 @@ const main=document.querySelector('#main'),scenario=document.querySelector('#sce
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let state;
 let registrationVariant=document.body.dataset.defaultRegistration==='2'||location.hash==='#registration-2'?'2':'1';
-const registration2=createMosRegistration({main,refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false)=>{
+const registration2=createMosRegistration({main,refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false,target='home')=>{
  if(state.registrationAccountId&&state.registrationAccountId!==account.id)reset(true);
  state.registrationAccountId=account.id;
  state.email=account.email;state.demoPassword=account.password;
  if(!state.authenticated)auth();
- if(!keepScreen&&state.screen!=='invite'){state.history=[];state.screen='profile';render();}
+ if(!keepScreen&&state.screen!=='invite'){state.history=[];state.screen=target==='home'&&state.intent&&state.context?.kind!=='government'?'service':target;render();}
  else render();
 }});
 const intentNames={materials:'Покупка нерудных материалов',ossig:'Вывоз и учёт отходов',agr:'Получение АГК'};

@@ -26,7 +26,8 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
   }
   function openCabinet() {
     if(!current)return;
-    oneTimePassword=''; draft={}; screen=null; enter({...current});
+    const target=['password','unlink','linked','conflict'].includes(screen)?'profile':'home';
+    oneTimePassword=''; draft={}; screen=null; enter({...current},false,target);
   }
   function startMos(mode) {
     if(mode==='link' && (!isAuthenticated() || !current))return;
@@ -172,7 +173,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated}) {
       if(value('current-password')!==current.password)return error('Текущий пароль неверный.','current-password');
       if(value('new-password').length<8||!value('new-password').trim())return error('Используйте пароль не короче 8 символов.','new-password');
       if(value('new-password')!==value('confirm-password'))return error('Пароли не совпадают.','confirm-password');
-      current.password=value('new-password');screen=null;notice='Пароль изменён';enter({...current});
+      current.password=value('new-password');screen=null;notice='Пароль изменён';enter({...current},false,'profile');
     }
   });
   main.addEventListener('input',e=>{
