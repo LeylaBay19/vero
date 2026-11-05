@@ -121,13 +121,14 @@ body,button,input,select,textarea{font-family:Arial,sans-serif}
 .sidebar nav button{border-radius:4px}
 @media(max-width:700px){.r2-card[data-registration-screen=entry],.r2-card[data-registration-screen=login]{padding:22px}}
 .platform-help{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;line-height:1.6}.platform-help summary{cursor:pointer;font-weight:600}.platform-help ol{padding-left:20px}.platform-help li{margin:10px 0}.mos-permissions{display:grid;gap:14px;border:1px solid var(--line);padding:16px;margin:20px 0}.mos-permissions legend{font-size:13px}.field input:disabled{background:#f4f6f8;color:#647084;opacity:1}
+.r2-mos-benefits{display:grid;gap:6px}.r2-mos-benefits>span{display:block}
 
 </style></head><body>
 <nav class="registration-variants" aria-label="Вариант регистрации"><button type="button" data-registration-variant="1" aria-pressed="true">Вариант 1<small>Текущая регистрация</small></button><button type="button" data-registration-variant="2" aria-pressed="false">Вариант 2<small>Mos ID и привязка аккаунта</small></button></nav>
-<aside class="bench" aria-label="Управление демонстрацией"><div class="bench-inner"><strong>Прототип · единый вход</strong><label>Сценарий<select id="scenario"><option value="new">Новый пользователь / физлицо</option><option value="invite">Сотрудник по приглашению</option><option value="employee">Подключённый сотрудник</option><option value="director">Подтверждённый гендиректор</option><option value="multi">Несколько организаций · разные роли</option></select></label><label>Начатая задача<select id="intent"><option value="">Без выбранной услуги</option><option value="materials">Нерудные материалы</option><option value="ossig">ОССиГ</option><option value="agr">АГК</option></select></label><label id="catalog-mode-wrap" hidden>Вариант каталога<select id="catalog-mode"><option value="organization">1 · По организации</option><option value="service">2 · По сервисам</option></select></label><label id="platform-result-wrap" hidden>Демо: решение платформы<select id="platform-result"><option value="approved">Одобрить</option><option value="rejected">Отказать</option></select><button id="apply-platform-result" type="button">Применить</button></label><label id="proof-result-wrap" hidden>Демо: проверка<select id="proof-result"><option value="success">Успешно</option><option value="failure">Ошибка</option></select></label><button id="fill" type="button">Заполнить пример</button><button id="reset" type="button">Начать заново</button><span class="version">v1.15.2</span><details class="bench-info"><summary>О прототипе · демо-пароль Example-2026!</summary><small>Демо-пароль: Example-2026!. Вход, письма, mos.ru и проверка полномочий имитируются. Выбор сценария задаёт исходные данные стенда, а не роль пользователя. Данные хранятся до перезагрузки. Доверенности — вымышленные записи для просмотра; выпуск, подписание и отзыв не подключены. УКЭП и реестровые сведения на экране проверки — вымышленные примеры из разных источников.</small></details></div></aside>
-<div class="shell"><header class="top"><div class="brand"><span class="brand-wordmark" aria-label="ВЕРО">ВЕРО</span></div><div id="top-context" class="top-note">Платформа для ваших задач</div><label id="account-select-wrap" class="account-select" hidden>Работа от имени<select id="account-select"></select></label><button type="button" class="text-btn" data-action="signout" id="signout" hidden>Выйти</button></header><div class="app-body"><aside id="sidebar" class="sidebar" hidden aria-label="Меню кабинета"></aside><main id="main"></main></div><footer class="footer"><span>Один аккаунт. Ваши организации, услуги и документы.</span><span>Интерактивный прототип · 1.15.2</span></footer></div>
+<aside class="bench" aria-label="Управление демонстрацией"><div class="bench-inner"><strong>Прототип · единый вход</strong><label>Сценарий<select id="scenario"><option value="new">Новый пользователь / физлицо</option><option value="invite">Сотрудник по приглашению</option><option value="employee">Подключённый сотрудник</option><option value="director">Подтверждённый гендиректор</option><option value="multi">Несколько организаций · разные роли</option></select></label><label>Начатая задача<select id="intent"><option value="">Без выбранной услуги</option><option value="materials">Нерудные материалы</option><option value="ossig">ОССиГ</option><option value="agr">АГК</option></select></label><label id="catalog-mode-wrap" hidden>Вариант каталога<select id="catalog-mode"><option value="organization">1 · По организации</option><option value="service">2 · По сервисам</option></select></label><label id="platform-result-wrap" hidden>Демо: решение платформы<select id="platform-result"><option value="approved">Одобрить</option><option value="rejected">Отказать</option></select><button id="apply-platform-result" type="button">Применить</button></label><label id="proof-result-wrap" hidden>Демо: проверка<select id="proof-result"><option value="success">Успешно</option><option value="failure">Ошибка</option></select></label><button id="fill" type="button">Заполнить пример</button><button id="reset" type="button">Начать заново</button><span class="version">v1.15.3</span><details class="bench-info"><summary>О прототипе · демо-пароль Example-2026!</summary><small>Демо-пароль: Example-2026!. Вход, письма, mos.ru и проверка полномочий имитируются. Выбор сценария задаёт исходные данные стенда, а не роль пользователя. Данные хранятся до перезагрузки. Доверенности — вымышленные записи для просмотра; выпуск, подписание и отзыв не подключены. УКЭП и реестровые сведения на экране проверки — вымышленные примеры из разных источников.</small></details></div></aside>
+<div class="shell"><header class="top"><div class="brand"><span class="brand-wordmark" aria-label="ВЕРО">ВЕРО</span></div><div id="top-context" class="top-note">Платформа для ваших задач</div><label id="account-select-wrap" class="account-select" hidden>Работа от имени<select id="account-select"></select></label><button type="button" class="text-btn" data-action="signout" id="signout" hidden>Выйти</button></header><div class="app-body"><aside id="sidebar" class="sidebar" hidden aria-label="Меню кабинета"></aside><main id="main"></main></div><footer class="footer"><span>Один аккаунт. Ваши организации, услуги и документы.</span><span>Интерактивный прототип · 1.15.3</span></footer></div>
 <script>/* Registration variant 2. UI demonstration only: no requests or real accounts. */
-function createMosRegistration({main, refresh, enter, isAuthenticated, getScenario=()=> 'new', help=''}) {
+function createMosRegistration({main, refresh, enter, isAuthenticated, getScenario=()=> 'new', hasOrganization=()=> false, help=''}) {
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const button = (label, action, secondary = false) => `<button type="button" class="${secondary ? 'secondary' : 'primary'}" data-r2-action="${action}">${label}</button>`;
@@ -155,9 +156,9 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     box.hidden=false; box.textContent=text;
     if(id){$('r2-'+id)?.setAttribute('aria-invalid','true');$('r2-'+id)?.focus();}
   }
-  function openCabinet() {
+  function openCabinet(requestedTarget) {
     if(!current)return;
-    const target=['password','unlink','linked','conflict'].includes(screen)?'profile':'home';
+    const target=requestedTarget||(['password','unlink','conflict'].includes(screen)?'profile':'home');
     oneTimePassword=''; draft={}; screen=null; enter({...current,acceptInvitation:getScenario()==='invite'&&current.email===invitationEmail},false,target);
   }
   function startMos(mode) {
@@ -238,11 +239,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     }
     if(shown==='offer') {
       title='Добро пожаловать!';
-      body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан. Подключите Mos ID, чтобы входить через mos.ru в этот же аккаунт.</p><div class="summary"><strong>Что даёт Mos ID</strong><span>Ещё один способ входа</span><span>Вход без ввода пароля ВЕРО</span></div>'+button('Подключить Mos ID','link')+button('Сделать позже','cabinet',true);
+      body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан. Подключите Mos ID, чтобы входить через mos.ru в этот же аккаунт.</p><div class="summary r2-mos-benefits"><strong>Что даёт Mos ID</strong><span>Ещё один способ входа</span><span>Вход без ввода пароля ВЕРО</span></div>'+button('Подключить Mos ID','link')+button('Сделать позже','cabinet',true);
     }
     if(shown==='linked') {
       title='Mos ID подключён';
-      body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+button('Перейти в профиль','cabinet');
+      body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+(hasOrganization()?button('К сервисам','cabinet'):'<div class="summary"><strong>Подключите организацию</strong><p>Найдите компанию по ИНН и подтвердите полномочия, чтобы работать от её имени. Если вы сотрудник, попросите приглашение у организации.</p></div>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true));
     }
     if(shown==='conflict') {
       title='Этот Mos ID уже привязан к другому аккаунту';
@@ -306,6 +307,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(action==='cancel-mos'||action==='close-mos')return cancelMos();
     if(action==='retry-mos')return show('mos');
     if(action==='cabinet')return openCabinet();
+    if(action==='connect-organization'&&current&&isAuthenticated())return openCabinet('company');
     if(action==='link')return startMos('link');
     if(action==='conflict-login'){current=null;return startMos('login');}
     if(!current||!isAuthenticated())return;
@@ -382,7 +384,7 @@ const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,
 let state;
 let registrationVariant=document.body.dataset.defaultRegistration==='2'||location.hash==='#registration-2'?'2':'1';
 const platformHelp=`<details class="platform-help ap-auth-help"><summary>Как пользоваться платформой</summary><ol><li><strong>Войдите или зарегистрируйтесь.</strong> Используйте свой аккаунт или mos.ru.</li><li><strong>Если вы генеральный директор:</strong> найдите организацию по ИНН, подпишите заявление и дождитесь проверки платформой. Затем пригласите сотрудников.</li><li><strong>Если вы сотрудник:</strong> откройте приглашение от организации. Если приглашения нет, обратитесь к руководителю или администратору.</li><li><strong>Начните работу.</strong> После подключения будут доступны назначенные вам действия.</li></ol><p>Вход через mos.ru подтверждает личность. Наличие организации на mos.ru само по себе не назначает права в её кабинете на платформе.</p></details>`;
-const registration2=createMosRegistration({main,help:platformHelp,getScenario:()=>scenario.value,refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false,target='home')=>{
+const registration2=createMosRegistration({main,help:platformHelp,getScenario:()=>scenario.value,hasOrganization:()=>!!state?.contexts?.some(c=>['employee','director'].includes(c.kind)),refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false,target='home')=>{
  if(state.registrationAccountId&&state.registrationAccountId!==account.id)reset(true);
  state.registrationAccountId=account.id;
  state.email=account.email;state.demoPassword=account.password;

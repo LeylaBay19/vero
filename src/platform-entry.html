@@ -37,7 +37,7 @@ const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,
 let state;
 let registrationVariant=document.body.dataset.defaultRegistration==='2'||location.hash==='#registration-2'?'2':'1';
 const platformHelp=`__PLATFORM_HELP__`;
-const registration2=createMosRegistration({main,help:platformHelp,getScenario:()=>scenario.value,refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false,target='home')=>{
+const registration2=createMosRegistration({main,help:platformHelp,getScenario:()=>scenario.value,hasOrganization:()=>!!state?.contexts?.some(c=>['employee','director'].includes(c.kind)),refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false,target='home')=>{
  if(state.registrationAccountId&&state.registrationAccountId!==account.id)reset(true);
  state.registrationAccountId=account.id;
  state.email=account.email;state.demoPassword=account.password;

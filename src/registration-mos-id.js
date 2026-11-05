@@ -1,5 +1,5 @@
 /* Registration variant 2. UI demonstration only: no requests or real accounts. */
-function createMosRegistration({main, refresh, enter, isAuthenticated, getScenario=()=> 'new', help=''}) {
+function createMosRegistration({main, refresh, enter, isAuthenticated, getScenario=()=> 'new', hasOrganization=()=> false, help=''}) {
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const button = (label, action, secondary = false) => `<button type="button" class="${secondary ? 'secondary' : 'primary'}" data-r2-action="${action}">${label}</button>`;
@@ -27,9 +27,9 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     box.hidden=false; box.textContent=text;
     if(id){$('r2-'+id)?.setAttribute('aria-invalid','true');$('r2-'+id)?.focus();}
   }
-  function openCabinet() {
+  function openCabinet(requestedTarget) {
     if(!current)return;
-    const target=['password','unlink','linked','conflict'].includes(screen)?'profile':'home';
+    const target=requestedTarget||(['password','unlink','conflict'].includes(screen)?'profile':'home');
     oneTimePassword=''; draft={}; screen=null; enter({...current,acceptInvitation:getScenario()==='invite'&&current.email===invitationEmail},false,target);
   }
   function startMos(mode) {
@@ -110,11 +110,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     }
     if(shown==='offer') {
       title='Добро пожаловать!';
-      body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан. Подключите Mos ID, чтобы входить через mos.ru в этот же аккаунт.</p><div class="summary"><strong>Что даёт Mos ID</strong><span>Ещё один способ входа</span><span>Вход без ввода пароля ВЕРО</span></div>'+button('Подключить Mos ID','link')+button('Сделать позже','cabinet',true);
+      body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан. Подключите Mos ID, чтобы входить через mos.ru в этот же аккаунт.</p><div class="summary r2-mos-benefits"><strong>Что даёт Mos ID</strong><span>Ещё один способ входа</span><span>Вход без ввода пароля ВЕРО</span></div>'+button('Подключить Mos ID','link')+button('Сделать позже','cabinet',true);
     }
     if(shown==='linked') {
       title='Mos ID подключён';
-      body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+button('Перейти в профиль','cabinet');
+      body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+(hasOrganization()?button('К сервисам','cabinet'):'<div class="summary"><strong>Подключите организацию</strong><p>Найдите компанию по ИНН и подтвердите полномочия, чтобы работать от её имени. Если вы сотрудник, попросите приглашение у организации.</p></div>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true));
     }
     if(shown==='conflict') {
       title='Этот Mos ID уже привязан к другому аккаунту';
@@ -178,6 +178,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(action==='cancel-mos'||action==='close-mos')return cancelMos();
     if(action==='retry-mos')return show('mos');
     if(action==='cabinet')return openCabinet();
+    if(action==='connect-organization'&&current&&isAuthenticated())return openCabinet('company');
     if(action==='link')return startMos('link');
     if(action==='conflict-login'){current=null;return startMos('login');}
     if(!current||!isAuthenticated())return;
