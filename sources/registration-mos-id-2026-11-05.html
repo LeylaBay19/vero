@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Документация: авторизация и привязка Mos ID</title>
+<style>
+  :root {
+    --text: #1a1a1a;
+    --muted: #555;
+    --border: #d0d7de;
+    --bg-soft: #f6f8fa;
+    --accent: #0b5cad;
+    --warn-bg: #fff8e1;
+    --warn-border: #e0b400;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+    color: var(--text);
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 64px;
+    background: #fff;
+  }
+  h1 { font-size: 26px; margin: 0 0 6px; }
+  h2 { font-size: 20px; margin: 36px 0 12px; padding-bottom: 6px; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  h4 { font-size: 14px; margin: 18px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+  p { margin: 6px 0 10px; }
+  ul, ol { margin: 6px 0 12px; padding-left: 22px; }
+  li { margin: 3px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 16px;
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th { background: var(--bg-soft); font-weight: 600; }
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--bg-soft);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  pre {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  pre code { background: none; padding: 0; }
+  .meta { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+  .note {
+    background: var(--warn-bg);
+    border-left: 4px solid var(--warn-border);
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .checklist { list-style: none; padding-left: 4px; }
+  .checklist li::before { content: "☐  "; color: var(--accent); font-weight: bold; }
+  .screen { border: 1px solid var(--border); border-radius: 8px; padding: 4px 14px 10px; margin: 14px 0 20px; }
+  .screen h4 { margin-top: 10px; }
+  @media print {
+    body { padding: 0; max-width: none; }
+    h2 { page-break-after: avoid; }
+    table, pre, .screen { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Документация: сценарии авторизации и привязки Mos ID</h1>
+<p class="meta"><strong>Версия:</strong> 1.0 &nbsp;|&nbsp; <strong>Назначение:</strong> техническое задание для вёрстки и фронтенд-разработки &nbsp;|&nbsp; <strong>Связанные системы:</strong> локальная аутентификация (логин/пароль), Mos ID (СУДИР, OAuth 2.0)</p>
+
+<h2>1. Общие положения</h2>
+
+<h3>1.1. Термины и определения</h3>
+<table>
+  <thead><tr><th>Термин</th><th>Определение</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Локальная учётная запись</strong></td><td>Учётная запись, созданная в вашей системе с логином и паролем.</td></tr>
+    <tr><td><strong>Mos ID</strong></td><td>Единый городской идентификатор (СУДИР). Внешний провайдер аутентификации, работающий по протоколу OAuth 2.0.</td></tr>
+    <tr><td><code>mos_id</code></td><td>Уникальный идентификатор пользователя, возвращаемый Mos ID после успешной аутентификации. Используется для связи внешней учётной записи с внутренней.</td></tr>
+    <tr><td><code>user_id</code></td><td>Внутренний уникальный идентификатор клиента в вашей системе. Остаётся неизменным независимо от способа входа.</td></tr>
+    <tr><td><code>auth_provider</code></td><td>Признак способа входа: <code>local_only</code> (только логин/пароль), <code>mos_linked</code> (Mos ID привязан к существующей локальной учётке), <code>mos_auto</code> (создана автоматически при входе через Mos ID).</td></tr>
+    <tr><td><strong>Привязка (linking)</strong></td><td>Процесс сохранения <code>mos_id</code> в запись существующего авторизованного пользователя.</td></tr>
+  </tbody>
+</table>
+
+<h3>1.2. Требования к интеграции с Mos ID</h3>
+<p>Согласно требованиям СУДИР, информационная система должна поддерживать протокол OAuth 2.0. Для интеграции необходимо подать заявку в ДИТ Москвы и получить <code>client_id</code> и <code>client_secret</code>.</p>
+<p><strong>Параметры подключения (внешний контур СУДИР):</strong></p>
+<table>
+  <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
+  <tbody>
+    <tr><td>URL авторизации</td><td><code>https://login.mos.ru/sps/oauth/ae</code></td></tr>
+    <tr><td>URL получения токена</td><td><code>https://login.mos.ru/sps/oauth/ht</code></td></tr>
+    <tr><td>URL получения данных пользователя</td><td><code>https://login.mos.ru/sps/oauth/me</code></td></tr>
+    <tr><td>Запрашиваемые разрешения (scope)</td><td><code>openid</code>, <code>profile</code></td></tr>
+  </tbody>
+</table>
+<div class="note"><strong>Важно:</strong> URL для получения данных в некоторых источниках указан как <code>https://login.mos.ru/sps/oauth/me</code>, в других — <code>https://login.mos.ru/sps/oauth/ht</code>. Рекомендуется уточнить актуальный эндпоинт в документации, полученной при подключении.</div>
+
+<h3>1.3. Схема данных (минимальная)</h3>
+<pre><code>users:
+  - id (PK, внутренний user_id)
+  - login (уникальный, nullable для mos_auto до генерации)
+  - password_hash (nullable для mos_auto до генерации)
+  - mos_id (уникальный, nullable)
+  - auth_provider (enum: local_only | mos_linked | mos_auto)
+  - profile_data (ФИО, телефон, email — заполняется из Mos ID и/или локально)</code></pre>
+
+<h2>2. Сценарий 1: Вход через Mos ID с автоматическим созданием логина и пароля</h2>
+
+<h3>2.1. Цель</h3>
+<p>Пользователь, не имеющий учётной записи в системе, входит через Mos ID. Система автоматически создаёт для него локальную учётную запись, генерирует логин и пароль и показывает их пользователю один раз.</p>
+
+<h3>2.2. Пошаговый сценарий</h3>
+
+<div class="screen">
+<h4>Шаг 1. Стартовый экран входа</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>LoginPage</code></td></tr>
+    <tr><td>Заголовок</td><td>«Вход в систему»</td></tr>
+    <tr><td>Кнопка 1 (основная)</td><td>«Войти через Mos ID» — с логотипом mos.ru</td></tr>
+    <tr><td>Разделитель</td><td>«или»</td></tr>
+    <tr><td>Кнопка 2 (вторичная)</td><td>«Войти по логину и паролю»</td></tr>
+    <tr><td>Ссылка</td><td>«Ещё нет аккаунта? Зарегистрироваться»</td></tr>
+  </tbody>
+</table>
+<p><strong>Действие:</strong> пользователь нажимает «Войти через Mos ID».</p>
+<p><strong>Результат:</strong> браузер перенаправляется на страницу авторизации Mos ID (внешний домен, вёрстка не требуется).</p>
+</div>
+
+<div class="screen">
+<h4>Шаг 2. Промежуточный экран загрузки</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>LoadingPage</code></td></tr>
+    <tr><td>Спиннер</td><td>Анимированный индикатор загрузки</td></tr>
+    <tr><td>Текст</td><td>«Проверяем данные Mos ID…»</td></tr>
+  </tbody>
+</table>
+<p><strong>Логика бэкенда:</strong></p>
+<ol>
+  <li>Система получает <code>code</code> от Mos ID, обменивает на <code>access_token</code>, извлекает <code>mos_id</code> и данные профиля.</li>
+  <li>Проверяет: существует ли запись с таким <code>mos_id</code>?
+    <ul>
+      <li><strong>Нет</strong> → создаёт новую запись: <code>auth_provider = mos_auto</code>, <code>mos_id = &lt;полученный&gt;</code>, генерирует <code>login</code> и <code>password</code>, сохраняет хеш пароля, заполняет профиль.</li>
+      <li><strong>Да</strong> → переходит к шагу 5 (повторный вход).</li>
+    </ul>
+  </li>
+</ol>
+<p><strong>Генерация логина и пароля:</strong></p>
+<ul>
+  <li>Логин: уникальный, например <code>mos_</code> + короткий хеш (8 символов).</li>
+  <li>Пароль: случайная строка 12–16 символов (буквы верхнего/нижнего регистра, цифры, спецсимволы).</li>
+</ul>
+</div>
+
+<div class="screen">
+<h4>Шаг 3. Экран «Аккаунт создан» (показывается только один раз)</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>MosAutoAccountCreatedPage</code></td></tr>
+    <tr><td>Иконка</td><td>Галочка успеха (зелёная)</td></tr>
+    <tr><td>Заголовок</td><td>«Аккаунт создан»</td></tr>
+    <tr><td>Подзаголовок</td><td>«Вы вошли через Mos ID. Мы автоматически создали для вас логин и пароль — сохраните их, чтобы входить без Mos ID.»</td></tr>
+    <tr><td>Блок «Данные для входа»</td><td>Карточка с двумя полями</td></tr>
+    <tr><td>Поле «Логин»</td><td>Значение + кнопка «Копировать»</td></tr>
+    <tr><td>Поле «Пароль»</td><td>Значение (скрыто по умолчанию) + кнопка «Показать/скрыть» + кнопка «Копировать»</td></tr>
+    <tr><td>Предупреждение (жёлтый блок)</td><td>«Пароль показывается только один раз. Сохраните его в надёжном месте.»</td></tr>
+    <tr><td>Кнопка (основная)</td><td>«Продолжить» → переход в личный кабинет</td></tr>
+    <tr><td>Ссылка (опционально)</td><td>«Отправить данные на email» — если email получен из Mos ID</td></tr>
+  </tbody>
+</table>
+<p><strong>Требования к вёрстке:</strong></p>
+<ul>
+  <li>Пароль не должен попадать в логи, аналитику или DOM после ухода с экрана.</li>
+  <li>Кнопки копирования показывают тост «Скопировано».</li>
+  <li>Экран недоступен для повторного просмотра после перехода.</li>
+</ul>
+</div>
+
+<div class="screen">
+<h4>Шаг 4. Личный кабинет (после автоматического создания)</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>ProfilePage</code></td></tr>
+    <tr><td>Блок профиля</td><td>ФИО, телефон, email (из Mos ID)</td></tr>
+    <tr><td>Блок «Способы входа»</td><td>Две строки</td></tr>
+    <tr><td>Строка «Mos ID»</td><td>Статус «Подключён» (зелёная метка)</td></tr>
+    <tr><td>Строка «Логин и пароль»</td><td>Статус «Активен», кнопка «Сменить пароль»</td></tr>
+    <tr><td>Информационный баннер</td><td>«Вы вошли через Mos ID. Логин и пароль созданы автоматически — их можно сменить в любой момент.»</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="screen">
+<h4>Шаг 5. Повторный вход через Mos ID</h4>
+<p><strong>Логика:</strong> система находит запись по <code>mos_id</code>, авторизует, сразу открывает <code>ProfilePage</code>. Экран с паролем не показывается.</p>
+</div>
+
+<div class="screen">
+<h4>Шаг 6. Вход по логину и паролю (после автоматического создания)</h4>
+<p><strong>Логика:</strong> пользователь вводит сгенерированные логин и пароль на <code>LoginPage</code> → система находит ту же запись → открывает <code>ProfilePage</code> с теми же данными.</p>
+</div>
+
+<h2>3. Сценарий 2: Стандартная регистрация с последующей привязкой Mos ID</h2>
+
+<h3>3.1. Цель</h3>
+<p>Пользователь регистрируется классически (логин + пароль), затем система предлагает привязать Mos ID для расширения функционала. Привязка выполняется только из авторизованной сессии.</p>
+
+<h3>3.2. Пошаговый сценарий</h3>
+
+<div class="screen">
+<h4>Шаг 1. Стандартная регистрация</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>RegisterPage</code></td></tr>
+    <tr><td>Заголовок</td><td>«Регистрация»</td></tr>
+    <tr><td>Поля формы</td><td>Логин, Email, Пароль, Повтор пароля</td></tr>
+    <tr><td>Чекбокс</td><td>Согласие с условиями</td></tr>
+    <tr><td>Кнопка (основная)</td><td>«Зарегистрироваться»</td></tr>
+    <tr><td>Разделитель</td><td>«или»</td></tr>
+    <tr><td>Кнопка (вторичная)</td><td>«Зарегистрироваться через Mos ID» (ведёт в Сценарий 1)</td></tr>
+    <tr><td>Ссылка</td><td>«Уже есть аккаунт? Войти»</td></tr>
+  </tbody>
+</table>
+<p><strong>Результат:</strong> создаётся запись <code>auth_provider = local_only</code>, пользователь авторизуется.</p>
+</div>
+
+<div class="screen">
+<h4>Шаг 2. Экран успешной регистрации + предложение привязки</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>RegisterSuccessPage</code></td></tr>
+    <tr><td>Иконка</td><td>Галочка успеха</td></tr>
+    <tr><td>Заголовок</td><td>«Добро пожаловать!»</td></tr>
+    <tr><td>Текст</td><td>«Аккаунт создан. Подключите Mos ID, чтобы получить доступ к расширенному функционалу.»</td></tr>
+    <tr><td>Блок «Что даёт Mos ID»</td><td>Список с иконками (галочки): подтверждённая учётная запись; доступ к [функция 1]; доступ к [функция 2]; быстрый вход без пароля</td></tr>
+    <tr><td>Кнопка (основная)</td><td>«Подключить Mos ID» → запускает OAuth-редирект</td></tr>
+    <tr><td>Кнопка (вторичная)</td><td>«Сделать позже» → переход в <code>ProfilePage</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="screen">
+<h4>Шаг 3. Процесс привязки Mos ID</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>LoadingPage</code></td></tr>
+    <tr><td>Текст</td><td>«Перенаправляем на Mos ID…»</td></tr>
+  </tbody>
+</table>
+<p><strong>Логика бэкенда:</strong></p>
+<ol>
+  <li>Пользователь уже авторизован (сессия активна). Это обязательное условие.</li>
+  <li>Запускается OAuth-редирект с параметром <code>state</code>, привязанным к текущей сессии.</li>
+  <li>После возврата из Mos ID система получает <code>mos_id</code>.</li>
+  <li>Проверка: не привязан ли этот <code>mos_id</code> к другой записи?
+    <ul>
+      <li><strong>Привязан к другой</strong> → экран ошибки (шаг 4).</li>
+      <li><strong>Свободен</strong> → сохраняет <code>mos_id</code> в текущую запись, меняет <code>auth_provider = mos_linked</code>.</li>
+    </ul>
+  </li>
+</ol>
+</div>
+
+<div class="screen">
+<h4>Шаг 4. Экран ошибки привязки (конфликт)</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>LinkConflictPage</code></td></tr>
+    <tr><td>Иконка</td><td>Ошибка (красная)</td></tr>
+    <tr><td>Заголовок</td><td>«Этот Mos ID уже привязан к другому аккаунту»</td></tr>
+    <tr><td>Текст</td><td>«Похоже, вы ранее входили через Mos ID в другом аккаунте. Войдите в него или обратитесь в поддержку.»</td></tr>
+    <tr><td>Кнопка (основная)</td><td>«Войти через Mos ID» → вход в существующую запись</td></tr>
+    <tr><td>Кнопка (вторичная)</td><td>«Вернуться в профиль»</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="screen">
+<h4>Шаг 5. Экран успешной привязки</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>LinkSuccessPage</code></td></tr>
+    <tr><td>Иконка</td><td>Галочка успеха</td></tr>
+    <tr><td>Заголовок</td><td>«Mos ID подключён»</td></tr>
+    <tr><td>Текст</td><td>«Теперь вы можете входить через Mos ID. Доступ к расширенному функционалу открыт.»</td></tr>
+    <tr><td>Кнопка (основная)</td><td>«Перейти в профиль»</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="screen">
+<h4>Шаг 6. Личный кабинет после привязки</h4>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Экран</td><td><code>ProfilePage</code></td></tr>
+    <tr><td>Блок профиля</td><td>ФИО, телефон, email (объединённые данные: локальные + из Mos ID)</td></tr>
+    <tr><td>Блок «Способы входа»</td><td>Две строки</td></tr>
+    <tr><td>Строка «Логин и пароль»</td><td>Статус «Активен»</td></tr>
+    <tr><td>Строка «Mos ID»</td><td>Статус «Подключён» (зелёная метка), кнопка «Отвязать»</td></tr>
+    <tr><td>Блок «Расширенный функционал»</td><td>Доступен</td></tr>
+  </tbody>
+</table>
+<p><strong>Модальное окно «Отвязать Mos ID»:</strong></p>
+<table>
+  <thead><tr><th>Элемент</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Заголовок</td><td>«Отвязать Mos ID?»</td></tr>
+    <tr><td>Текст</td><td>«Вы сможете входить только по логину и паролю. Расширенный функционал станет недоступен.»</td></tr>
+    <tr><td>Кнопка «Отвязать»</td><td>Подтверждение, <code>mos_id = null</code>, <code>auth_provider = local_only</code></td></tr>
+    <tr><td>Кнопка «Отмена»</td><td>Закрытие модалки</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="screen">
+<h4>Шаг 7. Повторный вход после привязки</h4>
+<table>
+  <thead><tr><th>Способ входа</th><th>Результат</th></tr></thead>
+  <tbody>
+    <tr><td>Через Mos ID</td><td>Система находит запись по <code>mos_id</code> → <code>ProfilePage</code> с теми же данными</td></tr>
+    <tr><td>По логину и паролю</td><td>Система находит запись по логину → та же <code>ProfilePage</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>4. Сводная таблица экранов для вёрстки</h2>
+<table>
+  <thead><tr><th>№</th><th>Экран / Компонент</th><th>Сценарий</th><th>Приоритет</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><code>LoginPage</code> (стартовый экран входа)</td><td>1, 2</td><td>Высокий</td></tr>
+    <tr><td>2</td><td><code>LoadingPage</code> (промежуточная загрузка)</td><td>1, 2</td><td>Высокий</td></tr>
+    <tr><td>3</td><td><code>MosAutoAccountCreatedPage</code> (логин/пароль после автосоздания)</td><td>1</td><td>Высокий</td></tr>
+    <tr><td>4</td><td><code>RegisterPage</code> (форма регистрации)</td><td>2</td><td>Высокий</td></tr>
+    <tr><td>5</td><td><code>RegisterSuccessPage</code> (успех + предложение Mos ID)</td><td>2</td><td>Высокий</td></tr>
+    <tr><td>6</td><td><code>LinkConflictPage</code> (конфликт привязки)</td><td>2</td><td>Средний</td></tr>
+    <tr><td>7</td><td><code>LinkSuccessPage</code> (успех привязки)</td><td>2</td><td>Средний</td></tr>
+    <tr><td>8</td><td><code>ProfilePage</code> (личный кабинет, блок «Способы входа»)</td><td>1, 2</td><td>Высокий</td></tr>
+    <tr><td>9</td><td>Модалка «Отвязать Mos ID»</td><td>2</td><td>Средний</td></tr>
+    <tr><td>10</td><td>Модалка «Сменить пароль»</td><td>1</td><td>Средний</td></tr>
+  </tbody>
+</table>
+
+<h2>5. Требования к UI/UX</h2>
+
+<h3>5.1. Общие требования</h3>
+<table>
+  <thead><tr><th>Требование</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Кнопка Mos ID</td><td>Располагается первой на экране входа, визуально отличается (фирменные цвета/логотип mos.ru)</td></tr>
+    <tr><td>Состояния кнопок</td><td>loading (спиннер внутри), disabled, error</td></tr>
+    <tr><td>Тосты</td><td>«Скопировано», «Mos ID подключён», «Произошла ошибка. Попробуйте ещё раз»</td></tr>
+    <tr><td>Ошибка OAuth</td><td>Если пользователь отменил авторизацию на стороне mos.ru — вернуть на предыдущий экран с тостом «Вход через Mos ID отменён»</td></tr>
+    <tr><td>Адаптивность</td><td>Мобильная и десктопная версии для всех экранов</td></tr>
+    <tr><td>Доступность</td><td>Фокус-стили, <code>aria-label</code> для кнопок копирования и показа пароля</td></tr>
+  </tbody>
+</table>
+
+<h3>5.2. Безопасность (требования к фронтенду)</h3>
+<table>
+  <thead><tr><th>Требование</th><th>Описание</th></tr></thead>
+  <tbody>
+    <tr><td>Пароль на экране <code>MosAutoAccountCreatedPage</code></td><td>Не кэшировать, не передавать в аналитику, не оставлять в DOM после ухода</td></tr>
+    <tr><td>CSRF-защита</td><td>Параметр <code>state</code> в OAuth-редиректе обязателен</td></tr>
+    <tr><td><code>redirect_uri</code></td><td>Должен быть зарегистрирован в заявке на подключение к Mos ID</td></tr>
+  </tbody>
+</table>
+
+<h2>6. Логика бэкенда (сводка)</h2>
+
+<h3>6.1. Обработка callback от Mos ID</h3>
+<pre><code>1. Получить code из query-параметра
+2. Обменять code на access_token (POST на URL токена)
+3. Запросить данные пользователя (GET на URL данных, с access_token)
+4. Извлечь mos_id
+5. Ветвление:
+   - Если сессия активна (пользователь уже авторизован):
+       → это привязка. Проверить, не занят ли mos_id другой записью.
+         - Свободен → сохранить mos_id в текущую запись, auth_provider = mos_linked
+         - Занят → ошибка LinkConflictPage
+   - Если сессии нет:
+       → это вход. Найти запись по mos_id.
+         - Найдена → авторизовать
+         - Не найдена → создать запись (mos_auto), сгенерировать login/password,
+           показать MosAutoAccountCreatedPage</code></pre>
+
+<h3>6.2. Обработка входа по логину и паролю</h3>
+<pre><code>1. Найти запись по login
+2. Проверить password_hash
+3. Авторизовать (создать сессию / выдать JWT)
+4. Не зависит от auth_provider — все записи с валидным паролем могут входить</code></pre>
+
+<h2>7. Примечания по интеграции с Mos ID</h2>
+<ol>
+  <li><strong>Подтверждённая учётная запись.</strong> Для ряда сервисов может потребоваться полная (подтверждённая) учётная запись Mos ID. Это стоит проверить в требованиях к вашему конкретному функционалу.</li>
+  <li><strong>Уникальность <code>mos_id</code>.</strong> На уровне базы данных необходимо установить уникальный индекс на поле <code>mos_id</code>, чтобы исключить привязку одного Mos ID к двум разным записям.</li>
+  <li><strong>Процесс подключения.</strong> Интеграция с СУДИР — это организационно-технический процесс, включающий подачу заявки, тестирование и проверку со стороны ДИТ Москвы. Рекомендуется заложить время на бюрократические этапы.</li>
+  <li><strong>Один пользователь — одна учётная запись.</strong> Согласно спецификации Mos ID, один пользователь может иметь только одну подлинную учётную запись. Это соответствует требованию уникальности <code>mos_id</code>.</li>
+</ol>
+
+<h2>8. Чек-лист для передачи в работу</h2>
+<ul class="checklist">
+  <li>Дизайнеру: отрисовать 10 экранов/компонентов из таблицы раздела 4</li>
+  <li>Дизайнеру: подготовить состояния кнопок (default, loading, disabled, error)</li>
+  <li>Дизайнеру: подготовить макеты тостов и модальных окон</li>
+  <li>Фронтенду: реализовать редирект на Mos ID с параметром <code>state</code></li>
+  <li>Фронтенду: реализовать экран <code>MosAutoAccountCreatedPage</code> с однократным показом пароля</li>
+  <li>Фронтенду: реализовать копирование логина/пароля</li>
+  <li>Бэкенду: реализовать обмен <code>code</code> → <code>access_token</code> → <code>mos_id</code></li>
+  <li>Бэкенду: реализовать логику связывания и обработку конфликтов</li>
+  <li>Бэкенду: реализовать генерацию логина и пароля для <code>mos_auto</code></li>
+  <li>Бэкенду: добавить уникальный индекс на <code>mos_id</code></li>
+</ul>
+
+</body>
+</html>

@@ -6,7 +6,7 @@
 2. С v1.3.0 добавлен пятый флоу «Предлагаемый вариант 2» в src/proposal-v2.js: простой личный вход, организация и сервисы отдельно. Его правила — раздел PR2 в docs/PRODUCT.md; пункты 5–8 ниже описывают прежний вариант 1. Схемы варианта 2 — scripts/proposal_v2_diagrams.py и schemes-v2.html. Не смешивайте варианты.
 
    Четвёртый флоу называется «Предлагаемый вариант». Не переименовывайте его в «Наша платформа».
-3. Отдельный прототип общего входа v1.4.0: src/platform-entry.html → scripts/build_platform_entry.py → platform-entry.html, web/platform-entry.html и автономный HTML в deliverables/. Правила PE в PRODUCT.md; он не заменяет сравнение пяти старых флоу.
+3. Отдельный прототип общего входа: src/platform-entry.html → scripts/build_platform_entry.py → platform-entry.html, web/platform-entry.html и автономный HTML в deliverables/. С v1.10.0 в нём два варианта регистрации; новый Mos ID / привязка — src/registration-mos-id.js, прямой вход platform-entry-variant2.html. Это не исторический сравнительный вариант 2 из index.html. Правила PE в PRODUCT.md; он не заменяет сравнение пяти старых флоу. Последнее поручение ограничено прототипом регистрации, без бэкенда.
 
    Правьте src/proposal-flow.js и скрипты сборки; пересобирайте index.html и web/index.html через scripts/build.py. Для схем правьте scripts/diagrams.py и выполняйте scripts/build_all.py.
 4. Первые три конкурентных флоу сохраняйте, если пользователь отдельно не поручил их изменить. Сведения конкурентов, предлагаемое поведение и гипотезы интеграций должны оставаться различимыми.

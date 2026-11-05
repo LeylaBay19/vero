@@ -27,7 +27,7 @@
     },
     ".agent-system/packs/platform-consistency/pack.json": {
       "kind": "file",
-      "sha256": "2018f38413743f168c302aad6b5bfb6324ebc4f4e98463d98dcb967626a8a795"
+      "sha256": "d1936a971ecbbcdafa7ea5a0cdc38c3db3788fe74b36ac619a5a384b8786fdb9"
     },
     ".agent-system/packs/platform-consistency/WORKFLOW.md": {
       "kind": "file",
@@ -299,7 +299,7 @@
     },
     ".agent-system/core/MODEL_POLICY.md": {
       "kind": "file",
-      "sha256": "48bd9bd07acaa64e947932c536f1a8ba75dc79551f6bb0edc66bdcd2ef8c9651"
+      "sha256": "dee154969de49f27ed33e87dadd935a5aa9cb5bbf514d42fd2ee83c0ea517c8a"
     },
     ".agent-system/core/RULES.md": {
       "kind": "file",
@@ -311,7 +311,7 @@
     },
     ".agent-system/project/CONTEXT.md": {
       "kind": "file",
-      "sha256": "abcc95358b714223d932ed091c89170a976738d3dd64b2960db4962b26b339a2"
+      "sha256": "cf54399df3551ef27be846c517fbf71c4d1b443087e8bd8654ea2d678deca1bb"
     },
     ".agent-system/active.json": {
       "kind": "file",
