@@ -10,17 +10,16 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   const form = (name, content, label) => `<form data-r2-form="${name}" novalidate>${content}<button class="primary" type="submit">${label}</button></form>`;
   const demoMos = {id:'mos-demo-001', name:'Иванов Иван Иванович', email:'ivan.mos@example.test', phone:'+7 000 000-00-00'};
   const invitationEmail='employee@example.test';
-  let screen, accounts, current, origin, purpose, oneTimePassword, draft, notice, sequence;
+  let screen, accounts, current, origin, purpose, draft, notice, sequence;
   function reset() {
     screen=getScenario()==='invite'?'invitation':'entry'; accounts=[{id:'demo-existing-account',login:'demo@example.test',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:'',connectedOrganization:authOnly?{name:'ООО «Пример»',role:'director'}:null}];
     if(getScenario()==='employee')accounts.push({id:'demo-employee',login:invitationEmail,email:invitationEmail,password:'Example-2026!',provider:'local_only',mosId:null,name:'Анна Петрова',phone:''});
     current=null; origin=screen; purpose='login';
-    oneTimePassword=''; draft={}; notice=''; sequence=0;
+    draft={}; notice=''; sequence=0;
     if($('r2-mos-outcome'))$('r2-mos-outcome').value='success';
     if($('r2-auth-outcome'))$('r2-auth-outcome').value='success';
   }
   function show(next) {
-    if (screen==='created' && next!=='created') oneTimePassword='';
     screen=next; notice=''; refresh(); main.querySelector('h1,h2')?.focus();
   }
   function error(text, id) {
@@ -48,7 +47,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   function openCabinet(requestedTarget) {
     if(!current)return;
     const target=requestedTarget||(['password','unlink','conflict'].includes(screen)?'profile':'home');
-    oneTimePassword=''; draft={}; screen=null; enter({...current,acceptInvitation:getScenario()==='invite'&&current.email===invitationEmail},false,target);
+    draft={}; screen=null; enter({...current,acceptInvitation:getScenario()==='invite'&&current.email===invitationEmail},false,target);
   }
   function startMos(mode) {
     if(mode==='link' && (!isAuthenticated() || !current))return;
@@ -84,8 +83,8 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(found){current=found;return openCabinet();}
     if(!$('r2-terms')?.checked)return error('Примите условия, чтобы создать аккаунт.','terms');
     sequence+=1;
-    current={id:'demo-account-'+sequence,login:demoMos.email,email:demoMos.email,name:demoMos.name,phone:grant.phone?demoMos.phone:'',mosGrants:grant,password:'Example-2026!',mosId:demoMos.id,provider:'mos_auto'};
-    accounts.push(current); oneTimePassword=current.password; show('created');
+    current={id:'demo-account-'+sequence,login:demoMos.email,email:demoMos.email,name:demoMos.name,phone:grant.phone?demoMos.phone:'',mosGrants:grant,password:null,mosId:demoMos.id,provider:'mos_auto'};
+    accounts.push(current); show('created');
   }
   function view(screenOverride, background=false) {
     const shown=screenOverride||screen;
@@ -145,7 +144,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     }
     if(shown==='created') {
       title='Подключите организацию';
-      body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан через mos.ru. Подключите организацию, чтобы работать от её имени.</p>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true)+'<p class="mini">Сохраните данные для входа без mos.ru.</p><div class="r2-credentials"><h3>Данные для входа</h3><label class="field" for="r2-generated-login">Логин<div class="r2-copy-row"><input id="r2-generated-login" readonly value="'+esc(current.login)+'"><button type="button" class="secondary" data-r2-copy="login" aria-label="Копировать логин">Копировать</button></div></label><label class="field" for="r2-generated-password">Пароль<span class="password-wrap"><input id="r2-generated-password" type="password" readonly autocomplete="off" value="'+esc(oneTimePassword)+'"><button type="button" class="password-toggle" data-r2-password="generated-password" aria-label="Показать пароль" aria-pressed="false">Показать</button></span></label><button class="text-btn" type="button" data-r2-copy="password" aria-label="Копировать пароль">Копировать пароль</button></div><div class="r2-warning">Пароль показывается только один раз. Сохраните его в надёжном месте.</div>';
+      body='<div class="r2-success" aria-hidden="true">✓</div><p>Аккаунт создан через mos.ru. Подключите организацию, чтобы работать от её имени.</p>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true)+'<p class="mini">Для входа используйте mos.ru. Пароль для входа по email можно задать позже в профиле.</p>';
     }
     if(shown==='offer') {
       title='Добро пожаловать!';
@@ -172,8 +171,8 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       body='<p>Вы сможете входить по своему логину и паролю. Для входа через mos.ru потребуется снова подключить Mos ID.</p>'+button('Отвязать','unlink-confirm')+button('Отмена','cabinet',true);
     }
     if(shown==='password') {
-      title='Сменить пароль';
-      body=form('password',password('Текущий пароль','current-password','current-password')+password('Новый пароль','new-password')+password('Повторите новый пароль','confirm-password'),'Сохранить пароль')+button('Отмена','cabinet',true);
+      title=current.password?'Сменить пароль':'Задайте пароль';
+      body=form('password',(current.password?password('Текущий пароль','current-password','current-password'):'<p>Создайте пароль для входа по email. Вход через mos.ru останется доступен.</p>')+password('Новый пароль','new-password')+password('Повторите новый пароль','confirm-password'),'Сохранить пароль')+button('Отмена','cabinet',true);
     }
     const content=`${['entry','login','mos','mos-consent'].includes(shown)?'':'<div class="eyebrow">Вариант 2 · регистрация</div>'}<h2 id="${['mos','mos-consent'].includes(shown)?'r2-mos-title':'r2-title'}" tabindex="-1">${title}</h2>${body}${background?'':message}${notice&&!background?'<p class="status-msg" role="status">'+esc(notice)+'</p>':''}${['entry','login','email','register','invitation'].includes(shown)?help:''}${['register','email'].includes(shown)?back:''}`;
     if(['mos','mos-consent'].includes(shown)){
@@ -186,24 +185,17 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   }
   function profile() {
     if(!current)return '';
-    return `<section class="r2-profile" aria-label="Способы входа"><div class="r2-profile-grid"><div><h2>Данные аккаунта</h2><dl><dt>Логин</dt><dd>${esc(current.login)}</dd><dt>ФИО</dt><dd>${esc(current.name||'Не заполнено')}</dd><dt>Телефон</dt><dd>${esc(current.phone||'Не заполнено')}</dd></dl></div><div><h2>Способы входа</h2><div class="r2-method"><div><strong>Логин и пароль</strong><span class="status-green">Активен</span></div>${button('Сменить пароль','password',true)}</div><div class="r2-method"><div><strong>Mos ID</strong><span class="${current.mosId?'status-green':'mini'}">${current.mosId?'Подключён':'Не подключён'}</span></div>${button(current.mosId?'Отвязать':'Подключить Mos ID',current.mosId?'unlink':'link',true)}</div></div></div>${current.provider==='mos_auto'?'<div class="notice">Аккаунт создан через Mos ID. Сгенерированный пароль можно сменить в любой момент.</div>':''}${notice?'<div class="notice good" role="status">'+esc(notice)+'</div>':''}<p class="mini">Подключение Mos ID не назначает организации, роли или полномочия подписи.</p></section>`;
+    return `<section class="r2-profile" aria-label="Способы входа"><div class="r2-profile-grid"><div><h2>Данные аккаунта</h2><dl><dt>Логин</dt><dd>${esc(current.login)}</dd><dt>ФИО</dt><dd>${esc(current.name||'Не заполнено')}</dd><dt>Телефон</dt><dd>${esc(current.phone||'Не заполнено')}</dd></dl></div><div><h2>Способы входа</h2><div class="r2-method"><div><strong>Логин и пароль</strong><span class="${current.password?'status-green':'mini'}">${current.password?'Активен':'Пароль не задан'}</span></div>${button(current.password?'Сменить пароль':'Задать пароль','password',true)}</div><div class="r2-method"><div><strong>Mos ID</strong><span class="${current.mosId?'status-green':'mini'}">${current.mosId?'Подключён':'Не подключён'}</span></div>${button(current.mosId?'Отвязать':'Подключить Mos ID',current.mosId?'unlink':'link',true)}</div></div></div>${current.provider==='mos_auto'&&!current.password?'<div class="notice">Вы входите через mos.ru. Чтобы также входить по email, задайте пароль в разделе «Способы входа».</div>':''}${notice?'<div class="notice good" role="status">'+esc(notice)+'</div>':''}<p class="mini">Подключение Mos ID не назначает организации, роли или полномочия подписи.</p></section>`;
   }
   function cancelMos() {
     const target=origin;
     if(target==='profile'){screen=null;notice='Вход через Mos ID отменён';refresh();}
     else {show(target);const box=$('r2-status');if(box){box.hidden=false;box.textContent='Вход через Mos ID отменён';}}
   }
-  function signout() {screen='entry';oneTimePassword='';current=null;draft={};notice='';}
+  function signout() {screen='entry';current=null;draft={};notice='';}
   main.addEventListener('click',async e=>{
     const b=e.target.closest('button');if(!b)return;
     if(b.dataset.r2Password){const x=$('r2-'+b.dataset.r2Password),show=x.type==='password';x.type=show?'text':'password';b.textContent=show?'Скрыть':'Показать';b.setAttribute('aria-label',(show?'Скрыть':'Показать')+' пароль');b.setAttribute('aria-pressed',String(show));return;}
-    if(b.dataset.r2Copy){
-      const text=b.dataset.r2Copy==='login'?current?.login:oneTimePassword;
-      const target=$('r2-status');
-      if(!text||!target)return;
-      try{if(!navigator.clipboard?.writeText)throw new Error('clipboard');await navigator.clipboard.writeText(text);if(target.isConnected){target.hidden=false;target.textContent='Скопировано';}}
-      catch{if(target.isConnected){target.hidden=false;target.textContent='Копирование недоступно. Выделите поле и скопируйте вручную.';}}return;
-    }
     const action=b.dataset.r2Action;
     if(!action)return;
     if(action==='login'){draft={};return show('entry');}
@@ -235,7 +227,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(action==='conflict-login'){current=null;return startMos('login');}
     if(!current||!isAuthenticated())return;
     if(action==='unlink'||action==='password')return show(action);
-    if(action==='unlink-confirm'){current.mosId=null;current.provider='local_only';notice='Mos ID отвязан. Вход по логину и паролю сохранён.';screen=null;return refresh();}
+    if(action==='unlink-confirm'){if(!current.password)return error('Сначала задайте пароль в профиле, чтобы сохранить возможность входа.');current.mosId=null;current.provider='local_only';notice='Mos ID отвязан. Вход по логину и паролю сохранён.';screen=null;return refresh();}
   });
   main.addEventListener('submit',async e=>{
     const kind=e.target.dataset.r2Form;if(!kind)return;e.preventDefault();
@@ -290,10 +282,10 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       screen='offer';enter({...current},true);return;
     }
     if(kind==='password'&&current&&isAuthenticated()){
-      if(value('current-password')!==current.password)return error('Текущий пароль неверный.','current-password');
+      if(current.password&&value('current-password')!==current.password)return error('Текущий пароль неверный.','current-password');
       if(value('new-password').length<8||!value('new-password').trim())return error('Используйте пароль не короче 8 символов.','new-password');
       if(value('new-password')!==value('confirm-password'))return error('Пароли не совпадают.','confirm-password');
-      current.password=value('new-password');screen=null;notice='Пароль изменён';enter({...current},false,'profile');
+      current.password=value('new-password');const saved=accounts.find(a=>a.id===current.id);if(saved)saved.password=current.password;screen=null;notice='Пароль сохранён';enter({...current},false,'profile');
     }
   });
   main.addEventListener('input',e=>{
@@ -313,8 +305,8 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   }
   reset();
   function mount(){const dialog=$('r2-dialog');if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(['mos','mos-consent'].includes(screen))cancelMos();else openCabinet();});}}
-  function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,oneTimePassword,draft,notice,sequence});}
-  function restore(value){({screen,accounts,current,origin,purpose,oneTimePassword,draft,notice,sequence}=structuredClone(value));}
+  function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,draft,notice,sequence});}
+  function restore(value){({screen,accounts,current,origin,purpose,draft,notice,sequence}=structuredClone(value));}
   function connectOrganization(name){if(!current)return;current.connectedOrganization={name,role:'director'};const saved=accounts.find(a=>a.id===current.id);if(saved)saved.connectedOrganization={...current.connectedOrganization};}
   return {reset,view,profile,signout,fill,mount,snapshot,restore,connectOrganization,hasScreen:()=>!!screen,screen:()=>screen};
 }
