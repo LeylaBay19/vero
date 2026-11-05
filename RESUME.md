@@ -1,3 +1,9 @@
+# Актуально · v1.14.0 · 05.11.2026
+
+Во «Входе» один ряд вариантов 1–5, без промежуточных вкладок. 1/2 — текущие процессы; 3 — прежний «Предлагаемый вариант»; 4 — прежний «Предлагаемый вариант 2»; 5 — встроенный ЛК и кошелёк по UX/UI ТЗ. Сверху сохранены «Вход», «Сравнение регистрации», «Схемы». UI простой, как в предлагаемом варианте: нейтральные фоны и тёмные основные кнопки. Бизнес-правила вариантов не смешиваются. ЛК-сводка остаётся отдельным окном.
+
+Проверены stand-routing, cabinet-entry, brief-cabinet, registration-layout, sandbox, schemes. Переносной файл: deliverables/vero-unified-v1.14.0.html. Подробности — docs/changes/v1.14.0.md. v1.14.0 опубликована 05.11.2026, Sites подтвердил succeeded. Сайт: https://registration-four-flows-prototype.leyla-bairamkulova.chatgpt.site/?v=1.14.0. Deployment appgdep_6aec61fd10c8819184d31c5ccfbc300b; source 6f1bafa4e596cf09499d1661746736493529ba45. Доступ владельца сохранён.
+
 # Публикация v1.13.0 завершена · 05.11.2026
 
 Native Sites подтвердил succeeded: appgdep_6aec5ee8373c8191ad47735741a9fddd, исходники bb7f57e4723980c5ebfb9a9dedddb543b3beb571. Сайт: https://registration-four-flows-prototype.leyla-bairamkulova.chatgpt.site/. Два отдельных ЛК: /cabinet-overview.html и /cabinet-brief.html. Прежний статус HTTP403 ниже исторический и больше не блокирует эту публикацию.

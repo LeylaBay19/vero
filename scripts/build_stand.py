@@ -7,12 +7,19 @@ ROOT=Path(__file__).resolve().parents[1]
 def build_document(wrapper,comparison,schemes):
     from prepare_site import inner,csp
     policy=csp(inner)[0]
+    # The standalone current prototype retains its own two-option navigation.
+    # In the combined stand the parent is the single source of variant selection.
+    current_bridge="""<style>.registration-variants{display:none!important}</style><script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:select-registration'||!['1','2'].includes(e.data.variant))return;const b=document.querySelector('[data-registration-variant="'+e.data.variant+'"]');if(b&&b.getAttribute('aria-pressed')!=='true')b.click();document.documentElement.dataset.activeRegistration=e.data.variant;});</script>"""
+    authored=re.search(r'data-srcdoc="([\s\S]*?)"',wrapper)
+    assert authored
+    content=html.unescape(authored.group(1)).replace('</body>',current_bridge+'</body>',1)
+    wrapper=wrapper[:authored.start(1)]+html.escape(content,quote=True)+wrapper[authored.end(1):]
     def subset(page,keep,initial):
         pattern=r'<button\b[^>]*\bdata-flow="([^"]+)"[^>]*>[\s\S]*?</button>'
         assert len(re.findall(pattern,page))==5
         page=re.sub(pattern,lambda m:m.group(0) if m.group(1) in keep else '',page)
         return page.replace("flow:location.hash==='#variant2'?'proposal2':'proposal'","flow:'"+initial+"'",1)
-    proposal_source=subset(comparison,{'proposal','proposal2'},'proposal')
+    proposal_source=subset(comparison,{'proposal','proposal2'},'proposal').replace('Предлагаемый вариант 2','Вариант 4').replace('Предлагаемый вариант','Вариант 3')
     comparison=subset(comparison,{'mos','ep','orb'},'mos')
 
     legacy_style='''<style>html,body{height:100%;min-height:0;overflow:auto}body{margin:0;padding:16px;background:#fafafa;font:14px Arial,sans-serif}#auth-flow-prototype{font-family:Arial,sans-serif;--ap-button:#2563eb;--ap-line:#d8dde5;--ap-ink:#20242c}#auth-flow-prototype *{box-shadow:none!important}#auth-flow-prototype button,#auth-flow-prototype input,#auth-flow-prototype select{border-radius:4px!important}#auth-flow-prototype h1{font-size:24px}#auth-flow-prototype .ap-scenarios{display:flex;flex-wrap:wrap;gap:6px}#auth-flow-prototype .ap-scenarios button{flex:1;min-width:130px;padding:9px!important}#auth-flow-prototype .ap-scenarios button strong{font-size:13px}</style>'''
@@ -24,19 +31,23 @@ def build_document(wrapper,comparison,schemes):
     proposals=proposal_source.replace('</head>',policy+legacy_style+'<style>.ap-scenarios{display:none!important}</style></head>',1).replace('</body>',bridge+navigation_bridge+proposal_bridge+'</body>',1)
     frame=re.search(r'<iframe\b[^>]*id="codex-visualization"[\s\S]*?</iframe>',wrapper)
     assert frame
-    switcher='<nav class="cabinet-switcher" aria-label="Варианты входа"><button type="button" data-cabinet-view="current" aria-pressed="true">Текущий вход и кабинет</button><button type="button" data-cabinet-view="proposal" aria-pressed="false">Предлагаемый вариант</button><button type="button" data-cabinet-view="proposal2" aria-pressed="false">Предлагаемый вариант 2</button></nav>'
+    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(f'<button type="button" data-cabinet-view="{n}" aria-pressed="{str(n==2).lower()}">Вариант {n}</button>' for n in range(1,6))+'</nav>'
     proposal_frame=f'<iframe id="stand-frame-proposals" title="Предлагаемые варианты" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(proposals,quote=True)}" hidden></iframe>'
-    panels='<section class="stand-panel" id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">'+switcher+'<div class="cabinet-stage">'+frame.group(0)+proposal_frame+'</div></section>'
+    brief=(ROOT/'cabinet-brief.html').read_text(encoding='utf-8').replace('</body>',bridge+'</body>',1)
+    brief_frame=f'<iframe id="stand-frame-brief" title="Вариант 5 — по ТЗ" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(brief,quote=True)}" hidden></iframe>'
+    panels='<section class="stand-panel" id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">'+switcher+'<div class="cabinet-stage">'+frame.group(0)+proposal_frame+brief_frame+'</div></section>'
     for name,content,title in [('comparison',comparison,'Сравнение: Тринити и Орбита'),('schemes',schemes,'Семь схем процессов')]:
         panels+=f'<section class="stand-panel" id="stand-{name}" role="tabpanel" aria-labelledby="stand-tab-{name}" hidden><iframe id="stand-frame-{name}" title="{title}" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(content,quote=True)}"></iframe></section>'
     downloads=''.join(re.findall(r'<a\b[^>]*\bdownload="[^"]+"[^>]*>[\s\S]*?</a>',schemes))
     header='''<header class="stand-header"><strong>ВЕРО · прототип</strong><nav role="tablist" aria-label="Разделы стенда"><button role="tab" id="stand-tab-current" data-stand-tab="current" aria-controls="stand-current" aria-selected="true">Вход</button><button role="tab" id="stand-tab-comparison" data-stand-tab="comparison" aria-controls="stand-comparison" aria-selected="false">Сравнение регистрации</button><button role="tab" id="stand-tab-schemes" data-stand-tab="schemes" aria-controls="stand-schemes" aria-selected="false">Схемы</button></nav><a class="stand-window" data-stand-window="stand-overview-data" href="cabinet-overview.html" target="_blank" rel="noopener">ЛК · сводка ↗</a><a class="stand-window" data-stand-window="stand-brief-data" href="cabinet-brief.html" target="_blank" rel="noopener">ЛК · по ТЗ ↗</a><details class="stand-downloads" hidden><summary>Скачать BPMN</summary><div>'''+downloads+'</div></details></header>'
     styles='''<style>html,body{height:100%;margin:0;overflow:hidden}body{display:flex;flex-direction:column;height:100dvh;padding:0;background:#fff;font:13px Arial,sans-serif}.stand-header{display:flex;gap:20px;align-items:center;flex:none;padding:10px 16px;border-bottom:1px solid #d8dde5;background:#fff}.stand-header strong{white-space:nowrap;font-size:14px}.stand-header nav{display:flex;gap:6px;flex-wrap:wrap}.stand-header button{font:inherit;border:1px solid #d8dde5;border-radius:4px;background:#fff;padding:8px 12px;cursor:pointer}.stand-header button[aria-selected=true]{color:#fff;background:#2563eb;border-color:#2563eb}.stand-header button:focus-visible{outline:2px solid #2563eb;outline-offset:3px}.stand-panel{display:block;flex:1;min-height:0;overflow:hidden}.stand-panel[hidden],.stand-downloads[hidden]{display:none!important}.stand-panel iframe{display:block;width:100%;max-width:none;height:100%!important;border:0;margin:0}.stand-downloads{position:relative;margin-left:auto}.stand-downloads summary{cursor:pointer;white-space:nowrap}.stand-downloads>div{position:absolute;z-index:10;right:0;top:24px;min-width:240px;max-height:60vh;overflow:auto;background:#fff;border:1px solid #d8dde5;padding:8px}.stand-downloads a{display:block;padding:7px;color:#1d4ed8}@media(max-width:700px){.stand-header{padding:8px 10px;gap:8px;flex-wrap:wrap}.stand-header strong{font-size:12px}.stand-header nav{gap:4px}.stand-header button{font-size:11px;padding:7px 8px}}</style>'''
     script='<script>'+(ROOT/'src/stand-navigation.js').read_text(encoding='utf-8')+'</script>'
-    for name,file in [('overview','cabinet-overview.html'),('brief','cabinet-brief.html')]:
+    for name,file in [('overview','cabinet-overview.html')]:
         script+=f'<template id="stand-{name}-data">{html.escape((ROOT/file).read_text(encoding="utf-8"))}</template>'
     styles+='<style>#stand-current{display:flex;flex-direction:column}.cabinet-switcher{display:flex;gap:6px;flex:none;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid #d8dde5}.cabinet-switcher button{font:13px Arial,sans-serif;background:white;border:1px solid #d8dde5;border-radius:4px;padding:8px 10px;cursor:pointer}.cabinet-switcher [aria-pressed=true]{background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1}.cabinet-stage{flex:1;min-height:0;overflow:hidden}.cabinet-stage iframe[hidden]{display:none!important}.stand-window{font-size:12px;color:#1d4ed8;white-space:nowrap}@media(max-width:700px){.cabinet-switcher{padding:6px 10px}.cabinet-switcher button{font-size:11px;padding:7px}}</style>'
 
+    header=re.sub(r'<a\b[^>]*data-stand-window="stand-brief-data"[\s\S]*?</a>','',header)
+    styles=styles.replace('cabinet-switcher','entry-variants').replace('#2563eb','#242b36').replace('background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1','background:#242b36;color:#fff;border-color:#242b36')
     result=wrapper[:frame.start()]+header+panels+wrapper[frame.end():]
     result=result.replace('</head>',styles+'</head>',1).replace('</body>',script+'</body>',1)
     result=re.sub(r'<title>[^<]*</title>','<title>ВЕРО — единый прототип</title>',result,count=1)
@@ -48,6 +59,6 @@ def main():
     result=build_document(wrap((ROOT/'platform-entry-variant2.html').read_text(encoding='utf-8')),(ROOT/'index.html').read_text(encoding='utf-8'),(ROOT/'schemes-all.html').read_text(encoding='utf-8'))
     for target in [ROOT/'prototype.html',ROOT/'web/prototype.html',ROOT/'deliverables'/f'vero-unified-v{version}.html']:
         target.parent.mkdir(parents=True,exist_ok=True);target.write_text(result,encoding='utf-8')
-    print('Built unified stand: prototype.html, entry with 2 proposals, 3 competitors, 2 separate cabinet alternatives and 7 diagrams, all embedded.')
+    print('Built unified stand: one row with variants 1–5, 3 competitors, summary window and 7 diagrams, all embedded.')
 
 if __name__=='__main__':main()

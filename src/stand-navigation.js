@@ -1,20 +1,20 @@
 (()=>{
   const tabs=[...document.querySelectorAll('[data-stand-tab]')];
   const choices=[...document.querySelectorAll('[data-cabinet-view]')];
-  let cabinet='current';
+  let cabinet='2';
   function load(frame){
     if(frame?.dataset.standSrcdoc){frame.srcdoc=frame.dataset.standSrcdoc;delete frame.dataset.standSrcdoc;}
   }
   function selectCabinet(name){
-    if(!['current','proposal','proposal2'].includes(name))return;
+    if(!['1','2','3','4','5'].includes(name))return;
     cabinet=name;
     choices.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cabinetView===name)));
-    document.getElementById('codex-visualization').hidden=name!=='current';
-    const frame=document.getElementById('stand-frame-proposals');frame.hidden=name==='current';
-    if(name!=='current'){
-      const send=()=>frame.contentWindow?.postMessage({type:'vero:select-proposal',flow:cabinet},'*');
-      if(frame.dataset.standSrcdoc){frame.addEventListener('load',send,{once:true});load(frame);}else send();
-    }
+    const kind=['1','2'].includes(name)?'current':name==='5'?'brief':'proposals';
+    const frames={current:document.getElementById('codex-visualization'),proposals:document.getElementById('stand-frame-proposals'),brief:document.getElementById('stand-frame-brief')};
+    Object.entries(frames).forEach(([key,f])=>f.hidden=key!==kind);
+    const frame=frames[kind],message=kind==='current'?{type:'vero:select-registration',variant:name}:kind==='proposals'?{type:'vero:select-proposal',flow:name==='3'?'proposal':'proposal2'}:null;
+    const send=()=>{if(message)frame.contentWindow?.postMessage(message,'*');};
+    if(frame.dataset.standSrcdoc){frame.addEventListener('load',send,{once:true});load(frame);}else send();
   }
   function select(name){
     if(!['current','comparison','schemes'].includes(name))return;
@@ -35,5 +35,6 @@
     const content=document.getElementById(a.dataset.standWindow)?.content.textContent;if(!content)return;
     e.preventDefault();const url=URL.createObjectURL(new Blob([content],{type:'text/html'}));window.open(url,'_blank','noopener');setTimeout(()=>URL.revokeObjectURL(url),60000);
   }));
+  document.getElementById('codex-visualization').addEventListener('load',()=>{if(['1','2'].includes(cabinet))selectCabinet(cabinet);});
   select(location.hash==='#comparison'?'comparison':location.hash==='#schemes'?'schemes':'current');
 })();
