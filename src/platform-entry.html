@@ -35,15 +35,17 @@ __SIMPLE_UI_CSS__
 const main=document.querySelector('#main'),scenario=document.querySelector('#scenario');
 const $=id=>document.getElementById(id),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let state;
+const authOnly=document.body.dataset.authOnly==='true';
 let registrationVariant=document.body.dataset.defaultRegistration==='2'||location.hash==='#registration-2'?'2':'1';
 const platformHelp=`__PLATFORM_HELP__`;
-const registration2=createMosRegistration({main,help:platformHelp,getScenario:()=>scenario.value,hasOrganization:()=>!!state?.contexts?.some(c=>['employee','director'].includes(c.kind)),refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false,target='home')=>{
+const registration2=createMosRegistration({main,authOnly,help:authOnly?platformHelp.replace('найдите организацию по ИНН, подпишите заявление и дождитесь проверки платформой. Затем пригласите сотрудников.','подключите УКЭП, выберите сертификат и проверьте данные организации. Права управления появятся после подтверждения платформой.'):platformHelp,getScenario:()=>scenario.value,hasOrganization:()=>!!state?.contexts?.some(c=>['employee','director'].includes(c.kind)),refresh:()=>render(),isAuthenticated:()=>!!state?.authenticated,enter:(account,keepScreen=false,target='home')=>{
  if(state.registrationAccountId&&state.registrationAccountId!==account.id)reset(true);
  state.registrationAccountId=account.id;
  state.email=account.email;state.demoPassword=account.password;
  if(!state.authenticated)auth();
+ if(authOnly&&account.connectedOrganization&&!state.contexts.some(c=>c.kind==='director'||c.kind==='employee')){const o=account.connectedOrganization;state.context={id:'org',name:o.name,kind:o.role,role:o.role==='director'?'Генеральный директор':'Сотрудник организации'};state.contexts.push(state.context);}
  if(account.acceptInvitation){state.accepted=true;let c=state.contexts.find(x=>x.id==='org');if(!c){c={id:'org',name:'ООО «Пример»',role:'Сотрудник организации',kind:'employee',serviceRoles:{agr:'Специалист',ossig:'Специалист'}};state.contexts.push(c);}state.context=c;state.screen='home';}
- if(!keepScreen&&state.screen!=='invite'){state.history=[];state.screen=target==='home'&&state.intent&&state.context?.kind!=='government'?'service':target;render();}
+ if(!keepScreen&&state.screen!=='invite'){state.history=[];state.screen=authOnly&&target==='home'?'auth-complete':target==='home'&&state.intent&&state.context?.kind!=='government'?'service':target;render();}
  else render();
 }});
 const intentNames={materials:'Покупка нерудных материалов',ossig:'Вывоз и учёт отходов',agr:'Получение АГК'};
@@ -72,7 +74,7 @@ function auth(){
  state.context=state.contexts.find(c=>c.kind!=='personal')||state.contexts[0];
  seedPowers(fixture);state.powerTab=state.contexts.some(canIssuePower)?'issued':'received';
  if(state.invited&&!state.accepted){state.screen='invite';render();return;}
- state.screen=state.intent&&state.context.kind!=='government'?'service':'home';render();
+ state.screen=authOnly?'auth-complete':state.intent&&state.context.kind!=='government'?'service':'home';render();
 }
 function card(title,body){return `<div class="layout"><section class="card"><h2 tabindex="-1">${title}</h2>${body}${alertBox}${['login','register'].includes(state.screen)?platformHelp:''}</section></div>`;}
 function back(){return state.history.length?'<button class="text-btn back" type="button" data-action="back">← Назад</button>':'';}
@@ -149,6 +151,7 @@ function employeesPage(){
  return `<section class="workspace"><div class="page-heading"><div><h1 tabindex="-1">Сотрудники</h1><p>Сотрудники и их назначения</p></div><button class="primary" data-action="invite-open">＋ &nbsp; Пригласить сотрудника</button></div><div class="table-filters"><label class="search-box">${icon('search')}<input id="people-search" placeholder="ФИО или email" aria-label="ФИО или email"></label><span>Назначения в организации</span></div><div class="table-wrap"><table><thead><tr><th>Сотрудник</th><th>Email</th><th>Роль в организации</th><th>Роли в сервисах</th><th>Статус</th></tr></thead><tbody><tr data-person><td>Иванов Иван Иванович</td><td>${esc(state.email)}</td><td>Руководитель</td><td><div class="assignment-list">${companyServices(state.context)}</div></td><td><span class="status-green">Подключён</span></td></tr>${people.map(x=>`<tr data-person><td>${esc(x.name)}</td><td>${esc(x.email)}</td><td>Сотрудник<br><span class="mini">После принятия приглашения</span></td><td><div class="assignment-list">${x.services.map(id=>`<span class="assignment-chip">${serviceNames[id]} · ${esc(employeeRoles[x.role].name)}</span>`).join('')}</div></td><td><span class="status-neutral">Приглашение подготовлено</span></td></tr>`).join('')}</tbody></table><p id="no-people" hidden class="empty-search">Сотрудники не найдены</p></div>${state.invitationNotice===state.context.id?'<div class="notice good">Приглашение подготовлено. В стенде письмо не отправляется.</div>':''}${alertBox}</section>`;
 }
 function modalHtml(){
+ if(authOnly&&state.modal==='certificate')return `<dialog id="app-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><h2 id="dialog-title">Выберите сертификат УКЭП</h2><button class="dialog-close" data-action="close-modal" aria-label="Закрыть выбор сертификата">×</button></div><form data-form="certificate" novalidate><label class="field" for="certificate">Сертификат<select id="certificate"><option value="">Выберите сертификат</option><option value="director">Иванов Иван Иванович · ООО «Пример» · действующий</option><option value="expired">Иванов Иван Иванович · срок действия истёк</option><option value="employee">Петрова Анна Сергеевна · сотрудник ООО «Пример»</option></select></label><p class="mini">Организацию регистрирует генеральный директор. Для подключения используется его действующий сертификат.</p><button class="primary" type="submit">Продолжить с сертификатом</button><div id="modal-alert" class="alert" role="alert" hidden></div></form></dialog>`;
  if(state.modal==='power-request')return powerRequestModal();
  if(state.modal==='invite')return `<dialog id="app-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><h2 id="dialog-title">Пригласить сотрудника</h2><button type="button" class="dialog-close" data-action="close-modal" aria-label="Закрыть">×</button></div><p>Пригласите сотрудника и выберите его доступ. Аккаунт заранее создавать не нужно.</p><div class="dialog-demo"><span>Демонстрация</span><button type="button" class="text-btn" data-action="demo-fill">Заполнить пример</button></div><form data-form="team" novalidate><div class="modal-name-grid">${input('<span class=required>Фамилия</span>','employee-surname','','text','required autofocus')}${input('<span class=required>Имя</span>','employee-name','','text','required')}${input('Отчество (необязательно)','employee-patronymic')}</div>${input('<span class=required>Email сотрудника</span>','employee-email','','email','autocomplete="off" required aria-describedby="employee-email-help"')}<p id="employee-email-help" class="access-help">На этот адрес придёт приглашение. Новый пользователь задаст пароль самостоятельно, зарегистрированный — войдёт в свой аккаунт.</p>${invitationAccess()}<div class="dialog-actions">${btn('Отменить','close-modal',true)}<button class="primary" type="submit">Создать приглашение</button></div><div id="modal-alert" role="alert" class="alert" hidden></div></form></dialog>`;
  if(state.modal==='organization'){
@@ -174,18 +177,18 @@ function organizationCard(){
 function renderNavigation(q){
  const active=state.authenticated,c=state.context;
  const onboarding=registrationVariant==='2'&&(['offer','organization-offer','linked','created'].includes(registration2.screen())||['company','company-found','proof','review-company','setup-team','application-status','ask-invite'].includes(q));
- const signed=active&&!onboarding;
+ const signed=active&&!onboarding&&!authOnly;
  $('sidebar').hidden=!signed;document.querySelector('.app-body').classList.toggle('signed',signed);
  $('account-select-wrap').hidden=!signed||q==='powers'||state.contexts.length<2||(scenario.value==='multi'&&$('catalog-mode').value==='service'&&['home','services'].includes(q));
  $('account-select').innerHTML=state.contexts.map(x=>`<option value="${esc(x.id)}" ${c?.id===x.id?'selected':''}>${esc(x.kind==='personal'?'От своего имени':x.name)}</option>`).join('');
- if(!signed){document.querySelector('.shell').classList.remove('signed-shell');$('sidebar').innerHTML='';if(onboarding)$('top-context').textContent='Подключение организации';return;}
+ if(!signed){document.querySelector('.shell').classList.remove('signed-shell');$('sidebar').innerHTML='';if(authOnly)$('top-context').textContent=onboarding?'Подключение организации':'Вход и регистрация';else if(onboarding)$('top-context').textContent='Подключение организации';return;}
  const nav=c?.kind==='government'?[['home','Обзор'],['data-access','Доступ к данным'],['profile','Профиль']]:[['home','Сервисы'],['my-organizations','Организации'],['powers','Доверенности'],['invitations','Приглашения'+(state.invited&&!state.accepted?' · 1':'')],...(c?.kind==='director'?[['team','Сотрудники']]:[]),['objects','Мои объекты'],...(c?.kind==='director'?[['finance','Баланс и финансы']]:[])];
  const titles=Object.fromEntries(nav);$('top-context').textContent=titles[q]||({services:'Сервисы',service:intentNames[state.intent],profile:'Профиль',organization:'Организации / '+(c?.name||''),company:'Организация',team:'Сотрудники'})[q]||'Личный кабинет';
  document.querySelector('.shell').classList.toggle('signed-shell',active);
  $('sidebar').innerHTML='<nav aria-label="Разделы кабинета">'+nav.map(([id,label])=>`<button type="button" data-nav="${id}" ${q===id||id==='home'&&q==='services'||id==='my-organizations'&&q==='organization'?'aria-current="page"':''}>${icon(id)}<span>${label}</span></button>`).join('')+'</nav>'+`<div class="sidebar-account"><button data-account-profile class="account-email" title="${esc(state.email)}">${esc(state.email)}</button><button type="button" data-sidebar-logout aria-label="Выйти">${icon('logout')}</button></div>`;
 
 }
-function closeModal(){const kind=state.modal;state.modal=null;render();main.querySelector(kind==='invite'?(state.screen==='setup-team'?'[data-action=setup-invite]':'[data-action=invite-open]'):kind==='organization'?'[data-action=edit-organization]':kind==='support'?'[data-action=support-open],[data-action=support-question]':kind==='power-request'?'[data-action=power-request]':kind==='power'?`[data-power="${state.selectedPower}"]`:'[data-action=product-picker]')?.focus();}
+function closeModal(){const kind=state.modal;state.modal=null;render();if(kind==='certificate'){main.querySelector('[data-action=choose-certificate]')?.focus();return;}main.querySelector(kind==='invite'?(state.screen==='setup-team'?'[data-action=setup-invite]':'[data-action=invite-open]'):kind==='organization'?'[data-action=edit-organization]':kind==='support'?'[data-action=support-open],[data-action=support-question]':kind==='power-request'?'[data-action=power-request]':kind==='power'?`[data-power="${state.selectedPower}"]`:'[data-action=product-picker]')?.focus();}
 function render(){
  document.dispatchEvent(new Event('vero:history-update'));
  document.querySelectorAll('[data-registration-variant]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.registrationVariant===registrationVariant)));
@@ -198,7 +201,7 @@ function render(){
  const q=state.screen,c=state.context;
  $('proof-result-wrap').hidden=q!=='proof';
  $('catalog-mode-wrap').hidden=!state.authenticated||scenario.value!=='multi';
- $('platform-result-wrap').hidden=!state.authenticated||q!=='application-status'||state.application?.status!=='submitted';
+ $('platform-result-wrap').hidden=!state.authenticated||!(q==='application-status'||authOnly&&q==='review-company')||state.application?.status!=='submitted';
  $('signout').hidden=!state.authenticated;
  $('top-context').textContent=c&&['home','service','team','team-sent'].includes(q)?c.name:state.authenticated?'Ваш аккаунт':'Платформа для ваших задач';
  $('fill').hidden=!['login','register','company','team'].includes(q);
@@ -224,6 +227,7 @@ function render(){
   else html=`<section class="workspace"><h1 tabindex="-1">Сервисы</h1><p>${scenario.value==='multi'&&$('catalog-mode').value==='service'?'Выберите организацию в нужном сервисе.':c.kind==='personal'?'Выберите, что хотите сделать.':'Сервисы '+esc(c.name)+'.'}</p>${c.kind==='personal'?'<div class="account-onboarding onboarding-callout"><div><h2>Подключите организацию</h2><p>Работайте от имени компании и приглашайте сотрудников.</p></div><button class="primary" data-action="add-company">Подключить организацию</button></div>':''}${state.invited&&!state.accepted?'<div class="notice"><strong>Вас пригласили в ООО «Пример»</strong><p>Приглашение ждёт вашего решения.</p><button class="secondary" data-action="invitations">Открыть приглашения</button><button class="text-btn" data-action="show-invite">Посмотреть приглашение →</button></div>':''}${scenario.value==='gov-pending'?'<div class="notice pending">Доступ к ведомству ещё не назначен. Обратитесь к ответственному за доступ.</div>':''}${applicationNotice()}${productGrid()}${alertBox}</section>`;
  }
  if(q==='company')html=card('Найдём вашу организацию',`${back()}<p>Укажите ИНН компании или ИП. Реквизиты подставятся автоматически.</p>${form('company',input('ИНН организации или ИП','inn',state.inn,'text','inputmode="numeric" maxlength="12" autocomplete="off"'))}<p class="legal">Добавление реквизитов не предоставляет доступ к данным организации.</p>`);
+ if(authOnly&&q==='company')html=card('Подключите УКЭП',`<p>Выберите сертификат генерального директора. Данные организации и владельца сертификата подставятся автоматически.</p>${btn('Выбрать сертификат УКЭП','choose-certificate')}<p class="mini">Если вы сотрудник, обратитесь к руководителю или администратору за приглашением.</p>`);
  if(q==='company-found')html=card('Как подключиться?',`${back()}<div class="summary"><strong>${esc(state.company)}</strong><span class="mini">ИНН ${esc(state.inn)}</span></div>${btn('Я руководитель — подтвердить полномочия','proof')}${btn('Я сотрудник — получить приглашение','ask-invite',true)}`);
  if(q==='proof')html=card('Подтвердите полномочия',`${back()}<p>Для управления организацией нужно подтвердить право действовать от её имени.</p><div class="summary"><strong>${esc(state.company)}</strong><span class="mini">Руководитель или ИП подтверждает полномочия УКЭП. Доступ представителя зависит от подтверждённых полномочий.</span></div>${btn('Проверить УКЭП руководителя','verify')}<p class="mini" style="margin-top:16px">Если УКЭП сейчас недоступна, вернитесь к подключению позже.</p>`);
  if(q==='review-company'){
@@ -231,6 +235,11 @@ function render(){
   html=card('Проверьте данные',`${back()}<p>Шаг 1 из 2 · подключение организации</p><p>Проверьте сведения о себе и организации.</p><div class="correction-callout"><div><strong>Нашли ошибку в данных?</strong><p>Укажите правильные значения — платформа проверит исправления.</p></div><button class="secondary" data-action="support-open">Исправить данные</button></div>${reviewData()}${correctionSummary(correction)}<form data-form="application" novalidate><label class="check"><input id="confirm-company-data" type="checkbox"><span>${correction?'Проверил(а) исходные данные и предлагаемые исправления':'Проверил(а) данные, всё верно'}</span></label><button class="primary" type="submit">Продолжить</button></form>`);
  }
  if(q==='setup-team')html=connectionTeam();
+ if(authOnly&&q==='review-company'){
+  const a=state.application,submitted=a?.inn===state.inn,approved=submitted&&a.status==='approved',rejected=submitted&&a.status==='rejected';
+  html=card('Проверьте данные',`<p>Данные получены после выбора сертификата УКЭП. Организацию подключает генеральный директор.</p>${reviewData()}${submitted?`<div class="notice ${approved?'good':''}" role="status">${approved?'Организация подключена. Полномочия генерального директора подтверждены. Регистрация завершена.':rejected?'Проверка не пройдена. Проверьте актуальность сертификата и сведений о руководителе.':'Данные отправлены на проверку. До подтверждения права управления организацией не предоставлены.'}</div>${rejected?btn('Выбрать другой сертификат','choose-certificate',true):''}`:`<form data-form="application" novalidate><label class="check"><input id="confirm-company-data" type="checkbox"><span>Проверил(а) данные, всё верно</span></label><button class="primary" type="submit">Подтвердить и отправить на проверку</button></form>`}`);
+ }
+ if(authOnly&&q==='auth-complete')html=`<section class="workspace" data-auth-complete><h1 tabindex="-1">Вход выполнен</h1>${['director','employee'].includes(c?.kind)?`<p>${esc(c.name)} · ${esc(c.kind==='director'?'Генеральный директор':'Сотрудник организации')}</p>`:''}<p>Сценарий входа завершён.</p></section>`;
  if(q==='invitations')html=invitationList();
  if(q==='my-organizations')html=accessPage();
  if(q==='powers')html=powersPage();
@@ -268,6 +277,7 @@ main.addEventListener('click',e=>{
   return auth();
  }
  if(!state.authenticated)return;
+ if(authOnly&&a==='choose-certificate'){state.modal='certificate';return render();}
  if(a==='power-request'){if(state.screen!=='powers')return;state.modal='power-request';return render();}
  if(a==='accept'){
   if(!state.invited||state.accepted)return;
@@ -323,6 +333,16 @@ main.addEventListener('click',e=>{
 });
 main.addEventListener('submit',e=>{
  e.preventDefault();const f=e.target,v=id=>$(id)?.value.trim()||'';
+ if(authOnly&&f.dataset.form==='certificate'){
+  if(!state.authenticated||state.modal!=='certificate')return;
+  const selected=v('certificate');if(!selected)return error('Выберите сертификат генерального директора.','certificate');
+  if(selected==='expired')return error('Срок действия сертификата истёк. Выберите действующий сертификат.','certificate');
+  if(selected==='employee')return error('Сертификат сотрудника не подтверждает полномочия генерального директора. Обратитесь к руководителю.','certificate');
+  if(selected!=='director')return;
+  state.inn='0000000000';state.company='ООО «Пример»';state.application=null;
+  state.certificateData={inn:state.inn,company:state.company,registration:'0000000000001',address:'г. Москва, Примерная улица, д. 1',person:'Иванов Иван Иванович',personInn:'000000000001',expires:'31.12.2027'};
+  return go('review-company');
+ }
  if(f.dataset.form==='login'||f.dataset.form==='register'){
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email')))return error('Проверьте адрес электронной почты.','email');
   if(state.invited&&v('email').toLowerCase()!=='employee@example.test')return error('Приглашение адресовано employee@example.test. Войдите с этой почтой или попросите новое приглашение.','email');
@@ -356,6 +376,7 @@ main.addEventListener('submit',e=>{
  if(f.dataset.form==='application'){
   if(state.screen!=='review-company'||!state.certificateData||state.certificateData.inn!==state.inn)return;
   if(!$('confirm-company-data')?.checked)return error('Подтвердите, что проверили данные.','confirm-company-data');
+  if(authOnly){const d=state.certificateData;state.application={...d,status:'submitted'};state.applications[d.inn]=state.application;return render();}
   if(state.contexts.some(c=>c.id==='company-'+state.inn&&c.kind==='director'))return selectContext('company-'+state.inn);
   if(state.applications[state.inn]?.status==='submitted'){state.application=state.applications[state.inn];return go('application-status');}
   state.connectionReady=state.certificateData;return go('setup-team');
@@ -396,19 +417,22 @@ main.addEventListener('submit',e=>{
   state.invitee=[v('employee-surname'),v('employee-name'),v('employee-patronymic')].filter(Boolean).join(' ');state.inviteEmail=v('employee-email');state.people.push({name:state.invitee,email:state.inviteEmail,company:targetCompany,role,services,queued:setup});state.invitationNotice=targetCompany;return go(setup?'setup-team':'team');
  }
 });
+main.addEventListener('change',e=>{if(e.target.id==='certificate'){e.target.removeAttribute('aria-invalid');if($('modal-alert'))$('modal-alert').hidden=true;}});
 function fillExample(){
  if(registrationVariant==='2'&&registration2.hasScreen()){registration2.fill();return;}
+ if(authOnly&&state.modal==='certificate'){if(!$('certificate').value)$('certificate').value='director';$('certificate').removeAttribute('aria-invalid');if($('modal-alert'))$('modal-alert').hidden=true;return;}
  const values={email:state.invited?'employee@example.test':'ivan@example.test',password:state.demoPassword,'new-password':'Example-2026!','confirm-password':'Example-2026!',inn:'0000000000','employee-name':'Анна','employee-surname':'Петрова','employee-patronymic':'','employee-email':'anna@example.test'};
  main.querySelectorAll('input').forEach(x=>{if(values[x.id]&&!x.value.trim()){x.value=values[x.id];x.removeAttribute('aria-invalid');}});
 }
 $('fill').addEventListener('click',fillExample);
 $('catalog-mode').addEventListener('change',()=>{if(state.authenticated){state.history=[];go('home');}});
 $('apply-platform-result').addEventListener('click',()=>{
- if(!state.authenticated||state.screen!=='application-status'||state.application?.status!=='submitted')return;
+ if(!state.authenticated||!(state.screen==='application-status'||authOnly&&state.screen==='review-company')||state.application?.status!=='submitted')return;
  const result=$('platform-result').value;if(!['approved','rejected'].includes(result))return;state.application.status=result;
  if(result==='approved'){
   const a=state.application,approved=a.correction?.proposed||a,c={id:'company-'+a.inn,name:approved.company,role:'Руководитель · полномочия подтверждены',kind:'director',serviceRoles:{},registration:approved.registration,address:approved.address,person:approved.person};
   if(a.correction)a.correction.status='approved';if(!state.contexts.some(x=>x.id===c.id))state.contexts.push(c);state.people.forEach(x=>{if(x.company===c.id)x.queued=false;});
+  if(authOnly)registration2.connectOrganization(a.company);
  }
  render();
 });

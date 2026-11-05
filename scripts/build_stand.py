@@ -15,6 +15,8 @@ def build_document(wrapper,comparison,schemes):
     authored=re.search(r'data-srcdoc="([\s\S]*?)"',wrapper)
     assert authored
     content=html.unescape(authored.group(1)).replace('Вариант 2','Вариант 1').replace('</body>',current_bridge+fill_bridge+'</body>',1)
+    content=content.replace('<body>','<body><script>document.body.dataset.authOnly="true";</script>',1)
+    assert 'dataset.authOnly="true"' in content
     wrapper=wrapper[:authored.start(1)]+html.escape(content,quote=True)+wrapper[authored.end(1):]
     def subset(page,keep,initial):
         pattern=r'<button\b[^>]*\bdata-flow="([^"]+)"[^>]*>[\s\S]*?</button>'

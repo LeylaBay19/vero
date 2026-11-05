@@ -1,5 +1,5 @@
 /* Registration variant 2. UI demonstration only: no requests or real accounts. */
-function createMosRegistration({main, refresh, enter, isAuthenticated, getScenario=()=> 'new', hasOrganization=()=> false, help=''}) {
+function createMosRegistration({main, refresh, enter, isAuthenticated, getScenario=()=> 'new', hasOrganization=()=> false, authOnly=false, help=''}) {
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const button = (label, action, secondary = false) => `<button type="button" class="${secondary ? 'secondary' : 'primary'}" data-r2-action="${action}">${label}</button>`;
@@ -12,7 +12,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   const invitationEmail='employee@example.test';
   let screen, accounts, current, origin, purpose, oneTimePassword, draft, notice, sequence;
   function reset() {
-    screen=getScenario()==='invite'?'invitation':'entry'; accounts=[{id:'demo-existing-account',login:'demo@example.test',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:''}];
+    screen=getScenario()==='invite'?'invitation':'entry'; accounts=[{id:'demo-existing-account',login:'demo@example.test',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:'',connectedOrganization:authOnly?{name:'ООО «Пример»',role:'director'}:null}];
     if(getScenario()==='employee')accounts.push({id:'demo-employee',login:invitationEmail,email:invitationEmail,password:'Example-2026!',provider:'local_only',mosId:null,name:'Анна Петрова',phone:''});
     current=null; origin=screen; purpose='login';
     oneTimePassword=''; draft={}; notice=''; sequence=0;
@@ -153,11 +153,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     }
     if(shown==='linked') {
       title=hasOrganization()?'Mos ID подключён':'Подключите организацию';
-      body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+(hasOrganization()?button('К сервисам','cabinet'):'<div class="summary"><strong>Подключите организацию</strong><p>Найдите компанию по ИНН и подтвердите полномочия, чтобы работать от её имени. Если вы сотрудник, попросите приглашение у организации.</p></div>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true));
+      body='<div class="r2-success" aria-hidden="true">✓</div><p>Теперь можно входить через mos.ru или по своему логину и паролю. Это один и тот же аккаунт.</p>'+(hasOrganization()?button(authOnly?'Завершить вход':'К сервисам','cabinet'):'<div class="summary"><strong>Подключите организацию</strong><p>'+(authOnly?'Выберите сертификат УКЭП генерального директора и проверьте полученные сведения.':'Найдите компанию по ИНН и подтвердите полномочия, чтобы работать от её имени.')+' Если вы сотрудник, попросите приглашение у организации.</p></div>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true));
     }
     if(shown==='organization-offer'){
       title='Подключите организацию';
-      body='<p>Аккаунт готов к работе. Найдите компанию по ИНН и пройдите проверку полномочий, чтобы работать от её имени.</p><p class="mini">Если вы сотрудник, попросите приглашение у руководителя или администратора.</p>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true);
+      body='<p>Аккаунт готов к работе. '+(authOnly?'Выберите сертификат УКЭП генерального директора, чтобы получить данные организации и подтвердить полномочия.':'Найдите компанию по ИНН и пройдите проверку полномочий, чтобы работать от её имени.')+'</p><p class="mini">Если вы сотрудник, попросите приглашение у руководителя или администратора.</p>'+button('Подключить организацию','connect-organization')+button('Сделать позже','cabinet',true);
     }
     if(shown==='conflict') {
       title='Этот Mos ID уже привязан к другому аккаунту';
@@ -315,5 +315,6 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   function mount(){const dialog=$('r2-dialog');if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(['mos','mos-consent'].includes(screen))cancelMos();else openCabinet();});}}
   function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,oneTimePassword,draft,notice,sequence});}
   function restore(value){({screen,accounts,current,origin,purpose,oneTimePassword,draft,notice,sequence}=structuredClone(value));}
-  return {reset,view,profile,signout,fill,mount,snapshot,restore,hasScreen:()=>!!screen,screen:()=>screen};
+  function connectOrganization(name){if(!current)return;current.connectedOrganization={name,role:'director'};const saved=accounts.find(a=>a.id===current.id);if(saved)saved.connectedOrganization={...current.connectedOrganization};}
+  return {reset,view,profile,signout,fill,mount,snapshot,restore,connectOrganization,hasScreen:()=>!!screen,screen:()=>screen};
 }
