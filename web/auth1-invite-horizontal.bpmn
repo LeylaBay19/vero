@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_INVITE_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+  <bpmn:process id="AUTH1_INVITE" name="Подключение сотрудника по приглашению" isExecutable="false">
+    <bpmn:documentation>Получить только назначенный организацией доступ после принятия действующего приглашения. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
+    <bpmn:laneSet id="AUTH1_INVITE_lanes">
+      <bpmn:lane id="AUTH1_INVITE_lane_0" name="Пользователь / руководитель">
+        <bpmn:flowNodeRef>AUTH1_INVITE_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_account</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_new_password</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_login</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_merge</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_denied</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_done</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="AUTH1_INVITE_lane_1" name="Платформа ВЕРО">
+        <bpmn:flowNodeRef>AUTH1_INVITE_form</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_valid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_fix</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_invitation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_expired</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_INVITE_accept</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="AUTH1_INVITE_start" name="Открыть приглашение организации">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:outgoing>AUTH1_INVITE_flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="AUTH1_INVITE_form" name="Показать приглашение и неизменяемый email">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_0</bpmn:incoming>
+      <bpmn:incoming>AUTH1_INVITE_flow_8</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_INVITE_account" name="Уже есть аккаунт?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_1</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_2</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_INVITE_flow_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_INVITE_new_password" name="Задать пароль, повторить и принять условия">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_2</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_INVITE_login" name="Ввести пароль существующего аккаунта">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_3</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_INVITE_merge" name="Продолжить выбранный путь" gatewayDirection="Converging">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_4</bpmn:incoming>
+      <bpmn:incoming>AUTH1_INVITE_flow_5</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="AUTH1_INVITE_valid" name="Данные входа / регистрации верны?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_6</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_7</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_INVITE_flow_9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_INVITE_fix" name="Показать ошибку; исправить ввод">
+      <bpmn:documentation>Участник: Платформа / пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_7</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_INVITE_invitation" name="Приглашение действует?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_9</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_10</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_INVITE_flow_12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_INVITE_expired" name="Сообщить об истечении / отзыве; обратиться к организации">
+      <bpmn:documentation>Участник: Платформа / сотрудник</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_10</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_INVITE_denied" name="Без доступа к организации">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_11</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="AUTH1_INVITE_accept" name="Создать аккаунт при необходимости; принять приглашение">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_12</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_INVITE_flow_13</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_INVITE_done" name="Вход выполнен с назначенными правами сотрудника">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_INVITE_flow_13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_0" sourceRef="AUTH1_INVITE_start" targetRef="AUTH1_INVITE_form" name="" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_1" sourceRef="AUTH1_INVITE_form" targetRef="AUTH1_INVITE_account" name="" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_2" sourceRef="AUTH1_INVITE_account" targetRef="AUTH1_INVITE_new_password" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_3" sourceRef="AUTH1_INVITE_account" targetRef="AUTH1_INVITE_login" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_4" sourceRef="AUTH1_INVITE_new_password" targetRef="AUTH1_INVITE_merge" name="" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_5" sourceRef="AUTH1_INVITE_login" targetRef="AUTH1_INVITE_merge" name="" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_6" sourceRef="AUTH1_INVITE_merge" targetRef="AUTH1_INVITE_valid" name="" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_7" sourceRef="AUTH1_INVITE_valid" targetRef="AUTH1_INVITE_fix" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_8" sourceRef="AUTH1_INVITE_fix" targetRef="AUTH1_INVITE_form" name="Исправить" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_9" sourceRef="AUTH1_INVITE_valid" targetRef="AUTH1_INVITE_invitation" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_10" sourceRef="AUTH1_INVITE_invitation" targetRef="AUTH1_INVITE_expired" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_11" sourceRef="AUTH1_INVITE_expired" targetRef="AUTH1_INVITE_denied" name="" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_12" sourceRef="AUTH1_INVITE_invitation" targetRef="AUTH1_INVITE_accept" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_INVITE_flow_13" sourceRef="AUTH1_INVITE_accept" targetRef="AUTH1_INVITE_done" name="" />
+  </bpmn:process>
+  <bpmn:collaboration id="AUTH1_INVITE_collaboration">
+    <bpmn:participant id="AUTH1_INVITE_pool" name="Подключение сотрудника по приглашению" processRef="AUTH1_INVITE" />
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="AUTH1_INVITE_diagram">
+    <bpmndi:BPMNPlane id="AUTH1_INVITE_horizontal_plane" bpmnElement="AUTH1_INVITE_collaboration">
+      <bpmndi:BPMNShape id="AUTH1_INVITE_pool_h_di" bpmnElement="AUTH1_INVITE_pool" isHorizontal="true">
+        <dc:Bounds x="20" y="35" width="3050" height="836" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_lane_0_h_di" bpmnElement="AUTH1_INVITE_lane_0" isHorizontal="true">
+        <dc:Bounds x="50" y="80" width="3020" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_lane_1_h_di" bpmnElement="AUTH1_INVITE_lane_1" isHorizontal="true">
+        <dc:Bounds x="50" y="420" width="3020" height="446" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_start_h_di" bpmnElement="AUTH1_INVITE_start">
+        <dc:Bounds x="292.0" y="232.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="190" y="275.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_form_h_di" bpmnElement="AUTH1_INVITE_form">
+        <dc:Bounds x="520.0" y="547.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_account_h_di" bpmnElement="AUTH1_INVITE_account">
+        <dc:Bounds x="922.0" y="222.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="830" y="185.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_new_password_h_di" bpmnElement="AUTH1_INVITE_new_password">
+        <dc:Bounds x="1160.0" y="132.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_login_h_di" bpmnElement="AUTH1_INVITE_login">
+        <dc:Bounds x="1160.0" y="282.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_merge_h_di" bpmnElement="AUTH1_INVITE_merge">
+        <dc:Bounds x="1562.0" y="222.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1470" y="185.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_valid_h_di" bpmnElement="AUTH1_INVITE_valid">
+        <dc:Bounds x="1882.0" y="637.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1790" y="600.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_fix_h_di" bpmnElement="AUTH1_INVITE_fix">
+        <dc:Bounds x="1800.0" y="472.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_invitation_h_di" bpmnElement="AUTH1_INVITE_invitation">
+        <dc:Bounds x="2202.0" y="487.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2110" y="450.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_expired_h_di" bpmnElement="AUTH1_INVITE_expired">
+        <dc:Bounds x="2120.0" y="622.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_denied_h_di" bpmnElement="AUTH1_INVITE_denied">
+        <dc:Bounds x="2532.0" y="232.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2430" y="275.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_accept_h_di" bpmnElement="AUTH1_INVITE_accept">
+        <dc:Bounds x="2440.0" y="547.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_INVITE_done_h_di" bpmnElement="AUTH1_INVITE_done">
+        <dc:Bounds x="2852.0" y="232.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2750" y="275.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_0_h_di" bpmnElement="AUTH1_INVITE_flow_0">
+        <di:waypoint x="328" y="250.0" />
+        <di:waypoint x="424.0" y="250.0" />
+        <di:waypoint x="424.0" y="590.0" />
+        <di:waypoint x="520" y="590.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_1_h_di" bpmnElement="AUTH1_INVITE_flow_1">
+        <di:waypoint x="740" y="590.0" />
+        <di:waypoint x="831.0" y="590.0" />
+        <di:waypoint x="831.0" y="250.0" />
+        <di:waypoint x="922" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_2_h_di" bpmnElement="AUTH1_INVITE_flow_2">
+        <di:waypoint x="978" y="250.0" />
+        <di:waypoint x="1069.0" y="250.0" />
+        <di:waypoint x="1069.0" y="175.0" />
+        <di:waypoint x="1160" y="175.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="994.0" y="198.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_3_h_di" bpmnElement="AUTH1_INVITE_flow_3">
+        <di:waypoint x="978" y="250.0" />
+        <di:waypoint x="1069.0" y="250.0" />
+        <di:waypoint x="1069.0" y="325.0" />
+        <di:waypoint x="1160" y="325.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="994.0" y="273.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_4_h_di" bpmnElement="AUTH1_INVITE_flow_4">
+        <di:waypoint x="1380" y="175.0" />
+        <di:waypoint x="1471.0" y="175.0" />
+        <di:waypoint x="1471.0" y="250.0" />
+        <di:waypoint x="1562" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_5_h_di" bpmnElement="AUTH1_INVITE_flow_5">
+        <di:waypoint x="1380" y="325.0" />
+        <di:waypoint x="1471.0" y="325.0" />
+        <di:waypoint x="1471.0" y="250.0" />
+        <di:waypoint x="1562" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_6_h_di" bpmnElement="AUTH1_INVITE_flow_6">
+        <di:waypoint x="1618" y="250.0" />
+        <di:waypoint x="1750.0" y="250.0" />
+        <di:waypoint x="1750.0" y="665.0" />
+        <di:waypoint x="1882" y="665.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_7_h_di" bpmnElement="AUTH1_INVITE_flow_7">
+        <di:waypoint x="1882" y="665.0" />
+        <di:waypoint x="1745" y="665.0" />
+        <di:waypoint x="1745" y="515.0" />
+        <di:waypoint x="1800" y="515.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1655" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_8_h_di" bpmnElement="AUTH1_INVITE_flow_8">
+        <di:waypoint x="2020" y="515.0" />
+        <di:waypoint x="2075" y="515.0" />
+        <di:waypoint x="2075" y="800" />
+        <di:waypoint x="465" y="800" />
+        <di:waypoint x="465" y="590.0" />
+        <di:waypoint x="520" y="590.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1180.0" y="786" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_9_h_di" bpmnElement="AUTH1_INVITE_flow_9">
+        <di:waypoint x="1938" y="665.0" />
+        <di:waypoint x="2070.0" y="665.0" />
+        <di:waypoint x="2070.0" y="515.0" />
+        <di:waypoint x="2202" y="515.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2045.0" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_10_h_di" bpmnElement="AUTH1_INVITE_flow_10">
+        <di:waypoint x="2202" y="515.0" />
+        <di:waypoint x="2065" y="515.0" />
+        <di:waypoint x="2065" y="665.0" />
+        <di:waypoint x="2120" y="665.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1975" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_11_h_di" bpmnElement="AUTH1_INVITE_flow_11">
+        <di:waypoint x="2340" y="665.0" />
+        <di:waypoint x="2436.0" y="665.0" />
+        <di:waypoint x="2436.0" y="250.0" />
+        <di:waypoint x="2532" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_12_h_di" bpmnElement="AUTH1_INVITE_flow_12">
+        <di:waypoint x="2258" y="515.0" />
+        <di:waypoint x="2349.0" y="515.0" />
+        <di:waypoint x="2349.0" y="590.0" />
+        <di:waypoint x="2440" y="590.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2274.0" y="538.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_13_h_di" bpmnElement="AUTH1_INVITE_flow_13">
+        <di:waypoint x="2660" y="590.0" />
+        <di:waypoint x="2756.0" y="590.0" />
+        <di:waypoint x="2756.0" y="250.0" />
+        <di:waypoint x="2852" y="250.0" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

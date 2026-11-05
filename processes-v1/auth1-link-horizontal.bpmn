@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_LINK_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+  <bpmn:process id="AUTH1_LINK" name="Необязательная привязка mos.ru" isExecutable="false">
+    <bpmn:documentation>Добавить вход через mos.ru к существующему аккаунту без создания дубля. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
+    <bpmn:laneSet id="AUTH1_LINK_lanes">
+      <bpmn:lane id="AUTH1_LINK_lane_0" name="Пользователь / руководитель">
+        <bpmn:flowNodeRef>AUTH1_LINK_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_choose</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_provider</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_consent</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_retry</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_cancel</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_no_change</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_done</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="AUTH1_LINK_lane_1" name="Платформа ВЕРО">
+        <bpmn:flowNodeRef>AUTH1_LINK_valid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_error</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_free</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_conflict</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_LINK_link</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="AUTH1_LINK_start" name="Аккаунт уже создан">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:outgoing>AUTH1_LINK_flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="AUTH1_LINK_choose" name="Выбрать «Подключить Mos ID»">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_0</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_LINK_provider" name="Войти в mos.ru">
+      <bpmn:documentation>Участник: Пользователь / mos.ru</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_1</bpmn:incoming>
+      <bpmn:incoming>AUTH1_LINK_flow_6</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_LINK_consent" name="Разрешить передачу данных">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_2</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_LINK_valid" name="Авторизация подтверждена?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_3</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_4</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_LINK_flow_8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_LINK_error" name="Ошибка / отмена; аккаунт не изменён">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_4</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_LINK_retry" name="Повторить?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_5</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_6</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_LINK_flow_7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="AUTH1_LINK_cancel" name="Привязка не выполнена">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="AUTH1_LINK_free" name="Mos ID свободен для этого аккаунта?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_8</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_9</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_LINK_flow_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_LINK_conflict" name="Сообщить о другой привязке; аккаунты не объединять">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_9</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_LINK_no_change" name="Существующий аккаунт сохранён">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="AUTH1_LINK_link" name="Сохранить Mos ID в текущем аккаунте">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_11</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_LINK_flow_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_LINK_done" name="Дополнительный способ входа подключён">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_LINK_flow_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_0" sourceRef="AUTH1_LINK_start" targetRef="AUTH1_LINK_choose" name="" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_1" sourceRef="AUTH1_LINK_choose" targetRef="AUTH1_LINK_provider" name="" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_2" sourceRef="AUTH1_LINK_provider" targetRef="AUTH1_LINK_consent" name="" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_3" sourceRef="AUTH1_LINK_consent" targetRef="AUTH1_LINK_valid" name="" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_4" sourceRef="AUTH1_LINK_valid" targetRef="AUTH1_LINK_error" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_5" sourceRef="AUTH1_LINK_error" targetRef="AUTH1_LINK_retry" name="" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_6" sourceRef="AUTH1_LINK_retry" targetRef="AUTH1_LINK_provider" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_7" sourceRef="AUTH1_LINK_retry" targetRef="AUTH1_LINK_cancel" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_8" sourceRef="AUTH1_LINK_valid" targetRef="AUTH1_LINK_free" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_9" sourceRef="AUTH1_LINK_free" targetRef="AUTH1_LINK_conflict" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_10" sourceRef="AUTH1_LINK_conflict" targetRef="AUTH1_LINK_no_change" name="" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_11" sourceRef="AUTH1_LINK_free" targetRef="AUTH1_LINK_link" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_LINK_flow_12" sourceRef="AUTH1_LINK_link" targetRef="AUTH1_LINK_done" name="" />
+  </bpmn:process>
+  <bpmn:collaboration id="AUTH1_LINK_collaboration">
+    <bpmn:participant id="AUTH1_LINK_pool" name="Необязательная привязка mos.ru" processRef="AUTH1_LINK" />
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="AUTH1_LINK_diagram">
+    <bpmndi:BPMNPlane id="AUTH1_LINK_horizontal_plane" bpmnElement="AUTH1_LINK_collaboration">
+      <bpmndi:BPMNShape id="AUTH1_LINK_pool_h_di" bpmnElement="AUTH1_LINK_pool" isHorizontal="true">
+        <dc:Bounds x="20" y="35" width="2730" height="836" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_lane_0_h_di" bpmnElement="AUTH1_LINK_lane_0" isHorizontal="true">
+        <dc:Bounds x="50" y="80" width="2700" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_lane_1_h_di" bpmnElement="AUTH1_LINK_lane_1" isHorizontal="true">
+        <dc:Bounds x="50" y="420" width="2700" height="446" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_start_h_di" bpmnElement="AUTH1_LINK_start">
+        <dc:Bounds x="292.0" y="232.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="190" y="275.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_choose_h_di" bpmnElement="AUTH1_LINK_choose">
+        <dc:Bounds x="520.0" y="207.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_provider_h_di" bpmnElement="AUTH1_LINK_provider">
+        <dc:Bounds x="840.0" y="207.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_consent_h_di" bpmnElement="AUTH1_LINK_consent">
+        <dc:Bounds x="1160.0" y="207.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_valid_h_di" bpmnElement="AUTH1_LINK_valid">
+        <dc:Bounds x="1562.0" y="637.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1470" y="600.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_error_h_di" bpmnElement="AUTH1_LINK_error">
+        <dc:Bounds x="1480.0" y="472.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_retry_h_di" bpmnElement="AUTH1_LINK_retry">
+        <dc:Bounds x="1882.0" y="222.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1790" y="185.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_cancel_h_di" bpmnElement="AUTH1_LINK_cancel">
+        <dc:Bounds x="2212.0" y="157.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2110" y="200.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_free_h_di" bpmnElement="AUTH1_LINK_free">
+        <dc:Bounds x="1882.0" y="487.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1790" y="450.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_conflict_h_di" bpmnElement="AUTH1_LINK_conflict">
+        <dc:Bounds x="1800.0" y="622.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_no_change_h_di" bpmnElement="AUTH1_LINK_no_change">
+        <dc:Bounds x="2212.0" y="307.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2110" y="350.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_link_h_di" bpmnElement="AUTH1_LINK_link">
+        <dc:Bounds x="2120.0" y="547.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_LINK_done_h_di" bpmnElement="AUTH1_LINK_done">
+        <dc:Bounds x="2532.0" y="232.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2430" y="275.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_0_h_di" bpmnElement="AUTH1_LINK_flow_0">
+        <di:waypoint x="328" y="250.0" />
+        <di:waypoint x="520" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_1_h_di" bpmnElement="AUTH1_LINK_flow_1">
+        <di:waypoint x="740" y="250.0" />
+        <di:waypoint x="840" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_2_h_di" bpmnElement="AUTH1_LINK_flow_2">
+        <di:waypoint x="1060" y="250.0" />
+        <di:waypoint x="1160" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_3_h_di" bpmnElement="AUTH1_LINK_flow_3">
+        <di:waypoint x="1380" y="250.0" />
+        <di:waypoint x="1471.0" y="250.0" />
+        <di:waypoint x="1471.0" y="665.0" />
+        <di:waypoint x="1562" y="665.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_4_h_di" bpmnElement="AUTH1_LINK_flow_4">
+        <di:waypoint x="1562" y="665.0" />
+        <di:waypoint x="1425" y="665.0" />
+        <di:waypoint x="1425" y="515.0" />
+        <di:waypoint x="1480" y="515.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1335" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_5_h_di" bpmnElement="AUTH1_LINK_flow_5">
+        <di:waypoint x="1700" y="515.0" />
+        <di:waypoint x="1791.0" y="515.0" />
+        <di:waypoint x="1791.0" y="250.0" />
+        <di:waypoint x="1882" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_6_h_di" bpmnElement="AUTH1_LINK_flow_6">
+        <di:waypoint x="1938" y="250.0" />
+        <di:waypoint x="2075" y="250.0" />
+        <di:waypoint x="2075" y="800" />
+        <di:waypoint x="785" y="800" />
+        <di:waypoint x="785" y="250.0" />
+        <di:waypoint x="840" y="250.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1340.0" y="786" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_7_h_di" bpmnElement="AUTH1_LINK_flow_7">
+        <di:waypoint x="1938" y="250.0" />
+        <di:waypoint x="2075.0" y="250.0" />
+        <di:waypoint x="2075.0" y="175.0" />
+        <di:waypoint x="2212" y="175.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2000.0" y="198.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_8_h_di" bpmnElement="AUTH1_LINK_flow_8">
+        <di:waypoint x="1618" y="665.0" />
+        <di:waypoint x="1750.0" y="665.0" />
+        <di:waypoint x="1750.0" y="515.0" />
+        <di:waypoint x="1882" y="515.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1725.0" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_9_h_di" bpmnElement="AUTH1_LINK_flow_9">
+        <di:waypoint x="1882" y="515.0" />
+        <di:waypoint x="1745" y="515.0" />
+        <di:waypoint x="1745" y="665.0" />
+        <di:waypoint x="1800" y="665.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1655" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_10_h_di" bpmnElement="AUTH1_LINK_flow_10">
+        <di:waypoint x="2020" y="665.0" />
+        <di:waypoint x="2116.0" y="665.0" />
+        <di:waypoint x="2116.0" y="325.0" />
+        <di:waypoint x="2212" y="325.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_11_h_di" bpmnElement="AUTH1_LINK_flow_11">
+        <di:waypoint x="1938" y="515.0" />
+        <di:waypoint x="2029.0" y="515.0" />
+        <di:waypoint x="2029.0" y="590.0" />
+        <di:waypoint x="2120" y="590.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1954.0" y="538.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_LINK_flow_12_h_di" bpmnElement="AUTH1_LINK_flow_12">
+        <di:waypoint x="2340" y="590.0" />
+        <di:waypoint x="2436.0" y="590.0" />
+        <di:waypoint x="2436.0" y="250.0" />
+        <di:waypoint x="2532" y="250.0" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

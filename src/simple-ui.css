@@ -22,3 +22,5 @@ body,button,input,select,textarea{font-family:Arial,sans-serif}
 .platform-help{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;line-height:1.6}.platform-help summary{cursor:pointer;font-weight:600}.platform-help ol{padding-left:20px}.platform-help li{margin:10px 0}.mos-permissions{display:grid;gap:14px;border:1px solid var(--line);padding:16px;margin:20px 0}.mos-permissions legend{font-size:13px}.field input:disabled{background:#f4f6f8;color:#647084;opacity:1}
 .r2-mos-benefits{display:grid;gap:6px}.r2-mos-benefits>span{display:block}
 .r2-field-error{color:#a33636;font-size:12px;font-weight:400;line-height:1.5}.r2-card>button+button{margin-top:10px}.r2-card form[aria-busy=true]{opacity:.75}
+
+.registration-details{border:1px solid #d8dde5;border-radius:5px;margin:18px 0;padding:16px;min-width:0}.registration-details legend{font-size:15px;font-weight:600;padding:0 5px}.registration-details .detail-grid{gap:14px}.registration-details .field{min-width:0}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_COMPANY_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.21.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_COMPANY_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
   <bpmn:process id="AUTH1_COMPANY" name="Подключение организации через УКЭП" isExecutable="false">
     <bpmn:documentation>Подключить организацию и получить подтверждённые полномочия генерального директора. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
     <bpmn:startEvent id="AUTH1_COMPANY_start" name="Аккаунт создан; подключить организацию">
@@ -24,12 +24,12 @@
       <bpmn:incoming>AUTH1_COMPANY_flow_3</bpmn:incoming>
       <bpmn:outgoing>AUTH1_COMPANY_flow_4</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="AUTH1_COMPANY_review" name="Проверить полученные сведения организации и владельца">
+    <bpmn:task id="AUTH1_COMPANY_review" name="Проверить сведения; дополнить контакты и недостающие поля">
       <bpmn:documentation>Участник: Генеральный директор</bpmn:documentation>
       <bpmn:incoming>AUTH1_COMPANY_flow_2</bpmn:incoming>
       <bpmn:outgoing>AUTH1_COMPANY_flow_5</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:task id="AUTH1_COMPANY_confirm" name="Подтвердить корректность данных">
+    <bpmn:task id="AUTH1_COMPANY_confirm" name="Подтвердить данные и контакты">
       <bpmn:documentation>Участник: Генеральный директор</bpmn:documentation>
       <bpmn:incoming>AUTH1_COMPANY_flow_5</bpmn:incoming>
       <bpmn:outgoing>AUTH1_COMPANY_flow_6</bpmn:outgoing>

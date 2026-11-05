@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_COMPANY_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+  <bpmn:process id="AUTH1_COMPANY" name="Подключение организации через УКЭП" isExecutable="false">
+    <bpmn:documentation>Подключить организацию и получить подтверждённые полномочия генерального директора. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
+    <bpmn:laneSet id="AUTH1_COMPANY_lanes">
+      <bpmn:lane id="AUTH1_COMPANY_lane_0" name="Пользователь / руководитель">
+        <bpmn:flowNodeRef>AUTH1_COMPANY_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_select</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_review</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_confirm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_again</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_no_access</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_done</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="AUTH1_COMPANY_lane_1" name="Платформа ВЕРО">
+        <bpmn:flowNodeRef>AUTH1_COMPANY_certificate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_invalid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_send</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_decision</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_reject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>AUTH1_COMPANY_approve</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="AUTH1_COMPANY_start" name="Аккаунт создан; подключить организацию">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_0</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="AUTH1_COMPANY_select" name="Выбрать сертификат УКЭП">
+      <bpmn:documentation>Участник: Генеральный директор</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_0</bpmn:incoming>
+      <bpmn:incoming>AUTH1_COMPANY_flow_4</bpmn:incoming>
+      <bpmn:incoming>AUTH1_COMPANY_flow_11</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_COMPANY_certificate" name="Сертификат действующий и принадлежит гендиректору?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_1</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_2</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_3</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_COMPANY_invalid" name="Показать причину; доступ не предоставлять">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_3</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_COMPANY_review" name="Проверить сведения; дополнить контакты и недостающие поля">
+      <bpmn:documentation>Участник: Генеральный директор</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_2</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_COMPANY_confirm" name="Подтвердить данные и контакты">
+      <bpmn:documentation>Участник: Генеральный директор</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_5</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="AUTH1_COMPANY_send" name="Принять данные на проверку">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_6</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_COMPANY_decision" name="Проверка пройдена?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_7</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_8</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_9</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="AUTH1_COMPANY_reject" name="Сообщить причину отказа; права не выдавать">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_9</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="AUTH1_COMPANY_again" name="Выбрать другой сертификат?" gatewayDirection="Diverging">
+      <bpmn:documentation>Участник: Генеральный директор</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_10</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_11</bpmn:outgoing>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="AUTH1_COMPANY_no_access" name="Организация не подключена">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="AUTH1_COMPANY_approve" name="Подключить организацию и сохранить роль руководителя">
+      <bpmn:documentation>Участник: Платформа</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_8</bpmn:incoming>
+      <bpmn:outgoing>AUTH1_COMPANY_flow_13</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="AUTH1_COMPANY_done" name="Организация подключена; регистрация завершена">
+      <bpmn:documentation>Участник: Пользователь</bpmn:documentation>
+      <bpmn:incoming>AUTH1_COMPANY_flow_13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_0" sourceRef="AUTH1_COMPANY_start" targetRef="AUTH1_COMPANY_select" name="" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_1" sourceRef="AUTH1_COMPANY_select" targetRef="AUTH1_COMPANY_certificate" name="" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_2" sourceRef="AUTH1_COMPANY_certificate" targetRef="AUTH1_COMPANY_review" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_3" sourceRef="AUTH1_COMPANY_certificate" targetRef="AUTH1_COMPANY_invalid" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_4" sourceRef="AUTH1_COMPANY_invalid" targetRef="AUTH1_COMPANY_select" name="Другой сертификат" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_5" sourceRef="AUTH1_COMPANY_review" targetRef="AUTH1_COMPANY_confirm" name="" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_6" sourceRef="AUTH1_COMPANY_confirm" targetRef="AUTH1_COMPANY_send" name="" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_7" sourceRef="AUTH1_COMPANY_send" targetRef="AUTH1_COMPANY_decision" name="" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_8" sourceRef="AUTH1_COMPANY_decision" targetRef="AUTH1_COMPANY_approve" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_9" sourceRef="AUTH1_COMPANY_decision" targetRef="AUTH1_COMPANY_reject" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_10" sourceRef="AUTH1_COMPANY_reject" targetRef="AUTH1_COMPANY_again" name="" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_11" sourceRef="AUTH1_COMPANY_again" targetRef="AUTH1_COMPANY_select" name="Да" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_12" sourceRef="AUTH1_COMPANY_again" targetRef="AUTH1_COMPANY_no_access" name="Нет" />
+    <bpmn:sequenceFlow id="AUTH1_COMPANY_flow_13" sourceRef="AUTH1_COMPANY_approve" targetRef="AUTH1_COMPANY_done" name="" />
+  </bpmn:process>
+  <bpmn:collaboration id="AUTH1_COMPANY_collaboration">
+    <bpmn:participant id="AUTH1_COMPANY_pool" name="Подключение организации через УКЭП" processRef="AUTH1_COMPANY" />
+  </bpmn:collaboration>
+  <bpmndi:BPMNDiagram id="AUTH1_COMPANY_diagram">
+    <bpmndi:BPMNPlane id="AUTH1_COMPANY_horizontal_plane" bpmnElement="AUTH1_COMPANY_collaboration">
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_pool_h_di" bpmnElement="AUTH1_COMPANY_pool" isHorizontal="true">
+        <dc:Bounds x="20" y="35" width="3050" height="872" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_lane_0_h_di" bpmnElement="AUTH1_COMPANY_lane_0" isHorizontal="true">
+        <dc:Bounds x="50" y="80" width="3020" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_lane_1_h_di" bpmnElement="AUTH1_COMPANY_lane_1" isHorizontal="true">
+        <dc:Bounds x="50" y="420" width="3020" height="482" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_start_h_di" bpmnElement="AUTH1_COMPANY_start">
+        <dc:Bounds x="292.0" y="232.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="190" y="275.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_select_h_di" bpmnElement="AUTH1_COMPANY_select">
+        <dc:Bounds x="520.0" y="207.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_certificate_h_di" bpmnElement="AUTH1_COMPANY_certificate">
+        <dc:Bounds x="922.0" y="637.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="830" y="600.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_invalid_h_di" bpmnElement="AUTH1_COMPANY_invalid">
+        <dc:Bounds x="840.0" y="472.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_review_h_di" bpmnElement="AUTH1_COMPANY_review">
+        <dc:Bounds x="1160.0" y="207.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_confirm_h_di" bpmnElement="AUTH1_COMPANY_confirm">
+        <dc:Bounds x="1480.0" y="207.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_send_h_di" bpmnElement="AUTH1_COMPANY_send">
+        <dc:Bounds x="1800.0" y="547.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_decision_h_di" bpmnElement="AUTH1_COMPANY_decision">
+        <dc:Bounds x="2202.0" y="637.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2110" y="600.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_reject_h_di" bpmnElement="AUTH1_COMPANY_reject">
+        <dc:Bounds x="2120.0" y="472.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_again_h_di" bpmnElement="AUTH1_COMPANY_again">
+        <dc:Bounds x="2522.0" y="222.0" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2430" y="185.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_no_access_h_di" bpmnElement="AUTH1_COMPANY_no_access">
+        <dc:Bounds x="2852.0" y="157.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2750" y="200.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_approve_h_di" bpmnElement="AUTH1_COMPANY_approve">
+        <dc:Bounds x="2440.0" y="547.0" width="220" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="AUTH1_COMPANY_done_h_di" bpmnElement="AUTH1_COMPANY_done">
+        <dc:Bounds x="2852.0" y="307.0" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2750" y="350.0" width="240" height="48" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_0_h_di" bpmnElement="AUTH1_COMPANY_flow_0">
+        <di:waypoint x="328" y="250.0" />
+        <di:waypoint x="520" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_1_h_di" bpmnElement="AUTH1_COMPANY_flow_1">
+        <di:waypoint x="740" y="250.0" />
+        <di:waypoint x="831.0" y="250.0" />
+        <di:waypoint x="831.0" y="665.0" />
+        <di:waypoint x="922" y="665.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_2_h_di" bpmnElement="AUTH1_COMPANY_flow_2">
+        <di:waypoint x="978" y="665.0" />
+        <di:waypoint x="1069.0" y="665.0" />
+        <di:waypoint x="1069.0" y="250.0" />
+        <di:waypoint x="1160" y="250.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="994.0" y="443.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_3_h_di" bpmnElement="AUTH1_COMPANY_flow_3">
+        <di:waypoint x="922" y="665.0" />
+        <di:waypoint x="785" y="665.0" />
+        <di:waypoint x="785" y="515.0" />
+        <di:waypoint x="840" y="515.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="695" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_4_h_di" bpmnElement="AUTH1_COMPANY_flow_4">
+        <di:waypoint x="1060" y="515.0" />
+        <di:waypoint x="1115" y="515.0" />
+        <di:waypoint x="1115" y="800" />
+        <di:waypoint x="465" y="800" />
+        <di:waypoint x="465" y="250.0" />
+        <di:waypoint x="520" y="250.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="700.0" y="786" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_5_h_di" bpmnElement="AUTH1_COMPANY_flow_5">
+        <di:waypoint x="1380" y="250.0" />
+        <di:waypoint x="1480" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_6_h_di" bpmnElement="AUTH1_COMPANY_flow_6">
+        <di:waypoint x="1700" y="250.0" />
+        <di:waypoint x="1750.0" y="250.0" />
+        <di:waypoint x="1750.0" y="590.0" />
+        <di:waypoint x="1800" y="590.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_7_h_di" bpmnElement="AUTH1_COMPANY_flow_7">
+        <di:waypoint x="2020" y="590.0" />
+        <di:waypoint x="2111.0" y="590.0" />
+        <di:waypoint x="2111.0" y="665.0" />
+        <di:waypoint x="2202" y="665.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_8_h_di" bpmnElement="AUTH1_COMPANY_flow_8">
+        <di:waypoint x="2258" y="665.0" />
+        <di:waypoint x="2349.0" y="665.0" />
+        <di:waypoint x="2349.0" y="590.0" />
+        <di:waypoint x="2440" y="590.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2274.0" y="613.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_9_h_di" bpmnElement="AUTH1_COMPANY_flow_9">
+        <di:waypoint x="2202" y="665.0" />
+        <di:waypoint x="2065" y="665.0" />
+        <di:waypoint x="2065" y="515.0" />
+        <di:waypoint x="2120" y="515.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1975" y="576.0" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_10_h_di" bpmnElement="AUTH1_COMPANY_flow_10">
+        <di:waypoint x="2340" y="515.0" />
+        <di:waypoint x="2431.0" y="515.0" />
+        <di:waypoint x="2431.0" y="250.0" />
+        <di:waypoint x="2522" y="250.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_11_h_di" bpmnElement="AUTH1_COMPANY_flow_11">
+        <di:waypoint x="2578" y="250.0" />
+        <di:waypoint x="2715" y="250.0" />
+        <di:waypoint x="2715" y="836" />
+        <di:waypoint x="465" y="836" />
+        <di:waypoint x="465" y="250.0" />
+        <di:waypoint x="520" y="250.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1500.0" y="822" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_12_h_di" bpmnElement="AUTH1_COMPANY_flow_12">
+        <di:waypoint x="2578" y="250.0" />
+        <di:waypoint x="2715.0" y="250.0" />
+        <di:waypoint x="2715.0" y="175.0" />
+        <di:waypoint x="2852" y="175.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2640.0" y="198.5" width="180" height="28" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_13_h_di" bpmnElement="AUTH1_COMPANY_flow_13">
+        <di:waypoint x="2660" y="590.0" />
+        <di:waypoint x="2756.0" y="590.0" />
+        <di:waypoint x="2756.0" y="325.0" />
+        <di:waypoint x="2852" y="325.0" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

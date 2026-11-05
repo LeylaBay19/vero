@@ -98,6 +98,15 @@ function productGrid(){
 }
 function applicationNotice(){return Object.values(state.applications).filter(a=>a.status!=='approved').map(a=>`<div class="notice ${a.status==='submitted'?'pending':''}"><strong>${esc(a.company)}</strong> · ${a.status==='submitted'?'заявка на проверке':'заявка отклонена'}. <button class="text-btn" data-action="application-status" data-application="${esc(a.inn)}">Посмотреть заявку →</button></div>`).join('');}
 function reviewData(d=state.certificateData){return `<div class="review-details"><h3>Организация · сведения реестра</h3><div class="detail-grid">${detail('Наименование',d.company)}${detail('ИНН',d.inn)}${detail(d.inn.length===12?'ОГРНИП':'ОГРН',d.registration)}${detail('Юридический адрес',d.address)}</div><h3>Владелец сертификата УКЭП</h3><div class="detail-grid">${detail('ФИО',d.person)}${detail('ИНН физического лица',d.personInn)}${detail('Основание',d.inn.length===12?'Индивидуальный предприниматель':'Руководитель организации')}${detail('Сертификат действителен до',d.expires)}</div></div>`;}
+const registrationDetailKeys=['email','phone','site','kpp','shortName'];
+function registrationDetails(){state.registrationDetails||={};return state.registrationDetails[state.inn]||{};}
+function registrationFields(disabled=false){
+ const d=registrationDetails(),attrs=disabled?'disabled':'';
+ const field=(label,key,type,placeholder,extra='')=>input(label,'registration-'+key,d[key]||'',type,`data-registration-detail="${key}" aria-describedby="registration-${key}-error" placeholder="${placeholder}" ${attrs} ${extra}`).replace('</label>',`<span id="registration-${key}-error" class="r2-field-error"></span></label>`);
+ return '<fieldset class="registration-details"><legend>Контакты организации</legend><p class="mini">Укажите сведения для связи. Эти поля можно изменить до отправки.</p><div class="detail-grid">'+field('Контактный email','email','email','office@example.ru','autocomplete="email"')+field('Телефон','phone','tel','+7 900 000-00-00','autocomplete="tel"')+field('Сайт (необязательно)','site','url','https://example.ru')+'</div></fieldset><fieldset class="registration-details"><legend>Недостающие сведения</legend><p class="mini">Заполните, если знаете. Данные сертификата и регистрационные номера не меняются.</p><div class="detail-grid">'+field('КПП (если применимо)','kpp','text','9 цифр','inputmode="numeric" maxlength="9"')+field('Сокращённое наименование','shortName','text','ООО «Пример»','maxlength="160"')+'</div></fieldset>';
+}
+function saveRegistrationDetails(form){state.registrationDetails||={};const d={};for(const key of registrationDetailKeys)d[key]=form.querySelector('[data-registration-detail="'+key+'"]')?.value||'';state.registrationDetails[state.inn]=d;return d;}
+function registrationFieldError(text,key){error(text,'registration-'+key);$('registration-'+key+'-error').textContent=text;}
 function companyInn(c){return c.id==='org'?'0000000000':c.id.replace('company-','');}
 function companyServices(c){return Object.entries(serviceNames).filter(([id])=>serviceRole(c,id)).map(([id,name])=>`<span class="assignment-chip">${name} · ${esc(serviceRole(c,id))}</span>`).join('')||'<span class="mini">Сервисные роли не назначены</span>';}
 function correctionSummary(record){if(!record?.changes?.length)return '';return `<div class="correction-summary"><strong>${record.status==='approved'?'Исправления приняты платформой':'Предлагаемые исправления · ожидают проверки'}</strong>${record.changes.map(x=>`<div class="change-pair"><span>${esc(x.label)}<br><s>${esc(x.original||'Не заполнено')}</s></span><span>Предлагается<br><b>${esc(x.proposed)}</b></span></div>`).join('')}</div>`;}
@@ -240,8 +249,8 @@ function render(){
   const a=state.application,submitted=a?.inn===state.inn,approved=submitted&&a.status==='approved',rejected=submitted&&a.status==='rejected';
   let result='';
   if(submitted)result=approved?'<div class="notice good" role="status">Организация подключена. Полномочия генерального директора подтверждены. Регистрация завершена.</div>':rejected?'<div class="notice" role="status">Проверка не пройдена. Проверьте актуальность сертификата и сведений о руководителе.</div>'+btn('Выбрать другой сертификат','choose-certificate',true):'<button type="button" class="secondary" data-connection-sent disabled>Отправлено</button>';
-  else result='<form data-form="application" novalidate><label class="check"><input id="confirm-company-data" type="checkbox"><span>Проверил(а) данные, всё верно</span></label><button class="primary" type="submit">Подтвердить и отправить на проверку</button></form>';
-  html=card('Проверьте данные',`<p>Данные получены после выбора сертификата УКЭП. Организацию подключает генеральный директор.</p>${reviewData()}${result}`);
+  else result='<form data-form="application" novalidate>'+registrationFields()+'<label class="check"><input id="confirm-company-data" type="checkbox"><span>Проверил(а) данные, всё верно</span></label><button class="primary" type="submit">Подтвердить и отправить на проверку</button></form>';
+  html=card('Проверьте данные',`<p>Данные получены после выбора сертификата УКЭП. Организацию подключает генеральный директор.</p>${reviewData()}${submitted?registrationFields(true):''}${result}`);
  }
  if(authOnly&&q==='auth-complete')html=`<section class="workspace" data-auth-complete><h1 tabindex="-1">Вход выполнен</h1>${['director','employee'].includes(c?.kind)?`<p>${esc(c.name)} · ${esc(c.kind==='director'?'Генеральный директор':'Сотрудник организации')}</p>`:''}<p>Сценарий входа завершён.</p></section>`;
  if(q==='invitations')html=invitationList();
@@ -379,8 +388,15 @@ main.addEventListener('submit',e=>{
  }
  if(f.dataset.form==='application'){
   if(state.screen!=='review-company'||!state.certificateData||state.certificateData.inn!==state.inn)return;
+  if(authOnly){
+   const d=saveRegistrationDetails(f);
+   if(d.email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email.trim()))return registrationFieldError('Укажите email в формате office@example.ru.','email');
+   if(d.phone&&(!/^[+()\s\d-]+$/.test(d.phone)||d.phone.replace(/\D/g,'').length<10||d.phone.replace(/\D/g,'').length>15))return registrationFieldError('Укажите телефон с кодом страны или города.','phone');
+   if(d.site){try{const url=new URL(d.site);if(!['https:','http:'].includes(url.protocol)||!url.hostname.includes('.'))throw new Error();}catch{return registrationFieldError('Укажите адрес сайта, например https://example.ru.','site');}}
+   if(d.kpp&&!/^\d{9}$/.test(d.kpp))return registrationFieldError('КПП должен содержать 9 цифр.','kpp');
+  }
   if(!$('confirm-company-data')?.checked)return error('Подтвердите, что проверили данные.','confirm-company-data');
-  if(authOnly){const d=state.certificateData;state.application={...d,status:'submitted'};state.applications[d.inn]=state.application;return render();}
+  if(authOnly){const d=state.certificateData;state.application={...d,details:{...registrationDetails()},status:'submitted'};state.applications[d.inn]=state.application;return render();}
   if(state.contexts.some(c=>c.id==='company-'+state.inn&&c.kind==='director'))return selectContext('company-'+state.inn);
   if(state.applications[state.inn]?.status==='submitted'){state.application=state.applications[state.inn];return go('application-status');}
   state.connectionReady=state.certificateData;return go('setup-team');
@@ -421,9 +437,11 @@ main.addEventListener('submit',e=>{
   state.invitee=[v('employee-surname'),v('employee-name'),v('employee-patronymic')].filter(Boolean).join(' ');state.inviteEmail=v('employee-email');state.people.push({name:state.invitee,email:state.inviteEmail,company:targetCompany,role,services,queued:setup});state.invitationNotice=targetCompany;return go(setup?'setup-team':'team');
  }
 });
+main.addEventListener('input',e=>{if(!authOnly||!e.target.dataset.registrationDetail)return;const f=e.target.closest('[data-form=application]');if(!f)return;saveRegistrationDetails(f);e.target.removeAttribute('aria-invalid');$('registration-'+e.target.dataset.registrationDetail+'-error').textContent='';if($('alert'))$('alert').hidden=true;if($('confirm-company-data'))$('confirm-company-data').checked=false;});
 main.addEventListener('change',e=>{if(e.target.id==='certificate'){e.target.removeAttribute('aria-invalid');if($('modal-alert'))$('modal-alert').hidden=true;}});
 function fillExample(){
  if(registrationVariant==='2'&&registration2.hasScreen()){registration2.fill();return;}
+ if(authOnly&&state.screen==='review-company'&&state.modal===null){const f=main.querySelector('[data-form=application]');if(f){const values={email:'office@example.test',phone:'+7 900 000-00-00',site:'https://example.test',kpp:'000000000',shortName:'ООО «Пример»'};let changed=false;for(const [key,value] of Object.entries(values)){const el=$('registration-'+key);if(el&&!el.value){el.value=value;changed=true;}}if(changed&&$('confirm-company-data'))$('confirm-company-data').checked=false;saveRegistrationDetails(f);}return;}
  if(authOnly&&state.modal==='certificate'){if(!$('certificate').value)$('certificate').value='director';$('certificate').removeAttribute('aria-invalid');if($('modal-alert'))$('modal-alert').hidden=true;return;}
  const values={email:state.invited?'employee@example.test':'ivan@example.test',password:state.demoPassword,'new-password':'Example-2026!','confirm-password':'Example-2026!',inn:'0000000000','employee-name':'Анна','employee-surname':'Петрова','employee-patronymic':'','employee-email':'anna@example.test'};
  main.querySelectorAll('input').forEach(x=>{if(values[x.id]&&!x.value.trim()){x.value=values[x.id];x.removeAttribute('aria-invalid');}});
