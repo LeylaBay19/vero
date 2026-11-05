@@ -10,34 +10,68 @@ def lane(n):return 1 if n['role'].startswith('Платформа') else 0
 def txt(x,y,value,size=14,width=28):
     return f'<text x="{x}" y="{y}" text-anchor="middle" font-size="{size}">'+''.join(f'<tspan x="{x}" dy="{0 if i==0 else 18}">{escape(s)}</tspan>' for i,s in enumerate(wrap(value,width)))+'</text>'
 def layout(model):
-    nodes=deepcopy(model['nodes']);groups={}
-    for n in nodes:groups.setdefault((lane(n),n['row']),[]).append(n)
+    nodes=deepcopy(model['nodes']);groups={};byid={n['id']:n for n in nodes}
+    # Longest-path ranks of the forward DAG. Alternate/error nodes must follow
+    # their condition, even when they shared a row in the vertical view.
+    backs=[i for i,e in enumerate(model['edges']) if byid[e['source']]['row']>byid[e['target']]['row']]
+    ranks={n['id']:0 for n in nodes};pending={n['id']:0 for n in nodes}
+    for i,e in enumerate(model['edges']):
+        if i not in backs:pending[e['target']]+=1
+    queue=[key for key,value in pending.items() if not value];visited=0
+    while queue:
+        key=queue.pop(0);visited+=1
+        for i,e in enumerate(model['edges']):
+            if i in backs or e['source']!=key:continue
+            ranks[e['target']]=max(ranks[e['target']],ranks[key]+1);pending[e['target']]-=1
+            if not pending[e['target']]:queue.append(e['target'])
+    assert visited==len(nodes),'Forward layout must be acyclic'
+    for n in nodes:
+        n['rank']=ranks[n['id']];groups.setdefault((lane(n),n['rank']),[]).append(n)
     maxima=[max([len(v) for (l,_),v in groups.items() if l==i] or [1]) for i in range(2)]
-    heights=[190+(v-1)*150 for v in maxima];tops=[80,80+heights[0]]
+    heights=[250+(v-1)*180 for v in maxima];tops=[80,80+heights[0]]
     for (l,row),group in groups.items():
         group.sort(key=lambda n:n['col']);center=tops[l]+heights[l]/2
-        for j,n in enumerate(group):n.update(x=200+row*320,y=center+(j-(len(group)-1)/2)*150-43,w=220,h=86,lane=l)
-    byid={n['id']:n for n in nodes};backs=[i for i,e in enumerate(model['edges']) if byid[e['source']]['row']>byid[e['target']]['row']];base=80+sum(heights);heights[1]+=70+len(backs)*36
-    return {'nodes':nodes,'lanes':[{'name':'Пользователь / руководитель','y':tops[0],'h':heights[0]},{'name':'Платформа ВЕРО','y':tops[1],'h':heights[1]}],'w':max(n['x'] for n in nodes)+330,'h':80+sum(heights)+25,'loop_y':{i:base+40+j*36 for j,i in enumerate(backs)}}
+        for j,n in enumerate(group):n.update(x=200+row*420,y=center+(j-(len(group)-1)/2)*180-43,w=220,h=86,lane=l)
+    base=80+sum(heights);heights[1]+=100+len(backs)*42
+    incoming={n['id']:[] for n in nodes};outgoing={n['id']:[] for n in nodes}
+    for i,e in enumerate(model['edges']):incoming[e['target']].append(i);outgoing[e['source']].append(i)
+    return {'nodes':nodes,'incoming':incoming,'outgoing':outgoing,'lanes':[{'name':'Пользователь / руководитель','y':tops[0],'h':heights[0]},{'name':'Платформа ВЕРО','y':tops[1],'h':heights[1]}],'w':max(n['x'] for n in nodes)+390,'h':80+sum(heights)+25,'loop_y':{i:base+55+j*42 for j,i in enumerate(backs)}}
 def anchor(n,side):
     cx,cy=n['x']+110,n['y']+43;rx,ry=(18,18) if n['kind'] in ['start','end'] else (28,28) if n['kind']=='gateway' else (110,43)
     return {'left':(cx-rx,cy),'right':(cx+rx,cy),'top':(cx,cy-ry),'bottom':(cx,cy+ry)}[side]
 def edge_geometry(model,g,i):
     edge=model['edges'][i];nodes={n['id']:n for n in g['nodes']};a,b=nodes[edge['source']],nodes[edge['target']]
-    if a['row']>b['row']:
-        p,q=anchor(a,'right'),anchor(b,'left');after=a['x']+275;before=b['x']-55;y=g['loop_y'][i]
-        return [p,(after,p[1]),(after,y),(before,y),(before,q[1]),q],((after+before)/2,y)
-    if a['row']==b['row']:
-        p,q=anchor(a,'left'),anchor(b,'left');x=a['x']-55
-        return [p,(x,p[1]),(x,q[1]),q],(x,(p[1]+q[1])/2)
-    p,q=anchor(a,'right'),anchor(b,'left');x=(p[0]+q[0])/2
-    if p[1]==q[1]:return [p,q],((p[0]+q[0])/2,p[1])
-    return [p,(x,p[1]),(x,q[1]),q],(x+(65 if b['kind']=='gateway' else 15) if a['kind']=='gateway' else x,(p[1]+q[1])/2)
+    incoming=g['incoming'][b['id']];incoming=sorted(incoming,key=lambda j:(j in g['loop_y'],j));port=incoming.index(i)
+    target_side=['left','bottom','top'][port]
+    source_side='bottom' if len(g['outgoing'][a['id']])>1 and edge['label']=='Нет' else 'right'
+    if i in g['loop_y'] and a['kind']=='task':
+        bottom_input=any(model['edges'][j]['label']=='Нет' and nodes[model['edges'][j]['source']]['y']==a['y'] for j in g['incoming'][a['id']])
+        if not bottom_input:source_side='bottom'
+    if b['kind']=='end' and port==0:target_side='top'
+    if source_side=='bottom' and i not in g['loop_y'] and a['y']==b['y'] and port==0:target_side='bottom'
+    p,q=anchor(a,source_side),anchor(b,target_side)
+    column_edges=[j for j,e in enumerate(model['edges']) if nodes[e['source']]['rank']==a['rank'] and j not in g['loop_y']]
+    column_backs=[j for j in g['loop_y'] if nodes[model['edges'][j]['source']]['rank']==a['rank']]
+    x=a['x']+260+column_edges.index(i)*28 if i in column_edges else a['x']+340+column_backs.index(i)*28
+    prefix=[p] if source_side=='right' else [p,(p[0],p[1]+25)]
+    if i in g['loop_y']:
+        y=g['loop_y'][i];before=b['x']-35-port*15
+        end_y=q[1]+30 if target_side=='bottom' else q[1]-30 if target_side=='top' else q[1]
+        pts=prefix+[(x,prefix[-1][1]),(x,y),(before,y),(before,end_y)]
+        if target_side!='left':pts.append((q[0],end_y))
+        return pts+[q],((x+before)/2,y)
+    end_y=q[1]+30 if target_side=='bottom' else q[1]-30 if target_side=='top' else q[1]
+    pts=prefix+[(x,prefix[-1][1]),(x,end_y)]
+    if target_side!='left':pts.append((q[0],end_y))
+    pts.append(q)
+    # A label on the first horizontal segment belongs unambiguously to its
+    # outgoing branch. Text masking leaves a gap in the underlying arrow.
+    return pts,((prefix[-1][0]+x)/2,prefix[-1][1])
 
 def svg(model,g):
     mid=model['id']+'_H';W,H=g['w'],g['h'];masks=[];paths=[];labels=[];shapes=[]
     for i,e in enumerate(model['edges']):
-        pts,(x,y)=edge_geometry(model,g,i);paths.append('<polyline points="'+' '.join(f'{a},{b}' for a,b in pts)+f'" marker-end="url(#{mid}_arrow)"/>')
+        pts,(x,y)=edge_geometry(model,g,i);points=' '.join(f'{a},{b}' for a,b in pts);paths.append(f'<g data-flow="{i}"><polyline points="{points}" stroke="white" stroke-width="6"/><polyline points="{points}" marker-end="url(#{mid}_arrow)"/></g>')
         if e['label']:
             w=max(42,len(e['label'])*7.4+16);masks.append(f'<rect x="{x-w/2}" y="{y-15}" width="{w}" height="28" fill="black"/>');labels.append(f'<g data-edge-label="{i}"><rect x="{x-w/2}" y="{y-15}" width="{w}" height="28" fill="white"/>'+txt(x,y+4,e['label'],13,40)+'</g>')
     for n in g['nodes']:
@@ -69,10 +103,12 @@ def bpmn(model,g,vertical_xml):
     for n in g['nodes']:
         cx,cy=n['x']+110,n['y']+43;w,h=(36,36) if n['kind'] in ['start','end'] else (56,56) if n['kind']=='gateway' else (220,86);sh=shape(mid+'_'+n['id'],cx-w/2,cy-h/2,w,h)
         if n['kind']!='task':
-            label=ET.SubElement(sh,f'{{{D}}}BPMNLabel');ET.SubElement(label,f'{{{C}}}Bounds',{'x':str(n['x']-10),'y':str(cy-65 if n['kind']=='gateway' else cy+25),'width':'240','height':'48'})
+            count=len(wrap(n['text'],28 if n['kind']=='gateway' else 30));label_y=cy-60-(count-1)*18 if n['kind']=='gateway' else cy+23
+            label=ET.SubElement(sh,f'{{{D}}}BPMNLabel');ET.SubElement(label,f'{{{C}}}Bounds',{'x':str(n['x']-10),'y':str(label_y),'width':'240','height':str(count*18+12)})
     for i,e in enumerate(model['edges']):
         el=ET.SubElement(plane,f'{{{D}}}BPMNEdge',{'id':mid+'_flow_'+str(i)+'_h_di','bpmnElement':mid+'_flow_'+str(i)});pts,(x,y)=edge_geometry(model,g,i)
         for a,b in pts:ET.SubElement(el,f'{{{I}}}waypoint',{'x':str(a),'y':str(b)})
         if e['label']:
-            label=ET.SubElement(el,f'{{{D}}}BPMNLabel');ET.SubElement(label,f'{{{C}}}Bounds',{'x':str(x-90),'y':str(y-14),'width':'180','height':'28'})
+            width=max(42,len(e['label'])*7.4+16)
+            label=ET.SubElement(el,f'{{{D}}}BPMNLabel');ET.SubElement(label,f'{{{C}}}Bounds',{'x':str(x-width/2),'y':str(y-15),'width':str(width),'height':'28'})
     ET.indent(root);return '<?xml version="1.0" encoding="UTF-8"?>\n'+ET.tostring(root,encoding='unicode')

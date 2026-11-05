@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_LINK_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_LINK_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.23.0">
   <bpmn:process id="AUTH1_LINK" name="Необязательная привязка mos.ru" isExecutable="false">
     <bpmn:documentation>Добавить вход через mos.ru к существующему аккаунту без создания дубля. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
     <bpmn:startEvent id="AUTH1_LINK_start" name="Аккаунт уже создан">

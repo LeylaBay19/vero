@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_EMAIL_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_EMAIL_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.23.0">
   <bpmn:process id="AUTH1_EMAIL" name="Регистрация по email" isExecutable="false">
     <bpmn:documentation>Создать подтверждённый личный аккаунт перед подключением организации. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
     <bpmn:laneSet id="AUTH1_EMAIL_lanes">
@@ -102,155 +102,168 @@
   <bpmndi:BPMNDiagram id="AUTH1_EMAIL_diagram">
     <bpmndi:BPMNPlane id="AUTH1_EMAIL_horizontal_plane" bpmnElement="AUTH1_EMAIL_collaboration">
       <bpmndi:BPMNShape id="AUTH1_EMAIL_pool_h_di" bpmnElement="AUTH1_EMAIL_pool" isHorizontal="true">
-        <dc:Bounds x="20" y="35" width="3370" height="572" />
+        <dc:Bounds x="20" y="35" width="4330" height="914" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_lane_0_h_di" bpmnElement="AUTH1_EMAIL_lane_0" isHorizontal="true">
-        <dc:Bounds x="50" y="80" width="3340" height="190" />
+        <dc:Bounds x="50" y="80" width="4300" height="430" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_lane_1_h_di" bpmnElement="AUTH1_EMAIL_lane_1" isHorizontal="true">
-        <dc:Bounds x="50" y="270" width="3340" height="332" />
+        <dc:Bounds x="50" y="510" width="4300" height="434" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_start_h_di" bpmnElement="AUTH1_EMAIL_start">
-        <dc:Bounds x="292.0" y="157.0" width="36" height="36" />
+        <dc:Bounds x="292.0" y="277.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="190" y="200.0" width="240" height="48" />
+          <dc:Bounds x="190" y="318.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_email_h_di" bpmnElement="AUTH1_EMAIL_email">
-        <dc:Bounds x="520.0" y="132.0" width="220" height="86" />
+        <dc:Bounds x="620.0" y="252.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_mail_h_di" bpmnElement="AUTH1_EMAIL_mail">
-        <dc:Bounds x="840.0" y="322.0" width="220" height="86" />
+        <dc:Bounds x="1040.0" y="592.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_open_h_di" bpmnElement="AUTH1_EMAIL_open">
-        <dc:Bounds x="1160.0" y="132.0" width="220" height="86" />
+        <dc:Bounds x="1460.0" y="252.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_valid_link_h_di" bpmnElement="AUTH1_EMAIL_valid_link">
-        <dc:Bounds x="1562.0" y="337.0" width="56" height="56" />
+        <dc:Bounds x="1962.0" y="607.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1470" y="300.0" width="240" height="48" />
+          <dc:Bounds x="1870" y="575.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_expired_h_di" bpmnElement="AUTH1_EMAIL_expired">
-        <dc:Bounds x="1480.0" y="132.0" width="220" height="86" />
+        <dc:Bounds x="2300.0" y="162.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_password_h_di" bpmnElement="AUTH1_EMAIL_password">
-        <dc:Bounds x="1800.0" y="132.0" width="220" height="86" />
+        <dc:Bounds x="2300.0" y="342.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_valid_form_h_di" bpmnElement="AUTH1_EMAIL_valid_form">
-        <dc:Bounds x="2202.0" y="337.0" width="56" height="56" />
+        <dc:Bounds x="2802.0" y="607.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2110" y="300.0" width="240" height="48" />
+          <dc:Bounds x="2710" y="575.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_fix_h_di" bpmnElement="AUTH1_EMAIL_fix">
-        <dc:Bounds x="2120.0" y="132.0" width="220" height="86" />
+        <dc:Bounds x="3140.0" y="252.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_create_h_di" bpmnElement="AUTH1_EMAIL_create">
-        <dc:Bounds x="2440.0" y="322.0" width="220" height="86" />
+        <dc:Bounds x="3140.0" y="592.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_mos_offer_h_di" bpmnElement="AUTH1_EMAIL_mos_offer">
-        <dc:Bounds x="2760.0" y="132.0" width="220" height="86" />
+        <dc:Bounds x="3560.0" y="252.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_EMAIL_done_h_di" bpmnElement="AUTH1_EMAIL_done">
-        <dc:Bounds x="3172.0" y="157.0" width="36" height="36" />
+        <dc:Bounds x="4072.0" y="277.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="3070" y="200.0" width="240" height="48" />
+          <dc:Bounds x="3970" y="318.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_0_h_di" bpmnElement="AUTH1_EMAIL_flow_0">
-        <di:waypoint x="328" y="175.0" />
-        <di:waypoint x="520" y="175.0" />
+        <di:waypoint x="328" y="295.0" />
+        <di:waypoint x="460" y="295.0" />
+        <di:waypoint x="460" y="295.0" />
+        <di:waypoint x="620" y="295.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_1_h_di" bpmnElement="AUTH1_EMAIL_flow_1">
-        <di:waypoint x="740" y="175.0" />
-        <di:waypoint x="790.0" y="175.0" />
-        <di:waypoint x="790.0" y="365.0" />
-        <di:waypoint x="840" y="365.0" />
+        <di:waypoint x="840" y="295.0" />
+        <di:waypoint x="880" y="295.0" />
+        <di:waypoint x="880" y="635.0" />
+        <di:waypoint x="1040" y="635.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_2_h_di" bpmnElement="AUTH1_EMAIL_flow_2">
-        <di:waypoint x="1060" y="365.0" />
-        <di:waypoint x="1110.0" y="365.0" />
-        <di:waypoint x="1110.0" y="175.0" />
-        <di:waypoint x="1160" y="175.0" />
+        <di:waypoint x="1260" y="635.0" />
+        <di:waypoint x="1300" y="635.0" />
+        <di:waypoint x="1300" y="295.0" />
+        <di:waypoint x="1460" y="295.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_3_h_di" bpmnElement="AUTH1_EMAIL_flow_3">
-        <di:waypoint x="1380" y="175.0" />
-        <di:waypoint x="1471.0" y="175.0" />
-        <di:waypoint x="1471.0" y="365.0" />
-        <di:waypoint x="1562" y="365.0" />
+        <di:waypoint x="1680" y="295.0" />
+        <di:waypoint x="1720" y="295.0" />
+        <di:waypoint x="1720" y="635.0" />
+        <di:waypoint x="1962" y="635.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_4_h_di" bpmnElement="AUTH1_EMAIL_flow_4">
-        <di:waypoint x="1618" y="365.0" />
-        <di:waypoint x="1709.0" y="365.0" />
-        <di:waypoint x="1709.0" y="175.0" />
-        <di:waypoint x="1800" y="175.0" />
+        <di:waypoint x="2018" y="635.0" />
+        <di:waypoint x="2140" y="635.0" />
+        <di:waypoint x="2140" y="385.0" />
+        <di:waypoint x="2300" y="385.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1634.0" y="256.0" width="180" height="28" />
+          <dc:Bounds x="2058.0" y="620.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_5_h_di" bpmnElement="AUTH1_EMAIL_flow_5">
-        <di:waypoint x="1562" y="365.0" />
-        <di:waypoint x="1425" y="365.0" />
-        <di:waypoint x="1425" y="175.0" />
-        <di:waypoint x="1480" y="175.0" />
+        <di:waypoint x="1990" y="663.0" />
+        <di:waypoint x="1990" y="688.0" />
+        <di:waypoint x="2168" y="688.0" />
+        <di:waypoint x="2168" y="205.0" />
+        <di:waypoint x="2300" y="205.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1335" y="256.0" width="180" height="28" />
+          <dc:Bounds x="2058.0" y="673.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_6_h_di" bpmnElement="AUTH1_EMAIL_flow_6">
-        <di:waypoint x="1700" y="175.0" />
-        <di:waypoint x="1755" y="175.0" />
-        <di:waypoint x="1755" y="500" />
-        <di:waypoint x="785" y="500" />
-        <di:waypoint x="785" y="365.0" />
-        <di:waypoint x="840" y="365.0" />
+        <di:waypoint x="2410" y="248.0" />
+        <di:waypoint x="2410" y="273.0" />
+        <di:waypoint x="2640" y="273.0" />
+        <di:waypoint x="2640" y="815" />
+        <di:waypoint x="990" y="815" />
+        <di:waypoint x="990" y="708.0" />
+        <di:waypoint x="1150" y="708.0" />
+        <di:waypoint x="1150" y="678.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1180.0" y="486" width="180" height="28" />
+          <dc:Bounds x="1762.6" y="800" width="104.80000000000001" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_7_h_di" bpmnElement="AUTH1_EMAIL_flow_7">
-        <di:waypoint x="2020" y="175.0" />
-        <di:waypoint x="2111.0" y="175.0" />
-        <di:waypoint x="2111.0" y="365.0" />
-        <di:waypoint x="2202" y="365.0" />
+        <di:waypoint x="2520" y="385.0" />
+        <di:waypoint x="2560" y="385.0" />
+        <di:waypoint x="2560" y="635.0" />
+        <di:waypoint x="2802" y="635.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_8_h_di" bpmnElement="AUTH1_EMAIL_flow_8">
-        <di:waypoint x="2258" y="365.0" />
-        <di:waypoint x="2440" y="365.0" />
+        <di:waypoint x="2858" y="635.0" />
+        <di:waypoint x="2980" y="635.0" />
+        <di:waypoint x="2980" y="635.0" />
+        <di:waypoint x="3140" y="635.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2259.0" y="351.0" width="180" height="28" />
+          <dc:Bounds x="2898.0" y="620.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_9_h_di" bpmnElement="AUTH1_EMAIL_flow_9">
-        <di:waypoint x="2202" y="365.0" />
-        <di:waypoint x="2065" y="365.0" />
-        <di:waypoint x="2065" y="175.0" />
-        <di:waypoint x="2120" y="175.0" />
+        <di:waypoint x="2830" y="663.0" />
+        <di:waypoint x="2830" y="688.0" />
+        <di:waypoint x="3008" y="688.0" />
+        <di:waypoint x="3008" y="295.0" />
+        <di:waypoint x="3140" y="295.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1975" y="256.0" width="180" height="28" />
+          <dc:Bounds x="2898.0" y="673.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_10_h_di" bpmnElement="AUTH1_EMAIL_flow_10">
-        <di:waypoint x="2340" y="175.0" />
-        <di:waypoint x="2395" y="175.0" />
-        <di:waypoint x="2395" y="536" />
-        <di:waypoint x="1745" y="536" />
-        <di:waypoint x="1745" y="175.0" />
-        <di:waypoint x="1800" y="175.0" />
+        <di:waypoint x="3250" y="338.0" />
+        <di:waypoint x="3250" y="363.0" />
+        <di:waypoint x="3480" y="363.0" />
+        <di:waypoint x="3480" y="857" />
+        <di:waypoint x="2250" y="857" />
+        <di:waypoint x="2250" y="458.0" />
+        <di:waypoint x="2410" y="458.0" />
+        <di:waypoint x="2410" y="428.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1980.0" y="522" width="180" height="28" />
+          <dc:Bounds x="2823.7" y="842" width="82.60000000000001" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_11_h_di" bpmnElement="AUTH1_EMAIL_flow_11">
-        <di:waypoint x="2660" y="365.0" />
-        <di:waypoint x="2710.0" y="365.0" />
-        <di:waypoint x="2710.0" y="175.0" />
-        <di:waypoint x="2760" y="175.0" />
+        <di:waypoint x="3360" y="635.0" />
+        <di:waypoint x="3400" y="635.0" />
+        <di:waypoint x="3400" y="295.0" />
+        <di:waypoint x="3560" y="295.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_EMAIL_flow_12_h_di" bpmnElement="AUTH1_EMAIL_flow_12">
-        <di:waypoint x="2980" y="175.0" />
-        <di:waypoint x="3172" y="175.0" />
+        <di:waypoint x="3780" y="295.0" />
+        <di:waypoint x="3820" y="295.0" />
+        <di:waypoint x="3820" y="247.0" />
+        <di:waypoint x="4090" y="247.0" />
+        <di:waypoint x="4090" y="277.0" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_MOS_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_MOS_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.23.0">
   <bpmn:process id="AUTH1_MOS" name="Регистрация и вход через mos.ru" isExecutable="false">
     <bpmn:documentation>Войти по Mos ID или создать личный аккаунт при первом входе. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
     <bpmn:laneSet id="AUTH1_MOS_lanes">
@@ -99,158 +99,169 @@
   <bpmndi:BPMNDiagram id="AUTH1_MOS_diagram">
     <bpmndi:BPMNPlane id="AUTH1_MOS_horizontal_plane" bpmnElement="AUTH1_MOS_collaboration">
       <bpmndi:BPMNShape id="AUTH1_MOS_pool_h_di" bpmnElement="AUTH1_MOS_pool" isHorizontal="true">
-        <dc:Bounds x="20" y="35" width="2410" height="836" />
+        <dc:Bounds x="20" y="35" width="3070" height="1232" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_lane_0_h_di" bpmnElement="AUTH1_MOS_lane_0" isHorizontal="true">
-        <dc:Bounds x="50" y="80" width="2380" height="340" />
+        <dc:Bounds x="50" y="80" width="3040" height="610" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_lane_1_h_di" bpmnElement="AUTH1_MOS_lane_1" isHorizontal="true">
-        <dc:Bounds x="50" y="420" width="2380" height="446" />
+        <dc:Bounds x="50" y="690" width="3040" height="572" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_start_h_di" bpmnElement="AUTH1_MOS_start">
-        <dc:Bounds x="292.0" y="232.0" width="36" height="36" />
+        <dc:Bounds x="292.0" y="367.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="190" y="275.0" width="240" height="48" />
+          <dc:Bounds x="190" y="408.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_provider_h_di" bpmnElement="AUTH1_MOS_provider">
-        <dc:Bounds x="520.0" y="207.0" width="220" height="86" />
+        <dc:Bounds x="620.0" y="342.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_consent_h_di" bpmnElement="AUTH1_MOS_consent">
-        <dc:Bounds x="840.0" y="207.0" width="220" height="86" />
+        <dc:Bounds x="1040.0" y="342.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_response_h_di" bpmnElement="AUTH1_MOS_response">
-        <dc:Bounds x="1242.0" y="637.0" width="56" height="56" />
+        <dc:Bounds x="1542.0" y="877.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1150" y="600.0" width="240" height="48" />
+          <dc:Bounds x="1450" y="827.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_error_h_di" bpmnElement="AUTH1_MOS_error">
-        <dc:Bounds x="1160.0" y="472.0" width="220" height="86" />
+        <dc:Bounds x="1880.0" y="772.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_retry_h_di" bpmnElement="AUTH1_MOS_retry">
-        <dc:Bounds x="1562.0" y="222.0" width="56" height="56" />
+        <dc:Bounds x="2382.0" y="357.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1470" y="185.0" width="240" height="48" />
+          <dc:Bounds x="2290" y="325.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_cancel_h_di" bpmnElement="AUTH1_MOS_cancel">
-        <dc:Bounds x="1892.0" y="157.0" width="36" height="36" />
+        <dc:Bounds x="2812.0" y="187.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1790" y="200.0" width="240" height="48" />
+          <dc:Bounds x="2710" y="228.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_known_h_di" bpmnElement="AUTH1_MOS_known">
-        <dc:Bounds x="1562.0" y="487.0" width="56" height="56" />
+        <dc:Bounds x="1962.0" y="967.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1470" y="450.0" width="240" height="48" />
+          <dc:Bounds x="1870" y="917.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_existing_h_di" bpmnElement="AUTH1_MOS_existing">
-        <dc:Bounds x="1480.0" y="622.0" width="220" height="86" />
+        <dc:Bounds x="2300.0" y="952.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_entered_h_di" bpmnElement="AUTH1_MOS_entered">
-        <dc:Bounds x="1892.0" y="307.0" width="36" height="36" />
+        <dc:Bounds x="2812.0" y="547.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1790" y="350.0" width="240" height="48" />
+          <dc:Bounds x="2710" y="588.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_new_h_di" bpmnElement="AUTH1_MOS_new">
-        <dc:Bounds x="1800.0" y="547.0" width="220" height="86" />
+        <dc:Bounds x="2300.0" y="772.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_MOS_registered_h_di" bpmnElement="AUTH1_MOS_registered">
-        <dc:Bounds x="2212.0" y="232.0" width="36" height="36" />
+        <dc:Bounds x="2812.0" y="367.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2110" y="275.0" width="240" height="48" />
+          <dc:Bounds x="2710" y="408.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_0_h_di" bpmnElement="AUTH1_MOS_flow_0">
-        <di:waypoint x="328" y="250.0" />
-        <di:waypoint x="520" y="250.0" />
+        <di:waypoint x="328" y="385.0" />
+        <di:waypoint x="460" y="385.0" />
+        <di:waypoint x="460" y="385.0" />
+        <di:waypoint x="620" y="385.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_1_h_di" bpmnElement="AUTH1_MOS_flow_1">
-        <di:waypoint x="740" y="250.0" />
-        <di:waypoint x="840" y="250.0" />
+        <di:waypoint x="840" y="385.0" />
+        <di:waypoint x="880" y="385.0" />
+        <di:waypoint x="880" y="385.0" />
+        <di:waypoint x="1040" y="385.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_2_h_di" bpmnElement="AUTH1_MOS_flow_2">
-        <di:waypoint x="1060" y="250.0" />
-        <di:waypoint x="1151.0" y="250.0" />
-        <di:waypoint x="1151.0" y="665.0" />
-        <di:waypoint x="1242" y="665.0" />
+        <di:waypoint x="1260" y="385.0" />
+        <di:waypoint x="1300" y="385.0" />
+        <di:waypoint x="1300" y="905.0" />
+        <di:waypoint x="1542" y="905.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_3_h_di" bpmnElement="AUTH1_MOS_flow_3">
-        <di:waypoint x="1242" y="665.0" />
-        <di:waypoint x="1105" y="665.0" />
-        <di:waypoint x="1105" y="515.0" />
-        <di:waypoint x="1160" y="515.0" />
+        <di:waypoint x="1570" y="933.0" />
+        <di:waypoint x="1570" y="958.0" />
+        <di:waypoint x="1720" y="958.0" />
+        <di:waypoint x="1720" y="815.0" />
+        <di:waypoint x="1880" y="815.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1015" y="576.0" width="180" height="28" />
+          <dc:Bounds x="1624.0" y="943.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_4_h_di" bpmnElement="AUTH1_MOS_flow_4">
-        <di:waypoint x="1380" y="515.0" />
-        <di:waypoint x="1471.0" y="515.0" />
-        <di:waypoint x="1471.0" y="250.0" />
-        <di:waypoint x="1562" y="250.0" />
+        <di:waypoint x="2100" y="815.0" />
+        <di:waypoint x="2140" y="815.0" />
+        <di:waypoint x="2140" y="385.0" />
+        <di:waypoint x="2382" y="385.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_5_h_di" bpmnElement="AUTH1_MOS_flow_5">
-        <di:waypoint x="1618" y="250.0" />
-        <di:waypoint x="1755" y="250.0" />
-        <di:waypoint x="1755" y="800" />
-        <di:waypoint x="465" y="800" />
-        <di:waypoint x="465" y="250.0" />
-        <di:waypoint x="520" y="250.0" />
+        <di:waypoint x="2438" y="385.0" />
+        <di:waypoint x="2640" y="385.0" />
+        <di:waypoint x="2640" y="1175" />
+        <di:waypoint x="570" y="1175" />
+        <di:waypoint x="570" y="458.0" />
+        <di:waypoint x="730" y="458.0" />
+        <di:waypoint x="730" y="428.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1020.0" y="786" width="180" height="28" />
+          <dc:Bounds x="1584.0" y="1160" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_6_h_di" bpmnElement="AUTH1_MOS_flow_6">
-        <di:waypoint x="1618" y="250.0" />
-        <di:waypoint x="1755.0" y="250.0" />
-        <di:waypoint x="1755.0" y="175.0" />
-        <di:waypoint x="1892" y="175.0" />
+        <di:waypoint x="2410" y="413.0" />
+        <di:waypoint x="2410" y="438.0" />
+        <di:waypoint x="2560" y="438.0" />
+        <di:waypoint x="2560" y="157.0" />
+        <di:waypoint x="2830" y="157.0" />
+        <di:waypoint x="2830" y="187.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1680.0" y="198.5" width="180" height="28" />
+          <dc:Bounds x="2464.0" y="423.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_7_h_di" bpmnElement="AUTH1_MOS_flow_7">
-        <di:waypoint x="1298" y="665.0" />
-        <di:waypoint x="1430.0" y="665.0" />
-        <di:waypoint x="1430.0" y="515.0" />
-        <di:waypoint x="1562" y="515.0" />
+        <di:waypoint x="1598" y="905.0" />
+        <di:waypoint x="1748" y="905.0" />
+        <di:waypoint x="1748" y="995.0" />
+        <di:waypoint x="1962" y="995.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1405.0" y="576.0" width="180" height="28" />
+          <dc:Bounds x="1652.0" y="890.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_8_h_di" bpmnElement="AUTH1_MOS_flow_8">
-        <di:waypoint x="1562" y="515.0" />
-        <di:waypoint x="1425" y="515.0" />
-        <di:waypoint x="1425" y="665.0" />
-        <di:waypoint x="1480" y="665.0" />
+        <di:waypoint x="2018" y="995.0" />
+        <di:waypoint x="2168" y="995.0" />
+        <di:waypoint x="2168" y="995.0" />
+        <di:waypoint x="2300" y="995.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1335" y="576.0" width="180" height="28" />
+          <dc:Bounds x="2072.0" y="980.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_9_h_di" bpmnElement="AUTH1_MOS_flow_9">
-        <di:waypoint x="1700" y="665.0" />
-        <di:waypoint x="1796.0" y="665.0" />
-        <di:waypoint x="1796.0" y="325.0" />
-        <di:waypoint x="1892" y="325.0" />
+        <di:waypoint x="2520" y="995.0" />
+        <di:waypoint x="2588" y="995.0" />
+        <di:waypoint x="2588" y="517.0" />
+        <di:waypoint x="2830" y="517.0" />
+        <di:waypoint x="2830" y="547.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_10_h_di" bpmnElement="AUTH1_MOS_flow_10">
-        <di:waypoint x="1618" y="515.0" />
-        <di:waypoint x="1709.0" y="515.0" />
-        <di:waypoint x="1709.0" y="590.0" />
-        <di:waypoint x="1800" y="590.0" />
+        <di:waypoint x="1990" y="1023.0" />
+        <di:waypoint x="1990" y="1048.0" />
+        <di:waypoint x="2196" y="1048.0" />
+        <di:waypoint x="2196" y="815.0" />
+        <di:waypoint x="2300" y="815.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1634.0" y="538.5" width="180" height="28" />
+          <dc:Bounds x="2072.0" y="1033.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_MOS_flow_11_h_di" bpmnElement="AUTH1_MOS_flow_11">
-        <di:waypoint x="2020" y="590.0" />
-        <di:waypoint x="2116.0" y="590.0" />
-        <di:waypoint x="2116.0" y="250.0" />
-        <di:waypoint x="2212" y="250.0" />
+        <di:waypoint x="2520" y="815.0" />
+        <di:waypoint x="2616" y="815.0" />
+        <di:waypoint x="2616" y="337.0" />
+        <di:waypoint x="2830" y="337.0" />
+        <di:waypoint x="2830" y="367.0" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

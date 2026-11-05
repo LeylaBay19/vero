@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_COMPANY_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_COMPANY_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.23.0">
   <bpmn:process id="AUTH1_COMPANY" name="Подключение организации через УКЭП" isExecutable="false">
     <bpmn:documentation>Подключить организацию и получить подтверждённые полномочия генерального директора. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
     <bpmn:laneSet id="AUTH1_COMPANY_lanes">
@@ -109,175 +109,187 @@
   <bpmndi:BPMNDiagram id="AUTH1_COMPANY_diagram">
     <bpmndi:BPMNPlane id="AUTH1_COMPANY_horizontal_plane" bpmnElement="AUTH1_COMPANY_collaboration">
       <bpmndi:BPMNShape id="AUTH1_COMPANY_pool_h_di" bpmnElement="AUTH1_COMPANY_pool" isHorizontal="true">
-        <dc:Bounds x="20" y="35" width="3050" height="872" />
+        <dc:Bounds x="20" y="35" width="4330" height="1094" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_lane_0_h_di" bpmnElement="AUTH1_COMPANY_lane_0" isHorizontal="true">
-        <dc:Bounds x="50" y="80" width="3020" height="340" />
+        <dc:Bounds x="50" y="80" width="4300" height="430" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_lane_1_h_di" bpmnElement="AUTH1_COMPANY_lane_1" isHorizontal="true">
-        <dc:Bounds x="50" y="420" width="3020" height="482" />
+        <dc:Bounds x="50" y="510" width="4300" height="614" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_start_h_di" bpmnElement="AUTH1_COMPANY_start">
-        <dc:Bounds x="292.0" y="232.0" width="36" height="36" />
+        <dc:Bounds x="292.0" y="277.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="190" y="275.0" width="240" height="48" />
+          <dc:Bounds x="190" y="318.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_select_h_di" bpmnElement="AUTH1_COMPANY_select">
-        <dc:Bounds x="520.0" y="207.0" width="220" height="86" />
+        <dc:Bounds x="620.0" y="252.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_certificate_h_di" bpmnElement="AUTH1_COMPANY_certificate">
-        <dc:Bounds x="922.0" y="637.0" width="56" height="56" />
+        <dc:Bounds x="1122.0" y="697.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="830" y="600.0" width="240" height="48" />
+          <dc:Bounds x="1030" y="647.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_invalid_h_di" bpmnElement="AUTH1_COMPANY_invalid">
-        <dc:Bounds x="840.0" y="472.0" width="220" height="86" />
+        <dc:Bounds x="1460.0" y="682.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_review_h_di" bpmnElement="AUTH1_COMPANY_review">
-        <dc:Bounds x="1160.0" y="207.0" width="220" height="86" />
+        <dc:Bounds x="1460.0" y="252.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_confirm_h_di" bpmnElement="AUTH1_COMPANY_confirm">
-        <dc:Bounds x="1480.0" y="207.0" width="220" height="86" />
+        <dc:Bounds x="1880.0" y="252.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_send_h_di" bpmnElement="AUTH1_COMPANY_send">
-        <dc:Bounds x="1800.0" y="547.0" width="220" height="86" />
+        <dc:Bounds x="2300.0" y="682.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_decision_h_di" bpmnElement="AUTH1_COMPANY_decision">
-        <dc:Bounds x="2202.0" y="637.0" width="56" height="56" />
+        <dc:Bounds x="2802.0" y="697.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2110" y="600.0" width="240" height="48" />
+          <dc:Bounds x="2710" y="665.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_reject_h_di" bpmnElement="AUTH1_COMPANY_reject">
-        <dc:Bounds x="2120.0" y="472.0" width="220" height="86" />
+        <dc:Bounds x="3140.0" y="592.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_again_h_di" bpmnElement="AUTH1_COMPANY_again">
-        <dc:Bounds x="2522.0" y="222.0" width="56" height="56" />
+        <dc:Bounds x="3642.0" y="177.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2430" y="185.0" width="240" height="48" />
+          <dc:Bounds x="3550" y="145.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_no_access_h_di" bpmnElement="AUTH1_COMPANY_no_access">
-        <dc:Bounds x="2852.0" y="157.0" width="36" height="36" />
+        <dc:Bounds x="4072.0" y="277.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2750" y="200.0" width="240" height="48" />
+          <dc:Bounds x="3970" y="318.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_approve_h_di" bpmnElement="AUTH1_COMPANY_approve">
-        <dc:Bounds x="2440.0" y="547.0" width="220" height="86" />
+        <dc:Bounds x="3140.0" y="772.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_COMPANY_done_h_di" bpmnElement="AUTH1_COMPANY_done">
-        <dc:Bounds x="2852.0" y="307.0" width="36" height="36" />
+        <dc:Bounds x="3652.0" y="367.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2750" y="350.0" width="240" height="48" />
+          <dc:Bounds x="3550" y="408.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_0_h_di" bpmnElement="AUTH1_COMPANY_flow_0">
-        <di:waypoint x="328" y="250.0" />
-        <di:waypoint x="520" y="250.0" />
+        <di:waypoint x="328" y="295.0" />
+        <di:waypoint x="460" y="295.0" />
+        <di:waypoint x="460" y="295.0" />
+        <di:waypoint x="620" y="295.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_1_h_di" bpmnElement="AUTH1_COMPANY_flow_1">
-        <di:waypoint x="740" y="250.0" />
-        <di:waypoint x="831.0" y="250.0" />
-        <di:waypoint x="831.0" y="665.0" />
-        <di:waypoint x="922" y="665.0" />
+        <di:waypoint x="840" y="295.0" />
+        <di:waypoint x="880" y="295.0" />
+        <di:waypoint x="880" y="725.0" />
+        <di:waypoint x="1122" y="725.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_2_h_di" bpmnElement="AUTH1_COMPANY_flow_2">
-        <di:waypoint x="978" y="665.0" />
-        <di:waypoint x="1069.0" y="665.0" />
-        <di:waypoint x="1069.0" y="250.0" />
-        <di:waypoint x="1160" y="250.0" />
+        <di:waypoint x="1178" y="725.0" />
+        <di:waypoint x="1300" y="725.0" />
+        <di:waypoint x="1300" y="295.0" />
+        <di:waypoint x="1460" y="295.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="994.0" y="443.5" width="180" height="28" />
+          <dc:Bounds x="1218.0" y="710.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_3_h_di" bpmnElement="AUTH1_COMPANY_flow_3">
-        <di:waypoint x="922" y="665.0" />
-        <di:waypoint x="785" y="665.0" />
-        <di:waypoint x="785" y="515.0" />
-        <di:waypoint x="840" y="515.0" />
+        <di:waypoint x="1150" y="753.0" />
+        <di:waypoint x="1150" y="778.0" />
+        <di:waypoint x="1328" y="778.0" />
+        <di:waypoint x="1328" y="798.0" />
+        <di:waypoint x="1570" y="798.0" />
+        <di:waypoint x="1570" y="768.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="695" y="576.0" width="180" height="28" />
+          <dc:Bounds x="1218.0" y="763.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_4_h_di" bpmnElement="AUTH1_COMPANY_flow_4">
-        <di:waypoint x="1060" y="515.0" />
-        <di:waypoint x="1115" y="515.0" />
-        <di:waypoint x="1115" y="800" />
-        <di:waypoint x="465" y="800" />
-        <di:waypoint x="465" y="250.0" />
-        <di:waypoint x="520" y="250.0" />
+        <di:waypoint x="1680" y="725.0" />
+        <di:waypoint x="1800" y="725.0" />
+        <di:waypoint x="1800" y="995" />
+        <di:waypoint x="570" y="995" />
+        <di:waypoint x="570" y="368.0" />
+        <di:waypoint x="730" y="368.0" />
+        <di:waypoint x="730" y="338.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="700.0" y="786" width="180" height="28" />
+          <dc:Bounds x="1114.1" y="980" width="141.8" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_5_h_di" bpmnElement="AUTH1_COMPANY_flow_5">
-        <di:waypoint x="1380" y="250.0" />
-        <di:waypoint x="1480" y="250.0" />
+        <di:waypoint x="1680" y="295.0" />
+        <di:waypoint x="1720" y="295.0" />
+        <di:waypoint x="1720" y="295.0" />
+        <di:waypoint x="1880" y="295.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_6_h_di" bpmnElement="AUTH1_COMPANY_flow_6">
-        <di:waypoint x="1700" y="250.0" />
-        <di:waypoint x="1750.0" y="250.0" />
-        <di:waypoint x="1750.0" y="590.0" />
-        <di:waypoint x="1800" y="590.0" />
+        <di:waypoint x="2100" y="295.0" />
+        <di:waypoint x="2140" y="295.0" />
+        <di:waypoint x="2140" y="725.0" />
+        <di:waypoint x="2300" y="725.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_7_h_di" bpmnElement="AUTH1_COMPANY_flow_7">
-        <di:waypoint x="2020" y="590.0" />
-        <di:waypoint x="2111.0" y="590.0" />
-        <di:waypoint x="2111.0" y="665.0" />
-        <di:waypoint x="2202" y="665.0" />
+        <di:waypoint x="2520" y="725.0" />
+        <di:waypoint x="2560" y="725.0" />
+        <di:waypoint x="2560" y="725.0" />
+        <di:waypoint x="2802" y="725.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_8_h_di" bpmnElement="AUTH1_COMPANY_flow_8">
-        <di:waypoint x="2258" y="665.0" />
-        <di:waypoint x="2349.0" y="665.0" />
-        <di:waypoint x="2349.0" y="590.0" />
-        <di:waypoint x="2440" y="590.0" />
+        <di:waypoint x="2858" y="725.0" />
+        <di:waypoint x="2980" y="725.0" />
+        <di:waypoint x="2980" y="815.0" />
+        <di:waypoint x="3140" y="815.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2274.0" y="613.5" width="180" height="28" />
+          <dc:Bounds x="2898.0" y="710.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_9_h_di" bpmnElement="AUTH1_COMPANY_flow_9">
-        <di:waypoint x="2202" y="665.0" />
-        <di:waypoint x="2065" y="665.0" />
-        <di:waypoint x="2065" y="515.0" />
-        <di:waypoint x="2120" y="515.0" />
+        <di:waypoint x="2830" y="753.0" />
+        <di:waypoint x="2830" y="778.0" />
+        <di:waypoint x="3008" y="778.0" />
+        <di:waypoint x="3008" y="635.0" />
+        <di:waypoint x="3140" y="635.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1975" y="576.0" width="180" height="28" />
+          <dc:Bounds x="2898.0" y="763.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_10_h_di" bpmnElement="AUTH1_COMPANY_flow_10">
-        <di:waypoint x="2340" y="515.0" />
-        <di:waypoint x="2431.0" y="515.0" />
-        <di:waypoint x="2431.0" y="250.0" />
-        <di:waypoint x="2522" y="250.0" />
+        <di:waypoint x="3360" y="635.0" />
+        <di:waypoint x="3400" y="635.0" />
+        <di:waypoint x="3400" y="205.0" />
+        <di:waypoint x="3642" y="205.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_11_h_di" bpmnElement="AUTH1_COMPANY_flow_11">
-        <di:waypoint x="2578" y="250.0" />
-        <di:waypoint x="2715" y="250.0" />
-        <di:waypoint x="2715" y="836" />
-        <di:waypoint x="465" y="836" />
-        <di:waypoint x="465" y="250.0" />
-        <di:waypoint x="520" y="250.0" />
+        <di:waypoint x="3698" y="205.0" />
+        <di:waypoint x="3900" y="205.0" />
+        <di:waypoint x="3900" y="1037" />
+        <di:waypoint x="555" y="1037" />
+        <di:waypoint x="555" y="222.0" />
+        <di:waypoint x="730" y="222.0" />
+        <di:waypoint x="730" y="252.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1500.0" y="822" width="180" height="28" />
+          <dc:Bounds x="2206.5" y="1022" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_12_h_di" bpmnElement="AUTH1_COMPANY_flow_12">
-        <di:waypoint x="2578" y="250.0" />
-        <di:waypoint x="2715.0" y="250.0" />
-        <di:waypoint x="2715.0" y="175.0" />
-        <di:waypoint x="2852" y="175.0" />
+        <di:waypoint x="3670" y="233.0" />
+        <di:waypoint x="3670" y="258.0" />
+        <di:waypoint x="3820" y="258.0" />
+        <di:waypoint x="3820" y="247.0" />
+        <di:waypoint x="4090" y="247.0" />
+        <di:waypoint x="4090" y="277.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2640.0" y="198.5" width="180" height="28" />
+          <dc:Bounds x="3724.0" y="243.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_13_h_di" bpmnElement="AUTH1_COMPANY_flow_13">
-        <di:waypoint x="2660" y="590.0" />
-        <di:waypoint x="2756.0" y="590.0" />
-        <di:waypoint x="2756.0" y="325.0" />
-        <di:waypoint x="2852" y="325.0" />
+        <di:waypoint x="3360" y="815.0" />
+        <di:waypoint x="3428" y="815.0" />
+        <di:waypoint x="3428" y="337.0" />
+        <di:waypoint x="3670" y="337.0" />
+        <di:waypoint x="3670" y="367.0" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

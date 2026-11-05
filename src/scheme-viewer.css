@@ -1,0 +1,6 @@
+.has-expanded-scheme{overflow:hidden}
+article.is-expanded{position:fixed;inset:8px;z-index:1000;margin:0;display:flex;flex-direction:column;min-height:0;box-shadow:0 0 0 20px #f6f8f8}
+article.is-expanded .card-head p,article.is-expanded>ul{display:none}
+article.is-expanded .diagram:not([hidden]){flex:1;min-height:0;max-height:none}
+article.is-expanded .tools{flex:none}
+@media(max-width:600px){article.is-expanded{inset:3px;padding:10px}.is-expanded h2{font-size:16px}}

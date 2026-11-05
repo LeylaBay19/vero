@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_INVITE_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.22.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_INVITE_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.23.0">
   <bpmn:process id="AUTH1_INVITE" name="Подключение сотрудника по приглашению" isExecutable="false">
     <bpmn:documentation>Получить только назначенный организацией доступ после принятия действующего приглашения. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
     <bpmn:laneSet id="AUTH1_INVITE_lanes">
@@ -109,180 +109,189 @@
   <bpmndi:BPMNDiagram id="AUTH1_INVITE_diagram">
     <bpmndi:BPMNPlane id="AUTH1_INVITE_horizontal_plane" bpmnElement="AUTH1_INVITE_collaboration">
       <bpmndi:BPMNShape id="AUTH1_INVITE_pool_h_di" bpmnElement="AUTH1_INVITE_pool" isHorizontal="true">
-        <dc:Bounds x="20" y="35" width="3050" height="836" />
+        <dc:Bounds x="20" y="35" width="3910" height="1052" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_lane_0_h_di" bpmnElement="AUTH1_INVITE_lane_0" isHorizontal="true">
-        <dc:Bounds x="50" y="80" width="3020" height="340" />
+        <dc:Bounds x="50" y="80" width="3880" height="430" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_lane_1_h_di" bpmnElement="AUTH1_INVITE_lane_1" isHorizontal="true">
-        <dc:Bounds x="50" y="420" width="3020" height="446" />
+        <dc:Bounds x="50" y="510" width="3880" height="572" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_start_h_di" bpmnElement="AUTH1_INVITE_start">
-        <dc:Bounds x="292.0" y="232.0" width="36" height="36" />
+        <dc:Bounds x="292.0" y="277.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="190" y="275.0" width="240" height="48" />
+          <dc:Bounds x="190" y="318.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_form_h_di" bpmnElement="AUTH1_INVITE_form">
-        <dc:Bounds x="520.0" y="547.0" width="220" height="86" />
+        <dc:Bounds x="620.0" y="682.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_account_h_di" bpmnElement="AUTH1_INVITE_account">
-        <dc:Bounds x="922.0" y="222.0" width="56" height="56" />
+        <dc:Bounds x="1122.0" y="267.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="830" y="185.0" width="240" height="48" />
+          <dc:Bounds x="1030" y="235.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_new_password_h_di" bpmnElement="AUTH1_INVITE_new_password">
-        <dc:Bounds x="1160.0" y="132.0" width="220" height="86" />
+        <dc:Bounds x="1460.0" y="162.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_login_h_di" bpmnElement="AUTH1_INVITE_login">
-        <dc:Bounds x="1160.0" y="282.0" width="220" height="86" />
+        <dc:Bounds x="1460.0" y="342.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_merge_h_di" bpmnElement="AUTH1_INVITE_merge">
-        <dc:Bounds x="1562.0" y="222.0" width="56" height="56" />
+        <dc:Bounds x="1962.0" y="267.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1470" y="185.0" width="240" height="48" />
+          <dc:Bounds x="1870" y="235.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_valid_h_di" bpmnElement="AUTH1_INVITE_valid">
-        <dc:Bounds x="1882.0" y="637.0" width="56" height="56" />
+        <dc:Bounds x="2382.0" y="697.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1790" y="600.0" width="240" height="48" />
+          <dc:Bounds x="2290" y="647.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_fix_h_di" bpmnElement="AUTH1_INVITE_fix">
-        <dc:Bounds x="1800.0" y="472.0" width="220" height="86" />
+        <dc:Bounds x="2720.0" y="592.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_invitation_h_di" bpmnElement="AUTH1_INVITE_invitation">
-        <dc:Bounds x="2202.0" y="487.0" width="56" height="56" />
+        <dc:Bounds x="2802.0" y="787.0" width="56" height="56" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2110" y="450.0" width="240" height="48" />
+          <dc:Bounds x="2710" y="755.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_expired_h_di" bpmnElement="AUTH1_INVITE_expired">
-        <dc:Bounds x="2120.0" y="622.0" width="220" height="86" />
+        <dc:Bounds x="3140.0" y="772.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_denied_h_di" bpmnElement="AUTH1_INVITE_denied">
-        <dc:Bounds x="2532.0" y="232.0" width="36" height="36" />
+        <dc:Bounds x="3652.0" y="367.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2430" y="275.0" width="240" height="48" />
+          <dc:Bounds x="3550" y="408.0" width="240" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_accept_h_di" bpmnElement="AUTH1_INVITE_accept">
-        <dc:Bounds x="2440.0" y="547.0" width="220" height="86" />
+        <dc:Bounds x="3140.0" y="592.0" width="220" height="86" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="AUTH1_INVITE_done_h_di" bpmnElement="AUTH1_INVITE_done">
-        <dc:Bounds x="2852.0" y="232.0" width="36" height="36" />
+        <dc:Bounds x="3652.0" y="187.0" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2750" y="275.0" width="240" height="48" />
+          <dc:Bounds x="3550" y="228.0" width="240" height="48" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_0_h_di" bpmnElement="AUTH1_INVITE_flow_0">
-        <di:waypoint x="328" y="250.0" />
-        <di:waypoint x="424.0" y="250.0" />
-        <di:waypoint x="424.0" y="590.0" />
-        <di:waypoint x="520" y="590.0" />
+        <di:waypoint x="328" y="295.0" />
+        <di:waypoint x="460" y="295.0" />
+        <di:waypoint x="460" y="725.0" />
+        <di:waypoint x="620" y="725.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_1_h_di" bpmnElement="AUTH1_INVITE_flow_1">
-        <di:waypoint x="740" y="590.0" />
-        <di:waypoint x="831.0" y="590.0" />
-        <di:waypoint x="831.0" y="250.0" />
-        <di:waypoint x="922" y="250.0" />
+        <di:waypoint x="840" y="725.0" />
+        <di:waypoint x="880" y="725.0" />
+        <di:waypoint x="880" y="295.0" />
+        <di:waypoint x="1122" y="295.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_2_h_di" bpmnElement="AUTH1_INVITE_flow_2">
-        <di:waypoint x="978" y="250.0" />
-        <di:waypoint x="1069.0" y="250.0" />
-        <di:waypoint x="1069.0" y="175.0" />
-        <di:waypoint x="1160" y="175.0" />
+        <di:waypoint x="1150" y="323.0" />
+        <di:waypoint x="1150" y="348.0" />
+        <di:waypoint x="1300" y="348.0" />
+        <di:waypoint x="1300" y="205.0" />
+        <di:waypoint x="1460" y="205.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="994.0" y="198.5" width="180" height="28" />
+          <dc:Bounds x="1204.0" y="333.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_3_h_di" bpmnElement="AUTH1_INVITE_flow_3">
-        <di:waypoint x="978" y="250.0" />
-        <di:waypoint x="1069.0" y="250.0" />
-        <di:waypoint x="1069.0" y="325.0" />
-        <di:waypoint x="1160" y="325.0" />
+        <di:waypoint x="1178" y="295.0" />
+        <di:waypoint x="1328" y="295.0" />
+        <di:waypoint x="1328" y="385.0" />
+        <di:waypoint x="1460" y="385.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="994.0" y="273.5" width="180" height="28" />
+          <dc:Bounds x="1232.0" y="280.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_4_h_di" bpmnElement="AUTH1_INVITE_flow_4">
-        <di:waypoint x="1380" y="175.0" />
-        <di:waypoint x="1471.0" y="175.0" />
-        <di:waypoint x="1471.0" y="250.0" />
-        <di:waypoint x="1562" y="250.0" />
+        <di:waypoint x="1680" y="205.0" />
+        <di:waypoint x="1720" y="205.0" />
+        <di:waypoint x="1720" y="295.0" />
+        <di:waypoint x="1962" y="295.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_5_h_di" bpmnElement="AUTH1_INVITE_flow_5">
-        <di:waypoint x="1380" y="325.0" />
-        <di:waypoint x="1471.0" y="325.0" />
-        <di:waypoint x="1471.0" y="250.0" />
-        <di:waypoint x="1562" y="250.0" />
+        <di:waypoint x="1680" y="385.0" />
+        <di:waypoint x="1748" y="385.0" />
+        <di:waypoint x="1748" y="353.0" />
+        <di:waypoint x="1990" y="353.0" />
+        <di:waypoint x="1990" y="323.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_6_h_di" bpmnElement="AUTH1_INVITE_flow_6">
-        <di:waypoint x="1618" y="250.0" />
-        <di:waypoint x="1750.0" y="250.0" />
-        <di:waypoint x="1750.0" y="665.0" />
-        <di:waypoint x="1882" y="665.0" />
+        <di:waypoint x="2018" y="295.0" />
+        <di:waypoint x="2140" y="295.0" />
+        <di:waypoint x="2140" y="725.0" />
+        <di:waypoint x="2382" y="725.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_7_h_di" bpmnElement="AUTH1_INVITE_flow_7">
-        <di:waypoint x="1882" y="665.0" />
-        <di:waypoint x="1745" y="665.0" />
-        <di:waypoint x="1745" y="515.0" />
-        <di:waypoint x="1800" y="515.0" />
+        <di:waypoint x="2410" y="753.0" />
+        <di:waypoint x="2410" y="778.0" />
+        <di:waypoint x="2560" y="778.0" />
+        <di:waypoint x="2560" y="635.0" />
+        <di:waypoint x="2720" y="635.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1655" y="576.0" width="180" height="28" />
+          <dc:Bounds x="2464.0" y="763.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_8_h_di" bpmnElement="AUTH1_INVITE_flow_8">
-        <di:waypoint x="2020" y="515.0" />
-        <di:waypoint x="2075" y="515.0" />
-        <di:waypoint x="2075" y="800" />
-        <di:waypoint x="465" y="800" />
-        <di:waypoint x="465" y="590.0" />
-        <di:waypoint x="520" y="590.0" />
+        <di:waypoint x="2830" y="678.0" />
+        <di:waypoint x="2830" y="703.0" />
+        <di:waypoint x="3060" y="703.0" />
+        <di:waypoint x="3060" y="995" />
+        <di:waypoint x="570" y="995" />
+        <di:waypoint x="570" y="798.0" />
+        <di:waypoint x="730" y="798.0" />
+        <di:waypoint x="730" y="768.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1180.0" y="786" width="180" height="28" />
+          <dc:Bounds x="1773.7" y="980" width="82.60000000000001" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_9_h_di" bpmnElement="AUTH1_INVITE_flow_9">
-        <di:waypoint x="1938" y="665.0" />
-        <di:waypoint x="2070.0" y="665.0" />
-        <di:waypoint x="2070.0" y="515.0" />
-        <di:waypoint x="2202" y="515.0" />
+        <di:waypoint x="2438" y="725.0" />
+        <di:waypoint x="2588" y="725.0" />
+        <di:waypoint x="2588" y="815.0" />
+        <di:waypoint x="2802" y="815.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2045.0" y="576.0" width="180" height="28" />
+          <dc:Bounds x="2492.0" y="710.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_10_h_di" bpmnElement="AUTH1_INVITE_flow_10">
-        <di:waypoint x="2202" y="515.0" />
-        <di:waypoint x="2065" y="515.0" />
-        <di:waypoint x="2065" y="665.0" />
-        <di:waypoint x="2120" y="665.0" />
+        <di:waypoint x="2830" y="843.0" />
+        <di:waypoint x="2830" y="868.0" />
+        <di:waypoint x="2980" y="868.0" />
+        <di:waypoint x="2980" y="888.0" />
+        <di:waypoint x="3250" y="888.0" />
+        <di:waypoint x="3250" y="858.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1975" y="576.0" width="180" height="28" />
+          <dc:Bounds x="2884.0" y="853.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_11_h_di" bpmnElement="AUTH1_INVITE_flow_11">
-        <di:waypoint x="2340" y="665.0" />
-        <di:waypoint x="2436.0" y="665.0" />
-        <di:waypoint x="2436.0" y="250.0" />
-        <di:waypoint x="2532" y="250.0" />
+        <di:waypoint x="3360" y="815.0" />
+        <di:waypoint x="3400" y="815.0" />
+        <di:waypoint x="3400" y="337.0" />
+        <di:waypoint x="3670" y="337.0" />
+        <di:waypoint x="3670" y="367.0" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_12_h_di" bpmnElement="AUTH1_INVITE_flow_12">
-        <di:waypoint x="2258" y="515.0" />
-        <di:waypoint x="2349.0" y="515.0" />
-        <di:waypoint x="2349.0" y="590.0" />
-        <di:waypoint x="2440" y="590.0" />
+        <di:waypoint x="2858" y="815.0" />
+        <di:waypoint x="3008" y="815.0" />
+        <di:waypoint x="3008" y="635.0" />
+        <di:waypoint x="3140" y="635.0" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2274.0" y="538.5" width="180" height="28" />
+          <dc:Bounds x="2912.0" y="800.0" width="42" height="28" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_INVITE_flow_13_h_di" bpmnElement="AUTH1_INVITE_flow_13">
-        <di:waypoint x="2660" y="590.0" />
-        <di:waypoint x="2756.0" y="590.0" />
-        <di:waypoint x="2756.0" y="250.0" />
-        <di:waypoint x="2852" y="250.0" />
+        <di:waypoint x="3360" y="635.0" />
+        <di:waypoint x="3428" y="635.0" />
+        <di:waypoint x="3428" y="157.0" />
+        <di:waypoint x="3670" y="157.0" />
+        <di:waypoint x="3670" y="187.0" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
