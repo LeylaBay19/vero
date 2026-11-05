@@ -6,6 +6,7 @@ from urllib.parse import quote
 from zipfile import ZipFile, ZIP_DEFLATED
 import json, textwrap
 import auth_v1_horizontal as horizontal
+from orthogonal_routes import route
 
 ROOT=Path(__file__).resolve().parents[1]
 VERSION=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
@@ -47,32 +48,24 @@ def anchor(n,side):
     rx,ry=(18,18) if n['kind'] in ['start','end'] else (30,30) if n['kind']=='gateway' else (120,45)
     return {'left':(cx-rx,cy),'right':(cx+rx,cy),'top':(cx,cy-ry),'bottom':(cx,cy+ry)}[side]
 
-def geometry(m,e):
-    ns={n['id']:n for n in m['nodes']};a,b=ns[e['source']],ns[e['target']]
-    if e['route']:
-        side=e['route'];x=20 if side=='left' else 1010
-        p,q=anchor(a,side),anchor(b,side)
-        if side=='left' and a['col']==0 and a['kind']=='task':
-            p=anchor(a,'bottom');return [p,(p[0],a['y']+120),(x,a['y']+120),(x,q[1]),q]
-        return [p,(x,p[1]),(x,q[1]),q]
-    if a['row']==b['row']:
-        side='right' if b['col']>a['col'] else 'left';p=anchor(a,side);q=anchor(b,'left' if side=='right' else 'right');return [p,q]
-    p,q=anchor(a,'bottom'),anchor(b,'top')
-    if a['col']==b['col']:return [p,q]
-    if a['kind']=='gateway':
-        p=anchor(a,'left' if b['col']<a['col'] else 'right');return [p,(q[0],p[1]),q]
-    y=a['y']+120
-    return [p,(p[0],y),(q[0],y),q]
+VERTICAL_ROUTES={}
+def vertical_routes(m):
+    if m['id'] not in VERTICAL_ROUTES:
+        obstacles=[];captions=[]
+        for n in m['nodes']:
+            cx,cy=n['x']+120,n['y']+45;rx,ry=(18,18) if n['kind'] in ['start','end'] else (30,30) if n['kind']=='gateway' else (120,45)
+            obstacles.append((cx-rx,cy-ry,rx*2,ry*2))
+            if n['kind']=='gateway':
+                count=len(lines(n['text'],31));captions.append((n['x']-5,n['y']-27-(count-1)*17,250,count*17+7))
+            elif n['kind'] in ['start','end']:captions.append((n['x'],cy+25,240,len(lines(n['text'],30))*17+10))
+        VERTICAL_ROUTES[m['id']]=route(m['nodes'],m['edges'],anchor,obstacles,(10,30,1030,max(n['y'] for n in m['nodes'])+130),captions)
+    return VERTICAL_ROUTES[m['id']]
+
+def geometry(m,e):return vertical_routes(m)[m['edges'].index(e)][0]
 
 def lines(text,width=27):return textwrap.wrap(text,width=width,break_long_words=False,break_on_hyphens=False)
 def label_geo(m,e,points):
-    segments=[(a,b) for a,b in zip(points,points[1:]) if a!=b]
-    a,b=next((pair for pair in segments if pair[0][1]==pair[1][1]),segments[0]) if e['route'] else segments[0]
-    x,y=(a[0]+b[0])/2,(a[1]+b[1])/2
-    target=next(n for n in m['nodes'] if n['id']==e['target'])
-    if not e['route'] and a[0]==b[0] and target['kind']=='gateway':
-        top=target['y']-12-(len(lines(target['text'],31))-1)*17-15;y=(a[1]+top)/2
-    return x,y
+    return vertical_routes(m)[m['edges'].index(e)][1]
 def text(x,y,words,size=13,anchor='middle',cls='',width=27):
     ls=lines(words,width);return f'<text x="{x}" y="{y}" text-anchor="{anchor}" font-size="{size}" class="{cls}">'+''.join(f'<tspan x="{x}" dy="{0 if i==0 else 17}">{escape(s)}</tspan>' for i,s in enumerate(ls))+'</text>'
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_COMPANY_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.23.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="AUTH1_COMPANY_definitions" targetNamespace="https://vero.prototype/processes/v1" exporter="VERO prototype" exporterVersion="1.24.0">
   <bpmn:process id="AUTH1_COMPANY" name="Подключение организации через УКЭП" isExecutable="false">
     <bpmn:documentation>Подключить организацию и получить подтверждённые полномочия генерального директора. Предлагаемый процесс по текущему прототипу; не исполняемый серверный процесс.</bpmn:documentation>
     <bpmn:startEvent id="AUTH1_COMPANY_start" name="Аккаунт создан; подключить организацию">
@@ -148,8 +148,10 @@
         <di:waypoint x="490" y="280" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_1_di" bpmnElement="AUTH1_COMPANY_flow_1">
-        <di:waypoint x="490" y="370" />
-        <di:waypoint x="490" y="485" />
+        <di:waypoint x="370" y="325" />
+        <di:waypoint x="352" y="325" />
+        <di:waypoint x="352" y="515" />
+        <di:waypoint x="460" y="515" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_2_di" bpmnElement="AUTH1_COMPANY_flow_2">
         <di:waypoint x="490" y="545" />
@@ -159,20 +161,22 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_3_di" bpmnElement="AUTH1_COMPANY_flow_3">
-        <di:waypoint x="460" y="515" />
-        <di:waypoint x="300" y="515" />
+        <di:waypoint x="490" y="485" />
+        <di:waypoint x="490" y="452" />
+        <di:waypoint x="180" y="452" />
+        <di:waypoint x="180" y="470" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="290.0" y="500.0" width="180" height="30" />
+          <dc:Bounds x="245.0" y="437.0" width="180" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_4_di" bpmnElement="AUTH1_COMPANY_flow_4">
-        <di:waypoint x="180" y="560" />
-        <di:waypoint x="180" y="590" />
-        <di:waypoint x="20" y="590" />
-        <di:waypoint x="20" y="325" />
-        <di:waypoint x="370" y="325" />
+        <di:waypoint x="300" y="515" />
+        <di:waypoint x="318" y="515" />
+        <di:waypoint x="318" y="388" />
+        <di:waypoint x="490" y="388" />
+        <di:waypoint x="490" y="370" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="10.0" y="575.0" width="180" height="30" />
+          <dc:Bounds x="314.0" y="373.0" width="180" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_5_di" bpmnElement="AUTH1_COMPANY_flow_5">
@@ -206,12 +210,14 @@
         <di:waypoint x="180" y="1435" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_11_di" bpmnElement="AUTH1_COMPANY_flow_11">
-        <di:waypoint x="150" y="1465" />
-        <di:waypoint x="20" y="1465" />
-        <di:waypoint x="20" y="325" />
-        <di:waypoint x="370" y="325" />
+        <di:waypoint x="210" y="1465" />
+        <di:waypoint x="228" y="1465" />
+        <di:waypoint x="228" y="1327" />
+        <di:waypoint x="628" y="1327" />
+        <di:waypoint x="628" y="325" />
+        <di:waypoint x="610" y="325" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-5.0" y="1450.0" width="180" height="30" />
+          <dc:Bounds x="338.0" y="1312.0" width="180" height="30" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="AUTH1_COMPANY_flow_12_di" bpmnElement="AUTH1_COMPANY_flow_12">

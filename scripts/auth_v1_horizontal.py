@@ -3,6 +3,7 @@ from copy import deepcopy
 from html import escape
 from xml.etree import ElementTree as ET
 import textwrap
+from orthogonal_routes import route
 
 B='http://www.omg.org/spec/BPMN/20100524/MODEL';D='http://www.omg.org/spec/BPMN/20100524/DI';C='http://www.omg.org/spec/DD/20100524/DC';I='http://www.omg.org/spec/DD/20100524/DI'
 def wrap(value,width=28):return textwrap.wrap(value,width=width,break_long_words=False,break_on_hyphens=False)
@@ -35,38 +36,27 @@ def layout(model):
     base=80+sum(heights);heights[1]+=100+len(backs)*42
     incoming={n['id']:[] for n in nodes};outgoing={n['id']:[] for n in nodes}
     for i,e in enumerate(model['edges']):incoming[e['target']].append(i);outgoing[e['source']].append(i)
-    return {'nodes':nodes,'incoming':incoming,'outgoing':outgoing,'lanes':[{'name':'Пользователь / руководитель','y':tops[0],'h':heights[0]},{'name':'Платформа ВЕРО','y':tops[1],'h':heights[1]}],'w':max(n['x'] for n in nodes)+390,'h':80+sum(heights)+25,'loop_y':{i:base+55+j*42 for j,i in enumerate(backs)}}
+    g={'nodes':nodes,'incoming':incoming,'outgoing':outgoing,'lanes':[{'name':'Пользователь / руководитель','y':tops[0],'h':heights[0]},{'name':'Платформа ВЕРО','y':tops[1],'h':heights[1]}],'w':max(n['x'] for n in nodes)+390,'h':80+sum(heights)+25,'loop_y':{i:base+55+j*42 for j,i in enumerate(backs)}}
+    for n in nodes:
+        n['label_below']=n['kind']=='gateway' and any(e['source']==n['id'] and e['label']=='Нет' and byid[e['target']]['y']<n['y'] for e in model['edges'])
+    obstacles=[]
+    for n in nodes:
+        cx,cy=n['x']+110,n['y']+43;rx,ry=(18,18) if n['kind'] in ['start','end'] else (28,28) if n['kind']=='gateway' else (110,43)
+        obstacles.append((cx-rx,cy-ry,rx*2,ry*2))
+        if n['kind']=='gateway':obstacles.append(caption(n)[1])
+        elif n['kind'] in ['start','end']:obstacles.append((n['x']-10,cy+23,240,len(wrap(n['text'],30))*18+12))
+    g['routes']=route(nodes,model['edges'],anchor,obstacles,(155,85,g['w']-30,g['h']-30))
+    return g
 def anchor(n,side):
     cx,cy=n['x']+110,n['y']+43;rx,ry=(18,18) if n['kind'] in ['start','end'] else (28,28) if n['kind']=='gateway' else (110,43)
     return {'left':(cx-rx,cy),'right':(cx+rx,cy),'top':(cx,cy-ry),'bottom':(cx,cy+ry)}[side]
 def edge_geometry(model,g,i):
-    edge=model['edges'][i];nodes={n['id']:n for n in g['nodes']};a,b=nodes[edge['source']],nodes[edge['target']]
-    incoming=g['incoming'][b['id']];incoming=sorted(incoming,key=lambda j:(j in g['loop_y'],j));port=incoming.index(i)
-    target_side=['left','bottom','top'][port]
-    source_side='bottom' if len(g['outgoing'][a['id']])>1 and edge['label']=='Нет' else 'right'
-    if i in g['loop_y'] and a['kind']=='task':
-        bottom_input=any(model['edges'][j]['label']=='Нет' and nodes[model['edges'][j]['source']]['y']==a['y'] for j in g['incoming'][a['id']])
-        if not bottom_input:source_side='bottom'
-    if b['kind']=='end' and port==0:target_side='top'
-    if source_side=='bottom' and i not in g['loop_y'] and a['y']==b['y'] and port==0:target_side='bottom'
-    p,q=anchor(a,source_side),anchor(b,target_side)
-    column_edges=[j for j,e in enumerate(model['edges']) if nodes[e['source']]['rank']==a['rank'] and j not in g['loop_y']]
-    column_backs=[j for j in g['loop_y'] if nodes[model['edges'][j]['source']]['rank']==a['rank']]
-    x=a['x']+260+column_edges.index(i)*28 if i in column_edges else a['x']+340+column_backs.index(i)*28
-    prefix=[p] if source_side=='right' else [p,(p[0],p[1]+25)]
-    if i in g['loop_y']:
-        y=g['loop_y'][i];before=b['x']-35-port*15
-        end_y=q[1]+30 if target_side=='bottom' else q[1]-30 if target_side=='top' else q[1]
-        pts=prefix+[(x,prefix[-1][1]),(x,y),(before,y),(before,end_y)]
-        if target_side!='left':pts.append((q[0],end_y))
-        return pts+[q],((x+before)/2,y)
-    end_y=q[1]+30 if target_side=='bottom' else q[1]-30 if target_side=='top' else q[1]
-    pts=prefix+[(x,prefix[-1][1]),(x,end_y)]
-    if target_side!='left':pts.append((q[0],end_y))
-    pts.append(q)
-    # A label on the first horizontal segment belongs unambiguously to its
-    # outgoing branch. Text masking leaves a gap in the underlying arrow.
-    return pts,((prefix[-1][0]+x)/2,prefix[-1][1])
+    return g['routes'][i]
+
+def caption(n):
+    count=len(wrap(n['text']));cy=n['y']+43
+    ty=cy+55 if n.get('label_below') else cy-45-(count-1)*18
+    return ty,(n['x']-10,ty-15,240,count*18+7)
 
 def svg(model,g):
     mid=model['id']+'_H';W,H=g['w'],g['h'];masks=[];paths=[];labels=[];shapes=[]
@@ -79,7 +69,7 @@ def svg(model,g):
         if k in ['start','end']:
             ls=wrap(n['text'],30);masks.append(f'<rect x="{x-10}" y="{cy+23}" width="240" height="{len(ls)*18+12}" fill="black"/>');shapes.append(f'<g data-node="{n["id"]}"><circle cx="{cx}" cy="{cy}" r="18" fill="white" stroke="#222" stroke-width="{3 if k=="end" else 1.5}"/>'+txt(cx,cy+40,n['text'],14,30)+'</g>')
         elif k=='gateway':
-            ls=wrap(n['text']);ty=cy-45-(len(ls)-1)*18;masks.append(f'<rect x="{x-10}" y="{ty-15}" width="240" height="{len(ls)*18+7}" fill="black"/>');shapes.append(f'<g data-node="{n["id"]}"><rect x="{x-10}" y="{ty-15}" width="240" height="{len(ls)*18+7}" fill="white"/>'+txt(cx,ty,n['text'])+f'<path d="M{cx},{cy-28}L{cx+28},{cy}L{cx},{cy+28}L{cx-28},{cy}Z" fill="white" stroke="#222"/>'+txt(cx,cy+6,'×',20)+'</g>')
+            ls=wrap(n['text']);ty=caption(n)[0];masks.append(f'<rect x="{x-10}" y="{ty-15}" width="240" height="{len(ls)*18+7}" fill="black"/>');shapes.append(f'<g data-node="{n["id"]}"><rect x="{x-10}" y="{ty-15}" width="240" height="{len(ls)*18+7}" fill="white"/>'+txt(cx,ty,n['text'])+f'<path d="M{cx},{cy-28}L{cx+28},{cy}L{cx},{cy+28}L{cx-28},{cy}Z" fill="white" stroke="#222"/>'+txt(cx,cy+6,'×',20)+'</g>')
         else:
             ls=wrap(n['text'],27);ty=cy+5-(len(ls)-1)*9;shapes.append(f'<g data-node="{n["id"]}"><rect x="{x}" y="{y}" width="220" height="86" rx="8" fill="white" stroke="#222"/>'+txt(cx,ty,n['text'],14,27)+'</g>')
     pool=f'<rect x="20" y="35" width="{W-40}" height="{H-55}" fill="white" stroke="#333"/>'+txt(W/2,60,model['title']+' · вариант 1',16,100)
@@ -103,7 +93,7 @@ def bpmn(model,g,vertical_xml):
     for n in g['nodes']:
         cx,cy=n['x']+110,n['y']+43;w,h=(36,36) if n['kind'] in ['start','end'] else (56,56) if n['kind']=='gateway' else (220,86);sh=shape(mid+'_'+n['id'],cx-w/2,cy-h/2,w,h)
         if n['kind']!='task':
-            count=len(wrap(n['text'],28 if n['kind']=='gateway' else 30));label_y=cy-60-(count-1)*18 if n['kind']=='gateway' else cy+23
+            count=len(wrap(n['text'],28 if n['kind']=='gateway' else 30));label_y=caption(n)[1][1] if n['kind']=='gateway' else cy+23
             label=ET.SubElement(sh,f'{{{D}}}BPMNLabel');ET.SubElement(label,f'{{{C}}}Bounds',{'x':str(n['x']-10),'y':str(label_y),'width':'240','height':str(count*18+12)})
     for i,e in enumerate(model['edges']):
         el=ET.SubElement(plane,f'{{{D}}}BPMNEdge',{'id':mid+'_flow_'+str(i)+'_h_di','bpmnElement':mid+'_flow_'+str(i)});pts,(x,y)=edge_geometry(model,g,i)

@@ -1,12 +1,20 @@
 {
-  "date_moscow": "2026-11-05T20:24:05+03:00",
-  "ui_version": "1.23.0",
-  "ui_commit": "5784038",
-  "site_source": "fcf547e98a68f958cde849b838b83af58764d2dd",
-  "site_url": "https://registration-four-flows-prototype.leyla-bairamkulova.chatgpt.site/?v=1.23.0",
-  "visible_messages": 555,
+  "date_moscow": "2026-11-05",
+  "ui_version": "1.24.0",
+  "release_tag": "v1.24.0",
+  "site_source": "784586d3790956ce531ebded549bc33b35802721",
+  "site_deployment": "appgdep_6aecc0028d9c819197edbf21766a51b4",
+  "site_status": "succeeded",
+  "site_url": "https://registration-four-flows-prototype.leyla-bairamkulova.chatgpt.site/?v=1.24.0#schemes",
+  "visible_messages": 566,
   "unique_images": 116,
   "entry": "prototype.html",
   "resume": "CONTINUE-VERO.md",
-  "pending": "Diagram simplification requires separate user permission; no prototype changes in this transfer."
+  "pending": null,
+  "one_time_authorization": {
+    "scope": "Diagram simplification, build/tests, Sites publication and GitHub transfer for this request only",
+    "expires": "At completion of this request after verified Sites publication and GitHub push",
+    "reusable_for_followup": false,
+    "runtime_approval_settings_changed": false
+  }
 }

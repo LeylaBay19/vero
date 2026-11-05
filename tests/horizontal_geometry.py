@@ -4,6 +4,7 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 import auth_v1_horizontal as h
+from orthogonal_routes import overlap as flows_overlap
 
 def segments(points):
     return [(a,b) for a,b in zip(points,points[1:]) if a!=b]
@@ -17,6 +18,14 @@ def hit(a,b,box):
 failures=[]
 for model in json.loads((ROOT/'processes-v1/model.json').read_text(encoding='utf8')):
     g=h.layout(model);paths=[h.edge_geometry(model,g,i)[0] for i in range(len(model['edges']))]
+    assert all(len(p)<=6 for p in paths),model['id']+' excessive bends'
+    if model['id']=='AUTH1_EMAIL':
+        by_pair={(e['source'],e['target']):paths[i] for i,e in enumerate(model['edges'])}
+        assert len(by_pair[('expired','mail')])==3,'Mail retry should have one bend'
+        assert len(by_pair[('mos_offer','done')])==2,'Final event should connect directly'
+        branch=by_pair[('valid_form','fix')]
+        assert branch[1][1]<branch[0][1] and branch[1][0]==branch[0][0],'No branch should go up'
+        assert next(n for n in g['nodes'] if n['id']=='valid_form')['label_below']
     for i,(e,pts) in enumerate(zip(model['edges'],paths)):
         for a,b in segments(pts):
             assert a[0]==b[0] or a[1]==b[1]
@@ -31,8 +40,20 @@ for model in json.loads((ROOT/'processes-v1/model.json').read_text(encoding='utf
                     elif a[1]==b[1]==c[1]==d[1]:overlap=min(max(a[0],b[0]),max(c[0],d[0]))-max(min(a[0],b[0]),min(c[0],d[0]))
                     else:continue
                     if overlap>1:failures.append((model['id'],i,'overlaps flow',j,overlap))
-    xml=ET.parse(ROOT/'processes-v1'/(model['id'].lower().replace('_','-')+'-horizontal.bpmn'))
-    edges=xml.findall('.//{'+h.B+'}sequenceFlow')
-    assert [(e.get('sourceRef'),e.get('targetRef'),e.get('name','')) for e in edges]==[(model['id']+'_'+e['source'],model['id']+'_'+e['target'],e['label']) for e in model['edges']]
+    for suffix in ('','-horizontal'):
+        xml=ET.parse(ROOT/'processes-v1'/(model['id'].lower().replace('_','-')+suffix+'.bpmn'))
+        edges=xml.findall('.//{'+h.B+'}sequenceFlow')
+        assert [(e.get('sourceRef'),e.get('targetRef'),e.get('name','')) for e in edges]==[(model['id']+'_'+e['source'],model['id']+'_'+e['target'],e['label']) for e in model['edges']]
+        paths_xml=[]
+        for edge in xml.findall('.//{'+h.D+'}BPMNEdge'):
+            pts=[(float(w.get('x')),float(w.get('y'))) for w in edge.findall('{'+h.I+'}waypoint')];assert all(a!=b and (a[0]==b[0] or a[1]==b[1]) for a,b in segments(pts))
+            for j,other in enumerate(paths_xml):
+                assert not any(flows_overlap(a,b,c,d) for a,b in segments(pts) for c,d in segments(other)),(model['id'],suffix,'shared segment',j)
+            paths_xml.append(pts)
+        shape_boxes={s.get('bpmnElement'):tuple(float(s.find('{'+h.C+'}Bounds').get(k)) for k in ('x','y','width','height')) for s in xml.findall('.//{'+h.D+'}BPMNShape')}
+        for e,pts in zip(model['edges'],paths_xml):
+            for n in model['nodes']:
+                if n['id'] in (e['source'],e['target']):continue
+                assert not any(hit(a,b,shape_boxes[model['id']+'_'+n['id']]) for a,b in segments(pts)),(model['id'],suffix,'crossed node',n['id'])
 assert not failures,failures
 print('Six horizontal BPMN layouts: orthogonal flows, no node crossings or collinear shared flows, all semantic edges/conditions preserved.')
