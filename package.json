@@ -1,10 +1,10 @@
 {
   "name": "auth-registration-prototype",
-  "version": "1.17.0",
+  "version": "1.18.0",
   "private": true,
   "description": "Interactive registration and authorization prototype with editable BPMN process diagrams",
   "scripts": {
-    "test": "node tests/prototype-history.cjs && node tests/onboarding-archive.cjs && node tests/variant4-password.cjs && node tests/registration-revisions.cjs && node tests/stand-routing.cjs && node tests/cabinet-entry.cjs && node tests/brief-cabinet.cjs && node tests/registration-layout.cjs && node tests/power-request.cjs && node tests/registration-mos-id.cjs && node tests/platform-entry.cjs && node tests/delivery.cjs && node tests/proposal-v2.cjs && node tests/organization-access.cjs && node tests/unified-invitation.cjs && node tests/mchd.cjs && node tests/mos-org.cjs && node tests/sandbox.cjs && node tests/schemes.cjs"
+    "test": "node tests/auth-recovery.cjs && node tests/prototype-history.cjs && node tests/onboarding-archive.cjs && node tests/variant4-password.cjs && node tests/registration-revisions.cjs && node tests/stand-routing.cjs && node tests/cabinet-entry.cjs && node tests/brief-cabinet.cjs && node tests/registration-layout.cjs && node tests/power-request.cjs && node tests/registration-mos-id.cjs && node tests/platform-entry.cjs && node tests/delivery.cjs && node tests/proposal-v2.cjs && node tests/organization-access.cjs && node tests/unified-invitation.cjs && node tests/mchd.cjs && node tests/mos-org.cjs && node tests/sandbox.cjs && node tests/schemes.cjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

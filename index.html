@@ -1,6 +1,6 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Регистрация и вход — 5 вариантов</title><style>body{margin:0;padding:24px;background:light-dark(#fff,#141518);color-scheme:light dark}#auth-flow-prototype{max-width:1100px;margin:auto}@media(max-width:580px){body{padding:10px}}</style></head><body><div id="auth-flow-prototype" aria-label="Прототип регистрации и входа: Тринити и Орбита">
   <div class="ap-bench">
-    <div class="ap-bench-head"><strong>Регистрация и вход <small>v1.17.0</small></strong><span>Интерактивный прототип · демонстрационные данные</span></div>
+    <div class="ap-bench-head"><strong>Регистрация и вход <small>v1.18.0</small></strong><span>Интерактивный прототип · демонстрационные данные</span></div>
     <div class="ap-scenarios" aria-label="Выбор сценария">
       <button type="button" data-flow="mos"><span class="ap-scenario-kicker">01 · Сотрудник</span><strong>Тринити · mos.ru</strong><span>Личный вход и доверенность</span></button>
       <button type="button" data-flow="ep"><span class="ap-scenario-kicker">02 · Руководитель</span><strong>Тринити · УКЭП</strong><span>Подключение организации</span></button>
@@ -856,7 +856,7 @@ root.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input'
 if(saved?.version===2&&typeof saved.screen==='string')S.screen=saved.screen;
 render();
 /* In-memory testing history. State and field values never leave the child frame. */
-function createPrototypeHistory({read,write,scope}){
+function createPrototypeHistory({read,write,scope,deferReset=false}){
  const clone=x=>structuredClone(x),stacks=new Map();let restoring=false,queued=false;
  const fields=()=>[...document.querySelectorAll('input,select,textarea')];
  function ui(){return {fields:fields().map((el,index)=>({id:el.id,index,value:el.type==='file'?null:el.value,checked:el.checked,selected:el.tagName==='SELECT'&&el.multiple?[...el.selectedOptions].map(o=>o.value):null})),details:[...document.querySelectorAll('details')].map((el,index)=>({id:el.id,index,open:el.open})),scroll:[...document.querySelectorAll('#main,dialog,[data-history-scroll]')].map((el,index)=>({id:el.id,index,left:el.scrollLeft,top:el.scrollTop})),window:{left:scrollX,top:scrollY}};}
@@ -872,7 +872,8 @@ function createPrototypeHistory({read,write,scope}){
  }
  function travel(direction){flush();const s=stack(),next=s.index+direction;if(next<0||next>=s.entries.length)return emit();restoring=true;try{s.index=next;const saved=clone(s.entries[next]);write(saved.model);restoreUI(saved.ui);}finally{restoring=false;}emit();}
  function reset(){if(restoring)return;stacks.delete(String(scope()));flush();}
- for(const type of ['click','submit','input','change','cancel'])document.addEventListener(type,e=>{if(restoring)return;checkpoint();const resetClick=type==='click'&&e.target.closest?.('#reset,#ap-start');const fixture=type==='change'&&e.target.matches?.('#scenario,#intent,#ap-v2-path,#ap-proposal-path,#ap-proposal-entry,#ap-org-case,#ap-repeat');if(resetClick||fixture)queueMicrotask(reset);else record();},true);
+ document.addEventListener('vero:history-update',record);
+ for(const type of ['click','submit','input','change','cancel'])document.addEventListener(type,e=>{if(restoring)return;checkpoint();const resetClick=type==='click'&&e.target.closest?.('#reset,#ap-start');const fixture=type==='change'&&e.target.matches?.('#scenario,#intent,#ap-v2-path,#ap-proposal-path,#ap-proposal-entry,#ap-org-case,#ap-repeat');if(resetClick||fixture){if(deferReset)setTimeout(reset,0);else queueMicrotask(reset);}else record();},true);
  addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:history')return;const action=e.data.action;if(action==='back')travel(-1);else if(action==='forward')travel(1);else if(action==='status'){if(!stack().entries.length)flush();else emit();}});
  flush();return {record,reset};
 }

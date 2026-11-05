@@ -17,6 +17,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     current=null; origin=screen; purpose='login';
     oneTimePassword=''; draft={}; notice=''; sequence=0;
     if($('r2-mos-outcome'))$('r2-mos-outcome').value='success';
+    if($('r2-auth-outcome'))$('r2-auth-outcome').value='success';
   }
   function show(next) {
     if (screen==='created' && next!=='created') oneTimePassword='';
@@ -25,7 +26,24 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   function error(text, id) {
     const box=$('r2-alert'); if(!box)return;
     box.hidden=false; box.textContent=text;
-    if(id){$('r2-'+id)?.setAttribute('aria-invalid','true');$('r2-'+id)?.focus();}
+    if(id){const input=$('r2-'+id);if(input){input.setAttribute('aria-invalid','true');const errorId='r2-error-'+id;let inline=$(errorId);if(!inline){inline=document.createElement('span');inline.id=errorId;inline.className='r2-field-error';input.closest('label')?.append(inline);}inline.textContent=text;input.setAttribute('aria-describedby',errorId);input.focus();}}
+  }
+  const outcome=()=> $('r2-auth-outcome')?.value||'success';
+  function invitationValid(){
+    if(getScenario()!=='invite')return true;
+    const result=outcome();
+    if(!['invite-expired','invite-revoked'].includes(result))return true;
+    draft.invitationError=result;show('invitation-error');return false;
+  }
+  async function request(form){
+    const previous=screen,inputs=[...form.querySelectorAll('input,button')].map(el=>[el,el.disabled]);
+    form.setAttribute('aria-busy','true');inputs.forEach(([el])=>el.disabled=true);
+    const status=$('r2-status');if(status){status.hidden=false;status.textContent='Сохраняем…';}
+    await new Promise(resolve=>setTimeout(resolve,300));
+    if(!form.isConnected||screen!==previous)return false;
+    form.removeAttribute('aria-busy');inputs.forEach(([el,disabled])=>el.disabled=disabled);if(status)status.hidden=true;
+    if(outcome()==='server'){error('Сервис временно недоступен. Данные сохранены в форме. Повторите попытку.');return false;}
+    return true;
   }
   function openCabinet(requestedTarget) {
     if(!current)return;
@@ -77,7 +95,28 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(shown==='entry'||shown==='login') {
       title='Войти в ВЕРО';
       const invited=getScenario()==='invite';
-      body=(invited?'<div class="notice">Вы приглашены в ООО «Пример». Войдите с почтой, на которую пришло приглашение.</div>':'')+form('login',field('Логин (email)','login','email',`autocomplete="username" value="${esc(invited?invitationEmail:draft.login||'')}" ${invited?'readonly':''}`)+password('Пароль','password','current-password',draft.password||''),invited?'Войти и присоединиться':'Войти')+(invited?'<p class="signup">Нет аккаунта? '+button('Задать пароль','invitation',true)+'</p>':'<div class="separator">или</div>'+button('Войти через mos.ru','mos-login',true)+'<p class="signup">Нет аккаунта? <button class="text-btn" type="button" data-r2-action="register">Зарегистрироваться</button></p>');
+      body=(invited?'<div class="notice">Вы приглашены в ООО «Пример». Войдите с почтой, на которую пришло приглашение.</div>':'')+form('login',field('Логин (email)','login','email',`autocomplete="username" value="${esc(invited?invitationEmail:draft.login||'')}" ${invited?'readonly':''}`)+password('Пароль','password','current-password',draft.password||''),invited?'Войти и присоединиться':'Войти')+'<p><button type="button" class="text-btn" data-r2-action="recover">Забыли пароль?</button></p>'+(invited?'<p class="signup">Нет аккаунта? '+button('Задать пароль','invitation',true)+'</p>':'<div class="separator">или</div>'+button('Войти через mos.ru','mos-login',true)+'<p class="signup">Нет аккаунта? <button class="text-btn" type="button" data-r2-action="register">Зарегистрироваться</button></p>');
+    }
+    if(shown==='recover'){
+      title='Восстановить пароль';body='<p>Укажите email, который используете для входа в ВЕРО.</p>'+form('recover',field('Логин (email)','recover-email','email',`autocomplete="email" placeholder="name@example.ru" value="${esc(draft.recoverEmail||'')}"`),'Получить письмо')+button('Вернуться ко входу','recovery-cancel',true);
+    }
+    if(shown==='recovery-sent'){
+      title='Проверьте почту';body='<p>Если аккаунт с адресом <strong>'+esc(draft.recoverEmail)+'</strong> существует, на него придёт письмо для восстановления пароля.</p>'+button('Открыть письмо','recovery-letter')+button('Отправить повторно','recovery-resend',true)+button('Изменить email','recover',true)+'<p class="mini">Демонстрация: письма не отправляются.</p>';
+    }
+    if(shown==='recovery-letter'){
+      title='Восстановление пароля';body='<p class="mini">Письмо от ВЕРО · демонстрация</p><p>Кому: '+esc(draft.recoverEmail)+'</p><p>Вы запросили смену пароля. Если это были не вы, просто закройте письмо.</p>'+button('Задать новый пароль','recovery-open')+button('Вернуться','recovery-inbox',true);
+    }
+    if(shown==='recovery-password'){
+      title='Задайте новый пароль';body=form('recovery-password',field('Логин (email)','recover-login','email',`value="${esc(draft.recoverEmail)}" disabled`)+password('Новый пароль','new-password')+'<p class="mini">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password'),'Сохранить пароль')+button('Вернуться ко входу','recovery-cancel',true);
+    }
+    if(shown==='recovery-expired'){
+      title='Ссылка недействительна';body='<p>Ссылка устарела или уже использована. Запросите новое письмо для восстановления пароля.</p>'+button('Получить новое письмо','recovery-resend')+button('Вернуться ко входу','recovery-cancel',true);
+    }
+    if(shown==='recovery-success'){
+      title='Пароль изменён';body='<p class="notice good">Теперь войдите с новым паролем. Логин остался прежним.</p>'+button('Войти','recovery-cancel');
+    }
+    if(shown==='invitation-error'){
+      title=draft.invitationError==='invite-revoked'?'Приглашение отозвано':'Срок приглашения истёк';body='<p>Обратитесь к руководителю или администратору организации за новым приглашением. Доступ к компании не предоставлен.</p>'+button('Вернуться ко входу','login',true);
     }
     if(shown==='email'){
       title='Регистрация';
@@ -87,7 +126,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       title='Проверьте почту';body='<p>Отправили ссылку на <strong>'+esc(draft.email)+'</strong>. Перейдите по ней, чтобы продолжить регистрацию.</p>'+button('Открыть письмо','open-email')+button('Изменить email','edit-email',true)+'<p class="mini">Демонстрация письма: реальная отправка не подключена.</p>';
     }
     if(shown==='email-letter'){
-      title='Подтвердите email';body='<p class="mini">Письмо от ВЕРО · демонстрация</p><p>Кому: '+esc(draft.email)+'</p><p>Подтвердите адрес, чтобы задать пароль для входа.</p>'+button('Подтвердить email','confirm-email');
+      title='Подтвердите email';body='<p class="mini">Письмо от ВЕРО · демонстрация</p><p>Кому: '+esc(draft.email)+'</p><p>Подтвердите адрес, чтобы задать пароль для входа.</p>'+button('Подтвердить email','confirm-email')+button('Запросить новое письмо','edit-email',true);
     }
     if(shown==='invitation'){
       title='Вас пригласили на платформу ВЕРО';body='<p>ООО «Пример» приглашает вас для совместной работы. Придумайте пароль. Логином будет почта, на которую пришло приглашение.</p>'+form('invitation',field('Логин — email приглашения','invite-login','email',`value="${invitationEmail}" disabled`)+password('Придумайте пароль','new-password')+'<p class="mini">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password')+agreement,'Создать аккаунт и присоединиться')+'<p class="signup">Уже зарегистрированы? <button class="text-btn" type="button" data-r2-action="invite-login">Войти</button></p>';
@@ -171,7 +210,16 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(action==='register'){draft={};return show('email');}
     if(action==='edit-email'){draft={email:draft.email};return show('email');}
     if(action==='open-email'&&draft.email)return show('email-letter');
-    if(action==='confirm-email'&&screen==='email-letter'&&draft.email){draft.verifiedEmail=draft.email;return show('register');}
+    if(action==='confirm-email'&&screen==='email-letter'&&draft.email){if(outcome()==='expired-link')return error('Ссылка подтверждения устарела. Вернитесь и запросите новое письмо.');draft.verifiedEmail=draft.email;return show('register');}
+    if(action==='recover'){draft={recoverEmail:$('r2-login')?.value.trim()||draft.recoverEmail||''};return show('recover');}
+    if(action==='recovery-cancel'){draft={login:draft.recoverEmail};return show('entry');}
+    if(action==='recovery-letter'&&draft.recoveryToken)return show('recovery-letter');
+    if(action==='recovery-inbox')return show('recovery-sent');
+    if(action==='recovery-resend'&&draft.recoverEmail){draft.recoveryToken=true;draft.recoveryVerified=false;show('recovery-sent');notice='Новое письмо запрошено. Используйте последнюю ссылку.';return refresh();}
+    if(action==='recovery-open'&&screen==='recovery-letter'){
+      if(!draft.recoveryToken||outcome()==='expired-link')return show('recovery-expired');
+      draft.recoveryVerified=true;return show('recovery-password');
+    }
     if(action==='invitation')return show('invitation');
     if(action==='invite-login'){draft={login:invitationEmail};return show('entry');}
     if(action==='back')return show('entry');
@@ -189,19 +237,37 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(action==='unlink'||action==='password')return show(action);
     if(action==='unlink-confirm'){current.mosId=null;current.provider='local_only';notice='Mos ID отвязан. Вход по логину и паролю сохранён.';screen=null;return refresh();}
   });
-  main.addEventListener('submit',e=>{
+  main.addEventListener('submit',async e=>{
     const kind=e.target.dataset.r2Form;if(!kind)return;e.preventDefault();
+    if(e.target.getAttribute('aria-busy')==='true')return;
     const value=id=>$('r2-'+id)?.value||'';
     if(kind==='login'){
       const identifier=value('login').trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier))return error('Укажите email в формате name@example.ru.','login');
+      if(!value('password'))return error('Введите пароль.','password');
       const account=accounts.find(a=>a.email.toLowerCase()===identifier.toLowerCase()&&a.password===value('password'));
-      if(!account)return error('Неверный email или пароль.','password');current=account;return openCabinet();
+      if(!account)return error('Неверный email или пароль. Проверьте данные или восстановите пароль.','password');
+      if(!invitationValid()||!await request(e.target))return;current=account;return openCabinet();
+    }
+    if(kind==='recover'){
+      const email=value('recover-email').trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return error('Укажите email в формате name@example.ru.','recover-email');
+      if(!await request(e.target))return;draft={recoverEmail:email,recoveryToken:true,recoveryVerified:false};return show('recovery-sent');
+    }
+    if(kind==='recovery-password'){
+      if(!draft.recoveryToken||!draft.recoveryVerified||outcome()==='expired-link')return show('recovery-expired');
+      const newPassword=value('new-password');
+      if(newPassword.length<8||!newPassword.trim())return error('Используйте пароль не короче 8 символов.','new-password');
+      if(newPassword!==value('confirm-password'))return error('Пароли не совпадают. Повторите новый пароль.','confirm-password');
+      if(!await request(e.target))return;
+      const account=accounts.find(a=>a.email.toLowerCase()===draft.recoverEmail.toLowerCase());
+      if(!account)return error('Не удалось подтвердить ссылку. Запросите новое письмо.');
+      account.password=newPassword;draft.recoveryToken=false;draft.recoveryVerified=false;return show('recovery-success');
     }
     if(kind==='email'){
       const email=value('email').trim();
       if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return error('Проверьте email.','email');
       if(accounts.some(a=>a.email.toLowerCase()===email.toLowerCase()))return error('Этот email уже используется. Войдите в существующий аккаунт.','email');
-      draft={email};return show('email-sent');
+      if(!await request(e.target))return;draft={email};return show('email-sent');
     }
     if(kind==='invitation'){
       if(screen!=='invitation'||getScenario()!=='invite')return;
@@ -209,6 +275,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       if(value('new-password').length<8||!value('new-password').trim())return error('Используйте пароль не короче 8 символов.','new-password');
       if(value('new-password')!==value('confirm-password'))return error('Пароли не совпадают.','confirm-password');
       if(!$('r2-terms').checked)return error('Примите условия, чтобы присоединиться.','terms');
+      if(!invitationValid()||!await request(e.target))return;
       current={id:'invited-'+(++sequence),login:invitationEmail,email:invitationEmail,password:value('new-password'),provider:'local_only',mosId:null,name:'Анна Петрова',phone:''};accounts.push(current);return openCabinet();
     }
     if(kind==='register'){
@@ -218,6 +285,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       if(value('new-password').length<8||!value('new-password').trim())return error('Используйте пароль не короче 8 символов.','new-password');
       if(value('new-password')!==value('confirm-password'))return error('Пароли не совпадают.','confirm-password');
       if(!$('r2-terms').checked)return error('Примите условия, чтобы создать аккаунт.','terms');
+      if(!await request(e.target))return;
       current={id:'demo-account-'+(++sequence),login,email,password:value('new-password'),provider:'local_only',mosId:null,name:'',phone:''};accounts.push(current);
       screen='offer';enter({...current},true);return;
     }
@@ -230,7 +298,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   });
   main.addEventListener('input',e=>{
     if(!e.target.id.startsWith('r2-'))return;
-    e.target.removeAttribute('aria-invalid');if($('r2-alert'))$('r2-alert').hidden=true;
+    e.target.removeAttribute('aria-invalid');const inline=$('r2-error-'+e.target.id.slice(3));if(inline)inline.remove();e.target.removeAttribute('aria-describedby');if($('r2-alert'))$('r2-alert').hidden=true;
     if(['entry','register','login'].includes(screen)){draft.login=$('r2-login')?.value||'';draft.email=$('r2-email')?.value||'';draft.password=$('r2-password')?.value||'';}
   });
   function fill() {
@@ -240,7 +308,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     const demoAccount=accounts.find(a=>a.login===enteredLogin||a.email.toLowerCase()===enteredLogin?.toLowerCase())||(!enteredLogin?accounts[accounts.length-1]:null);
     let registrationLogin='ivan',registrationEmail='ivan@example.test',suffix=1;
     while(accounts.some(a=>a.login===registrationLogin||a.email===registrationEmail)){registrationLogin='ivan'+suffix;registrationEmail='ivan'+suffix+'@example.test';suffix+=1;}
-    const values={login:['entry','login'].includes(screen)?demoAccount?.email:registrationLogin,email:registrationEmail,password:demoAccount?.password,'new-password':'Example-2026!','confirm-password':'Example-2026!','current-password':current?.password||'Example-2026!'};
+    const values={login:['entry','login'].includes(screen)?demoAccount?.email:registrationLogin,email:registrationEmail,'recover-email':draft.recoverEmail||accounts[accounts.length-1]?.email,password:demoAccount?.password,'new-password':'Example-2026!','confirm-password':'Example-2026!','current-password':current?.password||'Example-2026!'};
     for(const [id,value] of Object.entries(values)){const el=$('r2-'+id);if(value&&el&&!el.value.trim())el.value=value;}
   }
   reset();

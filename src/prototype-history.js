@@ -1,5 +1,5 @@
 /* In-memory testing history. State and field values never leave the child frame. */
-function createPrototypeHistory({read,write,scope}){
+function createPrototypeHistory({read,write,scope,deferReset=false}){
  const clone=x=>structuredClone(x),stacks=new Map();let restoring=false,queued=false;
  const fields=()=>[...document.querySelectorAll('input,select,textarea')];
  function ui(){return {fields:fields().map((el,index)=>({id:el.id,index,value:el.type==='file'?null:el.value,checked:el.checked,selected:el.tagName==='SELECT'&&el.multiple?[...el.selectedOptions].map(o=>o.value):null})),details:[...document.querySelectorAll('details')].map((el,index)=>({id:el.id,index,open:el.open})),scroll:[...document.querySelectorAll('#main,dialog,[data-history-scroll]')].map((el,index)=>({id:el.id,index,left:el.scrollLeft,top:el.scrollTop})),window:{left:scrollX,top:scrollY}};}
@@ -15,7 +15,8 @@ function createPrototypeHistory({read,write,scope}){
  }
  function travel(direction){flush();const s=stack(),next=s.index+direction;if(next<0||next>=s.entries.length)return emit();restoring=true;try{s.index=next;const saved=clone(s.entries[next]);write(saved.model);restoreUI(saved.ui);}finally{restoring=false;}emit();}
  function reset(){if(restoring)return;stacks.delete(String(scope()));flush();}
- for(const type of ['click','submit','input','change','cancel'])document.addEventListener(type,e=>{if(restoring)return;checkpoint();const resetClick=type==='click'&&e.target.closest?.('#reset,#ap-start');const fixture=type==='change'&&e.target.matches?.('#scenario,#intent,#ap-v2-path,#ap-proposal-path,#ap-proposal-entry,#ap-org-case,#ap-repeat');if(resetClick||fixture)queueMicrotask(reset);else record();},true);
+ document.addEventListener('vero:history-update',record);
+ for(const type of ['click','submit','input','change','cancel'])document.addEventListener(type,e=>{if(restoring)return;checkpoint();const resetClick=type==='click'&&e.target.closest?.('#reset,#ap-start');const fixture=type==='change'&&e.target.matches?.('#scenario,#intent,#ap-v2-path,#ap-proposal-path,#ap-proposal-entry,#ap-org-case,#ap-repeat');if(resetClick||fixture){if(deferReset)setTimeout(reset,0);else queueMicrotask(reset);}else record();},true);
  addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:history')return;const action=e.data.action;if(action==='back')travel(-1);else if(action==='forward')travel(1);else if(action==='status'){if(!stack().entries.length)flush();else emit();}});
  flush();return {record,reset};
 }
