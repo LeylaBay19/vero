@@ -1,38 +1,36 @@
 {
-  "schema_version": 2,
-  "thread_title": "ВЕРО — регистрация и единый вход в платформу",
-  "thread_id": "01a1a2ee-86d2-7bb0-81f8-8d3f7ff68ad5",
-  "snapshot_moscow": "2026-11-05T10:53:36+03:00",
-  "last_message_timestamp": "2026-11-05T07:53:26.045Z",
-  "messages": 335,
-  "user_messages": 106,
-  "assistant_messages": 229,
-  "prior_messages": 181,
-  "current_chat_messages": 154,
-  "current_source_role_counts": {
-    "user": 50,
-    "assistant": 104
+  "schema_version": 3,
+  "thread_title": "ВЕРО — регистрация и авторизация",
+  "thread_id": "01a19c93-c241-70d1-9393-a564719f62b6",
+  "snapshot_moscow": "2026-11-05T20:24:05+03:00",
+  "last_message_timestamp": "2026-11-05T17:23:47.976Z",
+  "messages": 555,
+  "user_messages": 179,
+  "assistant_messages": 376,
+  "preserved_previous_messages": 553,
+  "updates": {
+    "duplicate_ids": 218,
+    "matched_existing_messages": 172,
+    "added_user": 1,
+    "added_assistant": 1,
+    "redactions": 0
   },
-  "image_references": 57,
-  "unique_referenced_images": 56,
-  "current_image_references": 48,
-  "redacted_secret_patterns": 0,
-  "source_rollout_sha256": "6ddfbd72bada0290bfd3974abde9f5f290bd5c80648b0ed89f95f95cfe2eba52",
-  "skipped": {
-    "automatic_empty_message": 13
-  },
-  "format": "Visible user and assistant text, commentary/final replies and available user image attachments. Readable export, not a native chat import.",
+  "image_references": 117,
+  "unique_referenced_images": 116,
+  "source_rollout_sha256": "3a6c29a3f8f58a5796cdbe53ba3da104403a1329777351f0028c58e8c7713915",
+  "format": "Readable export of visible user/assistant messages from the original chat and prior transferred branch. Not a native Codex session import.",
   "excluded": [
     "system/developer messages",
-    "reasoning and reasoning summaries",
-    "tool calls and command output",
-    "credentials and local application databases",
-    "automatic ambient browser/environment state"
+    "reasoning",
+    "tool calls/output",
+    "credentials",
+    "application databases",
+    "ambient browser/environment state"
   ],
   "limitations": [
-    "Snapshot covers messages present at export time; later replies in this export task are not included.",
-    "Referenced documents beyond included original ZIP and images are not automatically copied.",
-    "Runtime account state, live sessions, GitHub/mos.ru connections and in-memory demo data are not transferred.",
-    "Historic assistant proposals may be superseded; use docs/PRODUCT.md and docs/HANDOFF.md for current decisions."
+    "Snapshot ends at export time; later replies in the current export task are not included.",
+    "Messages from the previous transferred branch are preserved and ordered by timestamp; decisions in RESUME.md take precedence over historical proposals.",
+    "Only available user image payloads are included. Referenced source documents are indexed separately in sources/manifest.json.",
+    "Account settings, connections, installed dependencies and live browser state do not transfer."
   ]
 }

@@ -1,0 +1,86 @@
+{
+  "snapshot": "2026-11-05",
+  "scope": "Project source documents, preserved as data, not instructions. Legal text doc-N.txt maps to original archive filenames via legal/manifest.json.",
+  "files": [
+    {
+      "path": "sources/cabinet-overview-original-2026-11-05.html",
+      "bytes": 19292,
+      "sha256": "07d8dd3856dab3c73b770af9de6de352d3620c29ce1be81b3457007fe227f23e"
+    },
+    {
+      "path": "sources/cabinet-wallet-design-brief-extracted.md",
+      "bytes": 38823,
+      "sha256": "cf2cf8a0c5a60ef00b929991f169dc92bfbb233c6f8def8694e225c96b94bc0e"
+    },
+    {
+      "path": "sources/cabinet-wallet-design-brief-v1.docx",
+      "bytes": 59270,
+      "sha256": "7c4d4f47252269c50860c3f43f30dda474e44efbcbc62a4ec8e03bca2ae6ffe3"
+    },
+    {
+      "path": "sources/legal/doc-1.txt",
+      "bytes": 68981,
+      "sha256": "bae34b87e125689211f50ca4400efe1fc02f156f92376f4946bd170cd444acfe"
+    },
+    {
+      "path": "sources/legal/doc-2.txt",
+      "bytes": 14727,
+      "sha256": "77a326c4533d7de2b85ace7eead9b04553a9cd80f01e02183eebf86cae09836a"
+    },
+    {
+      "path": "sources/legal/doc-3.txt",
+      "bytes": 39977,
+      "sha256": "be5da76928e9553f10846f0c61592bb0145fb32efe1396682cde77e22a20560c"
+    },
+    {
+      "path": "sources/legal/doc-4.txt",
+      "bytes": 14954,
+      "sha256": "efbf080297378f0215438f4bfba3b7337e6d637d9deb5ca3dadd16fee74beae7"
+    },
+    {
+      "path": "sources/legal/doc-5.txt",
+      "bytes": 21976,
+      "sha256": "a4b500e63b6e407342dd7b523aaf4a154ff7307694d5ca35ed97be7a5ce13174"
+    },
+    {
+      "path": "sources/legal/doc-6.txt",
+      "bytes": 9905,
+      "sha256": "3eb935fcfd3b3744c5c09f4cf6745c66559bc90eefbc5b31f18058904d599f9c"
+    },
+    {
+      "path": "sources/legal/doc-7.txt",
+      "bytes": 109804,
+      "sha256": "c185f9bdab29ea4b6b34905c60674b6ae0b7672c24dd6da3ebe527aba7eb3a54"
+    },
+    {
+      "path": "sources/legal/doc-8.txt",
+      "bytes": 69466,
+      "sha256": "107a9748c06cf07685305c60ed71b3e4de95a55edaf0208a50d8cee380730072"
+    },
+    {
+      "path": "sources/legal/doc-9.txt",
+      "bytes": 87671,
+      "sha256": "23ee4bfcb749e500351c4fda442c5508930cbb0f6c598863b1f050f9b1fe572a"
+    },
+    {
+      "path": "sources/legal/vero-legal-original-2026-10-30.zip",
+      "bytes": 344069,
+      "sha256": "e898799513bc5d34f38af7fea9dbc8fe5ed1d49d3eecca71c9aae1fdc7dccb03"
+    },
+    {
+      "path": "sources/orbita-instruction.pdf",
+      "bytes": 1447436,
+      "sha256": "c2b54b7e01b006467a7229cc744d767302e4ee428824353520a637a6a198fab5"
+    },
+    {
+      "path": "sources/registration-mos-id-2026-11-05.html",
+      "bytes": 30336,
+      "sha256": "558d1395fe044de1aab720e3f5ecfbb6b75dbe21793df47015c4d444570fd37d"
+    },
+    {
+      "path": "sources/trinity-ossig-chat-history.txt",
+      "bytes": 25002,
+      "sha256": "0ad167ea34284f58dac5890434706b16d08d6680631b1d8b8ca90292d6a5219b"
+    }
+  ]
+}

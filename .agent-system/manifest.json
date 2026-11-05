@@ -311,7 +311,7 @@
     },
     ".agent-system/project/CONTEXT.md": {
       "kind": "file",
-      "sha256": "d79ec3f36fe03dbc2eb56ea3b307babf2ddc96e4a76c2b924ef2dbacf79cd6a9"
+      "sha256": "90c2d639d0551516ef3134b6875f628ed8c1cecd2f52ab4705ded0163640f638"
     },
     ".agent-system/active.json": {
       "kind": "file",
