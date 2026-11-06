@@ -90,6 +90,56 @@ async function run() {
     await letter.locator('[data-r2-form=login] button[type=submit]').click();
     assert.match(await letter.locator('[data-auth-complete]').textContent(), /Сотрудник организации/);
 
+    const v2Button = name => letter.getByRole('button', { name, exact: true });
+    const v2Start = async () => {
+      await scenario.selectOption('new');
+      await scenario.selectOption('invite-v2');
+      await v2Button('Открыть ссылку из письма').click();
+      await v2Button('Войти в существующий аккаунт').waitFor();
+      await v2Button('Присоединиться к платформе').waitFor();
+    };
+
+    await v2Start();
+    await v2Button('Присоединиться к платформе').click();
+    assert.equal(await letter.locator('#r2-invite-login').inputValue(), 'anna@vector.example.test');
+    assert.equal(await letter.locator('#r2-invite-login').getAttribute('readonly'), '');
+    await letter.locator('#fill').click();
+    await letter.locator('#r2-confirm-password').fill('Mismatched!');
+    await v2Button('Создать аккаунт').click();
+    assert.match(await letter.locator('#r2-alert').textContent(), /Пароли не совпадают/);
+    await letter.locator('#r2-confirm-password').fill('Example-2026!');
+    await v2Button('Создать аккаунт').click();
+    await v2Button('Отклонить приглашение').click();
+    await letter.getByRole('heading', { name: 'Приглашение отклонено' }).waitFor();
+    await v2Button('Продолжить в ВЕРО').click();
+    assert.doesNotMatch(await letter.locator('[data-auth-complete]').textContent(), /Вектор/);
+
+    await v2Start();
+    await v2Button('Войти в существующий аккаунт').click();
+    await letter.locator('#fill').click();
+    await letter.locator('#r2-password').fill('wrong-password');
+    await v2Button('Войти').click();
+    assert.match(await letter.locator('#r2-alert').textContent(), /Неверный email или пароль/);
+    await letter.locator('#r2-password').fill('Example-2026!');
+    await v2Button('Войти').click();
+    await letter.locator('#r2-invitation-code').waitFor();
+    await letter.locator('#fill').click();
+    await v2Button('Подтвердить код').click();
+    await v2Button('Принять приглашение').click();
+    assert.match(await letter.locator('[data-auth-complete]').textContent(), /Вектор/);
+
+    await v2Start();
+    await letter.locator('#r2-auth-outcome').selectOption('invite-v2-email-exists');
+    await v2Button('Присоединиться к платформе').click();
+    await letter.getByRole('heading', { name: 'Аккаунт с этой почтой уже существует' }).waitFor();
+    assert.equal(await letter.locator('#r2-new-password').count(), 0);
+    await v2Button('Войти в существующий аккаунт').click();
+    assert.equal(await letter.locator('#r2-login').inputValue(), 'anna@vector.example.test');
+    await letter.locator('#fill').click();
+    await v2Button('Войти').click();
+    await v2Button('Принять приглашение').waitFor();
+    assert.equal(await letter.locator('#r2-invitation-code').count(), 0);
+
     await scenario.selectOption('invite-other');
     await letter.getByRole('heading', { name: 'Вас пригласили в ООО «Вектор»' }).waitFor();
     await letter.getByRole('button', { name: 'Создать аккаунт', exact: true }).waitFor();
@@ -363,7 +413,7 @@ async function run() {
     await page.getByRole('tab', { name: 'Схемы' }).click();
     const schemes = frame('schemes');
     await schemes.locator('[data-registration-schemes]').waitFor();
-    for (const [group, count] of [['letter', 9], ['brief', 2], ['kontur', 2], ['kontur-letter', 2]]) {
+    for (const [group, count] of [['letter', 10], ['brief', 2], ['kontur', 2], ['kontur-letter', 2]]) {
       assert.equal(await schemes.locator(`[data-process-group="${group}"] article`).count(), count);
     }
     const cards = schemes.locator('article[data-process-card]');
@@ -419,7 +469,7 @@ async function run() {
     assert.ok(fs.readFileSync('archive/prototype-v1.25.0.html').equals(fs.readFileSync('web/archive/prototype-v1.25.0.html')));
     assert.deepEqual(errors, []);
     assert.deepEqual(requests, []);
-    console.log('Registration stand: 4 variants, 3 comparisons, invitation scenarios and recovery, 15 diagrams in two layouts, BPMN/SVG, mobile and archive.');
+    console.log('Registration stand: 4 variants, 3 comparisons, invitation scenarios and recovery, 16 diagrams in two layouts, BPMN/SVG, mobile and archive.');
   } finally {
     await browser.close();
   }
