@@ -109,13 +109,6 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     const outcome=$('r2-mos-outcome')?.value||'success';
     if(outcome==='error')return show('oauth-error');
     draft.mosLogin=$('r2-mos-login').value;draft.mosPassword=$('r2-mos-password').value;
-    show('mos-consent');
-  }
-  function allowMos() {
-    if(screen!=='mos-consent')return;
-    if(!$('r2-share-name')?.checked||!$('r2-share-email')?.checked)return error('Разрешите передачу ФИО и email для входа в ВЕРО.');
-    const grant={name:true,email:true,phone:!!$('r2-share-phone')?.checked,organization:!!$('r2-share-organization')?.checked};
-    const outcome=$('r2-mos-outcome')?.value||'success';
     if(purpose==='link') {
       if(!current || !isAuthenticated())return show('entry');
       const owner=accounts.find(a=>a.mosId===demoMos.id && a.id!==current.id);
@@ -124,14 +117,18 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
         return show('conflict');
       }
       current.mosId=demoMos.id; current.provider='mos_linked';
-      current.name=demoMos.name; current.phone=grant.phone?demoMos.phone:'';current.mosGrants=grant;
+      current.name=demoMos.name;
       return show('linked');
     }
     const found=accounts.find(a=>a.mosId===demoMos.id);
     if(found){current=found;return openCabinet();}
+    show('mos-registration-terms');
+  }
+  function createMosAccount() {
+    if(screen!=='mos-registration-terms')return;
     if(!$('r2-terms')?.checked)return error('Примите условия, чтобы создать аккаунт.','terms');
     sequence+=1;
-    current={id:'demo-account-'+sequence,login:demoMos.email,email:demoMos.email,name:demoMos.name,phone:grant.phone?demoMos.phone:'',mosGrants:grant,password:null,mosId:demoMos.id,provider:'mos_auto'};
+    current={id:'demo-account-'+sequence,login:demoMos.email,email:demoMos.email,name:demoMos.name,phone:'',password:null,mosId:demoMos.id,provider:'mos_auto'};
     accounts.push(current); show('created');
   }
   function view(screenOverride, background=false) {
@@ -297,9 +294,10 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       title='Вход на mos.ru';
       body='<div class="mos-demo-url">login.mos.ru · демонстрация</div><div class="mos-brand">mos.ru</div>'+field('Телефон, email или СНИЛС','mos-login','text',`autocomplete="off" autofocus value="${esc(draft.mosLogin||'')}"`)+password('Пароль','mos-password','off',draft.mosPassword||'')+button('Войти','mos-return')+button('Отменить и вернуться','cancel-mos',true);
     }
-    if(shown==='mos-consent'){
-      title='Разрешить доступ к данным?';
-      body='<div class="mos-brand">mos.ru</div><p>ВЕРО запрашивает данные вашего профиля. Выберите, что разрешаете передать.</p><fieldset class="mos-permissions"><legend>Данные для ВЕРО</legend><label class="check"><input id="r2-share-name" type="checkbox"><span>ФИО — для идентификации пользователя</span></label><label class="check"><input id="r2-share-email" type="checkbox"><span>Email — для аккаунта и связи</span></label><label class="check"><input id="r2-share-phone" type="checkbox"><span>Телефон</span></label><label class="check"><input id="r2-share-organization" type="checkbox"><span>Сведения об организациях</span></label></fieldset><p class="mini">Для входа нужны ФИО и email. Сведения об организации не назначают роль или права доступа на ВЕРО. Состав данных показан как предлагаемый вариант интеграции.</p>'+(!accounts.some(a=>a.mosId===demoMos.id)&&purpose!=='link'?agreement:'')+button('Разрешить и продолжить','mos-allow')+button('Отменить','cancel-mos',true);
+    if(shown==='mos-registration-terms'){
+      title='Создать аккаунт ВЕРО';
+      body='<p>Для регистрации используется email <strong>'+esc(demoMos.email)+'</strong>.</p>'
+        +agreement+button('Создать аккаунт','mos-create')+button('Отменить','cancel-mos',true);
     }
     if(shown==='created') {
       title='Подключите организацию';
@@ -335,8 +333,8 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     }
     const sessionDemo=authOnly&&invited()&&!invitationV2()&&!background&&!['invitation-error','invite-deferred','invite-address-sent'].includes(shown)
       ?'<details class="mini"><summary>Демо · повторное открытие ссылки</summary><p>Имитирует новое устройство или вкладку. Для входа понадобится пароль, для другой почты — новый код.</p>'+button('Открыть ссылку в новой сессии','invite-new-session',true)+'</details>':'';
-    const content=`${invitationV2()||['entry','login','mos','mos-consent'].includes(shown)?'':'<div class="eyebrow">Вариант 2 · регистрация</div>'}<h2 id="${['mos','mos-consent'].includes(shown)?'r2-mos-title':'r2-title'}" tabindex="-1">${title}</h2>${body}${background?'':message}${notice&&!background?'<p class="status-msg" role="status">'+esc(notice)+'</p>':''}${['entry','login','email','register','invitation'].includes(shown)?help:''}${['register','email'].includes(shown)?back:''}${sessionDemo}`;
-    if(['mos','mos-consent'].includes(shown)){
+    const content=`${invitationV2()||['entry','login','mos'].includes(shown)?'':'<div class="eyebrow">Вариант 2 · регистрация</div>'}<h2 id="${shown==='mos'?'r2-mos-title':'r2-title'}" tabindex="-1">${title}</h2>${body}${background?'':message}${notice&&!background?'<p class="status-msg" role="status">'+esc(notice)+'</p>':''}${['entry','login','email','register','invitation'].includes(shown)?help:''}${['register','email'].includes(shown)?back:''}${sessionDemo}`;
+    if(shown==='mos'){
       const beneath=origin==='profile'?`<section class="workspace"><h1>Профиль</h1>${profile()}</section>`:view(origin,true);
       return `${beneath}<dialog id="r2-dialog" class="app-dialog r2-card mos-dialog" aria-labelledby="r2-mos-title" data-registration-screen="${shown}"><button type="button" class="dialog-close" data-r2-action="close-mos" aria-label="Закрыть авторизацию mos.ru">×</button>${content}</dialog>`;
     }
@@ -439,7 +437,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(action==='mos-login')return startMos('login');
     if(action==='mos-fill'){if($('r2-mos-login')&&!$('r2-mos-login').value)$('r2-mos-login').value=demoMos.email;if($('r2-mos-password')&&!$('r2-mos-password').value)$('r2-mos-password').value='Example-2026!';$('r2-mos-login')?.removeAttribute('aria-invalid');$('r2-mos-password')?.removeAttribute('aria-invalid');if($('r2-alert'))$('r2-alert').hidden=true;return;}
     if(action==='mos-return')return finishMos();
-    if(action==='mos-allow')return allowMos();
+    if(action==='mos-create')return createMosAccount();
     if(action==='cancel-mos'||action==='close-mos')return cancelMos();
     if(action==='retry-mos')return show('mos');
     if(action==='cabinet'){if(screen==='offer'&&!hasOrganization())return show('organization-offer');return openCabinet();}
@@ -571,7 +569,6 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       return;
     }
     if(screen==='mos'){if(!$('r2-mos-login').value)$('r2-mos-login').value=demoMos.email;if(!$('r2-mos-password').value)$('r2-mos-password').value='Example-2026!';return;}
-    if(screen==='mos-consent')return;
     const enteredLogin=$('r2-login')?.value.trim();
     const demoAccount=accounts.find(a=>a.login===enteredLogin||a.email.toLowerCase()===enteredLogin?.toLowerCase())||(!enteredLogin?accounts[accounts.length-1]:null);
     let registrationLogin='ivan',registrationEmail='ivan@example.test',suffix=1;
@@ -604,7 +601,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       }
     }
     const dialog=$('r2-dialog');
-    if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(['mos','mos-consent'].includes(screen))cancelMos();else openCabinet();});}
+    if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(screen==='mos')cancelMos();else openCabinet();});}
   }
   function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation});}
   function restore(value){({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation}=structuredClone(value));}

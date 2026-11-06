@@ -13,7 +13,7 @@ from prepare_site import csp, inner, shell
 from registration_stand_models import BRIEF, KONTUR, KONTUR_LETTER, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.31.1'
+VERSION = '1.31.2'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -146,10 +146,16 @@ def main():
                 + frame('kontur-letter', 'Как в Контуре · письмо → пароль',
                         kontur_page('kontur-letter', 'Как в Контуре · письмо → пароль',
                                     'Демо ВЕРО. Письма и коды подтверждения имитируются.')))
+    comparison = pages['stand-frame-comparison']
+    comparison = re.sub(r" } else if\(q==='consent'\)\{.*?(?= } else if\(q==='mosid'\))",
+                        '', comparison, count=1, flags=re.S)
+    comparison = re.sub(r"\['consent','Доступ(?: к данным)?'\],", '', comparison)
+    comparison = comparison.replace("'consent',", "'mosid',").replace("'entry','mosid','mosid'", "'entry','mosid'")
+    comparison = comparison.replace("btn.dataset.go==='consent'", "btn.dataset.go==='mosid'")
     result = read('templates/registration-stand.html')
     for key, value in (
         ('VERSION', VERSION), ('CSP', csp(shell)[0]), ('VARIANTS', variants), ('SCHEMES', frame('schemes', 'Схемы регистрации', schemes)),
-        ('COMPARISON', frame('comparison', 'Сравнение Тринити и Орбиты', pages['stand-frame-comparison'])),
+        ('COMPARISON', frame('comparison', 'Сравнение Тринити и Орбиты', comparison)),
         ('DOWNLOADS', ''.join(DOWNLOAD.findall(schemes))), ('NAVIGATION', read('src/registration-stand.js')),
     ):
         result = result.replace(f'__{key}__', value)

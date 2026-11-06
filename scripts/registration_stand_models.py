@@ -5,6 +5,17 @@ from auth_v1_diagrams import MODELS, edge, model, node
 
 def revised_letter_models():
     models = deepcopy(MODELS)
+    for diagram, target in [('AUTH1_MOS', 'response'), ('AUTH1_LINK', 'valid')]:
+        m = next((item for item in models if item['id'] == diagram), None)
+        if m is None:
+            continue
+        m['nodes'] = [step for step in m['nodes'] if step['id'] != 'consent']
+        m['edges'] = [edge('provider', target) if flow['target'] == 'consent' else flow
+                      for flow in m['edges'] if flow['source'] != 'consent']
+        if diagram == 'AUTH1_MOS':
+            next(step for step in m['nodes'] if step['id'] == 'response')['text'] = 'Вход подтверждён?'
+            next(step for step in m['nodes'] if step['id'] == 'new')['text'] = 'Принять условия ВЕРО и создать аккаунт'
+            m['notes'][0] = 'Для нового аккаунта подтверждаются условия регистрации ВЕРО.'
     email = next(m for m in models if m['id'] == 'AUTH1_EMAIL')
     email['goal'] = 'Подтвердить почту руководителя и создать аккаунт перед подключением организации.'
     for step in email['nodes']:

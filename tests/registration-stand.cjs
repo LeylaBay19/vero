@@ -135,6 +135,17 @@ async function run() {
     await v2Button('Принять приглашение').waitFor();
     assert.equal(await letter.locator('#r2-invitation-code').count(), 0);
 
+    await scenario.selectOption('new');
+    await letter.locator('[data-r2-action=mos-login]').click();
+    await letter.locator("#r2-mos-login").fill("ivan.mos@example.test");
+    await letter.locator("#r2-mos-password").fill("Example-2026!");
+    await letter.locator('[data-r2-action=mos-return]').click();
+    await letter.locator('[data-registration-screen=mos-registration-terms]').waitFor();
+    assert.equal(await letter.locator('dialog[open], #r2-share-email').count(), 0);
+    await letter.locator('#r2-terms').check();
+    await letter.locator('[data-r2-action=mos-create]').click();
+    await letter.locator('[data-registration-screen=created]').waitFor();
+
     await choose('kontur');
     assert.equal(new URL(page.url()).hash, '#kontur');
     const kontur = frame('kontur');
@@ -245,6 +256,8 @@ async function run() {
     await comparison.locator('[data-flow=mos]').waitFor();
     assert.deepEqual(await comparison.locator('[data-flow]').evaluateAll(buttons => buttons.map(b => b.dataset.flow)),
       ['mos', 'ep', 'orb']);
+    await comparison.getByRole('button', { name: 'Войти через mos.ru', exact: true }).click();
+    await comparison.getByRole('heading', { name: 'Вход в mos ID', exact: true }).waitFor();
     await comparison.locator('[data-flow=orb]').click();
     await page.getByRole('tab', { name: 'Схемы' }).click();
     const schemes = frame('schemes');
