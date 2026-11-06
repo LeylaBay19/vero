@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ВЕРО — регистрация · UX-вариант</title>
+<style>
+__SHARED_UI__
+* { box-sizing: border-box; }
+html { color: var(--ink); font: 15px/1.5 Arial, sans-serif; }
+#auth-flow-prototype { background: var(--bg); }
+.demo-bar { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 24px; background: #edf0f4; border-bottom: 1px solid var(--line); font-size: 13px; }
+.demo-bar label { display: flex; align-items: center; gap: 8px; }
+.demo-bar select { max-width: 100%; width: auto; }
+.demo-version { margin-left: auto; color: var(--muted); }
+.viewport { flex: 1; min-height: 0; overflow: auto; }
+.brand { display: flex; align-items: center; justify-content: space-between; max-width: 1080px; margin: auto; padding: 14px 24px; }
+.brand strong { font-size: 24px; }
+main { width: min(100% - 32px, 460px); margin: 12px auto 24px; }
+main.wide { max-width: 640px; width: min(100% - 32px, 640px); }
+.card { padding: 24px; border: 1px solid var(--line); background: #fff; }
+h1 { font-size: clamp(22px, 4vw, 26px); line-height: 1.2; margin: 0 0 12px; }
+h2 { font-size: 17px; margin: 0 0 8px; }
+p { margin: 0 0 12px; }
+.small { font-size: 13px; color: var(--muted); }
+.field { display: grid; gap: 4px; font-size: 14px; margin: 0 0 10px; min-width: 0; }
+.field input, select { width: 100%; min-width: 0; padding: 8px 10px; min-height: 40px; font: inherit; color: var(--ink); border: 1px solid var(--line); border-radius: 5px; background: white; }
+.field input[readonly] { background: var(--soft); }
+.field input[aria-invalid=true] { border-color: #a33636; }
+.password { display: flex; gap: 6px; }
+.password input { flex: 1; }
+.check { display: flex; align-items: flex-start; gap: 8px; margin: 10px 0; }
+.check input { margin-top: 5px; }
+button { cursor: pointer; font: inherit; font-weight: 600; padding: 8px 12px; min-height: 40px; border-radius: 5px; border: 1px solid var(--line); background: white; color: var(--ink); }
+button.primary { color: white; }
+button.link { padding: 2px 0; min-height: 30px; border: 0; background: none; color: #244883; text-decoration: underline; font-size: 14px; }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid #315c9d; outline-offset: 2px; }
+.actions { display: grid; gap: 8px; margin: 12px 0 0; }
+.actions button { width: 100%; }
+.inline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin: 8px 0 0; }
+.notice { background: var(--soft); padding: 12px; margin: 0 0 12px; overflow-wrap: anywhere; }
+.notice.good { background: #eef7ee; color: #21582b; }
+.error { color: #a33636; margin: 8px 0; font-size: 14px; }
+[hidden] { display: none !important; }
+.details { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; margin: 0; }
+.details dt { color: var(--muted); font-size: 13px; }
+.details dd { margin: 0; overflow-wrap: anywhere; }
+fieldset { min-width: 0; border: 1px solid var(--line); border-radius: 5px; padding: 10px 12px; margin: 0 0 10px; }
+legend { font-weight: 600; }
+details { margin: 10px 0; }
+summary { cursor: pointer; }
+.demo-action { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 8px; }
+@media (max-width: 480px) {
+  .demo-bar, .brand { padding: 8px 12px; }
+  .demo-bar label { flex-wrap: wrap; }
+  .demo-version { margin-left: 0; }
+  .card { padding: 16px; }
+  main, main.wide { width: calc(100% - 20px); margin-top: 4px; }
+  .details { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="demo-bar" aria-label="Управление демонстрацией">
+  <label for="scenario">Демо-сценарий
+    <select id="scenario">
+      <option value="director">Руководитель · регистрация</option>
+      <option value="director-existing">Руководитель · есть аккаунт</option>
+      <option value="invite-new">Сотрудник · новое приглашение</option>
+      <option value="invite-existing">Сотрудник · есть аккаунт</option>
+      <option value="invite-expired">Сотрудник · приглашение просрочено</option>
+      <option value="invite-revoked">Сотрудник · приглашение отозвано</option>
+    </select>
+  </label>
+  <button type="button" id="fill">Заполнить пример</button>
+  <button type="button" id="reset">Начать заново</button>
+  <span class="demo-version">UX-вариант · v1.24.0-ux.1</span>
+</header>
+<div class="viewport" id="viewport">
+  <header class="brand"><strong>ВЕРО</strong><button type="button" class="link" id="logout" hidden>Выйти</button></header>
+  <main id="main"></main>
+</div>
+<script>
+__REGISTRATION_UX__
+</script>
+</body>
+</html>
