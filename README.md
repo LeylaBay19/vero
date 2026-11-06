@@ -1,3 +1,7 @@
+# Актуальная сборка · v1.27.0 · 06.11.2026
+
+[Стенд](prototype.html) добавляет сценарий «Сотрудник по приглашению · другая почта». Сотрудник входит в существующий аккаунт, подтверждает адрес приглашения и присоединяется к новой организации. [HTML](deliverables/vero-unified-v1.27.0.html) · [Стенд и BPMN в ZIP](deliverables/vero-registration-stand-v1.27.0.zip).
+
 # Актуальная сборка · v1.26.0 · 06.11.2026
 
 [Стенд регистрации](prototype.html) включает сценарий занятого email и отдельные ветки приглашения для нового и существующего аккаунта. [HTML](deliverables/vero-unified-v1.26.0.html) · [Стенд и BPMN в ZIP](deliverables/vero-registration-stand-v1.26.0.zip) · [Требования в Word](deliverables/vero-registration-requirements-v1.26.0.docx).

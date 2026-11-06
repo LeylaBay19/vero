@@ -44,7 +44,14 @@ const registration2=createMosRegistration({main,authOnly,help:authOnly?platformH
  state.email=account.email;state.demoPassword=account.password;
  if(!state.authenticated)auth();
  if(authOnly&&account.connectedOrganization&&!state.contexts.some(c=>c.kind==='director'||c.kind==='employee')){const o=account.connectedOrganization;state.context={id:'org',name:o.name,kind:o.role,role:o.role==='director'?'Генеральный директор':'Сотрудник организации'};state.contexts.push(state.context);}
- if(account.acceptInvitation){state.accepted=true;let c=state.contexts.find(x=>x.id==='org');if(!c){c={id:'org',name:'ООО «Пример»',role:'Сотрудник организации',kind:'employee',serviceRoles:{agr:'Специалист',ossig:'Специалист'}};state.contexts.push(c);}state.context=c;state.screen='home';}
+ if(account.acceptInvitation){
+  const invitation=account.acceptInvitation===true
+   ?{id:'org',name:'ООО «Пример»',role:'Сотрудник организации',kind:'employee',serviceRoles:{agr:'Специалист',ossig:'Специалист'}}
+   :account.acceptInvitation;
+  let membership=state.contexts.find(context=>context.id===invitation.id);
+  if(!membership){membership={...invitation};state.contexts.push(membership);}
+  state.accepted=true;state.context=membership;state.screen='home';
+ }
  if(!keepScreen&&state.screen!=='invite'){state.history=[];state.screen=authOnly&&target==='home'?'auth-complete':target==='home'&&state.intent&&state.context?.kind!=='government'?'service':target;render();}
  else render();
 }});
@@ -252,7 +259,12 @@ function render(){
   else result='<form data-form="application" novalidate>'+registrationFields()+'<label class="check"><input id="confirm-company-data" type="checkbox"><span>Проверил(а) данные, всё верно</span></label><button class="primary" type="submit">Подтвердить и отправить на проверку</button></form>';
   html=card('Проверьте данные',`<p>Данные получены после выбора сертификата УКЭП. Организацию подключает генеральный директор.</p>${reviewData()}${submitted?registrationFields(true):''}${result}`);
  }
- if(authOnly&&q==='auth-complete')html=`<section class="workspace" data-auth-complete><h1 tabindex="-1">Вход выполнен</h1>${['director','employee'].includes(c?.kind)?`<p>${esc(c.name)} · ${esc(c.kind==='director'?'Генеральный директор':'Сотрудник организации')}</p>`:''}<p>Сценарий входа завершён.</p></section>`;
+ if(authOnly&&q==='auth-complete'){
+  const memberships=state.contexts.filter(context=>['director','employee'].includes(context.kind));
+  const joinedOther=state.accepted&&scenario.value==='invite-other';
+  const organizations=memberships.map(context=>'<li>'+esc(context.name)+' · '+esc(context.serviceRoles?.ossig?context.serviceRoles.ossig+' ОССиГ':context.role)+'</li>').join('');
+  html=`<section class="workspace" data-auth-complete><h1 tabindex="-1">${joinedOther?'Вы присоединились к '+esc(c.name):'Вход выполнен'}</h1>${joinedOther?`<p>Аккаунт ВЕРО · <strong>${esc(state.email)}</strong></p><h2>Ваши организации</h2><ul>${organizations}</ul>`:['director','employee'].includes(c?.kind)?`<p>${esc(c.name)} · ${esc(c.kind==='director'?'Генеральный директор':'Сотрудник организации')}</p>`:''}<p>Сценарий входа завершён.</p></section>`;
+ }
  if(q==='invitations')html=invitationList();
  if(q==='my-organizations')html=accessPage();
  if(q==='powers')html=powersPage();

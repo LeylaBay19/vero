@@ -13,7 +13,7 @@ from prepare_site import csp, inner, shell
 from registration_stand_models import BRIEF, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.26.0'
+VERSION = '1.27.0'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -103,14 +103,25 @@ def main():
     start = letter.index('<script>' + registration.splitlines()[0]) + len('<script>')
     end = letter.index('</script>', start)
     letter = letter[:start] + registration.replace('Вариант 2 · регистрация', 'Вариант 1 · регистрация') + letter[end:]
+    platform = read('src/platform-entry.html')
+    for start_marker, next_marker in (
+        (' if(account.acceptInvitation)', ' if(!keepScreen'),
+        (" if(authOnly&&q==='auth-complete')", " if(q==='invitations')"),
+    ):
+        source_start = platform.index(start_marker)
+        source_end = platform.index(next_marker, source_start)
+        frame_start = letter.index(start_marker)
+        frame_end = letter.index(next_marker, frame_start)
+        letter = letter[:frame_start] + platform[source_start:source_end] + letter[frame_end:]
     invite_option = '<option value="invite">Сотрудник по приглашению</option>'
     assert letter.count(invite_option) == 1
     letter = letter.replace(invite_option,
                             '<option value="duplicate-email">Организация · аккаунт уже существует</option>'
                             '<option value="invite">Сотрудник по приглашению · новый аккаунт</option>'
-                            '<option value="invite-existing">Сотрудник по приглашению · есть аккаунт</option>', 1)
+                            '<option value="invite-existing">Сотрудник по приглашению · есть аккаунт</option>'
+                            '<option value="invite-other">Сотрудник по приглашению · другая почта</option>', 1)
     letter = letter.replace("invited:scenario.value==='invite'",
-                            "invited:['invite','invite-existing'].includes(scenario.value)", 1)
+                            "invited:['invite','invite-existing','invite-other'].includes(scenario.value)", 1)
     # Hide the demo choices in the active stand. The archived controls stay intact.
     letter = re.sub(r'<option value="invite-(?:expired|revoked)"[^>]*>[^<]*</option>', '', letter)
     brief = pages['stand-frame-brief']

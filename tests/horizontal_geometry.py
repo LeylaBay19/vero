@@ -62,4 +62,4 @@ for model in models:
                 if n['id'] in (e['source'],e['target']):continue
                 assert not any(hit(a,b,shape_boxes[model['id']+'_'+n['id']]) for a,b in segments(pts)),(model['id'],suffix,'crossed node',n['id'])
 assert not failures,failures
-print('8 BPMN models in both layouts: orthogonal flows, no node crossings or collinear shared flows, all semantic edges/conditions preserved.')
+print(f'{len(models)} BPMN models in both layouts: orthogonal flows, no node crossings or collinear shared flows, all semantic edges/conditions preserved.')

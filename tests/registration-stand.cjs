@@ -88,6 +88,42 @@ async function run() {
     await letter.locator('[data-r2-form=login] button[type=submit]').click();
     assert.match(await letter.locator('[data-auth-complete]').textContent(), /Сотрудник организации/);
 
+    await scenario.selectOption('invite-other');
+    await letter.getByRole('heading', { name: 'Вас пригласили в ООО «Вектор»' }).waitFor();
+    await letter.getByRole('button', { name: 'Войти в свой аккаунт' }).click();
+    await letter.locator('#fill').click();
+    assert.equal(await letter.locator('#r2-login').inputValue(), 'anna@example.test');
+    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
+    const code = letter.getByLabel('Код из письма');
+    await code.waitFor();
+    assert.match(await letter.locator('main').textContent(), /anna@vector\.example\.test/);
+    assert.equal(await letter.locator('[data-auth-complete]').count(), 0);
+    await letter.locator('#fill').click();
+    const oldCode = await code.inputValue();
+    await letter.getByRole('button', { name: 'Отправить код повторно' }).click();
+    await code.fill(oldCode);
+    await letter.getByRole('button', { name: 'Подтвердить код' }).click();
+    assert.equal(await code.getAttribute('aria-invalid'), 'true');
+    assert.equal(await letter.getByRole('button', { name: 'Присоединиться', exact: true }).count(), 0);
+    await code.fill('');
+    await letter.locator('#fill').click();
+    assert.notEqual(await code.inputValue(), oldCode);
+    await letter.getByRole('button', { name: 'Подтвердить код' }).click();
+    const join = letter.getByRole('button', { name: 'Присоединиться', exact: true });
+    await join.waitFor();
+    assert.equal(await letter.locator('[data-auth-complete]').count(), 0);
+    await join.click();
+    const result = letter.locator('[data-auth-complete]');
+    assert.match(await result.textContent(), /anna@example\.test/);
+    assert.deepEqual(await result.locator('li').allTextContents(),
+      ['ООО «Пример» · Сотрудник организации', 'ООО «Вектор» · Специалист ОССиГ']);
+    await letter.locator('#signout').click();
+    await letter.locator('#fill').click();
+    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
+    await result.waitFor();
+    assert.equal(await code.count(), 0);
+    assert.equal(await result.locator('li').count(), 2);
+
     await page.getByRole('tab', { name: 'Сравнение регистрации' }).click();
     const comparison = frame('comparison');
     await comparison.locator('[data-flow=mos]').waitFor();
@@ -97,7 +133,7 @@ async function run() {
     await page.getByRole('tab', { name: 'Схемы' }).click();
     const schemes = frame('schemes');
     await schemes.locator('[data-registration-schemes]').waitFor();
-    for (const [group, count] of [['letter', 6], ['brief', 2]]) {
+    for (const [group, count] of [['letter', 7], ['brief', 2]]) {
       assert.equal(await schemes.locator(`[data-process-group="${group}"] article`).count(), count);
     }
     const cards = schemes.locator('article[data-process-card]');
@@ -153,7 +189,7 @@ async function run() {
     assert.ok(fs.readFileSync('archive/prototype-v1.25.0.html').equals(fs.readFileSync('web/archive/prototype-v1.25.0.html')));
     assert.deepEqual(errors, []);
     assert.deepEqual(requests, []);
-    console.log('Registration stand: 2 variants, 3 comparison scenarios, 8 diagrams in two layouts, no label overlaps, expand/Esc, BPMN/SVG payloads, mobile and archive.');
+    console.log('Registration stand: 2 variants, 3 comparisons, cross-email invitation, 9 diagrams in two layouts, no label overlaps, BPMN/SVG, mobile and archive.');
   } finally {
     await browser.close();
   }
