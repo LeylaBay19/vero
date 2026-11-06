@@ -57,6 +57,7 @@ async function run() {
     assert.equal(await letter.locator('[data-r2-action=register]').count(), 0);
     await scenario.selectOption('invite');
     const invitation = letter.locator('[data-r2-form=invitation]');
+    assert.equal(await letter.getByText('Логином будет почта', { exact: false }).count(), 0);
     assert.equal(await letter.locator('[data-r2-action=invite-login]').count(), 0);
     await letter.locator('#fill').click();
     await invitation.locator('#r2-terms').check();
@@ -64,6 +65,7 @@ async function run() {
     assert.match(await letter.locator('[data-auth-complete]').textContent(), /Сотрудник организации/);
 
     await scenario.selectOption('invite-existing');
+    assert.equal(await letter.getByText('Войдите с почтой, на которую пришло приглашение.', { exact: false }).count(), 0);
     assert.equal(await letter.locator('[data-r2-form=invitation], [data-r2-action=invitation], [data-r2-action=register]').count(), 0);
     assert.equal(await letter.locator('#r2-login').inputValue(), 'employee@example.test');
     const password = letter.locator('#r2-password');
@@ -90,12 +92,14 @@ async function run() {
 
     await scenario.selectOption('invite-other');
     await letter.getByRole('heading', { name: 'Вас пригласили в ООО «Вектор»' }).waitFor();
+    await letter.getByRole('button', { name: 'Создать аккаунт', exact: true }).waitFor();
     await letter.getByRole('button', { name: 'Войти в свой аккаунт' }).click();
     await letter.locator('#fill').click();
     assert.equal(await letter.locator('#r2-login').inputValue(), 'anna@example.test');
     await letter.getByRole('button', { name: 'Войти', exact: true }).click();
     const code = letter.getByLabel('Код из письма');
     await code.waitFor();
+    assert.equal(await letter.getByRole('button', { name: 'Войти в другой аккаунт' }).count(), 0);
     assert.match(await letter.locator('main').textContent(), /anna@vector\.example\.test/);
     assert.equal(await letter.locator('[data-auth-complete]').count(), 0);
     await letter.locator('#fill').click();
@@ -194,12 +198,31 @@ async function run() {
       await letter.getByRole('button', { name: 'Открыть новое приглашение' }).click();
       await letter.getByRole('heading', { name: 'Вас пригласили в ООО «Вектор»' }).waitFor();
     }
-    for (const mode of ['invite-shared', 'invite-wrong']) {
-      await scenario.selectOption(mode);
-      assert.equal(await result.count(), 0);
-      await letter.getByRole('button', { name: 'Открыть приглашение на мой адрес' }).click();
-      await letter.getByText('anna@example.test', { exact: true }).waitFor();
-    }
+    await scenario.selectOption('invite-shared');
+    assert.equal(await result.count(), 0);
+    await letter.getByRole('button', { name: 'Открыть приглашение на мой адрес' }).click();
+    await letter.getByText('anna@example.test', { exact: true }).waitFor();
+
+    await scenario.selectOption('invite-wrong');
+    await letter.getByRole('heading', { name: 'Сотруднику не пришло приглашение' }).waitFor();
+    await letter.getByText('annna@vector.example.test', { exact: true }).waitFor();
+    await letter.getByRole('button', { name: 'Отозвать ссылку и отправить заново' }).click();
+    await letter.getByRole('heading', { name: 'Новое приглашение отправлено' }).waitFor();
+    assert.equal(await result.count(), 0);
+    await letter.getByRole('button', { name: 'Открыть новое приглашение' }).click();
+    await letter.getByText('anna@example.test', { exact: true }).waitFor();
+    assert.equal(await letter.getByRole('button', { name: 'Создать аккаунт', exact: true }).count(), 0);
+
+    await startOther();
+    await letter.getByRole('button', { name: 'Создать аккаунт', exact: true }).click();
+    assert.equal(await invitation.locator('#r2-invite-login').inputValue(), 'anna@vector.example.test');
+    await letter.locator('#fill').click();
+    await invitation.locator('#r2-terms').check();
+    await invitation.getByRole('button', { name: 'Создать аккаунт', exact: true }).click();
+    await join.waitFor();
+    assert.equal(await result.count(), 0);
+    await join.click();
+    await result.getByText('anna@vector.example.test', { exact: true }).waitFor();
     await startOther();
     await signInOther();
     await code.waitFor();

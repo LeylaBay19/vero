@@ -13,7 +13,7 @@ from prepare_site import csp, inner, shell
 from registration_stand_models import BRIEF, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.28.0'
+VERSION = '1.28.1'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -122,7 +122,7 @@ def main():
                             '<option value="invite-other">Сотрудник по приглашению · другая почта</option>'
                             '<option value="invite-conflict">Сотрудник по приглашению · два аккаунта</option>'
                             '<option value="invite-shared">Сотрудник по приглашению · общий ящик</option>'
-                            '<option value="invite-wrong">Сотрудник по приглашению · неверный адрес</option>', 1)
+                            '<option value="invite-wrong">Администратор · ошибка в почте приглашения</option>', 1)
     letter = letter.replace("invited:scenario.value==='invite'",
                             "invited:scenario.value.startsWith('invite')", 1)
     # The current script adds these choices only inside invitation demos.
