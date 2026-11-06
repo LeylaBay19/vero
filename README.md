@@ -1,3 +1,7 @@
+# Актуальная сборка · v1.26.0 · 06.11.2026
+
+[Стенд регистрации](prototype.html) включает сценарий занятого email и отдельные ветки приглашения для нового и существующего аккаунта. [HTML](deliverables/vero-unified-v1.26.0.html) · [Стенд и BPMN в ZIP](deliverables/vero-registration-stand-v1.26.0.zip) · [Требования в Word](deliverables/vero-registration-requirements-v1.26.0.docx).
+
 # Актуальная сборка · v1.25.1 · 06.11.2026
 
 [Стенд](prototype.html) содержит два варианта регистрации, три сценария сравнения Тринити и Орбиты и вкладку с восемью схемами. Сборка с UX-вариантом доступна в [архиве v1.25.0](archive/prototype-v1.25.0.html). [Сборка ZIP](deliverables/vero-registration-stand-v1.25.1.zip) · [Описание](docs/changes/v1.25.1.md).

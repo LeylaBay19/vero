@@ -10,10 +10,10 @@ import auth_v1_diagrams as diagrams
 from auth_v1_horizontal import bpmn as horizontal_bpmn, layout, svg as horizontal_svg
 from build_registration_ux import main as build_ux
 from prepare_site import csp, inner, shell
-from registration_stand_models import BRIEF
+from registration_stand_models import BRIEF, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.25.2'
+VERSION = '1.26.0'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -72,12 +72,9 @@ def new_cards(models, files):
 
 
 def schemes_page(archived_page):
-    files = {p.name: p.read_text(encoding='utf-8') for p in (ROOT / 'processes-v1').iterdir()
-             if p.suffix in ('.bpmn', '.svg')}
+    files = {}
     source = read('schemes-all.html')
-    legacy_cards = ''.join(re.findall(r'<article\b[^>]* data-process-card>[\s\S]*?</article>', source))
-    assert legacy_cards.count('data-process-card') == len(diagrams.MODELS)
-    letter = group('letter', '1. Письмо → пароль', legacy_cards, diagrams.MODELS)
+    letter = group('letter', '1. Письмо → пароль', new_cards(LETTER, files), LETTER)
     brief = group('brief', '2. По ТЗ', new_cards(BRIEF, files), BRIEF)
     links = ('<nav aria-label="Варианты схем">'
              '<a href="#group-letter">1. Письмо → пароль</a><a href="#group-brief">2. По ТЗ</a></nav>')
@@ -106,6 +103,14 @@ def main():
     start = letter.index('<script>' + registration.splitlines()[0]) + len('<script>')
     end = letter.index('</script>', start)
     letter = letter[:start] + registration.replace('Вариант 2 · регистрация', 'Вариант 1 · регистрация') + letter[end:]
+    invite_option = '<option value="invite">Сотрудник по приглашению</option>'
+    assert letter.count(invite_option) == 1
+    letter = letter.replace(invite_option,
+                            '<option value="duplicate-email">Организация · аккаунт уже существует</option>'
+                            '<option value="invite">Сотрудник по приглашению · новый аккаунт</option>'
+                            '<option value="invite-existing">Сотрудник по приглашению · есть аккаунт</option>', 1)
+    letter = letter.replace("invited:scenario.value==='invite'",
+                            "invited:['invite','invite-existing'].includes(scenario.value)", 1)
     # Hide the demo choices in the active stand. The archived controls stay intact.
     letter = re.sub(r'<option value="invite-(?:expired|revoked)"[^>]*>[^<]*</option>', '', letter)
     brief = pages['stand-frame-brief']

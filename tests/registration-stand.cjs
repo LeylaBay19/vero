@@ -22,7 +22,7 @@ async function run() {
       Array(4).fill('allow-scripts'));
 
     const letter = frame('letter');
-    await letter.locator('[data-r2-action=register]').click();
+    await letter.getByRole('button', { name: 'Зарегистрировать организацию' }).click();
     await page.locator('#stand-fill').click();
     await page.waitForFunction(() => document.getElementById('stand-history-position').textContent !== '');
     const outcomes = await letter.locator('#r2-auth-outcome option').evaluateAll(options => options.map(option => option.value));
@@ -42,8 +42,29 @@ async function run() {
     await choose('letter');
     assert.equal(await letter.locator('#r2-email').inputValue(), letterEmail);
 
-    await letter.locator('#scenario').selectOption('invite');
-    await letter.locator('[data-r2-action=invite-login]').click();
+    const scenario = letter.locator('#scenario');
+    await scenario.selectOption('duplicate-email');
+    await letter.getByRole('button', { name: 'Получить письмо' }).click();
+    await letter.getByRole('heading', { name: 'Аккаунт уже существует' }).waitFor();
+    await letter.getByRole('button', { name: 'Изменить email' }).click();
+    assert.equal(await letter.locator('#r2-email').inputValue(), 'demo@example.test');
+    await letter.locator('#r2-email').fill('DEMO@example.test');
+    await letter.getByRole('button', { name: 'Получить письмо' }).click();
+    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
+    assert.equal(await letter.locator('#r2-login').inputValue(), 'DEMO@example.test');
+
+    await scenario.selectOption('employee');
+    assert.equal(await letter.locator('[data-r2-action=register]').count(), 0);
+    await scenario.selectOption('invite');
+    const invitation = letter.locator('[data-r2-form=invitation]');
+    assert.equal(await letter.locator('[data-r2-action=invite-login]').count(), 0);
+    await letter.locator('#fill').click();
+    await invitation.locator('#r2-terms').check();
+    await invitation.getByRole('button', { name: 'Присоединиться в качестве сотрудника' }).click();
+    assert.match(await letter.locator('[data-auth-complete]').textContent(), /Сотрудник организации/);
+
+    await scenario.selectOption('invite-existing');
+    assert.equal(await letter.locator('[data-r2-form=invitation], [data-r2-action=invitation], [data-r2-action=register]').count(), 0);
     assert.equal(await letter.locator('#r2-login').inputValue(), 'employee@example.test');
     const password = letter.locator('#r2-password');
     assert.equal(await password.inputValue(), '');

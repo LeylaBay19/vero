@@ -1,5 +1,40 @@
-"""Models of the registration paths presented by the UX and brief prototypes."""
-from auth_v1_diagrams import edge, model, node
+"""Models of the registration paths presented by the stand and archived UX."""
+from copy import deepcopy
+from auth_v1_diagrams import MODELS, edge, model, node
+
+
+def revised_letter_models():
+    models = deepcopy(MODELS)
+    email = next(m for m in models if m['id'] == 'AUTH1_EMAIL')
+    email['goal'] = 'Подтвердить почту руководителя и создать аккаунт перед подключением организации.'
+    for step in email['nodes']:
+        if step['row'] >= 2:
+            step['row'] += 1
+            step['y'] += 190
+    email['nodes'].extend([
+        node('existing', 'Аккаунт уже существует?', 1, 2, 'gateway', 'Платформа'),
+        node('warning', 'Показать предупреждение и варианты действий', 2, 2, role='Платформа'),
+        node('choice', 'Войти с этим email?', 2, 3, 'gateway'),
+        node('login', 'Перейти ко входу с этим email', 2, 4, 'end'),
+    ])
+    email['edges'][1:2] = [
+        edge('email', 'existing'), edge('existing', 'mail', 'Нет'),
+        edge('existing', 'warning', 'Да'), edge('warning', 'choice'),
+        edge('choice', 'login', 'Да'), edge('choice', 'email', 'Изменить email', 'right'),
+    ]
+    email['notes'].insert(0, 'Для занятого email письмо регистрации не отправляется. Можно войти с этим адресом или указать другой.')
+
+    invite = next(m for m in models if m['id'] == 'AUTH1_INVITE')
+    for step in invite['nodes']:
+        if step['id'] == 'account':
+            step.update(text='Есть аккаунт с email приглашения?', role='Платформа')
+        elif step['id'] == 'new_password':
+            step['text'] = 'Задать пароль и нажать «Присоединиться в качестве сотрудника»'
+    invite['notes'].insert(1, 'Платформа направляет сотрудника сразу на вход или на создание аккаунта по email приглашения.')
+    return models
+
+
+LETTER = revised_letter_models()
 
 
 def process(key, title, goal, nodes, edges, notes=()):
