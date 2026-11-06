@@ -1,13 +1,11 @@
-# Продолжить ВЕРО · передача 05.11.2026
+# Продолжить работу над ВЕРО
 
-Актуальная версия **v1.24.0** находится прямо в main. Склонируйте репозиторий и откройте папку в Codex. Начните с [handoff/START-HERE.md](handoff/START-HERE.md) и [RESUME.md](RESUME.md).
+Стенд регистрации v1.31.3. После клонирования откройте проект в Codex или запустите HTML в браузере.
 
-- Общий прототип: [prototype.html](prototype.html).
-- Автономный файл: [vero-unified-v1.24.0.html](deliverables/vero-unified-v1.24.0.html).
-- Переписка: [HTML](history/conversation.html), [Markdown](history/conversation.md), [JSON](history/conversation.json); изображения — history/assets/.
-- Исходники и документы: src/, scripts/, tests/, [sources/README.md](sources/README.md).
-- Профили и навыки: .codex/agents, .agents/skills; редактируемая библиотека agent-system.
+- [Общий стенд](prototype.html) и [отдельный UX-вариант](registration-ux.html).
+- [Автономный HTML](deliverables/vero-unified-v1.31.3.html) и [ZIP со стендом и схемами](deliverables/vero-registration-stand-v1.31.3.zip).
+- [Файлы сайта](web/) и [адрес ранее опубликованного стенда в Sites](https://registration-four-flows-prototype.leyla-bairamkulova.chatgpt.site/).
+- [Актуальная выжимка из чатов](history/work-context-2026-11-06.md) и [исторический архив переписки](history/conversation.html).
+- [История решений и сборок](RESUME.md), [исходные материалы проекта](sources/README.md), [проектные профили и навыки](agent-system/).
 
-Замечания к линиям схем выполнены в v1.24.0: обе раскладки, короткие возвраты и прямые конечные стрелки. Разовое согласие на эту задачу закрывается по завершении и не переносится на новые запросы.
-
-vero-project-v1.9.0-2026-11-05.zip и vero-versions.bundle — старый архив передачи, сохранённый для истории. Переписка в GitHub — читаемый архив, а не импортируемая активная сессия Codex. Авторизация и глобальные плагины на другом устройстве настраиваются отдельно.
+Исходники и сборка находятся в src/ и scripts/, проверки — в tests/. VERSION относится к базовой сборке платформы. Версия стенда указана в scripts/build_stand.py и в имени автономного файла.
