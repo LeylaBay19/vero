@@ -39,12 +39,11 @@ async function run() {
     }
     const heading = async text => assert.equal(await item('main h1').textContent(), text);
 
-    // Account creation keeps the confirmed address and goes directly to the certificate.
+    // Account creation keeps the confirmed address and offers organization connection before showing the certificate.
     await action('register');
     await item('#email').fill(' director@example.test ');
     await item('#email').press('Enter');
-    await action('expire-mail');
-    await heading('Ссылка недействительна');
+    assert.equal(await item('[data-action=expire-mail]').count(), 0);
     await action('resend');
     assert.match(await item('main').innerText(), /director@example.test/);
     await action('open-mail');
@@ -52,8 +51,11 @@ async function run() {
     await fill();
     await item('#terms').check();
     await submit('password');
-    await screen('connect-company');
+    await screen('company-intro');
     await heading('Аккаунт создан');
+    assert.equal(await item('#certificate').count(), 0);
+    await action('connect-company');
+    await screen('connect-company');
     assert.equal(await item('main h1').evaluate(el => document.activeElement === el), true);
 
     await item('#certificate').selectOption('employee');
@@ -129,7 +131,7 @@ async function run() {
     await action('login');
     await action('recover');
     await submit('recover');
-    await action('expire-mail');
+    assert.equal(await item('[data-action=expire-mail]').count(), 0);
     await action('resend');
     await action('open-mail');
     await item('#password').fill('Replaced-2026!');

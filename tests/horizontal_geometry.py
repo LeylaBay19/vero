@@ -6,7 +6,8 @@ from zipfile import ZipFile
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 import auth_v1_horizontal as h
 from orthogonal_routes import overlap as flows_overlap
-from registration_stand_models import UX, BRIEF
+from registration_stand_models import BRIEF
+from build_stand import VERSION
 
 def segments(points):
     return [(a,b) for a,b in zip(points,points[1:]) if a!=b]
@@ -18,8 +19,8 @@ def hit(a,b,box):
     raise AssertionError('Diagonal sequence flow')
 
 failures=[]
-models = json.loads((ROOT/'processes-v1/model.json').read_text(encoding='utf8')) + UX + BRIEF
-with ZipFile(ROOT/'deliverables/vero-registration-stand-v1.25.0.zip') as package:
+models = json.loads((ROOT/'processes-v1/model.json').read_text(encoding='utf8')) + BRIEF
+with ZipFile(ROOT/f'deliverables/vero-registration-stand-v{VERSION}.zip') as package:
     exports = {name.split('/')[-1]: package.read(name) for name in package.namelist() if name.endswith('.bpmn')}
 for model in models:
     g=h.layout(model);paths=[h.edge_geometry(model,g,i)[0] for i in range(len(model['edges']))]
@@ -61,4 +62,4 @@ for model in models:
                 if n['id'] in (e['source'],e['target']):continue
                 assert not any(hit(a,b,shape_boxes[model['id']+'_'+n['id']]) for a,b in segments(pts)),(model['id'],suffix,'crossed node',n['id'])
 assert not failures,failures
-print('13 BPMN models in both layouts: orthogonal flows, no node crossings or collinear shared flows, all semantic edges/conditions preserved.')
+print('8 BPMN models in both layouts: orthogonal flows, no node crossings or collinear shared flows, all semantic edges/conditions preserved.')

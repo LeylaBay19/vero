@@ -1,15 +1,15 @@
 (() => {
   const byId = id => document.getElementById(id);
   const variants = [...document.querySelectorAll('[data-variant]')];
-  const tabs = [byId('stand-tab-current'), byId('stand-tab-schemes')];
+  const sections = ['current', 'comparison', 'schemes'];
+  const tabs = sections.map(name => byId('stand-tab-' + name));
   const schemeFrame = byId('stand-frame-schemes');
-  const tools = byId('stand-tools');
   const back = byId('stand-back');
   const forward = byId('stand-forward');
   const position = byId('stand-history-position');
   const downloads = new Map([...byId('scheme-downloads').querySelectorAll('a[download]')]
     .map(link => [link.download, link.getAttribute('href')]));
-  let activeVariant = 'ux';
+  let activeVariant = 'letter';
 
   const frameFor = name => byId('stand-frame-' + name);
   const send = (frame, data) => frame.contentWindow.postMessage(data, '*');
@@ -22,10 +22,10 @@
   }
 
   function show(name) {
-    const schemes = name === 'schemes';
-    if (!schemes) activeVariant = name;
+    const section = sections.includes(name) ? name : 'current';
+    if (section === 'current') activeVariant = name;
     tabs.forEach((tab, index) => {
-      const selected = schemes === (index === 1);
+      const selected = sections[index] === section;
       tab.setAttribute('aria-selected', selected);
       tab.tabIndex = selected ? 0 : -1;
       byId(tab.getAttribute('aria-controls')).hidden = !selected;
@@ -35,16 +35,15 @@
       button.setAttribute('aria-pressed', selected);
       frameFor(button.dataset.variant).hidden = !selected;
     }
-    tools.hidden = activeVariant === 'ux';
     back.disabled = forward.disabled = true;
     position.textContent = '';
-    load(schemes ? schemeFrame : frameFor(activeVariant));
-    if (!schemes && !tools.hidden) history('status');
+    load(frameFor(section === 'current' ? activeVariant : section));
+    if (section === 'current') history('status');
   }
 
   function fromHash() {
     const name = location.hash.slice(1);
-    return ['ux', 'letter', 'brief', 'schemes'].includes(name) ? name : 'ux';
+    return ['letter', 'brief', 'comparison', 'schemes'].includes(name) ? name : 'letter';
   }
   function select(name) {
     if (fromHash() !== name) window.history.replaceState(null, '', '#' + name);
@@ -53,11 +52,15 @@
 
   for (const button of variants) button.addEventListener('click', () => select(button.dataset.variant));
   tabs.forEach((tab, index) => {
-    const switchTo = next => select(next === 0 ? activeVariant : 'schemes');
+    const switchTo = next => select(next === 0 ? activeVariant : sections[next]);
     tab.addEventListener('click', () => switchTo(index));
     tab.addEventListener('keydown', event => {
-      const next = event.key === 'Home' ? 0 : event.key === 'End' ? 1 :
-        ['ArrowLeft', 'ArrowRight'].includes(event.key) ? 1 - index : -1;
+      const next = {
+        Home: 0,
+        End: tabs.length - 1,
+        ArrowLeft: (index + tabs.length - 1) % tabs.length,
+        ArrowRight: (index + 1) % tabs.length,
+      }[event.key] ?? -1;
       if (next < 0) return;
       event.preventDefault();
       tabs[next].focus();
@@ -65,7 +68,7 @@
     });
   });
   for (const button of variants) frameFor(button.dataset.variant).addEventListener('load', () => {
-    if (activeVariant === button.dataset.variant && !tools.hidden) history('status');
+    if (activeVariant === button.dataset.variant) history('status');
   });
   back.addEventListener('click', () => history('back'));
   forward.addEventListener('click', () => history('forward'));
@@ -79,11 +82,16 @@
   addEventListener('message', event => {
     const data = event.data;
     if (event.source === frameFor(activeVariant).contentWindow && data?.type === 'vero:history-state' &&
-        !tools.hidden && typeof data.back === 'boolean' && typeof data.forward === 'boolean') {
+        typeof data.back === 'boolean' && typeof data.forward === 'boolean') {
       back.disabled = !data.back;
       forward.disabled = !data.forward;
       position.textContent = Number.isInteger(data.position) && Number.isInteger(data.total) && data.total > 0
         ? `${data.position} / ${data.total}` : '';
+    }
+    const comparison = frameFor('comparison');
+    if (event.source === comparison.contentWindow && !comparison.parentElement.hidden && data?.type === 'vero:navigate') {
+      if (data.view === 'schemes') select('schemes');
+      if (data.view === 'current') select(activeVariant);
     }
     if (event.source !== schemeFrame.contentWindow || schemeFrame.parentElement.hidden) return;
     if (data?.type === 'vero:scheme-expand' && typeof data.expanded === 'boolean') {

@@ -118,7 +118,7 @@ const screens = {
     return [heading, `<p>${message}</p>${resent ? '<p role="status">Новое письмо запрошено. Используйте последнюю ссылку.</p>' : ''}` +
       actions(button('Отправить письмо повторно', 'resend', expired ? 'primary' : 'secondary'),
         !state.invite && !state.mosLink ? button('Изменить email', purpose) : button('Вернуться ко входу', 'login')) +
-      (expired ? '' : `<div class="demo-action"><p class="small">Демонстрация письма</p>${canOpen ? actions(button('Открыть ссылку из письма', 'open-mail', 'primary'), button('Проверить просроченную ссылку', 'expire-mail', 'link')) : '<p class="small">В демонстрации для этого адреса письма нет.</p>'}</div>`)];
+      (expired ? '' : `<div class="demo-action"><p class="small">Демонстрация письма</p>${canOpen ? actions(button('Открыть ссылку из письма', 'open-mail', 'primary')) : '<p class="small">В демонстрации для этого адреса письма нет.</p>'}</div>`)];
   },
   password() {
     const recovery = state.mail.purpose === 'recover';
@@ -152,8 +152,13 @@ const screens = {
     return ['Принять приглашение', inviteSummary() +
       actions(button('Принять приглашение', 'accept', 'primary'), button('Продолжить без приглашения', 'leave-invite'))];
   },
-  'connect-company'() {
+  'company-intro'() {
     return [state.justCreated ? 'Аккаунт создан' : 'Подключите организацию',
+      '<p>Подключите организацию с помощью УКЭП генерального директора.</p>' +
+      actions(button('Подключить через УКЭП', 'connect-company', 'primary'))];
+  },
+  'connect-company'() {
+    return ['Выберите сертификат УКЭП',
       '<p>Чтобы зарегистрировать компанию, выберите действующий сертификат УКЭП генерального директора.</p>' +
       form('certificate', '<label class="field" for="certificate">Сертификат УКЭП<select id="certificate" name="certificate" required><option value="">Выберите сертификат</option><option value="valid">Иванов Иван Иванович · ООО «Пример»</option><option value="expired">Сертификат руководителя · просрочен</option><option value="employee">Сертификат сотрудника</option></select></label>', 'Проверить сертификат')];
   },
@@ -228,7 +233,7 @@ function signedIn(account) {
     state.contacts = { ...account.application.contacts };
     return go('company-status');
   }
-  go('connect-company');
+  go('company-intro');
 }
 
 function startMail(purpose) {

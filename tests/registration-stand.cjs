@@ -12,22 +12,15 @@ async function run() {
     page.on('pageerror', error => errors.push(error.message));
     await page.route(/^https?:/, route => { requests.push(route.request().url()); return route.abort(); });
     const url = pathToFileURL(path.resolve('prototype.html')).href;
-    await page.goto(url);
+    await page.goto(url + '#ux');
     const frame = name => page.frameLocator('#stand-frame-' + name);
     const choose = name => page.locator(`[data-variant="${name}"]`).click();
 
     assert.deepEqual(await page.locator('[data-variant]').allTextContents(),
-      ['1. С UX-правками', '2. Письмо → пароль', '3. По ТЗ']);
+      ['1. Письмо → пароль', '2. По ТЗ']);
     assert.deepEqual(await page.locator('iframe').evaluateAll(frames => frames.map(f => f.sandbox.value)),
       Array(4).fill('allow-scripts'));
 
-    const ux = frame('ux');
-    await ux.locator('[data-action=register]').click();
-    await ux.locator('#email').fill('director@example.test');
-    assert.deepEqual(await ux.locator('#scenario option').evaluateAll(options => options.map(o => o.value)),
-      ['director', 'director-existing', 'invite-new', 'invite-existing']);
-
-    await choose('letter');
     const letter = frame('letter');
     await letter.locator('[data-r2-action=register]').click();
     await page.locator('#stand-fill').click();
@@ -46,15 +39,19 @@ async function run() {
     await brief.locator('[data-form=signup] button[type=submit]').click();
     await brief.locator('[data-form=contact]').waitFor();
 
-    await choose('ux');
-    assert.equal(await ux.locator('#email').inputValue(), 'director@example.test');
     await choose('letter');
     assert.equal(await letter.locator('#r2-email').inputValue(), letterEmail);
 
+    await page.getByRole('tab', { name: 'Сравнение регистрации' }).click();
+    const comparison = frame('comparison');
+    await comparison.locator('[data-flow=mos]').waitFor();
+    assert.deepEqual(await comparison.locator('[data-flow]').evaluateAll(buttons => buttons.map(b => b.dataset.flow)),
+      ['mos', 'ep', 'orb']);
+    await comparison.locator('[data-flow=orb]').click();
     await page.getByRole('tab', { name: 'Схемы' }).click();
     const schemes = frame('schemes');
     await schemes.locator('[data-registration-schemes]').waitFor();
-    for (const [group, count] of [['ux', 5], ['letter', 6], ['brief', 2]]) {
+    for (const [group, count] of [['letter', 6], ['brief', 2]]) {
       assert.equal(await schemes.locator(`[data-process-group="${group}"] article`).count(), count);
     }
     const cards = schemes.locator('article[data-process-card]');
@@ -92,7 +89,7 @@ async function run() {
       const anchor = first.locator(`.downloads:not([hidden]) a[download$=".${extension}"]`);
       const expected = decodeURIComponent((await anchor.getAttribute('href')).split(',').slice(1).join(','));
       const [download] = await Promise.all([page.waitForEvent('download'), anchor.click()]);
-      assert.equal(download.suggestedFilename(), 'ux-email-horizontal.' + extension);
+      assert.equal(download.suggestedFilename(), 'auth1-email-horizontal.' + extension);
       const blob = await page.evaluate(async () => ({ type: window.schemeDownload.type, text: await window.schemeDownload.text() }));
       assert.deepEqual(blob, { type, text: expected });
     }
@@ -100,18 +97,17 @@ async function run() {
       await page.setViewportSize({ width, height: 844 });
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       await page.getByRole('tab', { name: 'Варианты' }).click();
-      await choose('ux');
-      assert.ok(await ux.locator('#viewport').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
+      await choose('letter');
       await page.getByRole('tab', { name: 'Схемы' }).click();
     }
     const archive = page.getByRole('link', { name: /Архив/ });
-    assert.equal(await archive.getAttribute('href'), 'archive/prototype-v1.24.0.html');
+    assert.equal(await archive.getAttribute('href'), 'archive/prototype-v1.25.0.html');
     await page.goto(new URL(await archive.getAttribute('href'), url).href);
-    await page.locator('[data-stand-tab=comparison]').waitFor();
-    assert.ok(fs.readFileSync('archive/prototype-v1.24.0.html').equals(fs.readFileSync('web/archive/prototype-v1.24.0.html')));
+    await page.locator('[data-variant=ux]').waitFor();
+    assert.ok(fs.readFileSync('archive/prototype-v1.25.0.html').equals(fs.readFileSync('web/archive/prototype-v1.25.0.html')));
     assert.deepEqual(errors, []);
     assert.deepEqual(requests, []);
-    console.log('Registration stand: 3 independent variants, 13 diagrams in two layouts, no label overlaps, expand/Esc, BPMN/SVG payloads, mobile and archive.');
+    console.log('Registration stand: 2 variants, 3 comparison scenarios, 8 diagrams in two layouts, no label overlaps, expand/Esc, BPMN/SVG payloads, mobile and archive.');
   } finally {
     await browser.close();
   }

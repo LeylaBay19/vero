@@ -1976,7 +1976,7 @@ summary { cursor: pointer; }
   &lt;/label&gt;
   &lt;button type=&quot;button&quot; id=&quot;fill&quot;&gt;Заполнить пример&lt;/button&gt;
   &lt;button type=&quot;button&quot; id=&quot;reset&quot;&gt;Начать заново&lt;/button&gt;
-  &lt;span class=&quot;demo-version&quot;&gt;UX-вариант · v1.24.0-ux.1&lt;/span&gt;
+  &lt;span class=&quot;demo-version&quot;&gt;UX-вариант · v1.24.0-ux.2&lt;/span&gt;
 &lt;/header&gt;
 &lt;div class=&quot;viewport&quot; id=&quot;viewport&quot;&gt;
   &lt;header class=&quot;brand&quot;&gt;&lt;strong&gt;ВЕРО&lt;/strong&gt;&lt;button type=&quot;button&quot; class=&quot;link&quot; id=&quot;logout&quot; hidden&gt;Выйти&lt;/button&gt;&lt;/header&gt;
@@ -2103,7 +2103,7 @@ const screens = {
     return [heading, `&lt;p&gt;${message}&lt;/p&gt;${resent ? &#x27;&lt;p role=&quot;status&quot;&gt;Новое письмо запрошено. Используйте последнюю ссылку.&lt;/p&gt;&#x27; : &#x27;&#x27;}` +
       actions(button(&#x27;Отправить письмо повторно&#x27;, &#x27;resend&#x27;, expired ? &#x27;primary&#x27; : &#x27;secondary&#x27;),
         !state.invite &amp;&amp; !state.mosLink ? button(&#x27;Изменить email&#x27;, purpose) : button(&#x27;Вернуться ко входу&#x27;, &#x27;login&#x27;)) +
-      (expired ? &#x27;&#x27; : `&lt;div class=&quot;demo-action&quot;&gt;&lt;p class=&quot;small&quot;&gt;Демонстрация письма&lt;/p&gt;${canOpen ? actions(button(&#x27;Открыть ссылку из письма&#x27;, &#x27;open-mail&#x27;, &#x27;primary&#x27;), button(&#x27;Проверить просроченную ссылку&#x27;, &#x27;expire-mail&#x27;, &#x27;link&#x27;)) : &#x27;&lt;p class=&quot;small&quot;&gt;В демонстрации для этого адреса письма нет.&lt;/p&gt;&#x27;}&lt;/div&gt;`)];
+      (expired ? &#x27;&#x27; : `&lt;div class=&quot;demo-action&quot;&gt;&lt;p class=&quot;small&quot;&gt;Демонстрация письма&lt;/p&gt;${canOpen ? actions(button(&#x27;Открыть ссылку из письма&#x27;, &#x27;open-mail&#x27;, &#x27;primary&#x27;)) : &#x27;&lt;p class=&quot;small&quot;&gt;В демонстрации для этого адреса письма нет.&lt;/p&gt;&#x27;}&lt;/div&gt;`)];
   },
   password() {
     const recovery = state.mail.purpose === &#x27;recover&#x27;;
@@ -2137,8 +2137,13 @@ const screens = {
     return [&#x27;Принять приглашение&#x27;, inviteSummary() +
       actions(button(&#x27;Принять приглашение&#x27;, &#x27;accept&#x27;, &#x27;primary&#x27;), button(&#x27;Продолжить без приглашения&#x27;, &#x27;leave-invite&#x27;))];
   },
-  &#x27;connect-company&#x27;() {
+  &#x27;company-intro&#x27;() {
     return [state.justCreated ? &#x27;Аккаунт создан&#x27; : &#x27;Подключите организацию&#x27;,
+      &#x27;&lt;p&gt;Подключите организацию с помощью УКЭП генерального директора.&lt;/p&gt;&#x27; +
+      actions(button(&#x27;Подключить через УКЭП&#x27;, &#x27;connect-company&#x27;, &#x27;primary&#x27;))];
+  },
+  &#x27;connect-company&#x27;() {
+    return [&#x27;Выберите сертификат УКЭП&#x27;,
       &#x27;&lt;p&gt;Чтобы зарегистрировать компанию, выберите действующий сертификат УКЭП генерального директора.&lt;/p&gt;&#x27; +
       form(&#x27;certificate&#x27;, &#x27;&lt;label class=&quot;field&quot; for=&quot;certificate&quot;&gt;Сертификат УКЭП&lt;select id=&quot;certificate&quot; name=&quot;certificate&quot; required&gt;&lt;option value=&quot;&quot;&gt;Выберите сертификат&lt;/option&gt;&lt;option value=&quot;valid&quot;&gt;Иванов Иван Иванович · ООО «Пример»&lt;/option&gt;&lt;option value=&quot;expired&quot;&gt;Сертификат руководителя · просрочен&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Сертификат сотрудника&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&#x27;, &#x27;Проверить сертификат&#x27;)];
   },
@@ -2213,7 +2218,7 @@ function signedIn(account) {
     state.contacts = { ...account.application.contacts };
     return go(&#x27;company-status&#x27;);
   }
-  go(&#x27;connect-company&#x27;);
+  go(&#x27;company-intro&#x27;);
 }
 
 function startMail(purpose) {

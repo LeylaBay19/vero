@@ -34,18 +34,18 @@ body.scheme-expanded .stand-header { display: none; }
   <strong>ВЕРО · стенд регистрации <small>v__VERSION__</small></strong>
   <nav role="tablist" aria-label="Разделы стенда">
     <button id="stand-tab-current" type="button" role="tab" aria-selected="true" aria-controls="stand-current">Варианты</button>
+    <button id="stand-tab-comparison" type="button" role="tab" aria-selected="false" aria-controls="stand-comparison" tabindex="-1">Сравнение регистрации</button>
     <button id="stand-tab-schemes" type="button" role="tab" aria-selected="false" aria-controls="stand-schemes" tabindex="-1">Схемы</button>
   </nav>
-  <a href="archive/prototype-v1.24.0.html" target="_blank" rel="noopener">Архив · v1.24.0 ↗</a>
+  <a href="archive/prototype-v1.25.0.html" target="_blank" rel="noopener">Архив · v1.25.0 ↗</a>
 </header>
 <section id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">
   <div class="variant-switcher">
     <nav class="stand-actions" aria-label="Варианты регистрации" style="margin-left:0">
-      <button type="button" data-variant="ux" aria-pressed="true">1. С UX-правками</button>
-      <button type="button" data-variant="letter" aria-pressed="false">2. Письмо → пароль</button>
-      <button type="button" data-variant="brief" aria-pressed="false">3. По ТЗ</button>
+      <button type="button" data-variant="letter" aria-pressed="true">1. Письмо → пароль</button>
+      <button type="button" data-variant="brief" aria-pressed="false">2. По ТЗ</button>
     </nav>
-    <div class="stand-actions" id="stand-tools" hidden>
+    <div class="stand-actions" id="stand-tools">
       <button type="button" id="stand-back" disabled>← Назад</button>
       <button type="button" id="stand-forward" disabled>Вперёд →</button>
       <span id="stand-history-position" aria-live="polite"></span>
@@ -54,6 +54,7 @@ body.scheme-expanded .stand-header { display: none; }
   </div>
   <div class="frames">__VARIANTS__</div>
 </section>
+<section id="stand-comparison" role="tabpanel" aria-labelledby="stand-tab-comparison" hidden>__COMPARISON__</section>
 <section id="stand-schemes" role="tabpanel" aria-labelledby="stand-tab-schemes" hidden>__SCHEMES__</section>
 <div id="scheme-downloads" hidden>__DOWNLOADS__</div>
 <script>__NAVIGATION__</script>

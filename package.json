@@ -1,6 +1,6 @@
 {
   "name": "auth-registration-prototype",
-  "version": "1.25.0",
+  "version": "1.25.1",
   "private": true,
   "description": "Interactive registration and authorization prototype with editable BPMN process diagrams",
   "scripts": {
