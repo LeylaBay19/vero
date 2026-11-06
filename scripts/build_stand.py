@@ -13,7 +13,7 @@ from prepare_site import csp, inner, shell
 from registration_stand_models import BRIEF, KONTUR, KONTUR_LETTER, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.31.0'
+VERSION = '1.31.1'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -120,17 +120,13 @@ def main():
     invite_option = '<option value="invite">Сотрудник по приглашению</option>'
     assert letter.count(invite_option) == 1
     letter = letter.replace(invite_option,
-                            '<option value="duplicate-email">Организация · аккаунт уже существует</option>'
                             '<option value="invite">Сотрудник по приглашению · новый аккаунт</option>'
-                            '<option value="invite-v2">Сотрудник по приглашению 2</option>'
-                            '<option value="invite-existing">Сотрудник по приглашению · есть аккаунт</option>'
-                            '<option value="invite-other">Сотрудник по приглашению · другая почта</option>'
-                            '<option value="invite-conflict">Сотрудник по приглашению · два аккаунта</option>'
-                            '<option value="invite-shared">Сотрудник по приглашению · общий ящик</option>'
-                            '<option value="invite-wrong">Администратор · ошибка в почте приглашения</option>', 1)
-    letter = letter.replace("invited:scenario.value==='invite'",
-                            "invited:scenario.value.startsWith('invite')&&scenario.value!=='invite-v2'", 1)
-    # The current script adds these choices only inside invitation demos.
+                            '<option value="invite-v2">Сотрудник по приглашению 2</option>', 1)
+    removed_scenarios = re.compile(r'<option value="(?:director|multi)"[^>]*>[^<]*</option>')
+    letter = re.sub(r'(<select id="scenario">)(.*?)(</select>)',
+                    lambda match: match[1] + removed_scenarios.sub('', match[2]) + match[3],
+                    letter, count=1, flags=re.S)
+    # Invitation-specific demo outcomes are added at runtime.
     letter = re.sub(r'<option value="invite-(?:expired|revoked)"[^>]*>[^<]*</option>', '', letter)
     brief = pages['stand-frame-brief']
     kontur = read('src/registration-kontur.html')

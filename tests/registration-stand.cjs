@@ -43,7 +43,9 @@ async function run() {
     assert.equal(await letter.locator('#r2-email').inputValue(), letterEmail);
 
     const scenario = letter.locator('#scenario');
-    await scenario.selectOption('duplicate-email');
+    assert.deepEqual(await scenario.locator('option').evaluateAll(options => options.map(option => option.value)),
+      ['new', 'invite', 'invite-v2', 'employee']);
+    await letter.locator('#r2-email').fill('demo@example.test');
     await letter.getByRole('button', { name: 'Получить письмо' }).click();
     await letter.getByRole('heading', { name: 'Аккаунт уже существует' }).waitFor();
     await letter.getByRole('button', { name: 'Изменить email' }).click();
@@ -62,32 +64,6 @@ async function run() {
     await letter.locator('#fill').click();
     await invitation.locator('#r2-terms').check();
     await invitation.getByRole('button', { name: 'Присоединиться в качестве сотрудника' }).click();
-    assert.match(await letter.locator('[data-auth-complete]').textContent(), /Сотрудник организации/);
-
-    await scenario.selectOption('invite-existing');
-    assert.equal(await letter.getByText('Войдите с почтой, на которую пришло приглашение.', { exact: false }).count(), 0);
-    assert.equal(await letter.locator('[data-r2-form=invitation], [data-r2-action=invitation], [data-r2-action=register]').count(), 0);
-    assert.equal(await letter.locator('#r2-login').inputValue(), 'employee@example.test');
-    const password = letter.locator('#r2-password');
-    assert.equal(await password.inputValue(), '');
-    await letter.locator('#fill').click();
-    assert.equal(await password.inputValue(), 'Example-2026!');
-    await password.fill('Entered-manually!');
-    await letter.locator('#fill').click();
-    assert.equal(await password.inputValue(), 'Entered-manually!');
-    await password.fill('');
-    await page.locator('#stand-fill').click();
-    await password.evaluate(input => new Promise((resolve, reject) => {
-      const deadline = Date.now() + 2000;
-      const check = () => {
-        if (input.value) resolve();
-        else if (Date.now() >= deadline) reject(new Error('The stand did not fill the password'));
-        else setTimeout(check, 20);
-      };
-      check();
-    }));
-    assert.equal(await password.inputValue(), 'Example-2026!');
-    await letter.locator('[data-r2-form=login] button[type=submit]').click();
     assert.match(await letter.locator('[data-auth-complete]').textContent(), /Сотрудник организации/);
 
     const v2Button = name => letter.getByRole('button', { name, exact: true });
@@ -135,169 +111,29 @@ async function run() {
     assert.equal(await letter.locator('#r2-new-password').count(), 0);
     await v2Button('Войти в существующий аккаунт').click();
     assert.equal(await letter.locator('#r2-login').inputValue(), 'anna@vector.example.test');
+    const password = letter.locator('#r2-password');
+    assert.equal(await password.inputValue(), '');
     await letter.locator('#fill').click();
+    assert.equal(await password.inputValue(), 'Example-2026!');
+    await password.fill('Entered-manually!');
+    await letter.locator('#fill').click();
+    assert.equal(await password.inputValue(), 'Entered-manually!');
+    await password.fill('');
+    await page.locator('#stand-fill').click();
+    await password.evaluate(input => new Promise((resolve, reject) => {
+      const deadline = Date.now() + 2000;
+      const check = () => {
+        if (input.value) resolve();
+        else if (Date.now() >= deadline) reject(new Error('The stand did not fill the password'));
+        else setTimeout(check, 20);
+      };
+      check();
+    }));
+    assert.equal(await password.inputValue(), 'Example-2026!');
+
     await v2Button('Войти').click();
     await v2Button('Принять приглашение').waitFor();
     assert.equal(await letter.locator('#r2-invitation-code').count(), 0);
-
-    await scenario.selectOption('invite-other');
-    await letter.getByRole('heading', { name: 'Вас пригласили в ООО «Вектор»' }).waitFor();
-    await letter.getByRole('button', { name: 'Создать аккаунт', exact: true }).waitFor();
-    await letter.getByRole('button', { name: 'Войти в свой аккаунт' }).click();
-    await letter.locator('#fill').click();
-    assert.equal(await letter.locator('#r2-login').inputValue(), 'anna@example.test');
-    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
-    const code = letter.getByLabel('Код из письма');
-    await code.waitFor();
-    assert.equal(await letter.getByRole('button', { name: 'Войти в другой аккаунт' }).count(), 0);
-    assert.match(await letter.locator('main').textContent(), /anna@vector\.example\.test/);
-    assert.equal(await letter.locator('[data-auth-complete]').count(), 0);
-    await letter.locator('#fill').click();
-    const oldCode = await code.inputValue();
-    await letter.getByRole('button', { name: 'Отправить код повторно' }).click();
-    await code.fill(oldCode);
-    await letter.getByRole('button', { name: 'Подтвердить код' }).click();
-    await letter.locator('#r2-alert:not([hidden])').waitFor();
-    assert.equal(await code.getAttribute('aria-invalid'), 'true');
-    assert.equal(await letter.getByRole('button', { name: 'Присоединиться', exact: true }).count(), 0);
-    await code.fill('');
-    await letter.locator('#fill').click();
-    assert.notEqual(await code.inputValue(), oldCode);
-    await letter.getByRole('button', { name: 'Подтвердить код' }).click();
-    const join = letter.getByRole('button', { name: 'Присоединиться', exact: true });
-    await join.waitFor();
-    assert.equal(await letter.locator('[data-auth-complete]').count(), 0);
-    await join.click();
-    const result = letter.locator('[data-auth-complete]');
-    assert.match(await result.textContent(), /anna@example\.test/);
-    assert.deepEqual(await result.locator('li').allTextContents(),
-      ['ООО «Пример» · Сотрудник организации', 'ООО «Вектор» · Специалист ОССиГ']);
-    await letter.locator('#signout').click();
-    await letter.locator('#fill').click();
-    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
-    await result.waitFor();
-    assert.equal(await code.count(), 0);
-    assert.equal(await result.locator('li').count(), 2);
-
-    const startOther = async () => {
-      await scenario.selectOption('new');
-      await scenario.selectOption('invite-other');
-    };
-    const signInOther = async () => {
-      await letter.getByRole('button', { name: 'Войти в свой аккаунт' }).click();
-      await letter.locator('#fill').click();
-      await letter.getByRole('button', { name: 'Войти', exact: true }).click();
-    };
-    const inviteStatus = letter.locator('#r2-auth-outcome');
-    const confirmCode = letter.getByRole('button', { name: 'Подтвердить код' });
-    const resendCode = letter.getByRole('button', { name: 'Отправить код повторно' });
-    await startOther();
-    await letter.getByRole('button', { name: 'Не сейчас' }).click();
-    await letter.getByRole('heading', { name: 'Приглашение отложено' }).waitFor();
-    assert.equal(await result.count(), 0);
-    await letter.getByRole('button', { name: 'Вернуться к приглашению' }).click();
-    await inviteStatus.selectOption('code-undelivered');
-    await signInOther();
-    await code.waitFor();
-    await letter.locator('#fill').click();
-    assert.equal(await code.inputValue(), '');
-    await resendCode.click();
-    for (let attempt = 0; attempt < 3; attempt++) {
-      await code.fill('000000');
-      await confirmCode.click();
-      await letter.locator('#r2-alert:not([hidden])').waitFor();
-    }
-    assert.match(await letter.locator('#r2-alert').textContent(), /Попытки исчерпаны/);
-    await resendCode.click();
-    await letter.locator('#fill').click();
-    await inviteStatus.selectOption('code-expired');
-    await confirmCode.click();
-    await letter.getByText('Срок действия кода истёк.', { exact: false }).first().waitFor();
-    await resendCode.click();
-    await letter.locator('#fill').click();
-    const previousSessionCode = await code.inputValue();
-    await letter.getByText('Демо · повторное открытие ссылки', { exact: true }).click();
-    await letter.getByRole('button', { name: 'Открыть ссылку в новой сессии' }).click();
-    await signInOther();
-    await code.fill(previousSessionCode);
-    await confirmCode.click();
-    await letter.locator('#r2-alert:not([hidden])').waitFor();
-    assert.match(await letter.locator('#r2-alert').textContent(), /Код не совпадает/);
-    await code.fill('');
-    await letter.locator('#fill').click();
-    await confirmCode.click();
-    await join.waitFor();
-    await inviteStatus.selectOption('invite-role-changed');
-    await join.click();
-    await letter.getByText('Администратор изменил роль. Проверьте новый доступ', { exact: false }).waitFor();
-    assert.equal(await result.count(), 0);
-    await join.click();
-    await result.getByText('ООО «Вектор» · Наблюдатель ОССиГ').waitFor();
-
-    for (const [outcome, heading] of [
-      ['invite-undelivered', 'Письмо с приглашением не пришло'],
-      ['invite-expired', 'Срок приглашения истёк'],
-      ['invite-revoked', 'Приглашение отозвано'],
-      ['invite-reissued', 'Приглашение отправили повторно'],
-    ]) {
-      await startOther();
-      await inviteStatus.selectOption(outcome);
-      await letter.getByRole('button', { name: 'Войти в свой аккаунт' }).click();
-      await letter.getByRole('heading', { name: heading, exact: true }).waitFor();
-      assert.equal(await result.count(), 0);
-      await letter.getByRole('button', { name: 'Открыть новое приглашение' }).click();
-      await letter.getByRole('heading', { name: 'Вас пригласили в ООО «Вектор»' }).waitFor();
-    }
-    await scenario.selectOption('invite-shared');
-    assert.equal(await result.count(), 0);
-    await letter.getByRole('button', { name: 'Открыть приглашение на мой адрес' }).click();
-    await letter.getByText('anna@example.test', { exact: true }).waitFor();
-
-    await scenario.selectOption('invite-wrong');
-    await letter.getByRole('heading', { name: 'Сотруднику не пришло приглашение' }).waitFor();
-    await letter.getByText('annna@vector.example.test', { exact: true }).waitFor();
-    await letter.getByRole('button', { name: 'Отозвать ссылку и отправить заново' }).click();
-    await letter.getByRole('heading', { name: 'Новое приглашение отправлено' }).waitFor();
-    assert.equal(await result.count(), 0);
-    await letter.getByRole('button', { name: 'Открыть новое приглашение' }).click();
-    await letter.getByText('anna@example.test', { exact: true }).waitFor();
-    assert.equal(await letter.getByRole('button', { name: 'Создать аккаунт', exact: true }).count(), 0);
-
-    await startOther();
-    await letter.getByRole('button', { name: 'Создать аккаунт', exact: true }).click();
-    assert.equal(await invitation.locator('#r2-invite-login').inputValue(), 'anna@vector.example.test');
-    await letter.locator('#fill').click();
-    await invitation.locator('#r2-terms').check();
-    await invitation.getByRole('button', { name: 'Создать аккаунт', exact: true }).click();
-    await join.waitFor();
-    assert.equal(await result.count(), 0);
-    await join.click();
-    await result.getByText('anna@vector.example.test', { exact: true }).waitFor();
-    await startOther();
-    await signInOther();
-    await code.waitFor();
-    await letter.getByRole('button', { name: 'Нет доступа к этой почте' }).click();
-    await letter.getByRole('heading', { name: 'Нужен доступ к почте приглашения' }).waitFor();
-    assert.equal(await result.count(), 0);
-
-    await scenario.selectOption('invite-conflict');
-    const conflictHeading = letter.getByRole('heading', { name: 'У этой почты уже есть аккаунт ВЕРО' });
-    await conflictHeading.waitFor();
-    await letter.getByRole('button', { name: 'Войти с почтой приглашения' }).click();
-    await letter.locator('#r2-login').fill('anna@example.test');
-    await letter.locator('#fill').click();
-    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
-    await conflictHeading.waitFor();
-    assert.equal(await code.count(), 0);
-    assert.equal(await result.count(), 0);
-    await letter.getByRole('button', { name: 'Войти с почтой приглашения' }).click();
-    assert.equal(await letter.locator('#r2-login').inputValue(), 'anna@vector.example.test');
-    await letter.locator('#fill').click();
-    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
-    await join.waitFor();
-    assert.equal(await code.count(), 0);
-    await join.click();
-    await result.getByText('anna@vector.example.test', { exact: true }).waitFor();
 
     await choose('kontur');
     assert.equal(new URL(page.url()).hash, '#kontur');
