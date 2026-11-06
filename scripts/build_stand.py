@@ -13,7 +13,7 @@ from prepare_site import csp, inner, shell
 from registration_stand_models import BRIEF, KONTUR, KONTUR_LETTER, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.31.2'
+VERSION = '1.31.3'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]

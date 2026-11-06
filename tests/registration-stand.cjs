@@ -103,6 +103,14 @@ async function run() {
     await v2Button('Подтвердить код').click();
     await v2Button('Принять приглашение').click();
     assert.match(await letter.locator('[data-auth-complete]').textContent(), /Вектор/);
+    await letter.locator('[data-mos-link-hint] [data-r2-action=link]').click();
+    await letter.locator('#r2-mos-login').fill('ivan.mos@example.test');
+    await letter.locator('#r2-mos-password').fill('Example-2026!');
+    await letter.locator('[data-r2-action=mos-return]').click();
+    await letter.locator('[data-registration-screen=linked] [data-r2-action=cabinet]').click();
+    await letter.locator('[data-auth-complete]').waitFor();
+    assert.equal(await letter.locator('[data-mos-link-hint]').count(), 0);
+
 
     await v2Start();
     await letter.locator('#r2-auth-outcome').selectOption('invite-v2-email-exists');

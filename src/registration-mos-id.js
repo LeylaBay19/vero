@@ -606,5 +606,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation});}
   function restore(value){({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation}=structuredClone(value));}
   function connectOrganization(name){if(!current)return;current.connectedOrganization={name,role:'director'};const saved=accounts.find(a=>a.id===current.id);if(saved)saved.connectedOrganization={...current.connectedOrganization};}
-  return {reset,view,profile,signout,fill,mount,snapshot,restore,connectOrganization,hasScreen:()=>!!screen,screen:()=>screen};
+  function mosLinkHint(){
+    if(!current||current.mosId||!isAuthenticated())return '';
+    return '<aside class="summary" aria-label="Дополнительный способ входа" data-mos-link-hint style="width:min(100%, 18rem);margin-inline-start:auto;align-self:start">'
+      +'<strong>Дополнительный способ входа</strong><p>Входите в свой аккаунт ВЕРО через mos.ru.</p>'
+      +button('Подключить mos.ru','link',true)+'</aside>';
+  }
+  return {reset,view,profile,mosLinkHint,signout,fill,mount,snapshot,restore,connectOrganization,hasScreen:()=>!!screen,screen:()=>screen};
 }

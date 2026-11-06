@@ -31,7 +31,7 @@ body.scheme-expanded .stand-header { display: none; }
 </head>
 <body>
 <header class="stand-header">
-  <strong>ВЕРО · стенд регистрации <small>v1.31.2</small></strong>
+  <strong>ВЕРО · стенд регистрации <small>v1.31.3</small></strong>
   <nav role="tablist" aria-label="Разделы стенда">
     <button id="stand-tab-current" type="button" role="tab" aria-selected="true" aria-controls="stand-current">Варианты</button>
     <button id="stand-tab-comparison" type="button" role="tab" aria-selected="false" aria-controls="stand-comparison" tabindex="-1">Сравнение регистрации</button>
@@ -2664,7 +2664,13 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation});}
   function restore(value){({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation}=structuredClone(value));}
   function connectOrganization(name){if(!current)return;current.connectedOrganization={name,role:&#x27;director&#x27;};const saved=accounts.find(a=&gt;a.id===current.id);if(saved)saved.connectedOrganization={...current.connectedOrganization};}
-  return {reset,view,profile,signout,fill,mount,snapshot,restore,connectOrganization,hasScreen:()=&gt;!!screen,screen:()=&gt;screen};
+  function mosLinkHint(){
+    if(!current||current.mosId||!isAuthenticated())return &#x27;&#x27;;
+    return &#x27;&lt;aside class=&quot;summary&quot; aria-label=&quot;Дополнительный способ входа&quot; data-mos-link-hint style=&quot;width:min(100%, 18rem);margin-inline-start:auto;align-self:start&quot;&gt;&#x27;
+      +&#x27;&lt;strong&gt;Дополнительный способ входа&lt;/strong&gt;&lt;p&gt;Входите в свой аккаунт ВЕРО через mos.ru.&lt;/p&gt;&#x27;
+      +button(&#x27;Подключить mos.ru&#x27;,&#x27;link&#x27;,true)+&#x27;&lt;/aside&gt;&#x27;;
+  }
+  return {reset,view,profile,mosLinkHint,signout,fill,mount,snapshot,restore,connectOrganization,hasScreen:()=&gt;!!screen,screen:()=&gt;screen};
 }
 &lt;/script&gt;
 &lt;script&gt;
@@ -2901,7 +2907,7 @@ function render(){
   const memberships=state.contexts.filter(context=&gt;[&#x27;director&#x27;,&#x27;employee&#x27;].includes(context.kind));
   const joinedOther=state.accepted&amp;&amp;c?.id===&#x27;company-vector&#x27;;
   const organizations=memberships.map(context=&gt;&#x27;&lt;li&gt;&#x27;+esc(context.name)+&#x27; · &#x27;+esc(context.serviceRoles?.ossig?context.serviceRoles.ossig+&#x27; ОССиГ&#x27;:context.role)+&#x27;&lt;/li&gt;&#x27;).join(&#x27;&#x27;);
-  html=`&lt;section class=&quot;workspace&quot; data-auth-complete&gt;&lt;h1 tabindex=&quot;-1&quot;&gt;${joinedOther?&#x27;Вы присоединились к &#x27;+esc(c.name):&#x27;Вход выполнен&#x27;}&lt;/h1&gt;${joinedOther?`&lt;p&gt;Аккаунт ВЕРО · &lt;strong&gt;${esc(state.email)}&lt;/strong&gt;&lt;/p&gt;&lt;h2&gt;Ваши организации&lt;/h2&gt;&lt;ul&gt;${organizations}&lt;/ul&gt;`:[&#x27;director&#x27;,&#x27;employee&#x27;].includes(c?.kind)?`&lt;p&gt;${esc(c.name)} · ${esc(c.kind===&#x27;director&#x27;?&#x27;Генеральный директор&#x27;:&#x27;Сотрудник организации&#x27;)}&lt;/p&gt;`:&#x27;&#x27;}&lt;p&gt;Сценарий входа завершён.&lt;/p&gt;&lt;/section&gt;`;
+  html=`&lt;section class=&quot;workspace&quot; data-auth-complete style=&quot;display:flex;flex-wrap:wrap;gap:1.5rem&quot;&gt;&lt;div style=&quot;flex:1 1 18rem;min-width:0&quot;&gt;&lt;h1 tabindex=&quot;-1&quot;&gt;${joinedOther?&#x27;Вы присоединились к &#x27;+esc(c.name):&#x27;Вход выполнен&#x27;}&lt;/h1&gt;${joinedOther?`&lt;p&gt;Аккаунт ВЕРО · &lt;strong&gt;${esc(state.email)}&lt;/strong&gt;&lt;/p&gt;&lt;h2&gt;Ваши организации&lt;/h2&gt;&lt;ul&gt;${organizations}&lt;/ul&gt;`:[&#x27;director&#x27;,&#x27;employee&#x27;].includes(c?.kind)?`&lt;p&gt;${esc(c.name)} · ${esc(c.kind===&#x27;director&#x27;?&#x27;Генеральный директор&#x27;:&#x27;Сотрудник организации&#x27;)}&lt;/p&gt;`:&#x27;&#x27;}&lt;p&gt;Сценарий входа завершён.&lt;/p&gt;&lt;/div&gt;${registration2.mosLinkHint()}&lt;/section&gt;`;
  }
  if(q===&#x27;invitations&#x27;)html=invitationList();
  if(q===&#x27;my-organizations&#x27;)html=accessPage();
