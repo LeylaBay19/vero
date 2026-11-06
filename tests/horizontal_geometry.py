@@ -6,7 +6,7 @@ from zipfile import ZipFile
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'scripts'))
 import auth_v1_horizontal as h
 from orthogonal_routes import overlap as flows_overlap
-from registration_stand_models import BRIEF, KONTUR, LETTER
+from registration_stand_models import BRIEF, KONTUR, KONTUR_LETTER, LETTER
 from build_stand import VERSION
 
 def segments(points):
@@ -19,7 +19,7 @@ def hit(a,b,box):
     raise AssertionError('Diagonal sequence flow')
 
 failures=[]
-models = LETTER + BRIEF + KONTUR
+models = LETTER + BRIEF + KONTUR + KONTUR_LETTER
 with ZipFile(ROOT/f'deliverables/vero-registration-stand-v{VERSION}.zip') as package:
     exports = {name.split('/')[-1]: package.read(name) for name in package.namelist() if name.endswith('.bpmn')}
 for model in models:

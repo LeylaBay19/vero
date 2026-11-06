@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 __CSP__
-<title>ВЕРО — приглашение как в Контуре</title>
+<title>ВЕРО — __TITLE__</title>
 <style>
 __SHARED_UI__
 * { box-sizing: border-box; }
@@ -19,8 +19,8 @@ small, .muted { color: var(--muted); }
 label.field { display: grid; gap: 4px; margin: 0 0 12px; }
 input:not([type=checkbox]), select { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; font: inherit; }
 input[readonly] { background: var(--soft); }
-fieldset { border: 1px solid var(--line); border-radius: 5px; margin: 0 0 12px; }
-fieldset label { display: block; }
+.scenes { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 8px; border-bottom: 1px solid var(--line); background: #edf0f4; }
+.scenes button[aria-pressed=true] { color: white; background: var(--accent); }
 button { font: inherit; cursor: pointer; padding: 8px 12px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: white; }
 button.primary { color: white; background: var(--accent); }
 .actions { display: grid; gap: 8px; margin: 12px 0 0; }
@@ -30,11 +30,15 @@ button.primary { color: white; background: var(--accent); }
 [hidden] { display: none !important; }
 </style>
 </head>
-<body>
+<body data-variant="__MODE__">
 <div class="demo">
-  <small>Демонстрация ВЕРО по сценарию Диадок КЭДО. Письма, СМС и сертификат имитируются.</small>
+  <small>__DEMO__</small>
   <button type="button" id="start-over">Начать заново</button>
 </div>
+<nav class="scenes" aria-label="Демо-сценарии">
+  <button type="button" data-scene="sender" aria-pressed="true">Отправка приглашения</button>
+  <button type="button" data-scene="employee" aria-pressed="false">Регистрация и вход сотрудника</button>
+</nav>
 <header class="brand"><strong class="brand-wordmark">ВЕРО</strong></header>
 <main id="kontur-flow"></main>
 <script>__FLOW_JS__</script>

@@ -10,10 +10,10 @@ import auth_v1_diagrams as diagrams
 from auth_v1_horizontal import bpmn as horizontal_bpmn, layout, svg as horizontal_svg
 from build_registration_ux import main as build_ux
 from prepare_site import csp, inner, shell
-from registration_stand_models import BRIEF, KONTUR, LETTER
+from registration_stand_models import BRIEF, KONTUR, KONTUR_LETTER, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.29.0'
+VERSION = '1.30.0'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -77,13 +77,15 @@ def schemes_page(archived_page):
     letter = group('letter', '1. Письмо → пароль', new_cards(LETTER, files), LETTER)
     brief = group('brief', '2. По ТЗ', new_cards(BRIEF, files), BRIEF)
     kontur = group('kontur', '3. Как в Контуре', new_cards(KONTUR, files), KONTUR)
+    kontur_letter = group('kontur-letter', '4. Как в Контуре · письмо → пароль', new_cards(KONTUR_LETTER, files), KONTUR_LETTER)
     links = ('<nav aria-label="Варианты схем">'
              '<a href="#group-letter">1. Письмо → пароль</a><a href="#group-brief">2. По ТЗ</a>'
-             '<a href="#group-kontur">3. Как в Контуре</a></nav>')
+             '<a href="#group-kontur">3. Как в Контуре</a>'
+             '<a href="#group-kontur-letter">4. Как в Контуре · письмо → пароль</a></nav>')
     body = ('<main data-registration-schemes><h1>Схемы регистрации и входа</h1>'
             '<p>Для каждой схемы доступны вертикальный вид и горизонтальный BPMN с дорожками. '
             'Выберите масштаб или разверните схему на весь экран.</p>'
-            + links + letter + brief + kontur + '</main>')
+            + links + letter + brief + kontur + kontur_letter + '</main>')
     page = re.sub(r'<main\b[\s\S]*?</main>', lambda _: body, source, count=1)
     page = re.sub(r'<title>[^<]*</title>', '<title>ВЕРО — схемы регистрации</title>', page, count=1)
     page = page.replace('</head>', '<style>[data-process-group]>h2{font-size:23px;margin-top:30px}</style></head>', 1)
@@ -134,10 +136,19 @@ def main():
     kontur = (kontur.replace('__CSP__', POLICY, 1)
               .replace('__SHARED_UI__', read('src/simple-ui.css'), 1)
               .replace('__FLOW_JS__', read('src/prototype-history.js') + '\n' + read('src/registration-kontur.js'), 1))
+    def kontur_page(mode, title, demo):
+        return (kontur.replace('__MODE__', mode, 1).replace('__TITLE__', title, 1)
+                .replace('__DEMO__', demo, 1))
+
     standalone, schemes, files = schemes_page(pages['stand-frame-schemes'])
     variants = (frame('letter', 'Письмо → пароль', letter)
                 + frame('brief', 'Личный кабинет и кошелёк по ТЗ', brief)
-                + frame('kontur', 'Приглашение как в Контуре', kontur))
+                + frame('kontur', 'Приглашение как в Контуре',
+                        kontur_page('kontur', 'Приглашение как в Контуре',
+                                    'Демо по мотивам Диадок КЭДО. Письма, коды входа и сертификат имитируются.'))
+                + frame('kontur-letter', 'Как в Контуре · письмо → пароль',
+                        kontur_page('kontur-letter', 'Как в Контуре · письмо → пароль',
+                                    'Демо ВЕРО. Письма и коды подтверждения имитируются.')))
     result = read('templates/registration-stand.html')
     for key, value in (
         ('VERSION', VERSION), ('CSP', csp(shell)[0]), ('VARIANTS', variants), ('SCHEMES', frame('schemes', 'Схемы регистрации', schemes)),
@@ -160,7 +171,7 @@ def main():
         package.writestr('schemes.html', standalone)
         for name, content in files.items():
             package.writestr('schemes/' + name, content)
-    print(f'Built v{VERSION}: 3 variants, {len(files) // 4} BPMN models and the v1.25.0 archive.')
+    print(f'Built v{VERSION}: 4 variants, {len(files) // 4} BPMN models and the v1.25.0 archive.')
 
 
 if __name__ == '__main__':
