@@ -10,10 +10,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   const form = (name, content, label) => `<form data-r2-form="${name}" novalidate>${content}<button class="primary" type="submit">${label}</button></form>`;
   const demoMos = {id:'mos-demo-001', name:'Иванов Иван Иванович', email:'ivan.mos@example.test', phone:'+7 000 000-00-00'};
   const invitationEmail='employee@example.test';
+  const demoEmployee={id:'demo-employee',login:invitationEmail,email:invitationEmail,password:'Example-2026!',provider:'local_only',mosId:null,name:'Анна Петрова',phone:''};
   let screen, accounts, current, origin, purpose, draft, notice, sequence;
   function reset() {
     screen=getScenario()==='invite'?'invitation':'entry'; accounts=[{id:'demo-existing-account',login:'demo@example.test',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:'',connectedOrganization:authOnly?{name:'ООО «Пример»',role:'director'}:null}];
-    if(getScenario()==='employee')accounts.push({id:'demo-employee',login:invitationEmail,email:invitationEmail,password:'Example-2026!',provider:'local_only',mosId:null,name:'Анна Петрова',phone:''});
+    if(getScenario()==='employee')accounts.push({...demoEmployee});
     current=null; origin=screen; purpose='login';
     draft={}; notice=''; sequence=0;
     if($('r2-mos-outcome'))$('r2-mos-outcome').value='success';
@@ -213,7 +214,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       draft.recoveryVerified=true;return show('recovery-password');
     }
     if(action==='invitation')return show('invitation');
-    if(action==='invite-login'){draft={login:invitationEmail};return show('entry');}
+    if(action==='invite-login'){
+      if(!accounts.some(account=>account.email===invitationEmail))accounts.push({...demoEmployee});
+      draft={login:invitationEmail};
+      return show('entry');
+    }
     if(action==='back')return show('entry');
     if(action==='mos-login')return startMos('login');
     if(action==='mos-fill'){if($('r2-mos-login')&&!$('r2-mos-login').value)$('r2-mos-login').value=demoMos.email;if($('r2-mos-password')&&!$('r2-mos-password').value)$('r2-mos-password').value='Example-2026!';$('r2-mos-login')?.removeAttribute('aria-invalid');$('r2-mos-password')?.removeAttribute('aria-invalid');if($('r2-alert'))$('r2-alert').hidden=true;return;}

@@ -42,6 +42,31 @@ async function run() {
     await choose('letter');
     assert.equal(await letter.locator('#r2-email').inputValue(), letterEmail);
 
+    await letter.locator('#scenario').selectOption('invite');
+    await letter.locator('[data-r2-action=invite-login]').click();
+    assert.equal(await letter.locator('#r2-login').inputValue(), 'employee@example.test');
+    const password = letter.locator('#r2-password');
+    assert.equal(await password.inputValue(), '');
+    await letter.locator('#fill').click();
+    assert.equal(await password.inputValue(), 'Example-2026!');
+    await password.fill('Entered-manually!');
+    await letter.locator('#fill').click();
+    assert.equal(await password.inputValue(), 'Entered-manually!');
+    await password.fill('');
+    await page.locator('#stand-fill').click();
+    await password.evaluate(input => new Promise((resolve, reject) => {
+      const deadline = Date.now() + 2000;
+      const check = () => {
+        if (input.value) resolve();
+        else if (Date.now() >= deadline) reject(new Error('The stand did not fill the password'));
+        else setTimeout(check, 20);
+      };
+      check();
+    }));
+    assert.equal(await password.inputValue(), 'Example-2026!');
+    await letter.locator('[data-r2-form=login] button[type=submit]').click();
+    assert.match(await letter.locator('[data-auth-complete]').textContent(), /Сотрудник организации/);
+
     await page.getByRole('tab', { name: 'Сравнение регистрации' }).click();
     const comparison = frame('comparison');
     await comparison.locator('[data-flow=mos]').waitFor();

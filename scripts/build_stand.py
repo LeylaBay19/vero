@@ -13,7 +13,7 @@ from prepare_site import csp, inner, shell
 from registration_stand_models import BRIEF
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.25.1'
+VERSION = '1.25.2'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -101,6 +101,11 @@ def main():
     build_ux()
     pages = FramePages(read(BASE)).pages
     letter = pages['codex-visualization']
+    # Use current login behavior inside the archived layout.
+    registration = read('src/registration-mos-id.js')
+    start = letter.index('<script>' + registration.splitlines()[0]) + len('<script>')
+    end = letter.index('</script>', start)
+    letter = letter[:start] + registration.replace('Вариант 2 · регистрация', 'Вариант 1 · регистрация') + letter[end:]
     # Hide the demo choices in the active stand. The archived controls stay intact.
     letter = re.sub(r'<option value="invite-(?:expired|revoked)"[^>]*>[^<]*</option>', '', letter)
     brief = pages['stand-frame-brief']

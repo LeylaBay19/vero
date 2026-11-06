@@ -31,7 +31,7 @@ body.scheme-expanded .stand-header { display: none; }
 </head>
 <body>
 <header class="stand-header">
-  <strong>ВЕРО · стенд регистрации <small>v1.25.1</small></strong>
+  <strong>ВЕРО · стенд регистрации <small>v1.25.2</small></strong>
   <nav role="tablist" aria-label="Разделы стенда">
     <button id="stand-tab-current" type="button" role="tab" aria-selected="true" aria-controls="stand-current">Варианты</button>
     <button id="stand-tab-comparison" type="button" role="tab" aria-selected="false" aria-controls="stand-comparison" tabindex="-1">Сравнение регистрации</button>
@@ -2066,10 +2066,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   const form = (name, content, label) =&gt; `&lt;form data-r2-form=&quot;${name}&quot; novalidate&gt;${content}&lt;button class=&quot;primary&quot; type=&quot;submit&quot;&gt;${label}&lt;/button&gt;&lt;/form&gt;`;
   const demoMos = {id:&#x27;mos-demo-001&#x27;, name:&#x27;Иванов Иван Иванович&#x27;, email:&#x27;ivan.mos@example.test&#x27;, phone:&#x27;+7 000 000-00-00&#x27;};
   const invitationEmail=&#x27;employee@example.test&#x27;;
+  const demoEmployee={id:&#x27;demo-employee&#x27;,login:invitationEmail,email:invitationEmail,password:&#x27;Example-2026!&#x27;,provider:&#x27;local_only&#x27;,mosId:null,name:&#x27;Анна Петрова&#x27;,phone:&#x27;&#x27;};
   let screen, accounts, current, origin, purpose, draft, notice, sequence;
   function reset() {
     screen=getScenario()===&#x27;invite&#x27;?&#x27;invitation&#x27;:&#x27;entry&#x27;; accounts=[{id:&#x27;demo-existing-account&#x27;,login:&#x27;demo@example.test&#x27;,email:&#x27;demo@example.test&#x27;,password:&#x27;Example-2026!&#x27;,provider:&#x27;local_only&#x27;,mosId:null,name:&#x27;Демонстрационный пользователь&#x27;,phone:&#x27;&#x27;,connectedOrganization:authOnly?{name:&#x27;ООО «Пример»&#x27;,role:&#x27;director&#x27;}:null}];
-    if(getScenario()===&#x27;employee&#x27;)accounts.push({id:&#x27;demo-employee&#x27;,login:invitationEmail,email:invitationEmail,password:&#x27;Example-2026!&#x27;,provider:&#x27;local_only&#x27;,mosId:null,name:&#x27;Анна Петрова&#x27;,phone:&#x27;&#x27;});
+    if(getScenario()===&#x27;employee&#x27;)accounts.push({...demoEmployee});
     current=null; origin=screen; purpose=&#x27;login&#x27;;
     draft={}; notice=&#x27;&#x27;; sequence=0;
     if($(&#x27;r2-mos-outcome&#x27;))$(&#x27;r2-mos-outcome&#x27;).value=&#x27;success&#x27;;
@@ -2269,7 +2270,11 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       draft.recoveryVerified=true;return show(&#x27;recovery-password&#x27;);
     }
     if(action===&#x27;invitation&#x27;)return show(&#x27;invitation&#x27;);
-    if(action===&#x27;invite-login&#x27;){draft={login:invitationEmail};return show(&#x27;entry&#x27;);}
+    if(action===&#x27;invite-login&#x27;){
+      if(!accounts.some(account=&gt;account.email===invitationEmail))accounts.push({...demoEmployee});
+      draft={login:invitationEmail};
+      return show(&#x27;entry&#x27;);
+    }
     if(action===&#x27;back&#x27;)return show(&#x27;entry&#x27;);
     if(action===&#x27;mos-login&#x27;)return startMos(&#x27;login&#x27;);
     if(action===&#x27;mos-fill&#x27;){if($(&#x27;r2-mos-login&#x27;)&amp;&amp;!$(&#x27;r2-mos-login&#x27;).value)$(&#x27;r2-mos-login&#x27;).value=demoMos.email;if($(&#x27;r2-mos-password&#x27;)&amp;&amp;!$(&#x27;r2-mos-password&#x27;).value)$(&#x27;r2-mos-password&#x27;).value=&#x27;Example-2026!&#x27;;$(&#x27;r2-mos-login&#x27;)?.removeAttribute(&#x27;aria-invalid&#x27;);$(&#x27;r2-mos-password&#x27;)?.removeAttribute(&#x27;aria-invalid&#x27;);if($(&#x27;r2-alert&#x27;))$(&#x27;r2-alert&#x27;).hidden=true;return;}
