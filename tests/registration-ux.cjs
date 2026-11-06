@@ -26,7 +26,17 @@ async function run() {
     const submit = name => item(`[data-form="${name}"] button[type="submit"]`).click();
     const screen = name => item(`[data-screen="${name}"]`).waitFor();
     const fill = () => item('#fill').click();
-    const scenario = name => item('#scenario').selectOption(name);
+    async function scenario(name) {
+      if (['invite-expired', 'invite-revoked'].includes(name)) {
+        // The failure fixtures remain testable without offering them in the demo.
+        await item('#scenario').evaluate((select, value) => {
+          if (![...select.options].some(option => option.value === value)) {
+            select.add(new Option(value, value));
+          }
+        }, name);
+      }
+      await item('#scenario').selectOption(name);
+    }
     const heading = async text => assert.equal(await item('main h1').textContent(), text);
 
     // Account creation keeps the confirmed address and goes directly to the certificate.

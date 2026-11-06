@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+__CSP__
+<title>ВЕРО — стенд регистрации</title>
+<style>
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { height: 100dvh; margin: 0; display: flex; flex-direction: column; overflow: hidden; font: 14px Arial, sans-serif; color: #242b36; }
+.stand-header, .variant-switcher, .stand-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.stand-header { padding: 9px 16px; border-bottom: 1px solid #d8dde5; }
+.stand-header strong { margin-right: 8px; }
+.stand-header a { margin-left: auto; color: #244883; }
+.variant-switcher { padding: 8px 16px; border-bottom: 1px solid #d8dde5; }
+.stand-actions { margin-left: auto; }
+button { font: inherit; background: white; color: inherit; border: 1px solid #d8dde5; border-radius: 5px; padding: 8px 12px; cursor: pointer; }
+button[aria-selected=true], button[aria-pressed=true] { background: #242b36; color: white; border-color: #242b36; }
+button:disabled { opacity: .5; cursor: default; }
+:focus-visible { outline: 2px solid #315c9d; outline-offset: 2px; }
+section { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.frames { flex: 1; min-height: 0; }
+iframe { display: block; width: 100%; height: 100%; border: 0; }
+body.scheme-expanded .stand-header { display: none; }
+@media (max-width: 600px) {
+  .stand-header, .variant-switcher { padding: 8px 10px; }
+  .stand-header a, .stand-actions { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<header class="stand-header">
+  <strong>ВЕРО · стенд регистрации <small>v__VERSION__</small></strong>
+  <nav role="tablist" aria-label="Разделы стенда">
+    <button id="stand-tab-current" type="button" role="tab" aria-selected="true" aria-controls="stand-current">Варианты</button>
+    <button id="stand-tab-schemes" type="button" role="tab" aria-selected="false" aria-controls="stand-schemes" tabindex="-1">Схемы</button>
+  </nav>
+  <a href="archive/prototype-v1.24.0.html" target="_blank" rel="noopener">Архив · v1.24.0 ↗</a>
+</header>
+<section id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">
+  <div class="variant-switcher">
+    <nav class="stand-actions" aria-label="Варианты регистрации" style="margin-left:0">
+      <button type="button" data-variant="ux" aria-pressed="true">1. С UX-правками</button>
+      <button type="button" data-variant="letter" aria-pressed="false">2. Письмо → пароль</button>
+      <button type="button" data-variant="brief" aria-pressed="false">3. По ТЗ</button>
+    </nav>
+    <div class="stand-actions" id="stand-tools" hidden>
+      <button type="button" id="stand-back" disabled>← Назад</button>
+      <button type="button" id="stand-forward" disabled>Вперёд →</button>
+      <span id="stand-history-position" aria-live="polite"></span>
+      <button type="button" id="stand-fill">Заполнить пример</button>
+    </div>
+  </div>
+  <div class="frames">__VARIANTS__</div>
+</section>
+<section id="stand-schemes" role="tabpanel" aria-labelledby="stand-tab-schemes" hidden>__SCHEMES__</section>
+<div id="scheme-downloads" hidden>__DOWNLOADS__</div>
+<script>__NAVIGATION__</script>
+</body>
+</html>

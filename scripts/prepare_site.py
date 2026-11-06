@@ -42,6 +42,8 @@ def main():
         if target.is_file():target.unlink()
     for page in (project/'web').iterdir():
         if page.is_file() and page.name!='index.html' and page.name not in retired:shutil.copy2(page,dist/page.name)
+    if (project/'web/archive').is_dir():
+        shutil.copytree(project/'web/archive',dist/'archive',dirs_exist_ok=True)
     shutil.copy2(project/'web/index.html',dist/'comparison.html')
     shutil.copy2(project/'schemes-all.html',dist/'processes.html')
     stand=(project/'prototype.html').read_text(encoding='utf-8')

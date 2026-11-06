@@ -1,81 +1,135 @@
-"""One self-contained stand: authentication, historic comparisons, current variant 1 diagrams."""
+"""Build the three registration variants and their BPMN viewer as one offline package."""
+from html import escape
+from html.parser import HTMLParser
 from pathlib import Path
-import html,re
+import re
+import shutil
+from zipfile import ZipFile, ZIP_DEFLATED
 
-ROOT=Path(__file__).resolve().parents[1]
+import auth_v1_diagrams as diagrams
+from auth_v1_horizontal import bpmn as horizontal_bpmn, layout, svg as horizontal_svg
+from build_registration_ux import main as build_ux
+from prepare_site import csp, inner, shell
+from registration_stand_models import BRIEF, UX
 
-def build_document(wrapper,comparison,schemes):
-    from prepare_site import inner,csp
-    policy=csp(inner)[0]
-    assert 'data-variant1-schemes' in schemes
-    fill_bridge="""<script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:fill')return;const button=document.getElementById('fill')||document.getElementById('ap-demo');button?.click();});</script>"""
-    # The standalone current prototype retains its own two-option navigation.
-    # In the combined stand the parent is the single source of variant selection.
-    current_bridge="""<style>.registration-variants{display:none!important}</style><script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:select-registration'||!['1','2'].includes(e.data.variant))return;const b=document.querySelector('[data-registration-variant="'+e.data.variant+'"]');if(b&&b.getAttribute('aria-pressed')!=='true')b.click();document.documentElement.dataset.activeRegistration=e.data.variant;});</script>"""
-    authored=re.search(r'data-srcdoc="([\s\S]*?)"',wrapper)
-    assert authored
-    content=html.unescape(authored.group(1)).replace('Вариант 2','Вариант 1').replace('</body>',current_bridge+fill_bridge+'</body>',1)
-    content=content.replace('<body>','<body><script>document.body.dataset.authOnly="true";</script>',1)
-    assert 'dataset.authOnly="true"' in content
-    wrapper=wrapper[:authored.start(1)]+html.escape(content,quote=True)+wrapper[authored.end(1):]
-    def subset(page,keep,initial):
-        pattern=r'<button\b[^>]*\bdata-flow="([^"]+)"[^>]*>[\s\S]*?</button>'
-        assert len(re.findall(pattern,page))==5
-        page=re.sub(pattern,lambda m:m.group(0) if m.group(1) in keep else '',page)
-        return page.replace("flow:location.hash==='#variant2'?'proposal2':'proposal'","flow:'"+initial+"'",1)
-    proposal_source=subset(comparison,{'proposal','proposal2'},'proposal').replace('Предлагаемый вариант 2','Вариант 3').replace('Предлагаемый вариант','Вариант 2')
-    proposal_source=proposal_source.replace("querySelector('#ap-screen-count').textContent='Вариант 2'","querySelector('#ap-screen-count').textContent='Вариант 3'").replace('Проект решения · вариант 2','Проект решения · вариант 3').replace('Флоу 04 · проект решения','Вариант 2 · проект решения').replace("textContent='04'","textContent='02'").replace("textContent='05'","textContent='03'")
-    comparison=subset(comparison,{'mos','ep','orb'},'mos')
+ROOT = Path(__file__).resolve().parents[1]
+VERSION = '1.25.0'
+ARCHIVE = Path('archive/prototype-v1.24.0.html')
+POLICY = csp(inner)[0]
+DOWNLOAD = re.compile(r'<a\b[^>]*\bdownload="[^"]+"[^>]*>[\s\S]*?</a>')
 
-    legacy_style='''<style>html,body{height:100%;min-height:0;overflow:auto}body{margin:0;padding:16px;background:#fafafa;font:14px Arial,sans-serif}#auth-flow-prototype{font-family:Arial,sans-serif;--ap-button:#2563eb;--ap-line:#d8dde5;--ap-ink:#20242c}#auth-flow-prototype *{box-shadow:none!important}#auth-flow-prototype button,#auth-flow-prototype input,#auth-flow-prototype select{border-radius:4px!important}#auth-flow-prototype h1{font-size:24px}#auth-flow-prototype .ap-scenarios{display:flex;flex-wrap:wrap;gap:6px}#auth-flow-prototype .ap-scenarios button{flex:1;min-width:130px;padding:9px!important}#auth-flow-prototype .ap-scenarios button strong{font-size:13px}</style>'''
-    bridge='''<script>document.addEventListener('click',e=>{const b=e.target.closest('button[type="submit"]');if(b?.form){e.preventDefault();b.form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}},true);document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target.matches('input:not([type="checkbox"]):not([type="radio"])')&&e.target.form){e.preventDefault();e.target.form.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}},true);</script>'''
-    navigation_bridge='''<script>document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;const href=a.getAttribute('href');if(a.hasAttribute('download')){e.preventDefault();parent.postMessage({type:'vero:download',name:a.getAttribute('download')},'*');}else if(['schemes-v2.html','schemes.html','schemes-all.html','index.html'].includes(href)){e.preventDefault();parent.postMessage({type:'vero:navigate',view:href==='index.html'?'current':'schemes'},'*');}},true);</script>'''
-    comparison=comparison.replace('</head>',policy+legacy_style+'</head>',1).replace('</body>',bridge+navigation_bridge+fill_bridge+'</body>',1)
-    schemes=schemes.replace('</head>',policy+'<style>body{margin:0;padding:20px;font-family:Arial,sans-serif}header{margin-bottom:20px}</style></head>',1).replace('</body>',navigation_bridge+'</body>',1)
-    proposal_bridge="""<script>addEventListener('message',e=>{if(e.source!==parent||e.data?.type!=='vero:select-proposal'||!['proposal','proposal2'].includes(e.data.flow))return;const b=document.querySelector('[data-flow="'+e.data.flow+'"]');if(b&&b.getAttribute('aria-pressed')!=='true')b.click();document.documentElement.dataset.activeProposal=e.data.flow;});</script>"""
-    proposals=proposal_source.replace('</head>',policy+legacy_style+'<style>.ap-scenarios{display:none!important}</style></head>',1).replace('</body>',bridge+navigation_bridge+proposal_bridge+fill_bridge+'</body>',1)
-    frame=re.search(r'<iframe\b[^>]*id="codex-visualization"[\s\S]*?</iframe>',wrapper)
-    assert frame
-    descriptions=['Email и пароль','Письмо → пароль','Компания и сотрудники','Код → пароль','ЛК и кошелёк по ТЗ']
-    def variant_button(n,archived=False):
-        return f'<button type="button" data-cabinet-view="{n}"'+(' data-archived="true"' if archived else '')+f' aria-pressed="{str(n==2).lower()}"><span>Вариант {n-1}</span><small>{descriptions[n-1]}</small></button>'
-    switcher='<nav class="entry-variants" aria-label="Варианты входа">'+''.join(variant_button(n) for n in [2,5])+'<details class="stand-archive"><summary>Архив (2)</summary><div>'+''.join(variant_button(n,True) for n in [3,4])+'</div></details></nav>'
-    proposal_frame=f'<iframe id="stand-frame-proposals" title="Предлагаемые варианты" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(proposals,quote=True)}" hidden></iframe>'
-    brief=(ROOT/'cabinet-brief.html').read_text(encoding='utf-8').replace('</body>',bridge+fill_bridge+'</body>',1)
-    brief_frame=f'<iframe id="stand-frame-brief" title="Вариант 4 — по ТЗ" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(brief,quote=True)}" hidden></iframe>'
-    panels='<section class="stand-panel" id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">'+switcher+'<div class="cabinet-stage">'+frame.group(0)+proposal_frame+brief_frame+'</div></section>'
-    for name,content,title in [('comparison',comparison,'Сравнение: Тринити и Орбита'),('schemes',schemes,'Семь схем процессов')]:
-        panels+=f'<section class="stand-panel" id="stand-{name}" role="tabpanel" aria-labelledby="stand-tab-{name}" hidden><iframe id="stand-frame-{name}" title="{"Схемы" if name=="schemes" else title}" sandbox="allow-scripts" referrerpolicy="no-referrer" data-stand-srcdoc="{html.escape(content,quote=True)}"></iframe></section>'
-    downloads=''.join(re.findall(r'<a\b[^>]*\bdownload="[^"]+"[^>]*>[\s\S]*?</a>',schemes))
-    header='''<header class="stand-header"><strong>ВЕРО · прототип</strong><nav role="tablist" aria-label="Разделы стенда"><button role="tab" id="stand-tab-current" data-stand-tab="current" aria-controls="stand-current" aria-selected="true">Вход</button><button role="tab" id="stand-tab-comparison" data-stand-tab="comparison" aria-controls="stand-comparison" aria-selected="false">Сравнение регистрации</button><button role="tab" id="stand-tab-schemes" data-stand-tab="schemes" aria-controls="stand-schemes" aria-selected="false">Схемы</button></nav><a class="stand-window" data-stand-window="stand-overview-data" href="cabinet-overview.html" target="_blank" rel="noopener">ЛК · сводка ↗</a><a class="stand-window" data-stand-window="stand-brief-data" href="cabinet-brief.html" target="_blank" rel="noopener">ЛК · по ТЗ ↗</a><details class="stand-downloads" hidden><summary>Скачать BPMN</summary><div>'''+downloads+'</div></details></header>'
-    styles='''<style>html,body{height:100%;margin:0;overflow:hidden}body{display:flex;flex-direction:column;height:100dvh;padding:0;background:#fff;font:13px Arial,sans-serif}.stand-header{display:flex;gap:20px;align-items:center;flex:none;padding:10px 16px;border-bottom:1px solid #d8dde5;background:#fff}.stand-header strong{white-space:nowrap;font-size:14px}.stand-header nav{display:flex;gap:6px;flex-wrap:wrap}.stand-header button{font:inherit;border:1px solid #d8dde5;border-radius:4px;background:#fff;padding:8px 12px;cursor:pointer}.stand-header button[aria-selected=true]{color:#fff;background:#2563eb;border-color:#2563eb}.stand-header button:focus-visible{outline:2px solid #2563eb;outline-offset:3px}.stand-panel{display:block;flex:1;min-height:0;overflow:hidden}.stand-panel[hidden],.stand-downloads[hidden]{display:none!important}.stand-panel iframe{display:block;width:100%;max-width:none;height:100%!important;border:0;margin:0}.stand-downloads{position:relative;margin-left:auto}.stand-downloads summary{cursor:pointer;white-space:nowrap}.stand-downloads>div{position:absolute;z-index:10;right:0;top:24px;min-width:240px;max-height:60vh;overflow:auto;background:#fff;border:1px solid #d8dde5;padding:8px}.stand-downloads a{display:block;padding:7px;color:#1d4ed8}@media(max-width:700px){.stand-header{padding:8px 10px;gap:8px;flex-wrap:wrap}.stand-header strong{font-size:12px}.stand-header nav{gap:4px}.stand-header button{font-size:11px;padding:7px 8px}}</style>'''
-    script='<script>'+(ROOT/'src/stand-navigation.js').read_text(encoding='utf-8')+'</script>'
-    for name,file in [('overview','cabinet-overview.html')]:
-        script+=f'<template id="stand-{name}-data">{html.escape((ROOT/file).read_text(encoding="utf-8"))}</template>'
-    styles+='<style>#stand-current{display:flex;flex-direction:column}.cabinet-switcher{display:flex;gap:6px;flex:none;flex-wrap:wrap;padding:8px 16px;border-bottom:1px solid #d8dde5}.cabinet-switcher button{font:13px Arial,sans-serif;background:white;border:1px solid #d8dde5;border-radius:4px;padding:8px 10px;cursor:pointer}.cabinet-switcher [aria-pressed=true]{background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1}.cabinet-stage{flex:1;min-height:0;overflow:hidden}.cabinet-stage iframe[hidden]{display:none!important}.stand-window{font-size:12px;color:#1d4ed8;white-space:nowrap}@media(max-width:700px){.cabinet-switcher{padding:6px 10px}.cabinet-switcher button{font-size:11px;padding:7px}}</style>'
 
-    header=re.sub(r'<a\b[^>]*data-stand-window="stand-brief-data"[\s\S]*?</a>','',header)
-    header=re.sub(r'<details class="stand-downloads"[\s\S]*?</details>','',header)
-    header=header.replace('<a class="stand-window"','<button type="button" id="stand-fill" title="Заполняет только пример данных; согласия отметьте самостоятельно">Заполнить пример</button><a class="stand-window"',1)
-    header=re.sub(r'<a\b[^>]*data-stand-window="stand-overview-data"[\s\S]*?</a>','',header)
-    header=header.replace('<button type="button" id="stand-fill"','<nav id="stand-history" aria-label="История тестирования"><button type="button" id="stand-back" title="Вернуться к предыдущему пройденному экрану с сохранёнными данными" disabled>← Назад</button><button type="button" id="stand-forward" title="Повторно открыть следующий пройденный экран" disabled>Вперёд →</button><span id="stand-history-position" aria-live="polite"></span></nav><button type="button" id="stand-fill"',1)
-    styles+='<style>.entry-variants button{text-align:left}.entry-variants small{display:block;font-size:11px;margin-top:4px;font-weight:normal}.entry-variants button[aria-pressed=true] small{color:inherit}.stand-header{flex-wrap:wrap;gap:10px}#stand-fill{margin-left:auto;background:#f4f6f8}.stand-header [hidden]{display:none!important}</style>'
-    styles+='<style>.stand-archive{position:relative;align-self:stretch;font:13px Arial,sans-serif}.stand-archive summary{cursor:pointer;padding:14px 12px;border:1px solid #d8dde5;border-radius:4px;background:#f4f6f8}.stand-archive.is-selected summary{background:#242b36;color:white}.stand-archive>div{position:absolute;top:100%;left:0;z-index:20;min-width:220px;max-width:calc(100vw - 24px);padding:8px;background:white;border:1px solid #d8dde5}.stand-archive button{display:block;width:100%;margin:4px 0}</style>'
-    styles+='<style>@media(max-width:700px){.entry-variants{position:relative}.stand-archive{position:static}.stand-archive>div{left:10px;right:10px;top:100%;min-width:0;max-width:none}}</style>'
-    styles+='<style>#stand-history{display:flex;align-items:center;gap:5px}#stand-history button{white-space:nowrap}#stand-history button:disabled{opacity:.4;cursor:default}#stand-history-position{font-size:11px;color:#647084;white-space:nowrap;min-width:26px}#stand-history[hidden]{display:none!important}@media(max-width:700px){#stand-history{flex-wrap:nowrap}}</style>'
-    styles+='<style>body.scheme-expanded>.stand-header{display:none}body.scheme-expanded>#stand-schemes{position:fixed;inset:0;z-index:1000;background:white}</style>'
-    styles=styles.replace('cabinet-switcher','entry-variants').replace('#2563eb','#242b36').replace('background:#edf4ff;color:#1d4ed8;border-color:#9dbaf1','background:#242b36;color:#fff;border-color:#242b36')
-    result=wrapper[:frame.start()]+header+panels+'<div id="stand-scheme-downloads" hidden>'+downloads+'</div>'+wrapper[frame.end():]
-    result=result.replace('</head>',styles+'</head>',1).replace('</body>',script+'</body>',1)
-    result=re.sub(r'<title>[^<]*</title>','<title>ВЕРО — единый прототип</title>',result,count=1)
-    return re.sub(r'(?m)^[ \t]+$','',result)
+class FramePages(HTMLParser):
+    def __init__(self, document):
+        super().__init__()
+        self.pages = {}
+        self.feed(document)
+
+    def handle_starttag(self, tag, attributes):
+        if tag == 'iframe':
+            attrs = dict(attributes)
+            content = attrs.get('data-srcdoc') or attrs.get('data-stand-srcdoc')
+            if content:
+                self.pages[attrs['id']] = content
+
+
+def read(path):
+    return (ROOT / path).read_text(encoding='utf-8')
+
+
+def frame(name, title, page):
+    state_element = '<script type="application/json" id="codex-visualization-widget-state">'
+    page = page.replace(state_element + '__CODEX_VISUALIZATION_WIDGET_STATE__</script>',
+                        state_element + '{}</script>', 1)
+    hidden = '' if name in ('ux', 'schemes') else ' hidden'
+    return (f'<iframe id="stand-frame-{name}" title="{title}" sandbox="allow-scripts" '
+            f'referrerpolicy="no-referrer" data-page="{escape(page, quote=True)}"{hidden}></iframe>')
+
+
+def group(key, title, cards, models):
+    links = ''.join(f'<a href="#{m["id"]}">{escape(m["title"])}</a>' for m in models)
+    return (f'<section data-process-group="{key}" id="group-{key}"><h2>{title}</h2>'
+            f'<nav aria-label="{title}">{links}</nav>{cards}</section>')
+
+
+def new_cards(models, files):
+    cards = []
+    for number, model in enumerate(models, 1):
+        name = model['id'].lower().replace('_', '-')
+        svg, xml = diagrams.svg(model), diagrams.bpmn(model)
+        geometry = layout(model)
+        hsvg, hxml = horizontal_svg(model, geometry), horizontal_bpmn(model, geometry, xml)
+        for suffix, payload in [
+            ('.svg', svg), ('.bpmn', xml), ('-horizontal.svg', hsvg), ('-horizontal.bpmn', hxml),
+        ]:
+            files[name + suffix] = payload
+        card = diagrams.process_card(number, model, (name + '.bpmn', svg, xml),
+                                     (name + '-horizontal.bpmn', hsvg, hxml))
+        fit = '<button data-zoom="fit">По ширине</button>'
+        cards.append(card.replace(fit, fit + '<button data-expand aria-expanded="false">На весь экран</button>', 1))
+    return ''.join(cards)
+
+
+def schemes_page(archived_page):
+    files = {p.name: p.read_text(encoding='utf-8') for p in (ROOT / 'processes-v1').iterdir()
+             if p.suffix in ('.bpmn', '.svg')}
+    source = read('schemes-all.html')
+    legacy_cards = ''.join(re.findall(r'<article\b[^>]* data-process-card>[\s\S]*?</article>', source))
+    assert legacy_cards.count('data-process-card') == len(diagrams.MODELS)
+    ux = group('ux', '1. С UX-правками', new_cards(UX, files), UX)
+    letter = group('letter', '2. Письмо → пароль', legacy_cards, diagrams.MODELS)
+    brief = group('brief', '3. По ТЗ', new_cards(BRIEF, files), BRIEF)
+    links = ('<nav aria-label="Варианты схем"><a href="#group-ux">1. С UX-правками</a>'
+             '<a href="#group-letter">2. Письмо → пароль</a><a href="#group-brief">3. По ТЗ</a></nav>')
+    body = ('<main data-registration-schemes><h1>Схемы регистрации и входа</h1>'
+            '<p>Для каждой схемы доступны вертикальный вид и горизонтальный BPMN с дорожками. '
+            'Выберите масштаб или разверните схему на весь экран.</p>'
+            + links + ux + letter + brief + '</main>')
+    page = re.sub(r'<main\b[\s\S]*?</main>', lambda _: body, source, count=1)
+    page = re.sub(r'<title>[^<]*</title>', '<title>ВЕРО — схемы регистрации</title>', page, count=1)
+    page = page.replace('</head>', '<style>[data-process-group]>h2{font-size:23px;margin-top:30px}</style></head>', 1)
+    standalone = page
+    embedded = page.replace('</head>', POLICY + '</head>', 1)
+    # The previous stand delegated downloads to the parent of its sandboxed frame.
+    bridge = re.search(r"<script>document.addEventListener\('click',e=>\{const a=e.target.closest\('a'\);[\s\S]*?</script>", archived_page)
+    assert bridge
+    embedded = embedded.replace('</body>', bridge.group(0) + '</body>', 1)
+    return standalone, embedded, files
+
 
 def main():
-    from prepare_site import wrap
-    version=(ROOT/'VERSION').read_text(encoding='utf-8').strip()
-    result=build_document(wrap((ROOT/'platform-entry-variant2.html').read_text(encoding='utf-8')),(ROOT/'index.html').read_text(encoding='utf-8'),(ROOT/'schemes-all.html').read_text(encoding='utf-8'))
-    for target in [ROOT/'prototype.html',ROOT/'web/prototype.html',ROOT/'deliverables'/f'vero-unified-v{version}.html']:
-        target.parent.mkdir(parents=True,exist_ok=True);target.write_text(result,encoding='utf-8')
-    print('Built unified stand: active 1/4, archive 2/3, testing history, 3 competitors and six current variant 1 schemes.')
+    build_ux()
+    pages = FramePages(read(ARCHIVE)).pages
+    ux = FramePages(read('registration-ux.html')).pages['codex-visualization']
+    letter = pages['codex-visualization']
+    # Hide the demo choices in the active stand. The archived controls stay intact.
+    letter = re.sub(r'<option value="invite-(?:expired|revoked)"[^>]*>[^<]*</option>', '', letter)
+    brief = pages['stand-frame-brief']
+    standalone, schemes, files = schemes_page(pages['stand-frame-schemes'])
+    variants = (frame('ux', 'Вариант с UX-правками', ux)
+                + frame('letter', 'Письмо → пароль', letter)
+                + frame('brief', 'Личный кабинет и кошелёк по ТЗ', brief))
+    result = read('templates/registration-stand.html')
+    for key, value in (
+        ('VERSION', VERSION), ('CSP', csp(shell)[0]), ('VARIANTS', variants), ('SCHEMES', frame('schemes', 'Схемы регистрации', schemes)),
+        ('DOWNLOADS', ''.join(DOWNLOAD.findall(schemes))), ('NAVIGATION', read('src/registration-stand.js')),
+    ):
+        result = result.replace(f'__{key}__', value)
+    for target in ('prototype.html', 'web/prototype.html'):
+        (ROOT / target).write_text(result, encoding='utf-8')
+    web_archive = ROOT / 'web' / ARCHIVE
+    web_archive.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT / ARCHIVE, web_archive)
+    (ROOT / 'deliverables' / f'vero-unified-v{VERSION}.html').write_text(
+        result.replace(f'href="{ARCHIVE}"', f'href="../{ARCHIVE}"', 1), encoding='utf-8')
+    with ZipFile(ROOT / 'deliverables' / f'vero-registration-stand-v{VERSION}.zip', 'w', ZIP_DEFLATED) as package:
+        package.writestr('prototype.html', result)
+        package.write(ROOT / ARCHIVE, ARCHIVE)
+        package.writestr('schemes.html', standalone)
+        for name, content in files.items():
+            package.writestr('schemes/' + name, content)
+    print(f'Built v{VERSION}: 3 variants, {len(files) // 4} BPMN models and the v1.24.0 archive.')
 
-if __name__=='__main__':main()
+
+if __name__ == '__main__':
+    main()
