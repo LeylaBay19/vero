@@ -43,7 +43,7 @@
 
   function fromHash() {
     const name = location.hash.slice(1);
-    return ['letter', 'brief', 'comparison', 'schemes'].includes(name) ? name : 'letter';
+    return variants.some(button => button.dataset.variant === name) || sections.slice(1).includes(name) ? name : 'letter';
   }
   function select(name) {
     if (fromHash() !== name) window.history.replaceState(null, '', '#' + name);

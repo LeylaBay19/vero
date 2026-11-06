@@ -17,9 +17,9 @@ async function run() {
     const choose = name => page.locator(`[data-variant="${name}"]`).click();
 
     assert.deepEqual(await page.locator('[data-variant]').allTextContents(),
-      ['1. Письмо → пароль', '2. По ТЗ']);
+      ['1. Письмо → пароль', '2. По ТЗ', '3. Как в Контуре']);
     assert.deepEqual(await page.locator('iframe').evaluateAll(frames => frames.map(f => f.sandbox.value)),
-      Array(4).fill('allow-scripts'));
+      Array(5).fill('allow-scripts'));
 
     const letter = frame('letter');
     await letter.getByRole('button', { name: 'Зарегистрировать организацию' }).click();
@@ -249,6 +249,69 @@ async function run() {
     await join.click();
     await result.getByText('anna@vector.example.test', { exact: true }).waitFor();
 
+    await choose('kontur');
+    assert.equal(new URL(page.url()).hash, '#kontur');
+    const kontur = frame('kontur');
+    const konturButton = name => kontur.getByRole('button', { name, exact: true });
+    const konturHeading = name => kontur.getByRole('heading', { name, exact: true });
+    const fillKontur = () => page.locator('#stand-fill').click();
+    await konturHeading('Пригласить сотрудника').waitFor();
+    await fillKontur();
+    await konturButton('Отправить приглашение').click();
+    await konturButton('Открыть письмо').click();
+    await konturButton('Принять приглашение').click();
+    await konturButton('Зарегистрироваться').click();
+    assert.equal(await kontur.getByLabel('Почта приглашения').inputValue(), 'maria@vector.example.test');
+    await fillKontur();
+    await konturButton('Продолжить').click();
+    assert.equal(await kontur.getByLabel('ФИО', { exact: true }).inputValue(), 'Мария Иванова');
+    await kontur.getByLabel('Согласен на обработку персональных данных').check();
+    await konturButton('Получить код').click();
+    await kontur.getByLabel('Код', { exact: true }).fill('000000');
+    await konturButton('Подтвердить').click();
+    assert.match(await kontur.getByRole('alert').textContent(), /Код не совпадает/);
+    await kontur.getByLabel('Код', { exact: true }).fill('');
+    await fillKontur();
+    await konturButton('Подтвердить').click();
+    await konturHeading('Доступ к компании открыт').waitFor();
+    await kontur.getByText('Аккаунт ВЕРО · maria@vector.example.test', {exact: true}).waitFor();
+
+    await konturButton('Выйти').click();
+    await konturButton('Войти в ВЕРО').click();
+    await fillKontur();
+    await konturButton('Войти').click();
+    await konturHeading('Доступ к компании открыт').waitFor();
+
+    await konturButton('Начать заново').click();
+    await kontur.getByLabel('Карточка сотрудника').selectOption('directory');
+    assert.equal(await kontur.getByLabel('ФИО сотрудника').inputValue(), 'Анна Петрова');
+    await kontur.getByRole('checkbox', { name: 'СМС', exact: true }).check();
+    await konturButton('Отправить приглашение').click();
+    await konturButton('Открыть СМС').click();
+    await konturButton('Принять приглашение').click();
+    await konturButton('Войти в свой аккаунт').click();
+    await konturButton('Войти по коду из письма').click();
+    await fillKontur();
+    await konturButton('Получить код').click();
+    await fillKontur();
+    await konturButton('Подтвердить').click();
+    await konturHeading('Доступ к компании открыт').waitFor();
+    await kontur.getByText('Аккаунт ВЕРО · anna@example.test', {exact: true}).waitFor();
+    for (const method of ['Войти по коду из СМС', 'Войти по сертификату']) {
+      await konturButton('Выйти').click();
+      await konturButton('Войти в ВЕРО').click();
+      await konturButton(method).click();
+      await fillKontur();
+      if (method === 'Войти по коду из СМС') {
+        await konturButton('Получить код').click();
+        await fillKontur();
+        await konturButton('Подтвердить').click();
+      } else {
+        await konturButton('Войти').click();
+      }
+      await konturHeading('Доступ к компании открыт').waitFor();
+    }
+
     await page.getByRole('tab', { name: 'Сравнение регистрации' }).click();
     const comparison = frame('comparison');
     await comparison.locator('[data-flow=mos]').waitFor();
@@ -258,7 +321,7 @@ async function run() {
     await page.getByRole('tab', { name: 'Схемы' }).click();
     const schemes = frame('schemes');
     await schemes.locator('[data-registration-schemes]').waitFor();
-    for (const [group, count] of [['letter', 9], ['brief', 2]]) {
+    for (const [group, count] of [['letter', 9], ['brief', 2], ['kontur', 1]]) {
       assert.equal(await schemes.locator(`[data-process-group="${group}"] article`).count(), count);
     }
     const cards = schemes.locator('article[data-process-card]');
@@ -314,7 +377,7 @@ async function run() {
     assert.ok(fs.readFileSync('archive/prototype-v1.25.0.html').equals(fs.readFileSync('web/archive/prototype-v1.25.0.html')));
     assert.deepEqual(errors, []);
     assert.deepEqual(requests, []);
-    console.log('Registration stand: 2 variants, 3 comparisons, invitation scenarios and recovery, 11 diagrams in two layouts, BPMN/SVG, mobile and archive.');
+    console.log('Registration stand: 3 variants, 3 comparisons, invitation scenarios and recovery, 12 diagrams in two layouts, BPMN/SVG, mobile and archive.');
   } finally {
     await browser.close();
   }

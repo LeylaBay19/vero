@@ -1,4 +1,4 @@
-"""Build the two registration variants and their BPMN viewer as one offline package."""
+"""Build the registration variants and their BPMN viewer as one offline package."""
 from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -10,10 +10,10 @@ import auth_v1_diagrams as diagrams
 from auth_v1_horizontal import bpmn as horizontal_bpmn, layout, svg as horizontal_svg
 from build_registration_ux import main as build_ux
 from prepare_site import csp, inner, shell
-from registration_stand_models import BRIEF, LETTER
+from registration_stand_models import BRIEF, KONTUR, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.28.1'
+VERSION = '1.29.0'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -76,12 +76,14 @@ def schemes_page(archived_page):
     source = read('schemes-all.html')
     letter = group('letter', '1. Письмо → пароль', new_cards(LETTER, files), LETTER)
     brief = group('brief', '2. По ТЗ', new_cards(BRIEF, files), BRIEF)
+    kontur = group('kontur', '3. Как в Контуре', new_cards(KONTUR, files), KONTUR)
     links = ('<nav aria-label="Варианты схем">'
-             '<a href="#group-letter">1. Письмо → пароль</a><a href="#group-brief">2. По ТЗ</a></nav>')
+             '<a href="#group-letter">1. Письмо → пароль</a><a href="#group-brief">2. По ТЗ</a>'
+             '<a href="#group-kontur">3. Как в Контуре</a></nav>')
     body = ('<main data-registration-schemes><h1>Схемы регистрации и входа</h1>'
             '<p>Для каждой схемы доступны вертикальный вид и горизонтальный BPMN с дорожками. '
             'Выберите масштаб или разверните схему на весь экран.</p>'
-            + links + letter + brief + '</main>')
+            + links + letter + brief + kontur + '</main>')
     page = re.sub(r'<main\b[\s\S]*?</main>', lambda _: body, source, count=1)
     page = re.sub(r'<title>[^<]*</title>', '<title>ВЕРО — схемы регистрации</title>', page, count=1)
     page = page.replace('</head>', '<style>[data-process-group]>h2{font-size:23px;margin-top:30px}</style></head>', 1)
@@ -128,9 +130,14 @@ def main():
     # The current script adds these choices only inside invitation demos.
     letter = re.sub(r'<option value="invite-(?:expired|revoked)"[^>]*>[^<]*</option>', '', letter)
     brief = pages['stand-frame-brief']
+    kontur = read('src/registration-kontur.html')
+    kontur = (kontur.replace('__CSP__', POLICY, 1)
+              .replace('__SHARED_UI__', read('src/simple-ui.css'), 1)
+              .replace('__FLOW_JS__', read('src/prototype-history.js') + '\n' + read('src/registration-kontur.js'), 1))
     standalone, schemes, files = schemes_page(pages['stand-frame-schemes'])
     variants = (frame('letter', 'Письмо → пароль', letter)
-                + frame('brief', 'Личный кабинет и кошелёк по ТЗ', brief))
+                + frame('brief', 'Личный кабинет и кошелёк по ТЗ', brief)
+                + frame('kontur', 'Приглашение как в Контуре', kontur))
     result = read('templates/registration-stand.html')
     for key, value in (
         ('VERSION', VERSION), ('CSP', csp(shell)[0]), ('VARIANTS', variants), ('SCHEMES', frame('schemes', 'Схемы регистрации', schemes)),
@@ -153,7 +160,7 @@ def main():
         package.writestr('schemes.html', standalone)
         for name, content in files.items():
             package.writestr('schemes/' + name, content)
-    print(f'Built v{VERSION}: 2 variants, {len(files) // 4} BPMN models and the v1.25.0 archive.')
+    print(f'Built v{VERSION}: 3 variants, {len(files) // 4} BPMN models and the v1.25.0 archive.')
 
 
 if __name__ == '__main__':

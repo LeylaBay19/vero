@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+__CSP__
+<title>ВЕРО — приглашение как в Контуре</title>
+<style>
+__SHARED_UI__
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 Arial, sans-serif; }
+.demo { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 16px; background: #edf0f4; border-bottom: 1px solid var(--line); }
+.demo small { margin-right: auto; }
+.brand { max-width: 1100px; margin: auto; padding: 16px; }
+main { width: min(100% - 24px, 500px); margin: 8px auto 24px; padding: clamp(16px, 4vw, 28px); background: white; border: 1px solid var(--line); border-radius: 6px; overflow-wrap: anywhere; }
+h1 { font-size: 24px; line-height: 1.25; margin: 0 0 12px; }
+p { margin: 0 0 12px; }
+small, .muted { color: var(--muted); }
+label.field { display: grid; gap: 4px; margin: 0 0 12px; }
+input:not([type=checkbox]), select { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; font: inherit; }
+input[readonly] { background: var(--soft); }
+fieldset { border: 1px solid var(--line); border-radius: 5px; margin: 0 0 12px; }
+fieldset label { display: block; }
+button { font: inherit; cursor: pointer; padding: 8px 12px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: white; }
+button.primary { color: white; background: var(--accent); }
+.actions { display: grid; gap: 8px; margin: 12px 0 0; }
+.summary { background: var(--soft); padding: 12px; margin: 0 0 12px; }
+.error { color: #a33636; }
+:focus-visible { outline: 2px solid #315c9d; outline-offset: 2px; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<div class="demo">
+  <small>Демонстрация ВЕРО по сценарию Диадок КЭДО. Письма, СМС и сертификат имитируются.</small>
+  <button type="button" id="start-over">Начать заново</button>
+</div>
+<header class="brand"><strong class="brand-wordmark">ВЕРО</strong></header>
+<main id="kontur-flow"></main>
+<script>__FLOW_JS__</script>
+</body>
+</html>
