@@ -103,6 +103,7 @@ async function run() {
     await letter.getByRole('button', { name: 'Отправить код повторно' }).click();
     await code.fill(oldCode);
     await letter.getByRole('button', { name: 'Подтвердить код' }).click();
+    await letter.locator('#r2-alert:not([hidden])').waitFor();
     assert.equal(await code.getAttribute('aria-invalid'), 'true');
     assert.equal(await letter.getByRole('button', { name: 'Присоединиться', exact: true }).count(), 0);
     await code.fill('');
@@ -124,6 +125,107 @@ async function run() {
     assert.equal(await code.count(), 0);
     assert.equal(await result.locator('li').count(), 2);
 
+    const startOther = async () => {
+      await scenario.selectOption('new');
+      await scenario.selectOption('invite-other');
+    };
+    const signInOther = async () => {
+      await letter.getByRole('button', { name: 'Войти в свой аккаунт' }).click();
+      await letter.locator('#fill').click();
+      await letter.getByRole('button', { name: 'Войти', exact: true }).click();
+    };
+    const inviteStatus = letter.locator('#r2-auth-outcome');
+    const confirmCode = letter.getByRole('button', { name: 'Подтвердить код' });
+    const resendCode = letter.getByRole('button', { name: 'Отправить код повторно' });
+    await startOther();
+    await letter.getByRole('button', { name: 'Не сейчас' }).click();
+    await letter.getByRole('heading', { name: 'Приглашение отложено' }).waitFor();
+    assert.equal(await result.count(), 0);
+    await letter.getByRole('button', { name: 'Вернуться к приглашению' }).click();
+    await inviteStatus.selectOption('code-undelivered');
+    await signInOther();
+    await code.waitFor();
+    await letter.locator('#fill').click();
+    assert.equal(await code.inputValue(), '');
+    await resendCode.click();
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await code.fill('000000');
+      await confirmCode.click();
+      await letter.locator('#r2-alert:not([hidden])').waitFor();
+    }
+    assert.match(await letter.locator('#r2-alert').textContent(), /Попытки исчерпаны/);
+    await resendCode.click();
+    await letter.locator('#fill').click();
+    await inviteStatus.selectOption('code-expired');
+    await confirmCode.click();
+    await letter.getByText('Срок действия кода истёк.', { exact: false }).first().waitFor();
+    await resendCode.click();
+    await letter.locator('#fill').click();
+    const previousSessionCode = await code.inputValue();
+    await letter.getByText('Демо · повторное открытие ссылки', { exact: true }).click();
+    await letter.getByRole('button', { name: 'Открыть ссылку в новой сессии' }).click();
+    await signInOther();
+    await code.fill(previousSessionCode);
+    await confirmCode.click();
+    await letter.locator('#r2-alert:not([hidden])').waitFor();
+    assert.match(await letter.locator('#r2-alert').textContent(), /Код не совпадает/);
+    await code.fill('');
+    await letter.locator('#fill').click();
+    await confirmCode.click();
+    await join.waitFor();
+    await inviteStatus.selectOption('invite-role-changed');
+    await join.click();
+    await letter.getByText('Администратор изменил роль. Проверьте новый доступ', { exact: false }).waitFor();
+    assert.equal(await result.count(), 0);
+    await join.click();
+    await result.getByText('ООО «Вектор» · Наблюдатель ОССиГ').waitFor();
+
+    for (const [outcome, heading] of [
+      ['invite-undelivered', 'Письмо с приглашением не пришло'],
+      ['invite-expired', 'Срок приглашения истёк'],
+      ['invite-revoked', 'Приглашение отозвано'],
+      ['invite-reissued', 'Приглашение отправили повторно'],
+    ]) {
+      await startOther();
+      await inviteStatus.selectOption(outcome);
+      await letter.getByRole('button', { name: 'Войти в свой аккаунт' }).click();
+      await letter.getByRole('heading', { name: heading, exact: true }).waitFor();
+      assert.equal(await result.count(), 0);
+      await letter.getByRole('button', { name: 'Открыть новое приглашение' }).click();
+      await letter.getByRole('heading', { name: 'Вас пригласили в ООО «Вектор»' }).waitFor();
+    }
+    for (const mode of ['invite-shared', 'invite-wrong']) {
+      await scenario.selectOption(mode);
+      assert.equal(await result.count(), 0);
+      await letter.getByRole('button', { name: 'Открыть приглашение на мой адрес' }).click();
+      await letter.getByText('anna@example.test', { exact: true }).waitFor();
+    }
+    await startOther();
+    await signInOther();
+    await code.waitFor();
+    await letter.getByRole('button', { name: 'Нет доступа к этой почте' }).click();
+    await letter.getByRole('heading', { name: 'Нужен доступ к почте приглашения' }).waitFor();
+    assert.equal(await result.count(), 0);
+
+    await scenario.selectOption('invite-conflict');
+    const conflictHeading = letter.getByRole('heading', { name: 'У этой почты уже есть аккаунт ВЕРО' });
+    await conflictHeading.waitFor();
+    await letter.getByRole('button', { name: 'Войти с почтой приглашения' }).click();
+    await letter.locator('#r2-login').fill('anna@example.test');
+    await letter.locator('#fill').click();
+    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
+    await conflictHeading.waitFor();
+    assert.equal(await code.count(), 0);
+    assert.equal(await result.count(), 0);
+    await letter.getByRole('button', { name: 'Войти с почтой приглашения' }).click();
+    assert.equal(await letter.locator('#r2-login').inputValue(), 'anna@vector.example.test');
+    await letter.locator('#fill').click();
+    await letter.getByRole('button', { name: 'Войти', exact: true }).click();
+    await join.waitFor();
+    assert.equal(await code.count(), 0);
+    await join.click();
+    await result.getByText('anna@vector.example.test', { exact: true }).waitFor();
+
     await page.getByRole('tab', { name: 'Сравнение регистрации' }).click();
     const comparison = frame('comparison');
     await comparison.locator('[data-flow=mos]').waitFor();
@@ -133,7 +235,7 @@ async function run() {
     await page.getByRole('tab', { name: 'Схемы' }).click();
     const schemes = frame('schemes');
     await schemes.locator('[data-registration-schemes]').waitFor();
-    for (const [group, count] of [['letter', 7], ['brief', 2]]) {
+    for (const [group, count] of [['letter', 9], ['brief', 2]]) {
       assert.equal(await schemes.locator(`[data-process-group="${group}"] article`).count(), count);
     }
     const cards = schemes.locator('article[data-process-card]');
@@ -189,7 +291,7 @@ async function run() {
     assert.ok(fs.readFileSync('archive/prototype-v1.25.0.html').equals(fs.readFileSync('web/archive/prototype-v1.25.0.html')));
     assert.deepEqual(errors, []);
     assert.deepEqual(requests, []);
-    console.log('Registration stand: 2 variants, 3 comparisons, cross-email invitation, 9 diagrams in two layouts, no label overlaps, BPMN/SVG, mobile and archive.');
+    console.log('Registration stand: 2 variants, 3 comparisons, invitation scenarios and recovery, 11 diagrams in two layouts, BPMN/SVG, mobile and archive.');
   } finally {
     await browser.close();
   }

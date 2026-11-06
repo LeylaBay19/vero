@@ -261,7 +261,7 @@ function render(){
  }
  if(authOnly&&q==='auth-complete'){
   const memberships=state.contexts.filter(context=>['director','employee'].includes(context.kind));
-  const joinedOther=state.accepted&&scenario.value==='invite-other';
+  const joinedOther=state.accepted&&c?.id==='company-vector';
   const organizations=memberships.map(context=>'<li>'+esc(context.name)+' · '+esc(context.serviceRoles?.ossig?context.serviceRoles.ossig+' ОССиГ':context.role)+'</li>').join('');
   html=`<section class="workspace" data-auth-complete><h1 tabindex="-1">${joinedOther?'Вы присоединились к '+esc(c.name):'Вход выполнен'}</h1>${joinedOther?`<p>Аккаунт ВЕРО · <strong>${esc(state.email)}</strong></p><h2>Ваши организации</h2><ul>${organizations}</ul>`:['director','employee'].includes(c?.kind)?`<p>${esc(c.name)} · ${esc(c.kind==='director'?'Генеральный директор':'Сотрудник организации')}</p>`:''}<p>Сценарий входа завершён.</p></section>`;
  }

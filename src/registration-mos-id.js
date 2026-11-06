@@ -11,19 +11,27 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   const demoMos = {id:'mos-demo-001', name:'Иванов Иван Иванович', email:'ivan.mos@example.test', phone:'+7 000 000-00-00'};
   const invitationEmail='employee@example.test';
   const demoEmployee={id:'demo-employee',login:invitationEmail,email:invitationEmail,password:'Example-2026!',provider:'local_only',mosId:null,name:'Анна Петрова',phone:''};
-  const otherInvitation={id:'company-vector',email:'anna@vector.example.test',name:'ООО «Вектор»',role:'Сотрудник организации',serviceRoles:{ossig:'Специалист'}};
-  const otherEmail=()=>getScenario()==='invite-other';
-  const invited=()=>['invite','invite-existing','invite-other'].includes(getScenario());
+  const otherInvitation={id:'company-vector',email:'anna@vector.example.test',name:'ООО «Вектор»',role:'Сотрудник организации'};
+  const primaryEmail='anna@example.test';
+  const advancedScenarios=['invite-other','invite-conflict','invite-shared','invite-wrong'];
+  const otherEmail=()=>advancedScenarios.includes(getScenario());
+  const invited=()=>otherEmail()||['invite','invite-existing'].includes(getScenario());
   const findAccount=email=>accounts.find(account=>account.email.toLowerCase()===email.toLowerCase());
-  let screen, accounts, current, origin, purpose, draft, notice, sequence;
+  let screen, accounts, current, origin, purpose, draft, notice, sequence, invitation;
   function reset() {
     const scenario=getScenario();
-    screen={invite:'invitation','duplicate-email':'email','invite-other':'invite-other'}[scenario]||'entry';
+    const initialScreens={invite:'invitation','duplicate-email':'email','invite-other':'invite-other',
+      'invite-conflict':'invite-conflict','invite-shared':'invitation-error','invite-wrong':'invitation-error'};
+    screen=initialScreens[scenario]||'entry';
     accounts=[{id:'demo-existing-account',login:'demo@example.test',email:'demo@example.test',password:'Example-2026!',provider:'local_only',mosId:null,name:'Демонстрационный пользователь',phone:'',connectedOrganization:authOnly?{name:'ООО «Пример»',role:'director'}:null}];
     if(['employee','invite-existing'].includes(scenario))accounts.push({...demoEmployee});
-    if(otherEmail())accounts.push({...demoEmployee,id:'demo-cross-email',login:'anna@example.test',email:'anna@example.test',connectedOrganization:{name:'ООО «Пример»',role:'employee'}});
+    if(scenario==='invite-conflict')accounts.push({...demoEmployee,id:'demo-invited-email',login:otherInvitation.email,email:otherInvitation.email});
+    if(otherEmail())accounts.push({...demoEmployee,id:'demo-cross-email',login:primaryEmail,email:primaryEmail,connectedOrganization:{name:'ООО «Пример»',role:'employee'}});
     current=null; origin=screen; purpose='login';
     draft=scenario==='duplicate-email'?{email:accounts[0].email}:{}; notice=''; sequence=0;
+    invitation={email:scenario==='invite-shared'?'office@vector.example.test':scenario==='invite-wrong'?'annna@vector.example.test':otherEmail()?otherInvitation.email:invitationEmail,
+      serviceRole:'Специалист',codeSequence:0,acceptedBy:null};
+    draft.invitationError=scenario==='invite-shared'?'shared':scenario==='invite-wrong'?'wrong':null;
     if($('r2-mos-outcome'))$('r2-mos-outcome').value='success';
     if($('r2-auth-outcome'))$('r2-auth-outcome').value='success';
   }
@@ -36,11 +44,34 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(id){const input=$('r2-'+id);if(input){input.setAttribute('aria-invalid','true');const errorId='r2-error-'+id;let inline=$(errorId);if(!inline){inline=document.createElement('span');inline.id=errorId;inline.className='r2-field-error';input.closest('label')?.append(inline);}inline.textContent=text;input.setAttribute('aria-describedby',errorId);input.focus();}}
   }
   const outcome=()=> $('r2-auth-outcome')?.value||'success';
+  const roleText=()=>invitation.serviceRole+' ОССиГ';
   function invitationValid(){
-    if(!invited())return true;
-    const result=outcome();
-    if(!['invite-expired','invite-revoked'].includes(result))return true;
-    draft.invitationError=result;show('invitation-error');return false;
+    if(!invited()||invitation.acceptedBy)return true;
+    const result=invitation.inactiveReason||outcome();
+    if(!['invite-expired','invite-revoked','invite-reissued','invite-undelivered'].includes(result))return true;
+    invitation.inactiveReason=result;
+    current=null;draft={invitationError:result};show('invitation-error');return false;
+  }
+  function issueInvitationCode(){
+    const code=String(123456+invitation.codeSequence++%876544);
+    const delivered=outcome()!=='code-undelivered';
+    if(!delivered)$('r2-auth-outcome').value='success';
+    draft={challenge:{code,failures:0,expires:Date.now()+10*60*1000,delivered}};
+    return show('invite-code');
+  }
+  function restartInvitation({corrected=false,reissued=false}={}){
+    if(corrected)invitation.email=primaryEmail;
+    if(reissued)invitation.inactiveReason=null;
+    if($('r2-auth-outcome'))$('r2-auth-outcome').value='success';
+    current=null;draft={};
+    if(invitation.acceptedBy)return show('entry');
+    if(otherEmail())return show(getScenario()==='invite-conflict'&&!corrected&&invitation.email===otherInvitation.email?'invite-conflict':'invite-other');
+    return show(getScenario()==='invite'?'invitation':'entry');
+  }
+  function reviewInvitation(){
+    if(outcome()==='invite-role-changed')invitation.serviceRole='Наблюдатель';
+    draft={reviewedRole:invitation.serviceRole};
+    return show('invite-confirm');
   }
   async function request(form){
     const previous=screen,inputs=[...form.querySelectorAll('input,button')].map(el=>[el,el.disabled]);
@@ -111,24 +142,41 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
             ? '<p class="signup"><button class="text-btn" type="button" data-r2-action="register">Зарегистрировать организацию</button><br>Сотрудники регистрируются по приглашению.</p>'
             : '<p class="signup">Нет аккаунта? <button class="text-btn" type="button" data-r2-action="register">Зарегистрироваться</button></p>';
       }
-      const prompt=otherEmail()&&!accounts.some(account=>account.invitationMembership)?'<div class="notice">Введите email, с которым вы уже входите в ВЕРО. Затем подтвердите почту приглашения.</div>':invitationLogin?'<div class="notice">Вы приглашены в ООО «Пример». Войдите с почтой, на которую пришло приглашение.</div>':'';
+      let prompt='';
+      if(invitationLogin)prompt='<div class="notice">Вы приглашены в ООО «Пример». Войдите с почтой, на которую пришло приглашение.</div>';
+      if(otherEmail()&&!invitation.acceptedBy){
+        const instructions=findAccount(invitation.email)?'Войдите с почтой, на которую пришло приглашение.':'Введите email, с которым вы уже входите в ВЕРО. Затем подтвердите почту приглашения.';
+        prompt='<div class="notice">'+instructions+'</div>';
+      }
       body=prompt+form('login',field('Логин (email)','login','email',`autocomplete="username" value="${esc(invitationLogin?invitationEmail:draft.login||'')}" ${invitationLogin?'readonly':''}`)+password('Пароль','password','current-password',draft.password||''),invitationLogin?'Войти и присоединиться':'Войти')+'<p><button type="button" class="text-btn" data-r2-action="recover">Забыли пароль?</button></p>'+(invited()?'':'<div class="separator">или</div>'+button('Войти через mos.ru','mos-login',true))+signup;
+      if(authOnly&&invited()&&!invitation.acceptedBy)body+=button('Не сейчас','invite-defer',true);
     }
     if(shown==='invite-other'){
       title='Вас пригласили в '+otherInvitation.name;
-      body='<p>Приглашение для <strong>'+esc(otherInvitation.email)+'</strong>.</p><p>Доступ · Специалист ОССиГ</p><p>Войдите в свой аккаунт ВЕРО, даже если он зарегистрирован на другую почту.</p>'+button('Войти в свой аккаунт','login');
+      body='<p>Приглашение для <strong>'+esc(invitation.email)+'</strong>.</p><p>Доступ · '+esc(roleText())+'</p><p>Войдите в свой аккаунт ВЕРО, даже если он зарегистрирован на другую почту.</p>'
+        +button('Войти в свой аккаунт','login')+button('Не сейчас','invite-defer',true)+button('Нет доступа к этой почте','invite-no-mail',true);
+    }
+    if(shown==='invite-conflict'){
+      title='У этой почты уже есть аккаунт ВЕРО';
+      body='<p>Приглашение для <strong>'+esc(invitation.email)+'</strong>. Войдите в аккаунт на эту почту. Чтобы присоединить компанию к другому аккаунту, попросите администратора отправить приглашение на его адрес.</p>'
+        +button('Войти с почтой приглашения','invite-owner')+button('Нужно приглашение на другой адрес','invite-other-account',true);
     }
     if(shown==='invite-code'){
       title='Подтвердите почту приглашения';
-      body='<p>Отправили код на <strong>'+esc(otherInvitation.email)+'</strong>. Аккаунт для присоединения · '+esc(current?.email)+'</p>'
+      body='<p>Отправили код на <strong>'+esc(invitation.email)+'</strong>. Аккаунт для присоединения · '+esc(current?.email)+'</p>'
         +form('invite-code',field('Код из письма','invitation-code','text','inputmode="numeric" autocomplete="one-time-code" maxlength="6"'),'Подтвердить код')
         +button('Отправить код повторно','invite-resend',true)+button('Войти в другой аккаунт','invite-switch',true)
-        +'<details class="mini"><summary>Демо-письмо</summary><p>Код из письма · <strong>'+esc(draft.invitationCode)+'</strong></p></details>';
+        +button('Нет доступа к этой почте','invite-no-mail',true)
+        +'<details class="mini"><summary>Демо-почта</summary><p>'+(draft.challenge.delivered?'Код из письма · <strong>'+esc(draft.challenge.code)+'</strong>':'Письмо с кодом пока не доставлено. Запросите новый код.')+'</p></details>';
     }
     if(shown==='invite-confirm'){
       title='Присоединиться к организации';
-      body='<p>Почта приглашения подтверждена. В аккаунт <strong>'+esc(current?.email)+'</strong> будет добавлен доступ к <strong>'+esc(otherInvitation.name)+'</strong>.</p><p>Доступ · Специалист ОССиГ</p>'
-        +form('invite-confirm','','Присоединиться')+button('Войти в другой аккаунт','invite-switch',true);
+      body='<p>Почта приглашения подтверждена. В аккаунт <strong>'+esc(current?.email)+'</strong> будет добавлен доступ к <strong>'+esc(otherInvitation.name)+'</strong>.</p><p>Доступ · '+esc(roleText())+'</p>'
+        +form('invite-confirm','','Присоединиться')+button('Не сейчас','invite-defer',true)+button('Войти в другой аккаунт','invite-switch',true);
+    }
+    if(shown==='invite-deferred'){
+      title='Приглашение отложено';
+      body='<p>Вернитесь по ссылке из письма, чтобы продолжить. Доступ появится, когда вы примете приглашение.</p>'+button('Вернуться к приглашению','invite-reopen');
     }
     if(shown==='recover'){
       title='Восстановить пароль';body='<p>Укажите email, который используете для входа в ВЕРО.</p>'+form('recover',field('Логин (email)','recover-email','email',`autocomplete="email" placeholder="name@example.ru" value="${esc(draft.recoverEmail||'')}"`),'Получить письмо')+button('Вернуться ко входу','recovery-cancel',true);
@@ -149,7 +197,24 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       title='Пароль изменён';body='<p class="notice good">Теперь войдите с новым паролем. Логин остался прежним.</p>'+button('Войти','recovery-cancel');
     }
     if(shown==='invitation-error'){
-      title=draft.invitationError==='invite-revoked'?'Приглашение отозвано':'Срок приглашения истёк';body='<p>Обратитесь к руководителю или администратору организации за новым приглашением. Доступ к компании не предоставлен.</p>'+button('Вернуться ко входу','login',true);
+      const reasons={
+        'invite-revoked':['Приглашение отозвано','Попросите администратора организации отправить новое приглашение, если доступ ещё нужен.'],
+        'invite-expired':['Срок приглашения истёк','Попросите администратора организации отправить новую ссылку.'],
+        'invite-reissued':['Приглашение отправили повторно','Откройте ссылку из последнего письма. Предыдущая ссылка больше не действует.'],
+        'invite-undelivered':['Письмо с приглашением не пришло','Проверьте папку «Спам». Если письма нет, попросите администратора проверить адрес и отправить приглашение повторно.'],
+        shared:['Приглашение отправили на общий ящик','Попросите администратора отправить приглашение на адрес, к которому есть доступ только у вас.'],
+        wrong:['Приглашение отправили на неверный адрес','Администратор отзывает старое приглашение и отправляет новое на правильную почту.'],
+        'no-mail':['Нужен доступ к почте приглашения','Если письмо переслали или адрес вам недоступен, попросите администратора пригласить вас на вашу почту.'],
+        'other-account':['Попросите приглашение на другой адрес','Сообщите администратору email, с которым вы входите в основной аккаунт ВЕРО. Администратор отзовёт старую ссылку и отправит новую.'],
+      };
+      const reason=draft.invitationError;
+      const detail=reasons[reason]||reasons['invite-expired'];
+      title=detail[0];
+      body='<p>'+esc(detail[1])+'</p>';
+      if(authOnly&&invited()){
+        const corrected=['shared','wrong','no-mail','other-account'].includes(reason);
+        body+='<p class="mini">Демонстрация нового письма от администратора</p>'+button(corrected?'Открыть приглашение на мой адрес':'Открыть новое приглашение',corrected?'invite-corrected':'invite-reopen');
+      } else body+=button('Вернуться ко входу','login',true);
     }
     if(shown==='email'){
       title=authOnly?'Регистрация организации':'Регистрация';
@@ -168,6 +233,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     }
     if(shown==='invitation'){
       title='Вас пригласили на платформу ВЕРО';body='<p>ООО «Пример» приглашает вас для совместной работы. Придумайте пароль. Логином будет почта, на которую пришло приглашение.</p>'+form('invitation',field('Логин — email приглашения','invite-login','email',`value="${invitationEmail}" disabled`)+password('Придумайте пароль','new-password')+'<p class="mini">Не менее 8 символов.</p>'+password('Повторите пароль','confirm-password')+agreement,authOnly?'Присоединиться в качестве сотрудника':'Создать аккаунт и присоединиться')+(authOnly?'':'<p class="signup">Уже зарегистрированы? <button class="text-btn" type="button" data-r2-action="invite-login">Войти</button></p>');
+      if(authOnly)body+=button('Не сейчас','invite-defer',true);
     }
     if(shown==='register') {
       title='Регистрация';
@@ -213,7 +279,9 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       title=current.password?'Сменить пароль':'Задайте пароль';
       body=form('password',(current.password?password('Текущий пароль','current-password','current-password'):'<p>Создайте пароль для входа по email. Вход через mos.ru останется доступен.</p>')+password('Новый пароль','new-password')+password('Повторите новый пароль','confirm-password'),'Сохранить пароль')+button('Отмена','cabinet',true);
     }
-    const content=`${['entry','login','mos','mos-consent'].includes(shown)?'':'<div class="eyebrow">Вариант 2 · регистрация</div>'}<h2 id="${['mos','mos-consent'].includes(shown)?'r2-mos-title':'r2-title'}" tabindex="-1">${title}</h2>${body}${background?'':message}${notice&&!background?'<p class="status-msg" role="status">'+esc(notice)+'</p>':''}${['entry','login','email','register','invitation'].includes(shown)?help:''}${['register','email'].includes(shown)?back:''}`;
+    const sessionDemo=authOnly&&invited()&&!background&&!['invitation-error','invite-deferred'].includes(shown)
+      ?'<details class="mini"><summary>Демо · повторное открытие ссылки</summary><p>Имитирует новое устройство или вкладку. Для входа понадобится пароль, для другой почты — новый код.</p>'+button('Открыть ссылку в новой сессии','invite-new-session',true)+'</details>':'';
+    const content=`${['entry','login','mos','mos-consent'].includes(shown)?'':'<div class="eyebrow">Вариант 2 · регистрация</div>'}<h2 id="${['mos','mos-consent'].includes(shown)?'r2-mos-title':'r2-title'}" tabindex="-1">${title}</h2>${body}${background?'':message}${notice&&!background?'<p class="status-msg" role="status">'+esc(notice)+'</p>':''}${['entry','login','email','register','invitation'].includes(shown)?help:''}${['register','email'].includes(shown)?back:''}${sessionDemo}`;
     if(['mos','mos-consent'].includes(shown)){
       const beneath=origin==='profile'?`<section class="workspace"><h1>Профиль</h1>${profile()}</section>`:view(origin,true);
       return `${beneath}<dialog id="r2-dialog" class="app-dialog r2-card mos-dialog" aria-labelledby="r2-mos-title" data-registration-screen="${shown}"><button type="button" class="dialog-close" data-r2-action="close-mos" aria-label="Закрыть авторизацию mos.ru">×</button>${content}</dialog>`;
@@ -237,16 +305,34 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(b.dataset.r2Password){const x=$('r2-'+b.dataset.r2Password),show=x.type==='password';x.type=show?'text':'password';b.textContent=show?'Скрыть':'Показать';b.setAttribute('aria-label',(show?'Скрыть':'Показать')+' пароль');b.setAttribute('aria-pressed',String(show));return;}
     const action=b.dataset.r2Action;
     if(!action)return;
+    if(action==='invite-owner'&&screen==='invite-conflict'){
+      if(!invitationValid())return;
+      draft={login:invitation.email};return show('entry');
+    }
+    if(action==='invite-defer'&&invited()&&['entry','invitation','invite-other','invite-confirm'].includes(screen)){
+      current=null;draft={};return show('invite-deferred');
+    }
+    if(action==='invite-no-mail'&&['invite-other','invite-code','invite-conflict'].includes(screen)){
+      current=null;draft={invitationError:'no-mail'};return show('invitation-error');
+    }
+    if(action==='invite-other-account'&&screen==='invite-conflict'){
+      current=null;draft={invitationError:'other-account'};return show('invitation-error');
+    }
+    if(action==='invite-corrected'&&screen==='invitation-error')return restartInvitation({corrected:true,reissued:true});
+    if(action==='invite-new-session'||action==='invite-reopen'){
+      if(screen!=='invitation-error'&&!invitationValid())return;
+      return restartInvitation({reissued:screen==='invitation-error'});
+    }
     if(action==='invite-switch'&&['invite-code','invite-confirm'].includes(screen)){
       current=null;draft={};return show('entry');
     }
     if(action==='invite-resend'&&screen==='invite-code'&&current){
       if(!invitationValid())return;
       if(outcome()==='server')return error('Не удалось отправить код. Попробуйте ещё раз.');
-      draft.invitationCode=String(Number(draft.invitationCode)+1);
-      return show('invite-code');
+      if(outcome()==='code-expired')$('r2-auth-outcome').value='success';
+      return issueInvitationCode();
     }
-    if(action==='login'){draft={};return show('entry');}
+    if(action==='login'){if(!invitationValid())return;draft={};return show('entry');}
     if(action==='register'){
       if(authOnly&&(invited()||getScenario()==='employee'))return;
       draft={};return show('email');
@@ -295,24 +381,47 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       if(!value('password'))return error('Введите пароль.','password');
       const account=accounts.find(a=>a.email.toLowerCase()===identifier.toLowerCase()&&a.password===value('password'));
       if(!account)return error('Неверный email или пароль. Проверьте данные или восстановите пароль.','password');
-      if(!invitationValid()||!await request(e.target))return;
+      if(!invitationValid()||!await request(e.target)||!invitationValid())return;
+      if(invited()&&invitation.acceptedBy&&invitation.acceptedBy!==account.id)return error('Это приглашение уже принято. Войдите в аккаунт, с которым вы его приняли.');
       if(otherEmail()){
-        const joined=accounts.find(a=>a.invitationMembership);
-        if(joined&&joined!==account)return error('Это приглашение уже принято. Войдите в аккаунт, с которым вы его приняли.');
-        if(!joined){current=account;draft={invitationCode:'123456'};return show('invite-code');}
+        const owner=findAccount(invitation.email);
+        if(!invitation.acceptedBy&&owner&&owner!==account){current=null;draft={};return show('invite-conflict');}
+        if(!invitation.acceptedBy){
+          current=account;
+          return owner?reviewInvitation():issueInvitationCode();
+        }
+      } else if(invited()){
+        if(account.email!==invitationEmail)return error('Войдите с почтой, на которую пришло приглашение.','login');
+        invitation.acceptedBy=account.id;
       }
       current=account;return openCabinet();
     }
     if(kind==='invite-code'&&screen==='invite-code'&&current){
-      if(value('invitation-code').trim()!==draft.invitationCode)return error('Код не совпадает. Проверьте письмо или запросите новый код.','invitation-code');
       if(!invitationValid()||!await request(e.target))return;
-      draft.invitationCode=null;
-      return show('invite-confirm');
+      if(!invitationValid())return;
+      const challenge=draft.challenge;
+      if(outcome()==='code-expired')challenge.expires=0;
+      if(challenge.expires<=Date.now())return error('Срок действия кода истёк. Запросите новый код.','invitation-code');
+      if(challenge.failures>=3)return error('Попытки исчерпаны. Запросите новый код.','invitation-code');
+      const code=value('invitation-code').trim();
+      if(!/^\d{6}$/.test(code))return error('Введите шесть цифр из письма.','invitation-code');
+      if(code!==challenge.code){
+        challenge.failures+=1;
+        return error(challenge.failures===3?'Попытки исчерпаны. Запросите новый код.':'Код не совпадает. Проверьте письмо или запросите новый код.','invitation-code');
+      }
+      return reviewInvitation();
     }
     if(kind==='invite-confirm'&&screen==='invite-confirm'&&current){
-      if(!invitationValid()||!await request(e.target))return;
-      const {id,name,role,serviceRoles}=otherInvitation;
-      current.invitationMembership={id,name,role,serviceRoles,kind:'employee'};
+      if(!invitationValid()||!await request(e.target)||!invitationValid())return;
+      if(outcome()==='invite-role-changed')invitation.serviceRole='Наблюдатель';
+      if(draft.reviewedRole!==invitation.serviceRole){
+        reviewInvitation();
+        notice='Администратор изменил роль. Проверьте новый доступ и подтвердите присоединение.';
+        return refresh();
+      }
+      const {id,name,role}=otherInvitation;
+      current.invitationMembership={id,name,role,serviceRoles:{ossig:invitation.serviceRole},kind:'employee'};
+      invitation.acceptedBy=current.id;
       return openCabinet();
     }
     if(kind==='recover'){
@@ -345,8 +454,9 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
       if(value('new-password').length<8||!value('new-password').trim())return error('Используйте пароль не короче 8 символов.','new-password');
       if(value('new-password')!==value('confirm-password'))return error('Пароли не совпадают.','confirm-password');
       if(!$('r2-terms').checked)return error('Примите условия, чтобы присоединиться.','terms');
-      if(!invitationValid()||!await request(e.target))return;
-      current={id:'invited-'+(++sequence),login:invitationEmail,email:invitationEmail,password:value('new-password'),provider:'local_only',mosId:null,name:'Анна Петрова',phone:''};accounts.push(current);return openCabinet();
+      if(!invitationValid()||!await request(e.target)||!invitationValid())return;
+      current={id:'invited-'+(++sequence),login:invitationEmail,email:invitationEmail,password:value('new-password'),provider:'local_only',mosId:null,name:'Анна Петрова',phone:''};
+      accounts.push(current);invitation.acceptedBy=current.id;return openCabinet();
     }
     if(kind==='register'){
       const email=draft.verifiedEmail,login=email;
@@ -374,7 +484,7 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
   function fill() {
     if(screen==='invite-code'){
       const input=$('r2-invitation-code');
-      if(input&&!input.value)input.value=draft.invitationCode;
+      if(input&&!input.value&&draft.challenge.delivered)input.value=draft.challenge.code;
       return;
     }
     if(screen==='mos'){if(!$('r2-mos-login').value)$('r2-mos-login').value=demoMos.email;if(!$('r2-mos-password').value)$('r2-mos-password').value='Example-2026!';return;}
@@ -387,9 +497,32 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     for(const [id,value] of Object.entries(values)){const el=$('r2-'+id);if(value&&el&&!el.value.trim())el.value=value;}
   }
   reset();
-  function mount(){const dialog=$('r2-dialog');if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(['mos','mos-consent'].includes(screen))cancelMos();else openCabinet();});}}
-  function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,draft,notice,sequence});}
-  function restore(value){({screen,accounts,current,origin,purpose,draft,notice,sequence}=structuredClone(value));}
+  function mount(){
+    const select=$('r2-auth-outcome');
+    if(select&&authOnly){
+      const invitationOutcomes=[
+        ['invite-undelivered','Письмо с приглашением не пришло'],['invite-expired','Приглашение просрочено'],
+        ['invite-revoked','Приглашение отозвано'],['invite-reissued','Администратор отправил новую ссылку'],
+      ];
+      if(otherEmail())invitationOutcomes.push(
+        ['code-undelivered','Письмо с кодом не пришло'],['code-expired','Код просрочен'],['invite-role-changed','Администратор изменил роль'],
+      );
+      const selected=select.value;
+      select.querySelectorAll('[data-invitation-outcome]').forEach(option=>option.remove());
+      if(invited()){
+        for(const [value,label] of invitationOutcomes){
+          const option=new Option(label,value);
+          option.dataset.invitationOutcome='';
+          select.add(option);
+        }
+        if(invitationOutcomes.some(([value])=>value===selected))select.value=selected;
+      }
+    }
+    const dialog=$('r2-dialog');
+    if(dialog){dialog.showModal();dialog.addEventListener('cancel',e=>{e.preventDefault();if(['mos','mos-consent'].includes(screen))cancelMos();else openCabinet();});}
+  }
+  function snapshot(){return structuredClone({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation});}
+  function restore(value){({screen,accounts,current,origin,purpose,draft,notice,sequence,invitation}=structuredClone(value));}
   function connectOrganization(name){if(!current)return;current.connectedOrganization={name,role:'director'};const saved=accounts.find(a=>a.id===current.id);if(saved)saved.connectedOrganization={...current.connectedOrganization};}
   return {reset,view,profile,signout,fill,mount,snapshot,restore,connectOrganization,hasScreen:()=>!!screen,screen:()=>screen};
 }

@@ -13,7 +13,7 @@ from prepare_site import csp, inner, shell
 from registration_stand_models import BRIEF, LETTER
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '1.27.0'
+VERSION = '1.28.0'
 BASE = Path('archive/prototype-v1.24.0.html')
 ARCHIVE = Path('archive/prototype-v1.25.0.html')
 POLICY = csp(inner)[0]
@@ -119,10 +119,13 @@ def main():
                             '<option value="duplicate-email">Организация · аккаунт уже существует</option>'
                             '<option value="invite">Сотрудник по приглашению · новый аккаунт</option>'
                             '<option value="invite-existing">Сотрудник по приглашению · есть аккаунт</option>'
-                            '<option value="invite-other">Сотрудник по приглашению · другая почта</option>', 1)
+                            '<option value="invite-other">Сотрудник по приглашению · другая почта</option>'
+                            '<option value="invite-conflict">Сотрудник по приглашению · два аккаунта</option>'
+                            '<option value="invite-shared">Сотрудник по приглашению · общий ящик</option>'
+                            '<option value="invite-wrong">Сотрудник по приглашению · неверный адрес</option>', 1)
     letter = letter.replace("invited:scenario.value==='invite'",
-                            "invited:['invite','invite-existing','invite-other'].includes(scenario.value)", 1)
-    # Hide the demo choices in the active stand. The archived controls stay intact.
+                            "invited:scenario.value.startsWith('invite')", 1)
+    # The current script adds these choices only inside invitation demos.
     letter = re.sub(r'<option value="invite-(?:expired|revoked)"[^>]*>[^<]*</option>', '', letter)
     brief = pages['stand-frame-brief']
     standalone, schemes, files = schemes_page(pages['stand-frame-schemes'])
