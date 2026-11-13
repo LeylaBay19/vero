@@ -16,6 +16,7 @@ body { height: 100dvh; margin: 0; display: flex; flex-direction: column; overflo
 .variant-switcher { padding: 8px 16px; border-bottom: 1px solid #d8dde5; }
 .stand-actions { margin-left: auto; }
 button { font: inherit; background: white; color: inherit; border: 1px solid #d8dde5; border-radius: 5px; padding: 8px 12px; cursor: pointer; }
+#stand-screen-id { display:inline-block; padding:7px 10px; border-radius:5px; color:#244883; background:#edf3fc; font-size:13px; }
 button[aria-selected=true], button[aria-pressed=true] { background: #242b36; color: white; border-color: #242b36; }
 button:disabled { opacity: .5; cursor: default; }
 :focus-visible { outline: 2px solid #315c9d; outline-offset: 2px; }
@@ -31,7 +32,7 @@ body.scheme-expanded .stand-header { display: none; }
 </head>
 <body>
 <header class="stand-header">
-  <strong>ВЕРО · стенд регистрации <small>v3.2.1</small></strong>
+  <strong>ВЕРО · стенд регистрации <small>v3.2.1</small> <small>· ID экранов</small></strong>
   <nav role="tablist" aria-label="Разделы стенда">
     <button id="stand-tab-current" type="button" role="tab" aria-selected="true" aria-controls="stand-current">Сценарий</button>
     <button id="stand-tab-schemes" type="button" role="tab" aria-selected="false" aria-controls="stand-schemes" tabindex="-1">Схемы</button>
@@ -44,6 +45,7 @@ body.scheme-expanded .stand-header { display: none; }
       <button type="button" data-variant="letter" aria-pressed="true">Письмо → пароль</button>
     </nav>
     <div class="stand-actions" id="stand-tools">
+      <span id="stand-screen-id" role="status">Экран Figma загружается…</span>
       <button type="button" id="stand-back" disabled>← Назад</button>
       <button type="button" id="stand-forward" disabled>Вперёд →</button>
       <span id="stand-history-position" aria-live="polite"></span>
@@ -2694,6 +2696,16 @@ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenar
     if(invitationV2()&amp;&amp;screen===&#x27;invitation&#x27;&amp;&amp;$(&#x27;r2-terms&#x27;))$(&#x27;r2-terms&#x27;).checked=true;
     for(const [id,value] of Object.entries(values)){const el=$(&#x27;r2-&#x27;+id);if(value&amp;&amp;el&amp;&amp;!el.value.trim())el.value=value;}
   }
+
+  if (authOnly) document.addEventListener(&#x27;vero:read-registration-screen&#x27;, event =&gt; {
+    const email = current?.email ?? draft.login ?? &#x27;&#x27;;
+    Object.assign(event.detail, {
+      screen, purpose,
+      sameInviteEmail: Boolean(email &amp;&amp; invitation &amp;&amp; email.toLowerCase() === invitation.email.toLowerCase()),
+      invitationError: draft.invitationError,
+      codeSequence: invitation?.codeSequence ?? 0
+    });
+  });
   reset();
   function mount(){
     clearTimeout(resendTimer);
@@ -3915,6 +3927,19 @@ article.is-expanded .tools{flex:none}
   const back = byId('stand-back');
   const forward = byId('stand-forward');
   const position = byId('stand-history-position');
+  
+(() => {
+  const frames = {"10": {"title": "Выберите сертификат УКЭП"}, "11": {"title": "Проверьте данные организации"}, "12": {"title": "Организация на проверке"}, "13": {"title": "Организация подключена"}, "14": {"title": "Письмо с приглашением"}, "15": {"title": "Продолжить по приглашению"}, "16": {"title": "Вход по приглашению"}, "17": {"title": "Создать аккаунт по приглашению"}, "18": {"title": "Аккаунт с почтой приглашения есть"}, "19": {"title": "Подтвердите почту приглашения"}, "20": {"title": "Принять или отклонить приглашение"}, "21": {"title": "Приглашение отклонено"}, "22": {"title": "Вход выполнен"}, "23": {"title": "Сотрудник присоединился"}, "24": {"title": "Новый аккаунт по приглашению"}, "25": {"title": "Вход нового сотрудника"}, "27": {"title": "Вход подключённого сотрудника"}, "28": {"title": "Вход подключённого сотрудника выполнен"}, "29": {"title": "Восстановление пароля"}, "30": {"title": "Письмо для восстановления отправлено"}, "31": {"title": "Письмо о восстановлении"}, "32": {"title": "Новый пароль"}, "33": {"title": "Пароль изменён"}, "34": {"title": "Вход через mos.ru"}, "35": {"title": "Создание аккаунта через mos.ru"}, "36": {"title": "Аккаунт создан через mos.ru"}, "37": {"title": "Mos ID подключён"}, "38": {"title": "Вход в существующий аккаунт"}, "01": {"title": "Вход в ВЕРО"}, "02": {"title": "Регистрация организации"}, "03": {"title": "Проверьте почту"}, "04": {"title": "Письмо для подтверждения"}, "05": {"title": "Пароль для входа"}, "07": {"title": "Добро пожаловать"}, "08а": {"title": "Подключите организацию"}, "06": {"title": "Почта уже зарегистрирована"}, "03а": {"title": "Проверьте почту — повторная отправка"}, "04а": {"title": "Ссылка подтверждения устарела"}, "10б": {"title": "Проблема с сертификатом"}, "13а": {"title": "Проверка не пройдена"}, "05а": {"title": "Сервис недоступен"}, "24а": {"title": "Приглашение — сервис недоступен"}, "16а": {"title": "Вход с почтой приглашения"}, "20а": {"title": "Приглашение для текущей почты"}, "23а": {"title": "Организация добавлена к аккаунту"}, "19а": {"title": "Код просрочен"}, "19б": {"title": "Код не совпадает"}, "19в": {"title": "Нет доступа к почте"}, "19г": {"title": "Код выслан повторно"}, "32а": {"title": "Ссылка восстановления устарела"}, "34а": {"title": "Подключение Mos ID"}, "37а": {"title": "Конфликт Mos ID"}, "34б": {"title": "Ошибка входа через Mos ID"}, "34в": {"title": "Ошибка подключения Mos ID"}, "30а": {"title": "Новое письмо запрошено"}};
+  const iframe = document.querySelector('#stand-frame-letter');
+  const badge = document.querySelector('#stand-screen-id');
+  addEventListener('message', event => {
+    if (event.source !== iframe.contentWindow || event.data?.type !== 'vero:figma-screen') return;
+    const code = event.data.code;
+    const frame = typeof code === 'string' && Object.hasOwn(frames, code) ? frames[code] : null;
+    badge.textContent = frame ? code + ' · ' + frame.title : 'Нет привязки к Figma';
+  });
+})();
+
   const demoLetter = byId('stand-demo-letter');
   let demoLetterAvailable = false;
   const downloads = new Map([...byId('scheme-downloads').querySelectorAll('a[download]')]
@@ -3938,7 +3963,9 @@ article.is-expanded .tools{flex:none}
 
   function load(frame) {
     if (!frame.dataset.page) return;
-    frame.srcdoc = frame.dataset.page;
+    frame.srcdoc = frame.id === 'stand-frame-letter'
+      ? frame.dataset.page.replace(/<\/body>\s*<\/html>\s*$/i, closing => "\u003cscript>\n(() => {\n  const main = document.querySelector('#main');\n  const scenario = () => document.querySelector('#scenario')?.value;\n  const base = {\n    email:'02', 'email-exists':'06', 'email-sent':'03', 'email-letter':'04',\n    register:'05', offer:'07', 'organization-offer':'08а',\n    'invite-v2-letter':'14', 'invite-v2-choice':'15', 'invite-v2-exists':'18',\n    'invite-v2-declined':'21', recover:'29', 'recovery-sent':'30',\n    'recovery-letter':'31', 'recovery-password':'32', 'recovery-success':'33',\n    'recovery-expired':'32а', 'mos-registration-terms':'35', created:'36',\n    linked:'37', conflict:'37а'\n  };\n  let last;\n\n  function screenCode() {\n    const context = {};\n    document.dispatchEvent(new CustomEvent('vero:read-registration-screen', {detail: context}));\n    const {screen, purpose, sameInviteEmail, invitationError, codeSequence} = context;\n    const alert = id => {\n      const node = main.querySelector('#' + id);\n      return node && !node.hidden ? node.textContent : '';\n    };\n    const r2Error = alert('r2-alert');\n    const notice = main.querySelector('#r2-status');\n    const status = notice && !notice.hidden ? notice.textContent : '';\n    const modal = main.querySelector('#app-dialog[open]');\n    if (modal?.querySelector('#certificate')) {\n      if (alert('modal-alert').includes('Срок действия сертификата истёк')) return '10б';\n      if (alert('modal-alert').includes('Сертификат сотрудника')) return null;\n      return '10';\n    }\n    if (main.querySelector('#confirm-company-data')) return '11';\n    if (main.querySelector('[data-connection-sent]')) return '12';\n    const result = main.querySelector('.notice[role=\"status\"]')?.textContent ?? '';\n    if (result.startsWith('Организация подключена.')) return '13';\n    if (result.startsWith('Проверка не пройдена.')) return '13а';\n    if (main.querySelector('[data-auth-complete]')) {\n      if (scenario() === 'employee') return '28';\n      if (scenario() === 'invite' || scenario() === 'invite-existing') return '25';\n      if (scenario() === 'invite-v2') {\n        if (!main.querySelector('h1')?.textContent.startsWith('Вы присоединились')) return '22';\n        return main.querySelectorAll('ul li').length > 1 ? '23а' : '23';\n      }\n      return '38';\n    }\n    if (screen === 'entry' || screen === 'login') {\n      if (scenario() === 'employee') return '27';\n      if (scenario() === 'invite-v2') return sameInviteEmail ? '16а' : '16';\n      return scenario() === 'new' || scenario() === 'duplicate-email' ? '01' : null;\n    }\n    if (screen === 'invitation') {\n      if (r2Error.includes('Сервис временно недоступен')) return scenario() === 'invite-v2' ? null : '24а';\n      return scenario() === 'invite-v2' ? '17' : '24';\n    }\n    if (screen === 'invite-confirm') {\n      return sameInviteEmail ? '20а' : '20';\n    }\n    if (screen === 'invite-code') {\n      if (r2Error.includes('Срок действия кода истёк')) return '19а';\n      if (r2Error.includes('Код не совпадает')) return '19б';\n      return codeSequence > 1 ? '19г' : '19';\n    }\n    if (screen === 'invitation-error') {\n      return invitationError === 'no-mail' ? '19в' : null;\n    }\n    if (screen === 'email-sent' && status.includes('Письмо выслано повторно')) return '03а';\n    if (screen === 'email-letter' && r2Error.includes('устарела')) return '04а';\n    if (screen === 'register' && r2Error.includes('Сервис временно недоступен')) return '05а';\n    if (screen === 'recovery-sent' && main.textContent.includes('Новое письмо запрошено.')) return '30а';\n    if (screen === 'mos' || screen === 'oauth-error') {\n      const linking = purpose === 'link';\n      return screen === 'mos' ? (linking ? '34а' : '34') : (linking ? '34в' : '34б');\n    }\n    return base[screen] ?? null;\n  }\n\n  function report(force = false) {\n    const code = screenCode();\n    if (force || code !== last) parent.postMessage({type: 'vero:figma-screen', code}, '*');\n    last = code;\n  }\n  new MutationObserver(() => report()).observe(main, {\n    childList: true, subtree: true, characterData: true, attributes: true,\n    attributeFilter: ['hidden', 'open', 'aria-invalid']\n  });\n  addEventListener('message', event => {\n    if (event.source === parent && event.data?.type === 'vero:history') queueMicrotask(() => report(true));\n  });\n  report();\n})();\n\u003c/script>" + closing)
+      : frame.dataset.page;
     delete frame.dataset.page;
   }
 
