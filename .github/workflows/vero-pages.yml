@@ -1,0 +1,39 @@
+name: Publish VERO demo
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/vero-pages.yml']
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: vero-pages-demo
+          persist-credentials: false
+          sparse-checkout: |
+            /index.html
+            /.nojekyll
+          sparse-checkout-cone-mode: false
+      - name: Stage the demo only
+        run: |
+          grep -Fq '<small>v3.2.1</small>' index.html
+          mkdir -p pages-demo
+          cp index.html pages-demo/index.html
+          touch pages-demo/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages-demo
+      - uses: actions/deploy-pages@v4
+        id: deployment
