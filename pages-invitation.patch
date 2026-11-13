@@ -1,0 +1,1838 @@
+diff --git a/index.html b/index.html
+index db97e63..5348f9b 100644
+--- a/index.html
++++ b/index.html
+@@ -32,7 +32,7 @@ body.scheme-expanded .stand-header { display: none; }
+ </head>
+ <body>
+ <header class="stand-header">
+-  <strong>ВЕРО · стенд регистрации <small>v3.2.1</small> <small>· ID экранов</small></strong>
++  <strong>ВЕРО · стенд регистрации <small>v3.2.3</small> <small>· ID экранов</small></strong>
+   <nav role="tablist" aria-label="Разделы стенда">
+     <button id="stand-tab-current" type="button" role="tab" aria-selected="true" aria-controls="stand-current">Сценарий</button>
+     <button id="stand-tab-schemes" type="button" role="tab" aria-selected="false" aria-controls="stand-schemes" tabindex="-1">Схемы</button>
+@@ -42,7 +42,8 @@ body.scheme-expanded .stand-header { display: none; }
+ <section id="stand-current" role="tabpanel" aria-labelledby="stand-tab-current">
+   <div class="variant-switcher">
+     <nav class="stand-actions" aria-label="Варианты регистрации" style="margin-left:0">
+-      <button type="button" data-variant="letter" aria-pressed="true">Письмо → пароль</button>
++      <button type="button" data-variant="letter" aria-pressed="true">Вариант 1 · Письмо → пароль</button>
++      <button type="button" data-variant="invitation" aria-pressed="false">Приглашение сотрудника</button>
+     </nav>
+     <div class="stand-actions" id="stand-tools">
+       <span id="stand-screen-id" role="status">Экран Figma загружается…</span>
+@@ -53,7 +54,7 @@ body.scheme-expanded .stand-header { display: none; }
+       <button type="button" id="stand-demo-letter" hidden>Открыть демо-письмо</button>
+     </div>
+   </div>
+-  <div class="frames"><iframe id="stand-frame-letter" title="Письмо → пароль" sandbox="allow-scripts" referrerpolicy="no-referrer" data-page="&lt;!doctype html&gt;
++  <div class="frames"><iframe id="stand-frame-letter" title="Вариант 1 · Письмо → пароль" sandbox="allow-scripts" referrerpolicy="no-referrer" data-page="&lt;!doctype html&gt;
+ &lt;html lang=&quot;ru-RU&quot;&gt;
+ &lt;head&gt;
+ &lt;meta charset=&quot;utf-8&quot;&gt;
+@@ -2053,7 +2054,7 @@ body,button,input,select,textarea{font-family:Arial,sans-serif}
+ 
+ &lt;/style&gt;&lt;style&gt;#auth-flow-prototype{height:100dvh;min-height:0;max-width:none;display:flex;flex-direction:column;overflow:hidden}&lt;/style&gt;&lt;script&gt;document.body.dataset.defaultRegistration=&quot;2&quot;;&lt;/script&gt;
+ &lt;nav class=&quot;registration-variants&quot; aria-label=&quot;Вариант регистрации&quot;&gt;&lt;button type=&quot;button&quot; data-registration-variant=&quot;1&quot; aria-pressed=&quot;true&quot;&gt;Вариант 1&lt;small&gt;Текущая регистрация&lt;/small&gt;&lt;/button&gt;&lt;button type=&quot;button&quot; data-registration-variant=&quot;2&quot; aria-pressed=&quot;false&quot;&gt;Вариант 1&lt;small&gt;Mos ID и привязка аккаунта&lt;/small&gt;&lt;/button&gt;&lt;/nav&gt;
+-&lt;aside class=&quot;bench&quot; aria-label=&quot;Управление демонстрацией&quot;&gt;&lt;div class=&quot;bench-inner&quot;&gt;&lt;strong&gt;Прототип · единый вход&lt;/strong&gt;&lt;label&gt;Сценарий&lt;select id=&quot;scenario&quot;&gt;&lt;option value=&quot;new&quot;&gt;Новый пользователь / физлицо&lt;/option&gt;&lt;option value=&quot;invite&quot;&gt;Сотрудник по приглашению · новый аккаунт&lt;/option&gt;&lt;option value=&quot;invite-v2&quot;&gt;Сотрудник по приглашению 2&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Подключённый сотрудник&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Начатая задача&lt;select id=&quot;intent&quot;&gt;&lt;option value=&quot;&quot;&gt;Без выбранной услуги&lt;/option&gt;&lt;option value=&quot;materials&quot;&gt;Нерудные материалы&lt;/option&gt;&lt;option value=&quot;ossig&quot;&gt;ОССиГ&lt;/option&gt;&lt;option value=&quot;agr&quot;&gt;АГК&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label id=&quot;catalog-mode-wrap&quot; hidden&gt;Вариант каталога&lt;select id=&quot;catalog-mode&quot;&gt;&lt;option value=&quot;organization&quot;&gt;1 · По организации&lt;/option&gt;&lt;option value=&quot;service&quot;&gt;2 · По сервисам&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label id=&quot;platform-result-wrap&quot; hidden&gt;Демо: решение платформы&lt;select id=&quot;platform-result&quot;&gt;&lt;option value=&quot;approved&quot;&gt;Одобрить&lt;/option&gt;&lt;option value=&quot;rejected&quot;&gt;Отказать&lt;/option&gt;&lt;/select&gt;&lt;button id=&quot;apply-platform-result&quot; type=&quot;button&quot;&gt;Применить&lt;/button&gt;&lt;/label&gt;&lt;label id=&quot;proof-result-wrap&quot; hidden&gt;Демо: проверка&lt;select id=&quot;proof-result&quot;&gt;&lt;option value=&quot;success&quot;&gt;Успешно&lt;/option&gt;&lt;option value=&quot;failure&quot;&gt;Ошибка&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;button id=&quot;fill&quot; type=&quot;button&quot;&gt;Заполнить пример&lt;/button&gt;&lt;button id=&quot;reset&quot; type=&quot;button&quot;&gt;Начать заново&lt;/button&gt;&lt;span class=&quot;version&quot;&gt;v1.24.0&lt;/span&gt;&lt;details class=&quot;bench-info&quot;&gt;&lt;summary&gt;О прототипе · демо-пароль Example-2026!&lt;/summary&gt;&lt;small&gt;Демо-пароль: Example-2026!. Вход, письма, mos.ru и проверка полномочий имитируются. Выбор сценария задаёт исходные данные стенда, а не роль пользователя. Данные хранятся до перезагрузки. Доверенности — вымышленные записи для просмотра; выпуск, подписание и отзыв не подключены. УКЭП и реестровые сведения на экране проверки — вымышленные примеры из разных источников.&lt;/small&gt;&lt;/details&gt;&lt;/div&gt;&lt;/aside&gt;
++&lt;aside class=&quot;bench&quot; aria-label=&quot;Управление демонстрацией&quot;&gt;&lt;div class=&quot;bench-inner&quot;&gt;&lt;strong&gt;Прототип · единый вход&lt;/strong&gt;&lt;label&gt;Сценарий&lt;select id=&quot;scenario&quot;&gt;&lt;option value=&quot;new&quot;&gt;Новый пользователь / физлицо&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Подключённый сотрудник&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label&gt;Начатая задача&lt;select id=&quot;intent&quot;&gt;&lt;option value=&quot;&quot;&gt;Без выбранной услуги&lt;/option&gt;&lt;option value=&quot;materials&quot;&gt;Нерудные материалы&lt;/option&gt;&lt;option value=&quot;ossig&quot;&gt;ОССиГ&lt;/option&gt;&lt;option value=&quot;agr&quot;&gt;АГК&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label id=&quot;catalog-mode-wrap&quot; hidden&gt;Вариант каталога&lt;select id=&quot;catalog-mode&quot;&gt;&lt;option value=&quot;organization&quot;&gt;1 · По организации&lt;/option&gt;&lt;option value=&quot;service&quot;&gt;2 · По сервисам&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;label id=&quot;platform-result-wrap&quot; hidden&gt;Демо: решение платформы&lt;select id=&quot;platform-result&quot;&gt;&lt;option value=&quot;approved&quot;&gt;Одобрить&lt;/option&gt;&lt;option value=&quot;rejected&quot;&gt;Отказать&lt;/option&gt;&lt;/select&gt;&lt;button id=&quot;apply-platform-result&quot; type=&quot;button&quot;&gt;Применить&lt;/button&gt;&lt;/label&gt;&lt;label id=&quot;proof-result-wrap&quot; hidden&gt;Демо: проверка&lt;select id=&quot;proof-result&quot;&gt;&lt;option value=&quot;success&quot;&gt;Успешно&lt;/option&gt;&lt;option value=&quot;failure&quot;&gt;Ошибка&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;button id=&quot;fill&quot; type=&quot;button&quot;&gt;Заполнить пример&lt;/button&gt;&lt;button id=&quot;reset&quot; type=&quot;button&quot;&gt;Начать заново&lt;/button&gt;&lt;span class=&quot;version&quot;&gt;v1.24.0&lt;/span&gt;&lt;details class=&quot;bench-info&quot;&gt;&lt;summary&gt;О прототипе · демо-пароль Example-2026!&lt;/summary&gt;&lt;small&gt;Демо-пароль: Example-2026!. Вход, письма, mos.ru и проверка полномочий имитируются. Выбор сценария задаёт исходные данные стенда, а не роль пользователя. Данные хранятся до перезагрузки. Доверенности — вымышленные записи для просмотра; выпуск, подписание и отзыв не подключены. УКЭП и реестровые сведения на экране проверки — вымышленные примеры из разных источников.&lt;/small&gt;&lt;/details&gt;&lt;/div&gt;&lt;/aside&gt;
+ &lt;div class=&quot;shell&quot;&gt;&lt;header class=&quot;top&quot;&gt;&lt;div class=&quot;brand&quot;&gt;&lt;span class=&quot;brand-wordmark&quot; aria-label=&quot;ВЕРО&quot;&gt;ВЕРО&lt;/span&gt;&lt;/div&gt;&lt;div id=&quot;top-context&quot; class=&quot;top-note&quot;&gt;Платформа для ваших задач&lt;/div&gt;&lt;label id=&quot;account-select-wrap&quot; class=&quot;account-select&quot; hidden&gt;Работа от имени&lt;select id=&quot;account-select&quot;&gt;&lt;/select&gt;&lt;/label&gt;&lt;button type=&quot;button&quot; class=&quot;text-btn&quot; data-action=&quot;signout&quot; id=&quot;signout&quot; hidden&gt;Выйти&lt;/button&gt;&lt;/header&gt;&lt;div class=&quot;app-body&quot;&gt;&lt;aside id=&quot;sidebar&quot; class=&quot;sidebar&quot; hidden aria-label=&quot;Меню кабинета&quot;&gt;&lt;/aside&gt;&lt;main id=&quot;main&quot;&gt;&lt;/main&gt;&lt;/div&gt;&lt;footer class=&quot;footer&quot;&gt;&lt;span&gt;Один аккаунт. Ваши организации, услуги и документы.&lt;/span&gt;&lt;span&gt;Интерактивный прототип · 1.24.0&lt;/span&gt;&lt;/footer&gt;&lt;/div&gt;
+ &lt;script&gt;/* Registration variant 2. UI demonstration only: no requests or real accounts. */
+ function createMosRegistration({main, refresh, enter, isAuthenticated, getScenario=()=&gt; &#x27;new&#x27;, hasOrganization=()=&gt; false, openCertificate, authOnly=false, help=&#x27;&#x27;}) {
+@@ -3863,7 +3864,1777 @@ body.demo-mail-open { background:#eaf2fc; }
+ &lt;/style&gt;
+ &lt;/body&gt;
+ &lt;/html&gt;
+-"></iframe></div>
++"></iframe>
++<iframe id="stand-frame-invitation" title="Вариант 1 · Приглашение сотрудника" sandbox="allow-scripts" referrerpolicy="no-referrer" data-page="&lt;!doctype html&gt;
++&lt;html lang=&quot;ru&quot;&gt;
++&lt;head&gt;
++&lt;meta charset=&quot;utf-8&quot;&gt;
++&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
++&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://persistent.oaistatic.com/plugins/visualize/ https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://persistent.oaistatic.com/plugins/visualize/ https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://persistent.oaistatic.com/plugins/visualize/ https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://persistent.oaistatic.com/plugins/visualize/ https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://persistent.oaistatic.com/plugins/visualize/ https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
++&lt;title&gt;ВЕРО — один аккаунт v3&lt;/title&gt;
++&lt;style&gt;
++/* Shared plain UI for fast scenario work; no decorative artwork or effects. */
++:root{--accent:#242b36;--soft:#f4f6f8;--line:#d8dde5;--ink:#20242c;--muted:#647084;--bg:#fafafa}
++body,button,input,select,textarea{font-family:Arial,sans-serif}
++.card,dialog,.tile,.org-sheet,.access-card,.power-card,.power-request-card,.r2-profile-grid,.r2-credentials{box-shadow:none;border-radius:6px;border-color:var(--line)}
++.primary{background:#242b36;border-color:#242b36;border-radius:5px}
++.primary:hover{background:#374151}
++.secondary,.field input,.field select,.field textarea,.registration-variants button{border-radius:5px;box-shadow:none}
++.brand-wordmark{color:#20242c;font-size:24px;letter-spacing:0}
++.registration-variants button[aria-pressed=true]{box-shadow:none}
++.card h2,.workspace h1{font-size:24px;letter-spacing:0}
++.r2-card[data-registration-screen=entry],.r2-card[data-registration-screen=login]{padding:28px}
++.service-art{display:none}
++.product-visual{height:auto;min-height:0;padding:12px;background:#f4f6f8;border-radius:4px}
++.product-status{position:static;background:transparent;border:0;padding:0}
++.product-tile h2{font-size:19px}
++.product-tile,.add-product{box-shadow:none;border:1px solid var(--line)}
++.notice,.summary,.tasklist,.correction-callout,.access-card,.power-request-card{border-radius:5px;box-shadow:none}
++.mos-dialog{box-shadow:none;border-radius:6px}
++.mos-dialog::backdrop{backdrop-filter:none;background:rgba(20,27,38,.4)}
++.sidebar nav button{border-radius:4px}
++@media(max-width:700px){.r2-card[data-registration-screen=entry],.r2-card[data-registration-screen=login]{padding:22px}}
++.platform-help{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;line-height:1.6}.platform-help summary{cursor:pointer;font-weight:600}.platform-help ol{padding-left:20px}.platform-help li{margin:10px 0}.mos-permissions{display:grid;gap:14px;border:1px solid var(--line);padding:16px;margin:20px 0}.mos-permissions legend{font-size:13px}.field input:disabled{background:#f4f6f8;color:#647084;opacity:1}
++.r2-mos-benefits{display:grid;gap:6px}.r2-mos-benefits&gt;span{display:block}
++.r2-field-error{color:#a33636;font-size:12px;font-weight:400;line-height:1.5}.r2-card&gt;button+button{margin-top:10px}.r2-card form[aria-busy=true]{opacity:.75}
++
++.registration-details{border:1px solid #d8dde5;border-radius:5px;margin:18px 0;padding:16px;min-width:0}.registration-details legend{font-size:15px;font-weight:600;padding:0 5px}.registration-details .detail-grid{gap:14px}.registration-details .field{min-width:0}
++
++* { box-sizing: border-box; }
++body { margin: 0; color: var(--ink); background: #fff; font: 15px/1.5 Arial, sans-serif; }
++.demo, header, .actions, .status-row { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
++.demo { padding: 10px 18px; background: #eef2f7; border-bottom: 1px solid var(--line); font-size: 13px; }
++.demo label { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
++.demo small { flex-basis: 100%; }
++header { background: white; padding: 16px clamp(14px, 3vw, 42px); }
++header .brand-wordmark { margin-right: auto; }
++main { width: min(480px, calc(100% - 24px)); margin: 30px auto; padding: 28px; background: white; border: 1px solid var(--line); border-radius: 6px; overflow-wrap: anywhere; }
++main[data-screen=entry] { margin-block: 28px; }
++main[data-screen=entry] h1 { margin-bottom: 22px; }
++main[data-screen=entry] form { gap: 18px; }
++main[data-screen=entry] input { min-height: 49px; }
++main[data-screen=profile], main[data-screen=admin], main[data-screen=admin-new] { width: min(690px, calc(100% - 24px)); }
++h1 { margin: 0 0 10px; font-size: 26px; line-height: 1.2; }
++h2 { margin: 0 0 6px; font-size: 17px; }
++p { margin: 0 0 16px; }
++form, .stack, .field { display: grid; gap: 12px; }
++.field { gap: 5px; font-size: 14px; }
++input:not([type=checkbox]), select, button { font: inherit; padding: 8px 11px; color: inherit; background: white; border: 1px solid var(--line); border-radius: 5px; }
++input:not([type=checkbox]), main select { min-height: 44px; width: 100%; }
++input[readonly] { background: var(--soft); }
++button { cursor: pointer; }
++main button { min-height: 42px; }
++main .primary { background: var(--accent); color: white; }
++.method[aria-pressed=true] { color: #1f4b91; background: #eff5ff; border-color: #7ca0d0; }
++.back { border: 0; padding-inline: 0; margin-bottom: 6px; color: #425573; }
++.password-wrap { position: relative; display: block; }
++.password-wrap input { padding-right: 78px; }
++.password-wrap button { position: absolute; top: 50%; right: 6px; transform: translateY(-50%); min-height: 0; border: 0; color: var(--muted); font-size: 12px; }
++.auth-links { display: grid; gap: 10px; margin-top: 18px; text-align: center; font-size: 13px; }
++.auth-links p { margin: 0; }
++.auth-links .text-button { border: 0; min-height: 0; padding: 4px; font-weight: bold; }
++.auth-links .forgot { text-align: left; }
++.auth-links .forgot .text-button { padding-left: 0; font-weight: normal; color: var(--muted); }
++.separator { display: flex; align-items: center; gap: 12px; color: var(--muted); }
++.separator::before, .separator::after { content: &#x27;&#x27;; flex: 1; border-top: 1px solid var(--line); }
++.channel-options { margin: 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: 5px; }
++.channel-options legend { padding: 0 4px; }
++.channel-options label { display: inline-flex; align-items: center; gap: 5px; margin-right: 18px; }
++.field input:disabled { background: var(--soft); }
++.company-data { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 16px; margin: 10px 0 16px; }
++.company-data:last-child { margin-bottom: 0; }
++.company-data dt { color: var(--muted); font-size: 13px; }
++.company-data dd { margin: 2px 0 0; }
++.muted, small { color: #536176; }
++.panel, .alert, .demo-box { padding: 12px 14px; border-radius: 6px; }
++.panel, .demo-box { background: #f2f6fb; border: 1px solid #dce5f1; }
++.alert { color: #8a3128; background: #fff1ed; }
++.demo-box { margin-top: 16px; }
++.demo-box p { margin-bottom: 8px; }
++.status-row { justify-content: space-between; gap: 8px; padding: 12px 0; border-top: 1px solid var(--line); }
++.status-row small { display: block; }
++.profile-section + .profile-section { margin-top: 22px; }
++.status { color: #29587e; font-size: 13px; font-weight: bold; }
++.status.ok { color: #216136; }
++.invitation-list { list-style: none; padding: 0; margin: 18px 0 0; }
++.invitation-list .status-row { align-items: flex-start; }
++.invitation-status { padding: 3px 8px; border-radius: 4px; background: #eef3f8; }
++.invitation-status[data-status=connected] { color: #216136; background: #eaf5ed; }
++.invitation-status[data-status=checking], .invitation-status[data-status=attention] { color: #805311; background: #fff4db; }
++.split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
++:focus-visible { outline: 2px solid #315c9d; outline-offset: 2px; }
++[hidden] { display: none !important; }
++@media (max-width: 540px) {
++  main { padding: 20px; margin: 18px auto; }
++  main[data-screen=entry] { margin-block: 18px; }
++  h1 { font-size: 23px; }
++  .split { grid-template-columns: 1fr; }
++  .demo select { max-width: 100%; }
++}
++#v3-nav{display:flex;flex-direction:column;gap:5px;padding:16px 10px;background:#fff;border-right:1px solid var(--line);overflow:auto}#v3-nav button{text-align:left;border-color:transparent}#v3-nav button[aria-current=page]{background:#edf4ff;color:#1d4ed8}
++.v3-cabinet { display: grid; grid-template-columns: 210px minmax(0, 1fr); min-height: calc(100dvh - 170px); background: #fafafa; }
++.v3-cabinet #v3-nav { align-items: stretch; }
++.v3-cabinet #v3-nav button[aria-current=page] { background: #eceef1; color: #20242c; }
++.v3-company-switcher { position: relative; min-width: 0; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); }
++.v3-company-switcher summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px; background: var(--soft); border: 1px solid var(--line); border-radius: 5px; cursor: pointer; overflow-wrap: anywhere; }
++.v3-company-switcher summary small { display: block; }
++.v3-company-chevron { width: 8px; height: 8px; flex: 0 0 8px; border-right: 1.5px solid; border-bottom: 1.5px solid; transform: rotate(45deg); }
++.v3-company-switcher[open] .v3-company-chevron { transform: rotate(225deg); }
++.v3-company-list { position: absolute; inset: auto 0 calc(100% + 4px); z-index: 2; display: grid; gap: 4px; max-height: 180px; overflow: auto; padding: 6px; background: #fff; border: 1px solid var(--line); border-radius: 5px; box-shadow: 0 4px 16px #242b3620; }
++.v3-company-list button { overflow-wrap: anywhere; }
++.v3-company-list button:hover, #v3-nav .v3-company-list button[aria-current=true] { background: var(--soft); }
++.v3-cabinet main { width: 100%; margin: 0; padding: 24px; background: transparent; border: 0; border-radius: 0; }
++.v3-panel { background: white; border-color: var(--line); padding: 18px 22px; margin: 14px 0; }
++.v3-invitation-entry { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding-block: 10px; margin-bottom: 12px; border-block: 1px solid var(--line); }
++.v3-two { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; align-items: start; }
++.v3-cabinet main[data-screen=admin-new] form, .v3-cabinet main[data-screen=profile-name] form { max-width: 650px; }
++.staff-dialog { position: fixed; width: min(600px, calc(100% - 32px)); max-height: calc(100% - 32px); padding: 24px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); }
++.staff-dialog::backdrop { background: rgb(0 0 0 / 45%); }
++.staff-dialog h2 { margin-right: 32px; font-size: 20px; }
++.staff-dialog .actions { justify-content: flex-end; margin-top: 8px; }
++.staff-dialog .staff-close { position: absolute; top: 12px; right: 12px; min-height: 32px; border: 0; color: var(--muted); font-size: 20px; }
++.staff-dialog .stack { gap: 8px; }
++.staff-option { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 6px; }
++.staff-option:has(input:checked) { background: var(--soft); }
++.staff-option input[type=radio], .staff-option input[type=checkbox] { width: 16px; min-height: 0; height: 16px; margin: 0; flex: 0 0 auto; }
++.staff-option small { display: block; }
++@media (width &gt; 560px) {
++  body:has(.v3-cabinet .v3-company-switcher) { height: 100dvh; display: flex; flex-direction: column; }
++  body:has(.v3-cabinet .v3-company-switcher) &gt; :is(.demo, header) { flex: none; }
++  .v3-cabinet:has(.v3-company-switcher) { flex: 1; min-height: 0; }
++  .v3-cabinet:has(.v3-company-switcher) main { overflow: auto; }
++}
++@media (max-width: 850px) {
++  .v3-cabinet { grid-template-columns: 160px minmax(0, 1fr); }
++  .v3-two { grid-template-columns: minmax(0, 1fr); gap: 0; }
++}
++@media (max-width: 560px) {
++  .v3-cabinet { grid-template-columns: minmax(0, 1fr); align-content: start; }
++  .v3-cabinet #v3-nav { flex-direction: row; padding: 6px; border-right: 0; border-bottom: 1px solid var(--line); }
++  .v3-cabinet #v3-nav button { white-space: nowrap; font-size: 12px; }
++  .v3-cabinet #v3-nav:has(.v3-company-switcher) { flex-wrap: wrap; overflow: visible; }
++  .v3-company-switcher { width: 100%; padding-top: 6px; }
++  .v3-company-list { inset: calc(100% + 4px) 0 auto; }
++  .v3-cabinet #v3-nav .v3-company-list button { white-space: normal; }
++  .v3-cabinet main { padding: 18px 12px; }
++  .v3-panel { padding: 14px; }
++}
++&lt;/style&gt;
++&lt;/head&gt;
++&lt;body&gt;
++&lt;aside class=&quot;demo&quot; aria-label=&quot;Управление демонстрацией&quot;&gt;
++  &lt;strong&gt;Приглашение сотрудника&lt;/strong&gt;
++  &lt;label&gt;Сценарий &lt;select id=&quot;scenario&quot;&gt;
++    &lt;option value=&quot;send&quot;&gt;Отправить приглашение&lt;/option&gt;
++    &lt;option value=&quot;organizations-many&quot;&gt;Приглашения · несколько организаций&lt;/option&gt;
++    &lt;option value=&quot;existing&quot;&gt;Приглашение · есть аккаунт&lt;/option&gt;
++    &lt;option value=&quot;new&quot;&gt;Приглашение · новый аккаунт&lt;/option&gt;
++    &lt;option value=&quot;driver&quot;&gt;Приглашение · водитель без почты&lt;/option&gt;
++    &lt;option value=&quot;driver-existing&quot;&gt;Приглашение · водитель с аккаунтом&lt;/option&gt;
++    &lt;option value=&quot;other&quot;&gt;Приглашение · другая почта&lt;/option&gt;
++  &lt;/select&gt;&lt;/label&gt;
++  &lt;button type=&quot;button&quot; data-action=&quot;demo-employee&quot;&gt;Демо: сотрудник&lt;/button&gt;&lt;button type=&quot;button&quot; data-action=&quot;demo-director&quot;&gt;Демо: руководитель&lt;/button&gt;&lt;button type=&quot;button&quot; data-action=&quot;demo-admin&quot;&gt;Демо: администратор&lt;/button&gt;&lt;button type=&quot;button&quot; data-action=&quot;demo-send&quot;&gt;Демо: отправка приглашения&lt;/button&gt;
++  &lt;button type=&quot;button&quot; id=&quot;latest-invite&quot; data-action=&quot;letter&quot; hidden&gt;Демо: последнее приглашение&lt;/button&gt;&lt;button type=&quot;button&quot; id=&quot;session-invite&quot; data-action=&quot;session-invite&quot; hidden&gt;Демо: ссылка в активной сессии&lt;/button&gt;
++  &lt;button type=&quot;button&quot; data-action=&quot;fill&quot;&gt;Заполнить пример&lt;/button&gt;
++  &lt;button type=&quot;button&quot; id=&quot;reset&quot; data-action=&quot;reset&quot;&gt;Начать заново&lt;/button&gt;
++  &lt;small&gt;Демо: пароль Example-2026!, код в «Управление демо». Письма, SMS, Mos ID, УКЭП и проверки имитируются.&lt;/small&gt;
++&lt;/aside&gt;
++&lt;header&gt;&lt;strong class=&quot;brand-wordmark&quot;&gt;ВЕРО&lt;/strong&gt;&lt;span id=&quot;context&quot; class=&quot;muted&quot;&gt;Вход и регистрация&lt;/span&gt;&lt;button type=&quot;button&quot; id=&quot;logout&quot; data-action=&quot;logout&quot; hidden&gt;Выйти&lt;/button&gt;&lt;/header&gt;
++&lt;div&gt;&lt;nav id=&quot;v3-nav&quot; aria-label=&quot;Меню кабинета&quot; hidden&gt;&lt;/nav&gt;&lt;main id=&quot;main&quot;&gt;&lt;/main&gt;&lt;/div&gt;
++&lt;script&gt;/* In-memory testing history. State and field values never leave the child frame. */
++function createPrototypeHistory({read,write,scope,deferReset=false}){
++ const clone=x=&gt;structuredClone(x),stacks=new Map();let restoring=false,queued=false;
++ const fields=()=&gt;[...document.querySelectorAll(&#x27;input,select,textarea&#x27;)];
++ function ui(){return {fields:fields().map((el,index)=&gt;({id:el.id,index,value:el.type===&#x27;file&#x27;?null:el.value,checked:el.checked,selected:el.tagName===&#x27;SELECT&#x27;&amp;&amp;el.multiple?[...el.selectedOptions].map(o=&gt;o.value):null})),details:[...document.querySelectorAll(&#x27;details&#x27;)].map((el,index)=&gt;({id:el.id,index,open:el.open})),scroll:[...document.querySelectorAll(&#x27;#main,dialog,[data-history-scroll]&#x27;)].map((el,index)=&gt;({id:el.id,index,left:el.scrollLeft,top:el.scrollTop})),window:{left:scrollX,top:scrollY}};}
++ function capture(){return {...clone(read()),ui:ui()};}
++ function stack(){const key=String(scope());if(!stacks.has(key))stacks.set(key,{entries:[],index:-1});return stacks.get(key);}
++ function emit(){const s=stack();if(parent!==window)parent.postMessage({type:&#x27;vero:history-state&#x27;,back:s.index&gt;0,forward:s.index&lt;s.entries.length-1,position:s.index+1,total:s.entries.length,scope:String(scope())},&#x27;*&#x27;);}
++ function checkpoint(){if(restoring)return;const s=stack(),now=capture();if(s.index&gt;=0&amp;&amp;s.entries[s.index].signature===now.signature)s.entries[s.index]=now;}
++ function flush(){queued=false;if(restoring)return;const s=stack(),now=capture();if(s.index&gt;=0&amp;&amp;s.entries[s.index].signature===now.signature)s.entries[s.index]=now;else{s.entries.splice(s.index+1);s.entries.push(now);if(s.entries.length&gt;80)s.entries.shift();s.index=s.entries.length-1;}emit();}
++ function record(){if(restoring||queued)return;queued=true;queueMicrotask(flush);}
++ function restoreUI(saved){const inputs=fields();for(const v of saved.fields){const el=v.id?document.getElementById(v.id):inputs[v.index];if(!el||v.value===null)continue;if(v.selected&amp;&amp;el.multiple)[...el.options].forEach(o=&gt;o.selected=v.selected.includes(o.value));else el.value=v.value;if([&#x27;checkbox&#x27;,&#x27;radio&#x27;].includes(el.type))el.checked=v.checked;}
++  const details=[...document.querySelectorAll(&#x27;details&#x27;)];for(const v of saved.details){const el=v.id?document.getElementById(v.id):details[v.index];if(el)el.open=v.open;}
++  const scrollers=[...document.querySelectorAll(&#x27;#main,dialog,[data-history-scroll]&#x27;)];for(const v of saved.scroll){const el=v.id?document.getElementById(v.id):scrollers[v.index];if(el){el.scrollLeft=v.left;el.scrollTop=v.top;}}window.scrollTo(saved.window.left,saved.window.top);
++ }
++ function travel(direction){flush();const s=stack(),next=s.index+direction;if(next&lt;0||next&gt;=s.entries.length)return emit();restoring=true;try{s.index=next;const saved=clone(s.entries[next]);write(saved.model);restoreUI(saved.ui);}finally{restoring=false;}emit();}
++ function reset(){if(restoring)return;stacks.delete(String(scope()));flush();}
++ document.addEventListener(&#x27;vero:history-update&#x27;,record);
++ for(const type of [&#x27;click&#x27;,&#x27;submit&#x27;,&#x27;input&#x27;,&#x27;change&#x27;,&#x27;cancel&#x27;])document.addEventListener(type,e=&gt;{if(restoring)return;checkpoint();const resetClick=type===&#x27;click&#x27;&amp;&amp;e.target.closest?.(&#x27;#reset,#ap-start&#x27;);const fixture=type===&#x27;change&#x27;&amp;&amp;e.target.matches?.(&#x27;#scenario,#intent,#ap-v2-path,#ap-proposal-path,#ap-proposal-entry,#ap-org-case,#ap-repeat&#x27;);if(resetClick||fixture){if(deferReset)setTimeout(reset,0);else queueMicrotask(reset);}else record();},true);
++ addEventListener(&#x27;message&#x27;,e=&gt;{if(e.source!==parent||e.data?.type!==&#x27;vero:history&#x27;)return;const action=e.data.action;if(action===&#x27;back&#x27;)travel(-1);else if(action===&#x27;forward&#x27;)travel(1);else if(action===&#x27;status&#x27;){if(!stack().entries.length)flush();else emit();}});
++ flush();return {record,reset};
++}
++
++(() =&gt; {
++  const main = document.getElementById(&#x27;main&#x27;);
++  const scenario = document.getElementById(&#x27;scenario&#x27;);
++  const password = &#x27;Example-2026!&#x27;;
++  const code = &#x27;123456&#x27;;
++  const existingSnils = &#x27;00000000101&#x27;;
++  const newSnils = &#x27;00000000202&#x27;;
++  // Same demonstration record as the certificate check in «Письмо → пароль».
++  const organization = {
++    name: &#x27;ООО «Пример»&#x27;, inn: &#x27;0000000000&#x27;, registration: &#x27;0000000000001&#x27;,
++    address: &#x27;г. Москва, Примерная улица, д. 1&#x27;, director: &#x27;Иванов Иван Иванович&#x27;,
++    directorInn: &#x27;000000000001&#x27;, expires: &#x27;31.12.2027&#x27;,
++  };
++  const exampleContact = { email: &#x27;anna@example.test&#x27;, phone: &#x27;+79000000002&#x27; };
++  const fixtures = {
++    existing: { channel: &#x27;email&#x27;, contact: &#x27;employee@example.test&#x27;, snils: existingSnils },
++    new: { channel: &#x27;email&#x27;, contact: &#x27;new@example.test&#x27;, snils: newSnils },
++    driver: { channel: &#x27;phone&#x27;, contact: &#x27;+79000000003&#x27;, snils: newSnils, role: &#x27;Водитель&#x27; },
++    &#x27;driver-existing&#x27;: { channel: &#x27;phone&#x27;, contact: &#x27;+79000000001&#x27;, snils: existingSnils, role: &#x27;Водитель&#x27; },
++    other: { channel: &#x27;email&#x27;, contact: &#x27;anna@vector.example.test&#x27;, snils: existingSnils },
++  };
++  let state;
++  const invitationStatuses = {
++    sent: &#x27;Отправлено&#x27;, accepted: &#x27;Принято&#x27;, checking: &#x27;Проверка личности&#x27;,
++    connected: &#x27;Подключён&#x27;, attention: &#x27;Нужно уточнить данные&#x27;, declined: &#x27;Отклонено&#x27;,
++  };
++
++  const escape = value =&gt; String(value ?? &#x27;&#x27;).replace(/[&amp;&lt;&gt;&quot;&#x27;]/g, char =&gt; ({ &#x27;&amp;&#x27;: &#x27;&amp;amp;&#x27;, &#x27;&lt;&#x27;: &#x27;&amp;lt;&#x27;, &#x27;&gt;&#x27;: &#x27;&amp;gt;&#x27;, &#x27;&quot;&#x27;: &#x27;&amp;quot;&#x27;, &quot;&#x27;&quot;: &#x27;&amp;#39;&#x27; })[char]);
++  const account = () =&gt; state.accounts.find(item =&gt; item.id === state.accountId);
++  const byContact = (channel, contact) =&gt; state.accounts.find(item =&gt; item[channel] === contact);
++  const bySnils = snils =&gt; snils &amp;&amp; state.accounts.find(item =&gt; item.snils === snils);
++  const inviteContact = () =&gt; state.invite.contacts[state.delivery];
++  const matchedRecipient = () =&gt; state.accounts.find(item =&gt; item.id === state.inviteMatch)?.[state.delivery] === inviteContact();
++  const ownApplication = () =&gt; state.applications.find(item =&gt; item.owner === state.accountId);
++  const contactLabel = channel =&gt; channel === &#x27;email&#x27; ? &#x27;Электронная почта&#x27; : &#x27;Телефон&#x27;;
++  const deliveryLabel = channel =&gt; channel === &#x27;email&#x27; ? &#x27;Почта&#x27; : &#x27;SMS&#x27;;
++  const normalize = (channel, value) =&gt; channel === &#x27;email&#x27; ? value.trim().toLowerCase() : &#x27;+&#x27; + value.replace(/\D/g, &#x27;&#x27;).replace(/^8(?=\d{10}$)/, &#x27;7&#x27;);
++  const normalizeSnils = value =&gt; value.replace(/[ -]/g, &#x27;&#x27;);
++  const button = (label, action, css = &#x27;&#x27;) =&gt; `&lt;button type=&quot;button&quot; data-action=&quot;${action}&quot; class=&quot;${css}&quot;&gt;${label}&lt;/button&gt;`;
++  const primary = (label, action) =&gt; button(label, action, &#x27;primary&#x27;);
++  const submit = label =&gt; `&lt;button class=&quot;primary&quot; type=&quot;submit&quot;&gt;${label}&lt;/button&gt;`;
++  const back = (action = &#x27;back-profile&#x27;) =&gt; button(&#x27;← Назад&#x27;, action, &#x27;back&#x27;);
++  const field = (name, label, attributes = &#x27;&#x27;) =&gt; `&lt;label class=&quot;field&quot;&gt;${label}&lt;input id=&quot;${name}&quot; name=&quot;${name}&quot; ${attributes}&gt;&lt;/label&gt;`;
++  const form = (key, body) =&gt; `&lt;form data-form=&quot;${key}&quot;&gt;${body}&lt;/form&gt;`;
++  const screen = (title, content) =&gt; `&lt;h1 tabindex=&quot;-1&quot;&gt;${title}&lt;/h1&gt;${content}`;
++  const demo = content =&gt; `&lt;aside class=&quot;demo-box&quot;&gt;&lt;p&gt;&lt;strong&gt;Демонстрация&lt;/strong&gt;&lt;/p&gt;${content}&lt;/aside&gt;`;
++  const newPassword = () =&gt; field(&#x27;password&#x27;, &#x27;Придумайте пароль&#x27;, &#x27;type=&quot;password&quot; minlength=&quot;8&quot; autocomplete=&quot;new-password&quot; required&#x27;) +
++    field(&#x27;repeat&#x27;, &#x27;Повторите пароль&#x27;, &#x27;type=&quot;password&quot; minlength=&quot;8&quot; autocomplete=&quot;new-password&quot; required&#x27;);
++  const loginPassword = () =&gt; `&lt;div class=&quot;field&quot;&gt;&lt;label for=&quot;password&quot;&gt;Пароль&lt;/label&gt;&lt;span class=&quot;password-wrap&quot;&gt;&lt;input id=&quot;password&quot; name=&quot;password&quot; type=&quot;password&quot; autocomplete=&quot;current-password&quot; required&gt;${button(&#x27;Показать&#x27;, &#x27;show-password&#x27;)}&lt;/span&gt;&lt;/div&gt;`;
++  const companyDetails = () =&gt; {
++    const list = entries =&gt; `&lt;dl class=&quot;company-data&quot;&gt;${entries.map(([label, value]) =&gt; `&lt;div&gt;&lt;dt&gt;${label}&lt;/dt&gt;&lt;dd&gt;${escape(value)}&lt;/dd&gt;&lt;/div&gt;`).join(&#x27;&#x27;)}&lt;/dl&gt;`;
++    return `&lt;div class=&quot;panel&quot;&gt;&lt;h2&gt;Организация · сведения реестра&lt;/h2&gt;
++      ${list([[&#x27;Наименование&#x27;, organization.name], [&#x27;ИНН&#x27;, organization.inn], [&#x27;ОГРН&#x27;, organization.registration], [&#x27;Юридический адрес&#x27;, organization.address]])}
++      &lt;h2&gt;Владелец сертификата УКЭП&lt;/h2&gt;
++      ${list([[&#x27;ФИО&#x27;, organization.director], [&#x27;ИНН физического лица&#x27;, organization.directorInn], [&#x27;Основание&#x27;, &#x27;Руководитель организации&#x27;], [&#x27;Сертификат действителен до&#x27;, organization.expires]])}&lt;/div&gt;`;
++  };
++  const details = (role = state.invite.role) =&gt; `&lt;p class=&quot;panel&quot;&gt;&lt;strong&gt;${escape(state.invite.organization)}&lt;/strong&gt;&lt;br&gt;${escape(state.invite.name)} · ${escape(role)}&lt;/p&gt;`;
++  const signup = () =&gt; state.auth.mode === &#x27;signup&#x27;;
++  const inviteOpen = () =&gt; state.invite &amp;&amp; ![&#x27;connected&#x27;, &#x27;declined&#x27;].includes(state.invite.status);
++
++  function reset() {
++    const fixture = fixtures[scenario.value];
++    const invite = fixture &amp;&amp; { id: 1, status: &#x27;sent&#x27;, organization: &#x27;ООО «Вектор»&#x27;, name: &#x27;Петрова Анна Сергеевна&#x27;,
++      role: fixture.role || &#x27;Специалист ОССиГ&#x27;, snils: fixture.snils, contacts: { [fixture.channel]: fixture.contact } };
++    state = {
++      page: fixture ? &#x27;letter&#x27; : &#x27;entry&#x27;, channel: scenario.value === &#x27;phone&#x27; || fixture?.channel === &#x27;phone&#x27; ? &#x27;phone&#x27; : &#x27;email&#x27;,
++      accounts: [{ id: &#x27;A1&#x27;, email: &#x27;employee@example.test&#x27;, phone: &#x27;+79000000001&#x27;, password,
++        snils: existingSnils, identity: &#x27;Очная сверка&#x27;, mos: false, roles: [{ organization: &#x27;ООО «Пример»&#x27;, role: &#x27;Сотрудник&#x27; }] }],
++      invite, invites: invite ? [invite] : [], delivery: fixture?.channel, proof: false, accountId: null, auth: null, challenge: null, existingRole: &#x27;&#x27;, inviteMatch: null,
++      applications: [], connectAfterAuth: false, recoveringInvite: false,
++      adminChannels: [&#x27;email&#x27;], adminRole: &#x27;Специалист ОССиГ&#x27;, channelsEdited: false,
++      context: &#x27;&#x27;, linkedFlow: false, error: &#x27;&#x27;, identityOutcome: &#x27;match&#x27;,
++    };
++    if (state.invite) state.inviteMatch = bySnils(state.invite.snils)?.id || null;
++    render();
++  }
++
++  function go(page) {
++    state.page = page;
++    state.error = &#x27;&#x27;;
++    render();
++    main.querySelector(&#x27;h1&#x27;)?.focus({ preventScroll: true });
++    window.scrollTo(0, 0);
++  }
++
++  function fail(message, fieldName) {
++    state.error = message;
++    main.querySelector(&#x27;[role=alert]&#x27;).textContent = message;
++    main.querySelector(&#x27;[role=alert]&#x27;).hidden = false;
++    if (fieldName) main.querySelector(&#x27;#&#x27; + fieldName)?.focus();
++  }
++
++  function profileRow(title, value, status, action, label) {
++    return `&lt;div class=&quot;status-row&quot;&gt;&lt;div&gt;&lt;strong&gt;${title}&lt;/strong&gt;&lt;small&gt;${escape(value)}&lt;/small&gt;&lt;/div&gt;` +
++      (action ? button(label, action) : `&lt;span class=&quot;status ok&quot;&gt;${status}&lt;/span&gt;`) + &#x27;&lt;/div&gt;&#x27;;
++  }
++
++  function renderProfile() {
++    const user = account();
++    const identity = user.snils ? `${user.identity} · СНИЛС •••• ${user.snils.slice(-4)}` : &#x27;Личность не подтверждена&#x27;;
++    const roles = user.roles.map(item =&gt; `&lt;div class=&quot;status-row&quot;&gt;&lt;div&gt;&lt;strong&gt;${escape(item.organization)}&lt;/strong&gt;&lt;small&gt;${escape(item.role)}&lt;/small&gt;&lt;/div&gt;&lt;span class=&quot;status ok&quot;&gt;Подключено&lt;/span&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
++    const pending = state.linkedFlow &amp;&amp; inviteOpen();
++    return screen(&#x27;Личный кабинет&#x27;, `&lt;p class=&quot;muted&quot;&gt;Ваши контакты, данные профиля и доступ к компаниям.&lt;/p&gt;
++      &lt;section class=&quot;profile-section&quot;&gt;&lt;h2&gt;Контакты и подтверждение личности&lt;/h2&gt;
++        ${profileRow(&#x27;Телефон&#x27;, user.phone || &#x27;Телефон не добавлен&#x27;, &#x27;Подтверждён&#x27;, user.phone ? &#x27;&#x27; : &#x27;add-phone&#x27;, &#x27;Добавить телефон&#x27;)}
++        ${profileRow(&#x27;Электронная почта&#x27;, user.email || &#x27;Почта не добавлена&#x27;, &#x27;Подтверждена&#x27;, user.email ? &#x27;&#x27; : &#x27;add-email&#x27;, &#x27;Добавить почту&#x27;)}
++        ${profileRow(&#x27;Mos ID&#x27;, user.mos ? &#x27;Профиль mos.ru связан с ВЕРО&#x27; : &#x27;Для онлайн-проверки личности&#x27;, &#x27;Подключён&#x27;, user.mos ? &#x27;&#x27; : &#x27;link-mos&#x27;, &#x27;Подключить Mos ID&#x27;)}
++        ${profileRow(&#x27;Личность&#x27;, identity, &#x27;Подтверждена&#x27;, user.snils ? &#x27;&#x27; : &#x27;verify-profile&#x27;, &#x27;Подтвердить личность&#x27;)}
++      &lt;/section&gt;
++      &lt;section class=&quot;profile-section&quot;&gt;&lt;h2&gt;Мои организации&lt;/h2&gt;${roles || &#x27;&lt;p class=&quot;muted&quot;&gt;Здесь появятся организации, к которым у вас есть доступ.&lt;/p&gt;&#x27;}
++        ${ownApplication() ? button(&#x27;Посмотреть заявку на подключение&#x27;, &#x27;company-start&#x27;) : button(&#x27;Подключить организацию&#x27;, &#x27;company-start&#x27;)}
++        ${pending ? button(&#x27;Вернуться к приглашению&#x27;, &#x27;continue-invite&#x27;) : &#x27;&#x27;}
++        ${state.linkedFlow &amp;&amp; state.invite?.status === &#x27;declined&#x27; ? &#x27;&lt;p class=&quot;muted&quot;&gt;Приглашение отклонено.&lt;/p&gt;&#x27; : &#x27;&#x27;}
++      &lt;/section&gt;`);
++  }
++
++  function renderAuth() {
++    const { channel, fixed, prefill } = state.auth;
++    const isEmail = channel === &#x27;email&#x27;;
++    const attrs = `type=&quot;${isEmail ? &#x27;email&#x27; : &#x27;tel&#x27;}&quot; autocomplete=&quot;${isEmail ? &#x27;email&#x27; : &#x27;tel&#x27;}&quot; value=&quot;${escape(prefill)}&quot; ${fixed ? &#x27;readonly&#x27; : &#x27;&#x27;} required`;
++    const phoneOnly = !signup() &amp;&amp; !isEmail &amp;&amp; !state.linkedFlow &amp;&amp; !state.connectAfterAuth;
++    const tabs = fixed || (!signup() &amp;&amp; !state.linkedFlow &amp;&amp; !state.connectAfterAuth) ? &#x27;&#x27; : `&lt;div class=&quot;actions&quot; aria-label=&quot;Способ входа&quot;&gt;${[&#x27;email&#x27;, &#x27;phone&#x27;].map(item =&gt;
++      `&lt;button type=&quot;button&quot; class=&quot;method&quot; aria-pressed=&quot;${item === channel}&quot; data-action=&quot;channel-${item}&quot;&gt;${contactLabel(item)}&lt;/button&gt;`).join(&#x27;&#x27;)}&lt;/div&gt;`;
++    const fields = field(&#x27;contact&#x27;, !signup() &amp;&amp; isEmail ? &#x27;Логин (email)&#x27; : contactLabel(channel), attrs) +
++      (!signup() &amp;&amp; isEmail ? loginPassword() : &#x27;&#x27;);
++    const companySignup = state.connectAfterAuth &amp;&amp; signup();
++    return screen(companySignup ? &#x27;Регистрация организации&#x27; : signup() ? &#x27;Создать аккаунт ВЕРО&#x27; : phoneOnly ? &#x27;Войти по телефону&#x27; : &#x27;Войти в ВЕРО&#x27;,
++      `${back(&#x27;back-auth&#x27;)}${companySignup ? &#x27;&lt;p&gt;Создайте аккаунт, чтобы подключить организацию по УКЭП руководителя.&lt;/p&gt;&#x27; : &#x27;&#x27;}${!signup() &amp;&amp; state.linkedFlow ? &#x27;&lt;p&gt;После входа откроется приглашение.&lt;/p&gt;&#x27; : &#x27;&#x27;}${tabs}${form(&#x27;auth&#x27;, fields +
++      submit(isEmail ? (signup() ? &#x27;Получить письмо&#x27; : &#x27;Войти&#x27;) : &#x27;Получить код&#x27;))}${companySignup ?
++        `&lt;div class=&quot;auth-links&quot;&gt;&lt;p&gt;Уже есть аккаунт? ${button(&#x27;Войти&#x27;, &#x27;login&#x27;, &#x27;text-button&#x27;)}&lt;/p&gt;&lt;/div&gt;` : &#x27;&#x27;}`);
++  }
++
++  function renderChallenge() {
++    const { channel, contact, purpose } = state.challenge;
++    const title = channel === &#x27;phone&#x27; ? &#x27;Подтвердите телефон&#x27; : &#x27;Проверьте почту&#x27;;
++    const useLink = channel === &#x27;email&#x27; &amp;&amp; purpose !== &#x27;invite&#x27;;
++    const description = useLink ? &#x27;Ссылка для подтверждения отправлена на&#x27; : &#x27;Код отправлен на&#x27;;
++    return screen(title, `&lt;p&gt;${description} &lt;strong&gt;${escape(contact)}&lt;/strong&gt;.&lt;/p&gt;` + (useLink ?
++      demo(primary(&#x27;Открыть ссылку из письма&#x27;, &#x27;email-confirm&#x27;)) :
++      form(&#x27;code&#x27;, field(&#x27;code&#x27;, channel === &#x27;phone&#x27; ? &#x27;Код из SMS&#x27; : &#x27;Код из письма&#x27;, &#x27;inputmode=&quot;numeric&quot; autocomplete=&quot;one-time-code&quot; maxlength=&quot;6&quot; required&#x27;) + submit(&#x27;Подтвердить код&#x27;))) +
++      `&lt;div class=&quot;actions&quot;&gt;${button(useLink ? &#x27;Отправить письмо ещё раз&#x27; : &#x27;Отправить код ещё раз&#x27;, &#x27;resend&#x27;)}${button(&#x27;Назад&#x27;, &#x27;back-challenge&#x27;)}&lt;/div&gt;`);
++  }
++
++  function renderAdmin() {
++    const rows = [...state.invites].reverse().map(invite =&gt; `&lt;li class=&quot;status-row&quot; data-invitation-id=&quot;${invite.id}&quot;&gt;
++      &lt;div&gt;&lt;strong&gt;${escape(invite.name)}&lt;/strong&gt;&lt;small&gt;${escape(invite.role)}&lt;/small&gt;${Object.entries(invite.contacts).map(([channel, contact]) =&gt; `&lt;small&gt;${deliveryLabel(channel)} · ${escape(contact)}&lt;/small&gt;`).join(&#x27;&#x27;)}&lt;/div&gt;
++      &lt;span class=&quot;status invitation-status&quot; data-status=&quot;${invite.status}&quot;&gt;${invitationStatuses[invite.status]}&lt;/span&gt;
++      &lt;div class=&quot;actions&quot;&gt;${deliveryButtons(invite)}&lt;/div&gt;&lt;/li&gt;`).join(&#x27;&#x27;);
++    return screen(&#x27;Приглашения сотрудников&#x27;, `&lt;p class=&quot;muted&quot;&gt;ООО «Вектор» · статус подключения к компании.&lt;/p&gt;
++      ${primary(&#x27;Пригласить сотрудника&#x27;, &#x27;admin-new&#x27;)}${rows ? `&lt;ul class=&quot;invitation-list&quot;&gt;${rows}&lt;/ul&gt;` : &#x27;&lt;p class=&quot;muted&quot;&gt;Приглашений пока нет.&lt;/p&gt;&#x27;}`);
++  }
++
++  function deliveryButtons(invite) {
++    const channels = Object.keys(invite.contacts);
++    return channels.map(channel =&gt; `&lt;button type=&quot;button&quot; data-action=&quot;open-record&quot; data-id=&quot;${invite.id}&quot; data-channel=&quot;${channel}&quot;&gt;${channels.length === 1 ? &#x27;Демо: открыть приглашение&#x27; : (channel === &#x27;email&#x27; ? &#x27;Демо: открыть письмо&#x27; : &#x27;Демо: открыть SMS&#x27;)}&lt;/button&gt;`).join(&#x27;&#x27;);
++  }
++
++  function renderAdminForm() {
++    const checked = channel =&gt; state.adminChannels.includes(channel);
++    return screen(&#x27;Пригласить сотрудника&#x27;, back(&#x27;admin&#x27;) + `&lt;p class=&quot;muted&quot;&gt;ООО «Вектор» · укажите данные сотрудника и канал отправки.&lt;/p&gt;` + form(&#x27;admin&#x27;,
++      `&lt;div class=&quot;split&quot;&gt;${field(&#x27;surname&#x27;, &#x27;Фамилия&#x27;, &#x27;required&#x27;)}${field(&#x27;given&#x27;, &#x27;Имя&#x27;, &#x27;required&#x27;)}&lt;/div&gt;` +
++      field(&#x27;patronymic&#x27;, &#x27;Отчество (если есть)&#x27;) + `&lt;label class=&quot;field&quot;&gt;Роль в ОССиГ&lt;select id=&quot;invite-role&quot; name=&quot;role&quot;&gt;${[&#x27;Специалист ОССиГ&#x27;, &#x27;Водитель&#x27;].map(role =&gt; `&lt;option${state.adminRole === role ? &#x27; selected&#x27; : &#x27;&#x27;}&gt;${role}&lt;/option&gt;`).join(&#x27;&#x27;)}&lt;/select&gt;&lt;/label&gt;` +
++      `&lt;fieldset class=&quot;channel-options&quot;&gt;&lt;legend&gt;Каналы приглашения&lt;/legend&gt;${[&#x27;email&#x27;, &#x27;phone&#x27;].map(channel =&gt; `&lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;channel&quot; value=&quot;${channel}&quot;${checked(channel) ? &#x27; checked&#x27; : &#x27;&#x27;}&gt; ${deliveryLabel(channel)}&lt;/label&gt;`).join(&#x27;&#x27;)}&lt;small&gt;Можно выбрать оба канала.&lt;/small&gt;&lt;/fieldset&gt;` +
++      `&lt;div class=&quot;split&quot;&gt;${field(&#x27;email&#x27;, &#x27;Электронная почта&#x27;, `type=&quot;email&quot; ${checked(&#x27;email&#x27;) ? &#x27;required&#x27; : &#x27;disabled&#x27;}`)}${field(&#x27;phone&#x27;, &#x27;Телефон&#x27;, `type=&quot;tel&quot; ${checked(&#x27;phone&#x27;) ? &#x27;required&#x27; : &#x27;disabled&#x27;}`)}&lt;/div&gt;` +
++      field(&#x27;snils&#x27;, &#x27;СНИЛС (обязательно)&#x27;, &#x27;inputmode=&quot;numeric&quot; placeholder=&quot;000-000-000 00&quot; required&#x27;) +
++      submit(&#x27;Отправить приглашение&#x27;)));
++  }
++
++  const views = {
++    entry: () =&gt; screen(&#x27;Войти в ВЕРО&#x27;, form(&#x27;entry-login&#x27;, field(&#x27;contact&#x27;, &#x27;Логин (email)&#x27;, &#x27;type=&quot;email&quot; autocomplete=&quot;username&quot; required&#x27;) + loginPassword() + submit(&#x27;Войти&#x27;)) +
++      `&lt;div class=&quot;auth-links&quot;&gt;&lt;p class=&quot;forgot&quot;&gt;${button(&#x27;Забыли пароль?&#x27;, &#x27;recovery&#x27;, &#x27;text-button&#x27;)}&lt;/p&gt;&lt;div class=&quot;separator&quot;&gt;или&lt;/div&gt;${button(&#x27;Войти по телефону&#x27;, &#x27;phone-login&#x27;)}
++      &lt;p&gt;Нет аккаунта? ${button(&#x27;Создать аккаунт&#x27;, &#x27;signup&#x27;, &#x27;text-button&#x27;)}&lt;/p&gt;&lt;p&gt;${button(&#x27;Зарегистрировать организацию&#x27;, &#x27;company-register&#x27;, &#x27;text-button&#x27;)}&lt;/p&gt;&lt;/div&gt;`),
++    auth: renderAuth,
++    challenge: renderChallenge,
++    finish: () =&gt; screen(state.linkedFlow &amp;&amp; state.auth.channel === &#x27;phone&#x27; ? &#x27;Создайте аккаунт по телефону&#x27; : &#x27;Завершите регистрацию&#x27;,
++      `&lt;p class=&quot;muted&quot;&gt;${escape(state.auth.contact)} · контакт подтверждён&lt;/p&gt;` + form(&#x27;finish&#x27;,
++      (state.auth.channel === &#x27;email&#x27; ? newPassword() : &#x27;&#x27;) +
++      &#x27;&lt;label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;terms&quot; name=&quot;terms&quot; required&gt; Принимаю условия использования ВЕРО&lt;/label&gt;&#x27; + submit(&#x27;Создать аккаунт&#x27;)) +
++      (state.linkedFlow ? `&lt;div class=&quot;auth-links&quot;&gt;&lt;p&gt;Уже есть аккаунт? ${button(&#x27;Войти в свой аккаунт&#x27;, &#x27;invite-existing-login&#x27;, &#x27;text-button&#x27;)}&lt;/p&gt;&lt;/div&gt;` : &#x27;&#x27;)),
++    profile: renderProfile,
++    contact: () =&gt; screen(state.channel === &#x27;email&#x27; ? &#x27;Добавить почту&#x27; : &#x27;Добавить телефон&#x27;, back() + form(&#x27;add-contact&#x27;,
++      field(&#x27;contact&#x27;, contactLabel(state.channel), `type=&quot;${state.channel === &#x27;email&#x27; ? &#x27;email&#x27; : &#x27;tel&#x27;}&quot; required`) + submit(&#x27;Подтвердить контакт&#x27;))),
++    &#x27;add-password&#x27;: () =&gt; screen(&#x27;Задайте пароль для входа по почте&#x27;, `${back()}&lt;p&gt;Почта подтверждена. Сохраните пароль, чтобы использовать её для входа.&lt;/p&gt;` +
++      form(&#x27;add-password&#x27;, newPassword() + submit(&#x27;Сохранить почту и пароль&#x27;))),
++    admin: renderAdmin,
++    &#x27;admin-new&#x27;: renderAdminForm,
++    sent: () =&gt; screen(&#x27;Приглашение отправлено&#x27;, `&lt;p&gt;${escape(state.invite.name)}&lt;/p&gt;${button(&#x27;К списку приглашений&#x27;, &#x27;admin&#x27;)}${demo(deliveryButtons(state.invite))}`),
++    letter: () =&gt; screen(state.delivery === &#x27;email&#x27; ? &#x27;Письмо с приглашением&#x27; : &#x27;SMS с приглашением&#x27;,
++      `&lt;p class=&quot;muted&quot;&gt;Получатель · ${escape(inviteContact())}&lt;/p&gt;&lt;p class=&quot;panel&quot;&gt;Вас пригласили в ВЕРО. Откройте приглашение, чтобы продолжить.&lt;/p&gt;${primary(&#x27;Открыть приглашение&#x27;, &#x27;open&#x27;)}`),
++    &#x27;invite-closed&#x27;: () =&gt; screen(&#x27;Приглашение уже обработано&#x27;, `&lt;p&gt;Ответ на это приглашение уже сохранён.&lt;/p&gt;${account() ? button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;) : button(&#x27;К входу&#x27;, &#x27;logout&#x27;)}`),
++    open: () =&gt; account() ? screen(&#x27;Подтвердите почту приглашения&#x27;,
++      `&lt;p&gt;Приглашение отправили на другой адрес. Введите код из письма, чтобы открыть приглашение в вашем аккаунте.&lt;/p&gt;${primary(&#x27;Отправить код на почту&#x27;, &#x27;verify-invite&#x27;)}`) :
++      screen(&#x27;Вас пригласили в ВЕРО&#x27;, `&lt;div class=&quot;stack&quot;&gt;${primary(&#x27;Войти в свой аккаунт&#x27;, &#x27;login&#x27;)}
++      &lt;p class=&quot;muted&quot;&gt;Войдите с почтой и паролем, чтобы открыть приглашение.&lt;/p&gt;${button(&#x27;Начать регистрацию&#x27;, &#x27;verify-invite&#x27;)}
++      &lt;p class=&quot;muted&quot;&gt;Пришлём код на почту из приглашения. После подтверждения вы сможете задать пароль.&lt;/p&gt;&lt;/div&gt;`),
++    &#x27;sms-switch&#x27;: () =&gt; screen(&#x27;Продолжить с подтверждённым номером&#x27;, `&lt;p&gt;Войдите в аккаунт, связанный с номером приглашения.&lt;/p&gt;${primary(&#x27;Войти с этим номером&#x27;, &#x27;sms-login&#x27;)}`),
++    invite: () =&gt; screen(&#x27;Вас пригласили в организацию&#x27;, `${details()}&lt;p&gt;Примите приглашение, чтобы подключиться к компании.&lt;/p&gt;&lt;div class=&quot;stack&quot;&gt;${primary(&#x27;Принять приглашение&#x27;, &#x27;accept&#x27;)}${button(&#x27;Отклонить приглашение&#x27;, &#x27;decline&#x27;)}&lt;/div&gt;`),
++    identity: () =&gt; screen(&#x27;Подтвердите личность&#x27;, `${back(&#x27;back-identity&#x27;)}&lt;p&gt;${state.context === &#x27;invite&#x27; ? &#x27;Подтвердите СНИЛС, чтобы получить доступ к компании.&#x27; : &#x27;Добавьте подтверждённый СНИЛС в профиль ВЕРО.&#x27;}&lt;/p&gt;` +
++      (state.context === &#x27;invite&#x27; ? &#x27;&lt;p class=&quot;panel&quot;&gt;Организация уже указала СНИЛС. ВЕРО сверит его при проверке личности.&lt;/p&gt;&#x27; : &#x27;&#x27;) +
++      `&lt;div class=&quot;stack&quot;&gt;${primary(&#x27;Подтвердить через Mos ID&#x27;, &#x27;mos&#x27;)}${state.context === &#x27;invite&#x27; ? button(&#x27;Позже — в личный кабинет&#x27;, &#x27;back-profile&#x27;) : button(&#x27;Пройти очную сверку&#x27;, &#x27;in-person&#x27;)}&lt;/div&gt;`),
++    mos: () =&gt; screen(&#x27;Подключение Mos ID&#x27;, `${back(&#x27;back-provider&#x27;)}&lt;p&gt;После входа ВЕРО сверит подтверждённые сведения и вернёт вас в текущий аккаунт.&lt;/p&gt;${demo(
++      `&lt;label class=&quot;field&quot;&gt;Ответ Mos ID&lt;select id=&quot;identity-outcome&quot;&gt;&lt;option value=&quot;match&quot;&gt;Подтверждённые сведения получены&lt;/option&gt;&lt;option value=&quot;missing&quot;&gt;Подтверждённый СНИЛС не получен&lt;/option&gt;&lt;option value=&quot;mismatch&quot;&gt;СНИЛС отличается от приглашения&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&lt;div class=&quot;actions&quot;&gt;${primary(&#x27;Завершить вход через Mos ID&#x27;, &#x27;mos-complete&#x27;)}&lt;/div&gt;`)}`),
++    &#x27;mos-pending&#x27;: () =&gt; screen(&#x27;Mos ID подключён&#x27;, state.context === &#x27;invite&#x27; ?
++      `&lt;p&gt;Не удалось получить подтверждённый СНИЛС. Обратитесь в организацию, которая вас пригласила, чтобы уточнить дальнейшие шаги.&lt;/p&gt;${button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;)}` :
++      `&lt;p&gt;Для подтверждения личности выберите очную сверку.&lt;/p&gt;&lt;div class=&quot;stack&quot;&gt;${primary(&#x27;Пройти очную сверку&#x27;, &#x27;in-person&#x27;)}${button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;)}&lt;/div&gt;`),
++    &#x27;in-person&#x27;: () =&gt; screen(&#x27;Очная сверка СНИЛС&#x27;, `${back(&#x27;back-provider&#x27;)}&lt;p&gt;Покажите уполномоченному проверяющему документ, удостоверяющий личность, и уведомление СФР. Откройте код проверки из этого кабинета на встрече.&lt;/p&gt;` +
++      `&lt;p class=&quot;panel&quot;&gt;&lt;strong&gt;Код проверки · ${escape(account().id)}&lt;/strong&gt;&lt;br&gt;&lt;small&gt;Демонстрационный код для связи проверки с аккаунтом&lt;/small&gt;&lt;/p&gt;${demo(primary(&#x27;Подтвердить результат очной сверки&#x27;, &#x27;in-person-complete&#x27;))}`),
++    mismatch: () =&gt; screen(&#x27;Нужно уточнить данные&#x27;, `&lt;p&gt;Попросите организацию сверить контакт и СНИЛС в приглашении.&lt;/p&gt;${account() ? button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;) : button(&#x27;К входу&#x27;, &#x27;logout&#x27;)}`),
++    conflict: () =&gt; screen(&#x27;Требуется проверка&#x27;, `&lt;p&gt;Этот СНИЛС уже связан с аккаунтом ВЕРО. Войдите в прежний аккаунт, чтобы продолжить подключение.&lt;/p&gt;&lt;div class=&quot;stack&quot;&gt;${primary(&#x27;Войти в существующий аккаунт&#x27;, &#x27;switch-account&#x27;)}${button(&#x27;Восстановить доступ&#x27;, &#x27;recovery&#x27;)}${button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;)}&lt;/div&gt;`),
++    &#x27;contact-conflict&#x27;: () =&gt; screen(&#x27;Нужно новое приглашение&#x27;, `&lt;p&gt;Контакт приглашения связан с другим аккаунтом. Попросите организацию отправить приглашение на подтверждённый контакт текущего аккаунта.&lt;/p&gt;${button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;)}`),
++    recovery: () =&gt; screen(&#x27;Восстановление доступа&#x27;, `&lt;p&gt;Обратитесь в поддержку ВЕРО для восстановления доступа к аккаунту.&lt;/p&gt;${account() ? button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;) : button(&#x27;К входу&#x27;, &#x27;logout&#x27;)}`),
++    &#x27;company-certificate&#x27;: () =&gt; screen(&#x27;Подключить организацию&#x27;, back() + `&lt;p&gt;Выберите УКЭП генерального директора. ВЕРО заполнит данные организации после проверки сертификата.&lt;/p&gt;` +
++      form(&#x27;company-certificate&#x27;, &#x27;&lt;label class=&quot;field&quot;&gt;Сертификат УКЭП&lt;select id=&quot;certificate&quot; name=&quot;certificate&quot; required&gt;&lt;option value=&quot;&quot;&gt;Выберите сертификат&lt;/option&gt;&lt;option value=&quot;director&quot;&gt;Иванов Иван Иванович · действующий&lt;/option&gt;&lt;option value=&quot;expired&quot;&gt;Срок действия истёк&lt;/option&gt;&lt;option value=&quot;employee&quot;&gt;Сертификат сотрудника&lt;/option&gt;&lt;/select&gt;&lt;/label&gt;&#x27; + submit(&#x27;Проверить сертификат&#x27;))),
++    &#x27;company-review&#x27;: () =&gt; screen(&#x27;Проверьте данные организации&#x27;, back(&#x27;company-retry&#x27;) + companyDetails() +
++      form(&#x27;company-review&#x27;, &#x27;&lt;label&gt;&lt;input type=&quot;checkbox&quot; id=&quot;company-confirm&quot; name=&quot;confirm&quot; required&gt; Данные верны&lt;/label&gt;&#x27; + submit(&#x27;Отправить на проверку&#x27;))),
++    &#x27;company-status&#x27;: () =&gt; {
++      const status = ownApplication().status;
++      return screen({ pending: &#x27;Заявка на подключение организации на проверке&#x27;, approved: &#x27;Организация подключена&#x27;, rejected: &#x27;Заявка на подключение отклонена&#x27; }[status],
++        companyDetails() + (status === &#x27;pending&#x27; ? &#x27;&lt;p&gt;Срок проверки уточняется.&lt;/p&gt;&#x27; + demo(`&lt;div class=&quot;actions&quot;&gt;${button(&#x27;Одобрить заявку&#x27;, &#x27;company-approve&#x27;)}${button(&#x27;Отклонить заявку&#x27;, &#x27;company-reject&#x27;)}&lt;/div&gt;`) :
++          status === &#x27;rejected&#x27; ? &#x27;&lt;p&gt;Не удалось подтвердить полномочия руководителя. Проверьте сертификат и попробуйте ещё раз.&lt;/p&gt;&#x27; + button(&#x27;Подать заново&#x27;, &#x27;company-retry&#x27;) : &#x27;&lt;p&gt;В вашем кабинете доступна роль руководителя.&lt;/p&gt;&#x27;) +
++        `&lt;div class=&quot;actions&quot;&gt;${button(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;)}&lt;/div&gt;`);
++    },
++    joined: () =&gt; screen(state.existingRole ? &#x27;Вы уже подключены к организации&#x27; : &#x27;Вы подключены к организации&#x27;,
++      `${details(state.existingRole || state.invite.role)}${primary(&#x27;В личный кабинет&#x27;, &#x27;back-profile&#x27;)}`),
++  };
++
++  function render() {
++    main.dataset.screen = state.page;
++    document.getElementById(&#x27;context&#x27;).textContent = account() ? (account().email || account().phone) : &#x27;Вход и регистрация&#x27;;
++    document.getElementById(&#x27;logout&#x27;).hidden = !account();
++    document.getElementById(&#x27;latest-invite&#x27;).hidden = !state.invite;
++    main.innerHTML = `&lt;p class=&quot;alert&quot; role=&quot;alert&quot;${state.error ? &#x27;&#x27; : &#x27; hidden&#x27;}&gt;${escape(state.error)}&lt;/p&gt;` + views[state.page]();
++    if (state.page === &#x27;mos&#x27;) main.querySelector(&#x27;#identity-outcome&#x27;).value = state.identityOutcome;
++  }
++
++  function startAuth(mode, switchAccount = false, channelOverride) {
++    const invited = state.linkedFlow &amp;&amp; state.proof;
++    const channel = channelOverride ?? (invited &amp;&amp; !switchAccount ? state.delivery : state.channel);
++    state.auth = { mode, channel, fixed: invited &amp;&amp; mode === &#x27;signup&#x27;, prefill: invited &amp;&amp; !switchAccount &amp;&amp; channel === state.delivery ? inviteContact() : &#x27;&#x27; };
++    if (mode === &#x27;signup&#x27; &amp;&amp; invited) {
++      if (byContact(channel, inviteContact())) {
++        startAuth(&#x27;login&#x27;);
++        fail(&#x27;Этот контакт уже используется для входа. Войдите в свой аккаунт.&#x27;);
++        return;
++      }
++      state.auth.contact = inviteContact();
++      go(&#x27;finish&#x27;);
++      return;
++    }
++    go(&#x27;auth&#x27;);
++  }
++
++  function startChallenge(channel, contact, purpose) {
++    state.challenge = { channel, contact, purpose, from: state.page };
++    go(&#x27;challenge&#x27;);
++  }
++
++  function openInvite() {
++    state.linkedFlow = true;
++    const { acceptedBy, acceptedVia } = state.invite;
++    if (!inviteOpen() || (acceptedBy &amp;&amp; acceptedVia !== state.delivery)) return go(&#x27;invite-closed&#x27;);
++    if (account()?.[state.delivery] === inviteContact()) state.proof = true;
++    if (!state.proof) {
++      if (state.delivery === &#x27;phone&#x27;) return startChallenge(&#x27;phone&#x27;, inviteContact(), &#x27;invite&#x27;);
++      return go(&#x27;open&#x27;);
++    }
++    if (account()) {
++      if (acceptedBy &amp;&amp; acceptedBy !== state.accountId &amp;&amp; !canRecoverInvite()) return go(&#x27;invite-closed&#x27;);
++      if (account().snils &amp;&amp; account().snils !== state.invite.snils) return flagInvitation(&#x27;mismatch&#x27;);
++      if (acceptedBy === state.accountId) {
++        if (inviteContactConflict()) return flagInvitation(&#x27;contact-conflict&#x27;);
++        if (account().snils === state.invite.snils) return completeInvite();
++        return startIdentity(&#x27;invite&#x27;);
++      }
++      return go(&#x27;invite&#x27;);
++    }
++    state.inviteMatch = bySnils(state.invite.snils)?.id || null;
++    if (acceptedBy || matchedRecipient() || byContact(state.delivery, inviteContact())) return startAuth(&#x27;login&#x27;);
++    startAuth(&#x27;signup&#x27;);
++  }
++
++  function signedIn(user) {
++    state.accountId = user.id;
++    if (state.linkedFlow) return openInvite();
++    if (state.connectAfterAuth) {
++      state.connectAfterAuth = false;
++      return openCompany();
++    }
++    go(&#x27;profile&#x27;);
++  }
++
++  function confirmContact() {
++    const { channel, contact, purpose } = state.challenge;
++    if (purpose === &#x27;invite&#x27;) {
++      state.proof = true;
++      const existing = channel === &#x27;phone&#x27; &amp;&amp; byContact(channel, contact);
++      if (existing?.snils &amp;&amp; existing.snils !== state.invite.snils) return flagInvitation(&#x27;mismatch&#x27;);
++      if (existing) return account() &amp;&amp; account() !== existing ? go(&#x27;sms-switch&#x27;) : signedIn(existing);
++      return openInvite();
++    }
++    const existing = byContact(channel, contact);
++    if (purpose === &#x27;add&#x27;) {
++      if (existing &amp;&amp; existing !== account()) return fail(&#x27;Этот контакт связан с другим аккаунтом. Воспользуйтесь восстановлением доступа.&#x27;);
++      if (channel === &#x27;email&#x27; &amp;&amp; !account().password) return go(&#x27;add-password&#x27;);
++      account()[channel] = contact;
++      go(&#x27;profile&#x27;);
++      return;
++    }
++    if (existing &amp;&amp; channel === &#x27;phone&#x27;) return signedIn(existing);
++    if (existing) {
++      state.auth.mode = &#x27;login&#x27;;
++      go(&#x27;auth&#x27;);
++      fail(&#x27;У этой почты уже есть аккаунт. Войдите с паролем.&#x27;);
++      return;
++    }
++    if (purpose === &#x27;login&#x27;) return fail(&#x27;Не удалось войти. Проверьте данные или создайте аккаунт.&#x27;);
++    state.auth.contact = contact;
++    go(&#x27;finish&#x27;);
++  }
++
++  function completeInvite() {
++    const user = account();
++    if (!user || !state.proof || !inviteOpen() || state.invite.acceptedBy !== user.id || user.snils !== state.invite.snils) return;
++    if (inviteContactConflict()) return flagInvitation(&#x27;contact-conflict&#x27;);
++    state.existingRole = user.roles.find(item =&gt; item.organization === state.invite.organization)?.role || &#x27;&#x27;;
++    if (!state.existingRole) {
++      user.roles.push({ organization: state.invite.organization, role: state.invite.role });
++    }
++    state.invite.status = &#x27;connected&#x27;;
++    go(&#x27;joined&#x27;);
++  }
++
++  function inviteContactConflict() {
++    const owner = byContact(state.delivery, inviteContact());
++    return owner &amp;&amp; owner !== account();
++  }
++
++  function canRecoverInvite() {
++    return state.recoveringInvite &amp;&amp; account()?.snils === state.invite.snils;
++  }
++
++  function verifyIdentity(source, outcome = &#x27;match&#x27;) {
++    const user = account();
++    const invited = state.context === &#x27;invite&#x27;;
++    if (outcome === &#x27;missing&#x27;) { user.mos = true; return go(&#x27;mos-pending&#x27;); }
++    const snils = invited ? state.invite.snils : user.snils || newSnils;
++    if (outcome === &#x27;mismatch&#x27; || (user.snils &amp;&amp; user.snils !== snils)) return invited ? flagInvitation(&#x27;mismatch&#x27;) : go(&#x27;mismatch&#x27;);
++    const existing = bySnils(snils);
++    if (existing &amp;&amp; existing !== user) return invited ? flagInvitation(&#x27;conflict&#x27;) : go(&#x27;conflict&#x27;);
++    if (source === &#x27;Mos ID&#x27;) user.mos = true;
++    user.snils = snils;
++    user.identity = source;
++    if (invited) completeInvite();
++    else go(&#x27;profile&#x27;);
++  }
++
++  function startIdentity(context) {
++    state.context = context;
++    state.identityOutcome = &#x27;match&#x27;;
++    go(&#x27;identity&#x27;);
++  }
++
++  function flagInvitation(page) {
++    state.invite.status = &#x27;attention&#x27;;
++    go(page);
++  }
++
++  function chooseIdentityMethod(page) {
++    if (state.context === &#x27;invite&#x27;) state.invite.status = &#x27;checking&#x27;;
++    go(page);
++  }
++
++  function openCompany() {
++    if (!account()) return go(&#x27;entry&#x27;);
++    go(ownApplication() ? &#x27;company-status&#x27; : &#x27;company-certificate&#x27;);
++  }
++
++  function resolveCompany(approved) {
++    const application = ownApplication();
++    if (application?.status !== &#x27;pending&#x27;) return;
++    application.status = approved ? &#x27;approved&#x27; : &#x27;rejected&#x27;;
++    if (approved) {
++      const membership = account().roles.find(item =&gt; item.organization === organization.name);
++      if (membership) membership.role = &#x27;Руководитель&#x27;;
++      else account().roles.push({ organization: organization.name, role: &#x27;Руководитель&#x27; });
++    }
++    go(&#x27;company-status&#x27;);
++  }
++
++  function syncInvitationChannels(element) {
++    for (const channel of [&#x27;email&#x27;, &#x27;phone&#x27;]) {
++      const selected = state.adminChannels.includes(channel);
++      element.querySelector(`input[name=channel][value=${channel}]`).checked = selected;
++      element.elements[channel].disabled = !selected;
++      element.elements[channel].required = selected;
++    }
++  }
++
++  const actions = {
++    reset, fill, admin: () =&gt; go(&#x27;admin&#x27;), &#x27;admin-new&#x27;: () =&gt; {
++      state.adminChannels = [&#x27;email&#x27;];
++      state.adminRole = &#x27;Специалист ОССиГ&#x27;;
++      state.channelsEdited = false;
++      go(&#x27;admin-new&#x27;);
++    }, letter: () =&gt; go(&#x27;letter&#x27;), open: openInvite,
++    &#x27;open-record&#x27;: (id, channel) =&gt; {
++      const invite = state.invites.find(item =&gt; item.id === Number(id));
++      if (!invite?.contacts[channel]) return;
++      if (invite !== state.invite || channel !== state.delivery) {
++        state.invite = invite;
++        state.delivery = channel;
++        state.proof = false;
++        state.linkedFlow = false;
++        state.recoveringInvite = false;
++      }
++      go(&#x27;letter&#x27;);
++    },
++    signup: () =&gt; {
++      if (state.page === &#x27;entry&#x27;) state.connectAfterAuth = false;
++      startAuth(&#x27;signup&#x27;);
++    }, login: () =&gt; startAuth(&#x27;login&#x27;, false, state.page === &#x27;open&#x27; ? &#x27;email&#x27; : undefined),
++    &#x27;invite-existing-login&#x27;: () =&gt; startAuth(&#x27;login&#x27;, true, &#x27;email&#x27;),
++    &#x27;phone-login&#x27;: () =&gt; startAuth(&#x27;login&#x27;, false, &#x27;phone&#x27;),
++    &#x27;show-password&#x27;: () =&gt; {
++      const input = main.querySelector(&#x27;#password&#x27;);
++      const toggle = main.querySelector(&#x27;[data-action=show-password]&#x27;);
++      const shown = input.type === &#x27;password&#x27;;
++      input.type = shown ? &#x27;text&#x27; : &#x27;password&#x27;;
++      toggle.textContent = shown ? &#x27;Скрыть&#x27; : &#x27;Показать&#x27;;
++    },
++    &#x27;company-register&#x27;: () =&gt; { state.connectAfterAuth = true; startAuth(&#x27;signup&#x27;); },
++    &#x27;company-start&#x27;: openCompany,
++    &#x27;company-retry&#x27;: () =&gt; go(&#x27;company-certificate&#x27;),
++    &#x27;company-approve&#x27;: () =&gt; resolveCompany(true),
++    &#x27;company-reject&#x27;: () =&gt; resolveCompany(false),
++    &#x27;channel-email&#x27;: () =&gt; { state.auth.channel = &#x27;email&#x27;; state.auth.prefill = &#x27;&#x27;; go(&#x27;auth&#x27;); },
++    &#x27;channel-phone&#x27;: () =&gt; { state.auth.channel = &#x27;phone&#x27;; state.auth.prefill = &#x27;&#x27;; go(&#x27;auth&#x27;); },
++    &#x27;back-auth&#x27;: () =&gt; {
++      if (state.linkedFlow) {
++        if (state.invite.acceptedBy) { state.recoveringInvite = false; return go(&#x27;letter&#x27;); }
++        if (state.delivery === &#x27;phone&#x27;) return startAuth(&#x27;signup&#x27;);
++        if (state.proof) { state.proof = false; return go(&#x27;letter&#x27;); }
++        return go(&#x27;open&#x27;);
++      }
++      state.connectAfterAuth = false;
++      go(&#x27;entry&#x27;);
++    },
++    &#x27;back-challenge&#x27;: () =&gt; go(state.challenge.from),
++    &#x27;back-profile&#x27;: () =&gt; go(&#x27;profile&#x27;),
++    &#x27;email-confirm&#x27;: confirmContact,
++    resend: () =&gt; fail(state.challenge.channel === &#x27;email&#x27; ? &#x27;Письмо отправлено повторно.&#x27; : &#x27;Код отправлен повторно.&#x27;),
++    &#x27;verify-invite&#x27;: () =&gt; state.proof ? openInvite() : startChallenge(state.delivery, inviteContact(), &#x27;invite&#x27;),
++    &#x27;sms-login&#x27;: () =&gt; {
++      const owner = byContact(&#x27;phone&#x27;, inviteContact());
++      if (state.proof &amp;&amp; owner) signedIn(owner);
++    },
++    &#x27;continue-invite&#x27;: openInvite,
++    accept: () =&gt; {
++      if (!inviteOpen() || !state.proof || !account()) return;
++      if (state.invite.acceptedBy &amp;&amp; !canRecoverInvite()) return;
++      if (inviteContactConflict()) return flagInvitation(&#x27;contact-conflict&#x27;);
++      state.invite.acceptedBy = state.accountId;
++      state.invite.acceptedVia = state.delivery;
++      state.invite.status = &#x27;accepted&#x27;;
++      state.recoveringInvite = false;
++      if (account().snils === state.invite.snils) return completeInvite();
++      if (account().snils) return flagInvitation(&#x27;mismatch&#x27;);
++      startIdentity(&#x27;invite&#x27;);
++    },
++    decline: () =&gt; {
++      if (state.invite.acceptedBy) return;
++      state.invite.status = &#x27;declined&#x27;;
++      go(&#x27;profile&#x27;);
++    },
++    &#x27;add-email&#x27;: () =&gt; { state.channel = &#x27;email&#x27;; go(&#x27;contact&#x27;); },
++    &#x27;add-phone&#x27;: () =&gt; { state.channel = &#x27;phone&#x27;; go(&#x27;contact&#x27;); },
++    &#x27;verify-profile&#x27;: () =&gt; startIdentity(&#x27;profile&#x27;),
++    &#x27;link-mos&#x27;: () =&gt; { state.context = &#x27;profile&#x27;; state.identityOutcome = &#x27;match&#x27;; go(&#x27;mos&#x27;); },
++    mos: () =&gt; chooseIdentityMethod(&#x27;mos&#x27;),
++    &#x27;mos-complete&#x27;: () =&gt; verifyIdentity(&#x27;Mos ID&#x27;, state.identityOutcome),
++    &#x27;in-person&#x27;: () =&gt; chooseIdentityMethod(&#x27;in-person&#x27;),
++    &#x27;in-person-complete&#x27;: () =&gt; verifyIdentity(&#x27;Очная сверка&#x27;),
++    &#x27;back-provider&#x27;: () =&gt; go(&#x27;identity&#x27;),
++    &#x27;back-identity&#x27;: () =&gt; go(&#x27;profile&#x27;),
++    &#x27;switch-account&#x27;: () =&gt; {
++      state.recoveringInvite = state.context === &#x27;invite&#x27;;
++      if (!state.recoveringInvite) state.linkedFlow = false;
++      state.accountId = null;
++      startAuth(&#x27;login&#x27;, true);
++    },
++    recovery: () =&gt; go(&#x27;recovery&#x27;),
++    logout: () =&gt; { state.accountId = null; state.proof = false; state.linkedFlow = false; state.connectAfterAuth = false; state.recoveringInvite = false; go(&#x27;entry&#x27;); },
++  };
++
++  function fill() {
++    const values = {
++      contact: state.page === &#x27;entry&#x27; ? state.accounts[0].email : state.page === &#x27;auth&#x27; ? (state.auth.prefill || (signup() ? exampleContact[state.auth.channel] : state.accounts[0][state.auth.channel])) : exampleContact[state.channel],
++      password, repeat: password, code, surname: &#x27;Петрова&#x27;, given: &#x27;Анна&#x27;, patronymic: &#x27;Сергеевна&#x27;,
++      email: state.invite?.contacts.email || &#x27;new@example.test&#x27;,
++      phone: state.invite?.contacts.phone || &#x27;+79000000003&#x27;, snils: state.invite?.snils || newSnils,
++      certificate: &#x27;director&#x27;,
++    };
++    for (const [id, value] of Object.entries(values)) {
++      const input = main.querySelector(&#x27;#&#x27; + id);
++      if (input &amp;&amp; !input.readOnly) input.value = value;
++    }
++    if (main.querySelector(&#x27;#terms&#x27;)) main.querySelector(&#x27;#terms&#x27;).checked = true;
++    if (main.querySelector(&#x27;#company-confirm&#x27;)) main.querySelector(&#x27;#company-confirm&#x27;).checked = true;
++  }
++
++  // Installed only in the v3 frame, before the shared controls are bound.
++  const accessRole = &#x27;Администратор организации&#x27;;
++  const employeeRole = &#x27;Сотрудник&#x27;;
++  const demoOrganization = &#x27;ООО «Вектор»&#x27;;
++  const secondDemoOrganization = &#x27;ООО «Меридиан»&#x27;;
++  const joinDirectory = [
++    { name: demoOrganization, inn: &#x27;7700000002&#x27; },
++    { name: secondDemoOrganization, inn: &#x27;7700000003&#x27; },
++  ];
++  const joinStatuses = { pending: &#x27;На рассмотрении&#x27;, approved: &#x27;Одобрена&#x27;, denied: &#x27;Отклонена&#x27;, revoked: &#x27;Доступ отключён&#x27; };
++  const cellRoles = {
++    &#x27;ОССиГ&#x27;: [&#x27;Специалист&#x27;, &#x27;Водитель&#x27;, &#x27;Наблюдатель&#x27;],
++    &#x27;АГК&#x27;: [&#x27;Специалист&#x27;, &#x27;Наблюдатель&#x27;],
++    &#x27;НСМ&#x27;: [&#x27;Специалист&#x27;, &#x27;Наблюдатель&#x27;],
++  };
++  const sharedReset = reset;
++  const sharedSubmit = submitForm;
++  const sharedOpenInvite = openInvite;
++  const sharedConfirmContact = confirmContact;
++  const sharedLogout = actions.logout;
++  const sharedFill = fill;
++  const sharedRender = render;
++  const sharedGo = go;
++  const sharedSignedIn = signedIn;
++  const sharedVerifyIdentity = verifyIdentity;
++  const sharedSyncChannels = syncInvitationChannels;
++  const sharedMismatch = views.mismatch;
++
++  const membership = (user, company) =&gt; user?.roles.find(item =&gt; item.organization === company);
++  const directorRole = &#x27;Руководитель&#x27;;
++  const directorCompanies = user =&gt; (user?.roles || [])
++    .filter(item =&gt; item.role === directorRole).map(item =&gt; item.organization);
++  const rememberedCompany = new Map();
++  function directorCompany(user, companies = directorCompanies(user)) {
++    const previous = rememberedCompany.get(user?.id);
++    return companies.includes(previous) ? previous : companies[0];
++  }
++
++  addEventListener(&#x27;message&#x27;, event =&gt; {
++    if (event.source !== parent || event.data?.type !== &#x27;vero:director-companies&#x27; ||
++        !Array.isArray(event.data.choices)) return;
++    for (const [userId, company] of event.data.choices) {
++      if (!rememberedCompany.has(userId)) rememberedCompany.set(userId, company);
++    }
++  });
++  parent.postMessage({ type: &#x27;vero:director-companies:read&#x27; }, &#x27;*&#x27;);
++
++  signedIn = user =&gt; {
++    const company = directorCompany(user);
++    if (!company || state.linkedFlow || state.connectAfterAuth) return sharedSignedIn(user);
++    state.accountId = user.id;
++    actions.team(company);
++  };
++
++  const teamRole = () =&gt; membership(account(), state.teamOrg)?.role;
++  const leadsTeam = () =&gt; teamRole() === directorRole;
++  const managesTeam = () =&gt; leadsTeam() || teamRole() === accessRole;
++  const openForResponse = invite =&gt; !invite.acceptedBy &amp;&amp; [&#x27;sent&#x27;, &#x27;attention&#x27;].includes(invite.status);
++  const cabinetSections = {
++    profile: &#x27;back-profile&#x27;, organizations: &#x27;organizations&#x27;, &#x27;profile-name&#x27;: &#x27;back-profile&#x27;,
++    &#x27;join-search&#x27;: &#x27;organizations&#x27;,
++    contact: &#x27;back-profile&#x27;, &#x27;add-password&#x27;: &#x27;back-profile&#x27;,
++    admin: &#x27;admin&#x27;, &#x27;admin-new&#x27;: &#x27;admin&#x27;, &#x27;team-confirm&#x27;: &#x27;admin&#x27;, sent: &#x27;admin&#x27;,
++    &#x27;staff-card&#x27;: &#x27;admin&#x27;, &#x27;staff-cell&#x27;: &#x27;admin&#x27;, &#x27;staff-role&#x27;: &#x27;admin&#x27;,
++  };
++
++  go = page =&gt; {
++    sharedGo(page);
++    main.scrollTop = 0;
++  };
++
++  function companySwitcher(user) {
++    const companies = directorCompanies(user);
++    if (!companies.length) return &#x27;&#x27;;
++    const active = companies.includes(state.teamOrg) ? state.teamOrg : directorCompany(user, companies);
++    return `&lt;details class=&quot;v3-company-switcher&quot;&gt;
++      &lt;summary&gt;&lt;span&gt;&lt;small&gt;Организация&lt;/small&gt;&lt;strong&gt;${escape(active)}&lt;/strong&gt;&lt;/span&gt;
++        &lt;span aria-hidden=&quot;true&quot; class=&quot;v3-company-chevron&quot;&gt;&lt;/span&gt;&lt;/summary&gt;
++      &lt;div class=&quot;v3-company-list&quot; role=&quot;group&quot; aria-label=&quot;Организации руководителя&quot;&gt;
++        ${companies.map(company =&gt; `&lt;button type=&quot;button&quot; data-action=&quot;director-company&quot; data-id=&quot;${escape(company)}&quot;${company === active ? &#x27; aria-current=&quot;true&quot;&#x27; : &#x27;&#x27;}&gt;${escape(company)}&lt;/button&gt;`).join(&#x27;&#x27;)}
++      &lt;/div&gt;
++    &lt;/details&gt;`;
++  }
++
++  document.addEventListener(&#x27;click&#x27;, event =&gt; {
++    const switcher = document.querySelector(&#x27;.v3-company-switcher[open]&#x27;);
++    if (switcher &amp;&amp; !switcher.contains(event.target)) switcher.open = false;
++  });
++  document.addEventListener(&#x27;keydown&#x27;, event =&gt; {
++    if (event.key !== &#x27;Escape&#x27;) return;
++    const switcher = event.target.closest(&#x27;.v3-company-switcher[open]&#x27;);
++    if (!switcher) return;
++    switcher.open = false;
++    switcher.querySelector(&#x27;summary&#x27;).focus();
++  });
++
++  render = () =&gt; {
++    sharedRender();
++    document.getElementById(&#x27;session-invite&#x27;).hidden = !sessionInvitation();
++    main.querySelector(&#x27;dialog&#x27;)?.showModal();
++    const nav = document.getElementById(&#x27;v3-nav&#x27;);
++    const section = account() &amp;&amp; cabinetSections[state.page];
++    nav.hidden = !section;
++    nav.parentElement.classList.toggle(&#x27;v3-cabinet&#x27;, Boolean(section));
++    if (!section) return;
++    const entries = [[&#x27;Главная&#x27;, &#x27;back-profile&#x27;], [&#x27;Мои организации&#x27;, &#x27;organizations&#x27;]];
++    if (managesTeam()) entries.push([&#x27;Пользователи&#x27;, &#x27;admin&#x27;]);
++    nav.innerHTML = entries.map(([label, action]) =&gt;
++      `&lt;button type=&quot;button&quot; data-action=&quot;${action}&quot;${action === section ? &#x27; aria-current=&quot;page&quot;&#x27; : &#x27;&#x27;}&gt;${label}&lt;/button&gt;`).join(&#x27;&#x27;) +
++      (section === &#x27;admin&#x27; &amp;&amp; !leadsTeam() ? &#x27;&#x27; : companySwitcher(account()));
++  };
++
++  function seedOrganizations() {
++    state.joinRequests = [];
++    const employee = state.accounts[0];
++    employee.name = &#x27;Петрова Анна Сергеевна&#x27;;
++    state.accounts.push(
++      { id: &#x27;director&#x27;, name: &#x27;Иванов Иван Иванович&#x27;, email: &#x27;director@example.test&#x27;, password,
++        roles: joinDirectory.map(({ name }) =&gt; ({ organization: name, role: directorRole })) },
++      { id: &#x27;admin&#x27;, name: &#x27;Соколова Мария Олеговна&#x27;, email: &#x27;admin@example.test&#x27;, password,
++        roles: joinDirectory.map(({ name }) =&gt; ({ organization: name, role: accessRole })) },
++      { id: &#x27;member&#x27;, name: &#x27;Кузнецов Павел Андреевич&#x27;, email: &#x27;pavel@example.test&#x27;, password,
++        roles: [{ organization: demoOrganization, role: employeeRole }, { organization: organization.name, role: employeeRole }] },
++    );
++    if (state.invite) state.invite.role = employeeRole;
++    const several = scenario.value === &#x27;organizations-many&#x27;;
++    if (!several &amp;&amp; scenario.value !== &#x27;organizations&#x27;) return;
++    employee.roles.push({ organization: &#x27;ООО «Маяк»&#x27;, role: accessRole });
++    const invite = { id: 1, status: &#x27;sent&#x27;, organization: demoOrganization, name: employee.name,
++      role: employeeRole, snils: employee.snils, contacts: { email: employee.email } };
++    state.invites.push(invite);
++    if (several) state.invites.push({ ...invite, id: 2, organization: &#x27;ООО «Горизонт»&#x27; });
++    state.invite = invite;
++    state.delivery = &#x27;email&#x27;;
++    state.accountId = employee.id;
++    state.page = several ? &#x27;profile&#x27; : &#x27;organizations&#x27;;
++  }
++
++  function resetV3() {
++    sharedReset();
++    seedOrganizations();
++    render();
++  }
++  reset = resetV3;
++  actions.reset = () =&gt; reset();
++
++  function visibleInvitation(invite, user) {
++    if (!user || membership(user, invite.organization) || [&#x27;connected&#x27;, &#x27;declined&#x27;, &#x27;revoked&#x27;].includes(invite.status)) return false;
++    if (invite.acceptedBy) return invite.acceptedBy === user.id;
++    if (user.snils) return user.snils === invite.snils;
++    return Object.entries(invite.contacts).some(([channel, contact]) =&gt; user[channel] === contact);
++  }
++
++  function sessionInvitation() {
++    const user = account();
++    return state.invites.findLast(invite =&gt; visibleInvitation(invite, user));
++  }
++
++  const pendingInvitations = user =&gt; state.invites.filter(invite =&gt; openForResponse(invite) &amp;&amp; visibleInvitation(invite, user));
++
++  function openOrganizations() {
++    if (!account()) return go(&#x27;entry&#x27;);
++    go(&#x27;organizations&#x27;);
++  }
++
++  const itemButton = (label, action, id, css = &#x27;&#x27;) =&gt;
++    `&lt;button type=&quot;button&quot; class=&quot;${css}&quot; data-action=&quot;${action}&quot; data-id=&quot;${escape(id)}&quot;&gt;${label}&lt;/button&gt;`;
++
++  const joinCompany = () =&gt; joinDirectory.find(company =&gt; company.inn === state.joinInn);
++  const ownJoinRequest = company =&gt; state.joinRequests.findLast(item =&gt; item.owner === state.accountId &amp;&amp; item.company === company);
++  const joinAction = () =&gt; primary(&#x27;Подать заявку по ИНН&#x27;, &#x27;join-search&#x27;);
++  const companyInvitation = (name, user) =&gt;
++    state.invites.find(invite =&gt; invite.organization === name &amp;&amp; visibleInvitation(invite, user));
++
++  function renderJoinRequests() {
++    const rows = state.joinRequests.filter(item =&gt; item.owner === state.accountId &amp;&amp; ownJoinRequest(item.company) === item);
++    return rows.length ? `&lt;section class=&quot;panel v3-panel&quot;&gt;&lt;h2&gt;Заявки на доступ&lt;/h2&gt;${rows.map(item =&gt;
++      `&lt;div class=&quot;status-row&quot;&gt;&lt;strong&gt;${escape(item.company)}&lt;/strong&gt;&lt;span class=&quot;status&quot;&gt;${joinStatuses[item.status]}&lt;/span&gt;&lt;/div&gt;`).join(&#x27;&#x27;)}&lt;/section&gt;` : &#x27;&#x27;;
++  }
++
++  function renderJoinResult() {
++    const company = joinCompany();
++    if (!state.joinInn) return &#x27;&#x27;;
++    if (!/^(?:\d{10}|\d{12})$/.test(state.joinInn)) return &#x27;&lt;p class=&quot;muted&quot;&gt;ИНН состоит из 10 или 12 цифр.&lt;/p&gt;&#x27;;
++    if (!company) return &#x27;&lt;p&gt;Организация с таким ИНН не найдена в ВЕРО. Проверьте ИНН или обратитесь к руководителю.&lt;/p&gt;&#x27;;
++    const activeInvite = companyInvitation(company.name, account());
++    const request = ownJoinRequest(company.name);
++    let next = primary(&#x27;Подтвердить личность&#x27;, &#x27;join-verify&#x27;);
++    let explanation = &#x27;Для заявки нужно подтвердить личность. После проверки ВЕРО вернёт вас к этому шагу.&#x27;;
++    if (membership(account(), company.name)) {
++      next = primary(&#x27;Мои организации&#x27;, &#x27;organizations&#x27;);
++      explanation = &#x27;У вас уже есть доступ к этой организации.&#x27;;
++    } else if (activeInvite) {
++      next = itemButton(openForResponse(activeInvite) ? &#x27;Открыть существующее приглашение&#x27; : &#x27;Продолжить подключение&#x27;,
++        &#x27;view-invitation&#x27;, activeInvite.id, &#x27;primary&#x27;);
++      explanation = &#x27;Эта организация уже пригласила вас. Можно продолжить по приглашению.&#x27;;
++    } else if (request &amp;&amp; request.status !== &#x27;revoked&#x27;) {
++      next = primary(&#x27;К моим организациям&#x27;, &#x27;organizations&#x27;);
++      explanation = &#x27;Статус заявки — &#x27; + joinStatuses[request.status].toLowerCase() + &#x27;.&#x27;;
++    } else if (account().snils) {
++      next = form(&#x27;join-send&#x27;, submit(&#x27;Отправить заявку&#x27;));
++      explanation = &#x27;Администратор организации рассмотрит заявку. Статус будет в «Моих организациях».&#x27;;
++    }
++    return `&lt;div class=&quot;panel v3-panel&quot;&gt;&lt;strong&gt;${escape(company.name)}&lt;/strong&gt;&lt;p&gt;ИНН ${company.inn}&lt;/p&gt;
++      &lt;p&gt;${explanation}&lt;/p&gt;${next}&lt;/div&gt;`;
++  }
++
++  function updateJoinSearch(value) {
++    state.joinInn = value.trim();
++    const result = main.querySelector(&#x27;#join-result&#x27;);
++    const content = renderJoinResult();
++    if (result.innerHTML !== content) result.innerHTML = content;
++  }
++
++  main.addEventListener(&#x27;input&#x27;, event =&gt; {
++    if (event.target.id === &#x27;join-inn&#x27;) updateJoinSearch(event.target.value);
++  });
++
++  function submitJoin(element) {
++    const user = account();
++    if (!user || state.page !== &#x27;join-search&#x27; || !element.reportValidity()) return;
++    const company = joinCompany();
++    const request = company &amp;&amp; ownJoinRequest(company.name);
++    if (!company || !user.snils || membership(user, company.name) || (request &amp;&amp; request.status !== &#x27;revoked&#x27;) ||
++        companyInvitation(company.name, user)) return;
++    state.joinRequests.push({ id: state.joinRequests.length + 1, owner: user.id, snils: user.snils,
++      company: company.name, status: &#x27;pending&#x27; });
++    go(&#x27;organizations&#x27;);
++  }
++
++  function resolveJoin(id, approved) {
++    if (!managesTeam()) return;
++    const request = state.joinRequests.find(item =&gt; item.id === Number(id) &amp;&amp; item.company === state.teamOrg &amp;&amp; item.status === &#x27;pending&#x27;);
++    if (!request) return;
++    const applicant = state.accounts.find(user =&gt; user.id === request.owner);
++    if (approved &amp;&amp; (!applicant || applicant.snils !== request.snils)) return fail(&#x27;Личность заявителя нужно проверить повторно.&#x27;);
++    if (approved &amp;&amp; !membership(applicant, request.company)) {
++      applicant.roles.push({ organization: request.company, role: employeeRole });
++    }
++    request.status = approved ? &#x27;approved&#x27; : &#x27;denied&#x27;;
++    state.teamNotice = approved ? &#x27;Заявка одобрена. Сотруднику открыт доступ к организации.&#x27; : &#x27;Заявка отклонена.&#x27;;
++    go(&#x27;admin&#x27;);
++  }
++
++  function renderOrganizations() {
++    const user = account();
++    const organizations = user.roles.map(({ organization: company, role, cellAccess }) =&gt;
++      `&lt;div class=&quot;status-row&quot;&gt;&lt;div&gt;&lt;strong&gt;${escape(company)}&lt;/strong&gt;&lt;small&gt;${escape(role)}&lt;/small&gt;${cellAccessLine(cellAccess)}&lt;/div&gt;
++      ${role === employeeRole ? &#x27;&#x27; : itemButton(&#x27;Управлять командой&#x27;, &#x27;team&#x27;, company)}&lt;/div&gt;`).join(&#x27;&#x27;);
++    const invitations = state.invites.filter(invite =&gt; visibleInvitation(invite, user));
++    const invitationSection = (title, items, label, headingId = &#x27;&#x27;) =&gt; items.length ? `&lt;section class=&quot;panel v3-panel&quot;&gt;
++      &lt;h2${headingId ? ` id=&quot;${headingId}&quot; tabindex=&quot;-1&quot;` : &#x27;&#x27;}&gt;${title}&lt;/h2&gt;
++      ${items.map(invite =&gt; `&lt;div class=&quot;status-row&quot;&gt;&lt;div&gt;&lt;strong&gt;${escape(invite.organization)}&lt;/strong&gt;&lt;small&gt;${escape(invite.role)}&lt;/small&gt;&lt;/div&gt;
++      ${itemButton(label, &#x27;view-invitation&#x27;, invite.id)}&lt;/div&gt;`).join(&#x27;&#x27;)}&lt;/section&gt;` : &#x27;&#x27;;
++    return screen(&#x27;Мои организации&#x27;, `${back()}&lt;p class=&quot;muted&quot;&gt;Компании, к которым у вас есть доступ, и ваша роль в каждой.&lt;/p&gt;
++      &lt;section class=&quot;panel v3-panel&quot;&gt;&lt;h2&gt;Подключённые организации&lt;/h2&gt;
++      ${organizations || &#x27;&lt;p class=&quot;muted&quot;&gt;У вас пока нет подключённых организаций.&lt;/p&gt;&#x27;}&lt;/section&gt;
++      ${invitationSection(&#x27;Ожидают ответа&#x27;, invitations.filter(openForResponse), &#x27;Открыть приглашение&#x27;, &#x27;awaiting-invitations&#x27;)}
++      ${invitationSection(&#x27;Нужно завершить подключение&#x27;, invitations.filter(invite =&gt; !openForResponse(invite)), &#x27;Продолжить&#x27;)}
++      ${renderJoinRequests()}
++      &lt;div class=&quot;actions&quot;&gt;${joinAction()}${button(ownApplication() ? &#x27;Посмотреть заявку на подключение&#x27; : &#x27;Подключить организацию&#x27;, &#x27;company-start&#x27;)}&lt;/div&gt;`);
++  }
++
++  function renderAccessProfile() {
++    const user = account();
++    const identity = user.snils ? `${user.identity} · СНИЛС •••• ${user.snils.slice(-4)}` : &#x27;Личность не подтверждена&#x27;;
++    const invitations = pendingInvitations(user);
++    return screen(&#x27;Личный кабинет&#x27;, `
++      ${state.existingPhoneAccount === user.id ? &#x27;&lt;p class=&quot;panel&quot; role=&quot;status&quot;&gt;У вас уже есть аккаунт ВЕРО. Вы вошли по подтверждённому номеру.&lt;/p&gt;&#x27; : &#x27;&#x27;}
++      &lt;p class=&quot;muted&quot;&gt;Управляйте доступом к компаниям и настройками аккаунта.&lt;/p&gt;
++      &lt;div class=&quot;v3-two&quot;&gt;
++        &lt;div&gt;
++          &lt;section class=&quot;panel v3-panel&quot;&gt;&lt;h2&gt;Доступ к компаниям&lt;/h2&gt;
++            &lt;p&gt;&lt;strong&gt;${user.roles.length ? user.roles.map(item =&gt; escape(item.organization)).join(&#x27;, &#x27;) : &#x27;У вас пока нет подключённых организаций&#x27;}&lt;/strong&gt;&lt;/p&gt;
++            ${invitations.length ? `&lt;div class=&quot;v3-invitation-entry&quot;&gt;
++              ${invitations.length === 1 ? `&lt;strong&gt;${escape(invitations[0].organization)}&lt;/strong&gt;` : &#x27;&#x27;}
++              ${button(invitations.length === 1 ? &#x27;Открыть приглашение (1)&#x27; : `Приглашения, ожидающие ответа (${invitations.length})`, &#x27;profile-invitations&#x27;)}
++            &lt;/div&gt;` : &#x27;&#x27;}
++            &lt;div class=&quot;actions&quot;&gt;${joinAction()}${button(ownApplication() ? &#x27;Посмотреть заявку&#x27; : &#x27;Подключить организацию&#x27;, &#x27;company-start&#x27;)}&lt;/div&gt;
++          &lt;/section&gt;
++          &lt;section class=&quot;panel v3-panel&quot;&gt;&lt;h2&gt;Личные данные&lt;/h2&gt;
++            ${user.mosName ? profileRow(&#x27;ФИО&#x27;, user.mosName, &#x27;Из Mos ID&#x27;) :
++              profileRow(&#x27;Имя в профиле&#x27;, user.name || &#x27;Можно заполнить позже&#x27;, &#x27;&#x27;, &#x27;profile-name&#x27;, user.name ? &#x27;Изменить имя&#x27; : &#x27;Указать имя&#x27;)}
++            ${profileRow(&#x27;Личность&#x27;, identity, &#x27;Подтверждена&#x27;, user.snils ? &#x27;&#x27; : &#x27;verify-profile&#x27;, &#x27;Подтвердить личность&#x27;)}
++            ${profileRow(&#x27;Mos ID&#x27;, user.mos ? &#x27;Профиль mos.ru связан с ВЕРО&#x27; : &#x27;Для онлайн-проверки личности&#x27;, &#x27;Подключён&#x27;, user.mos ? &#x27;&#x27; : &#x27;link-mos&#x27;, &#x27;Подключить Mos ID&#x27;)}
++          &lt;/section&gt;
++        &lt;/div&gt;
++        &lt;aside class=&quot;panel v3-panel&quot;&gt;&lt;h2&gt;Способы входа&lt;/h2&gt;
++          ${profileRow(&#x27;Телефон и код из SMS&#x27;, user.phone || (user.mosContacts ? `${user.mosContacts.phone} · из Mos ID` : &#x27;Телефон не добавлен&#x27;), &#x27;Подключён&#x27;, user.phone ? &#x27;&#x27; : &#x27;add-phone&#x27;, &#x27;Добавить телефон&#x27;)}
++          ${profileRow(&#x27;Почта и пароль&#x27;, user.email || (user.mosContacts ? `${user.mosContacts.email} · из Mos ID` : &#x27;Почта станет логином после подтверждения&#x27;), &#x27;Подключены&#x27;, user.email ? &#x27;&#x27; : &#x27;add-email&#x27;, &#x27;Добавить вход по почте&#x27;)}
++        &lt;/aside&gt;
++      &lt;/div&gt;`);
++  }
++
++  verifyIdentity = (source, outcome = &#x27;match&#x27;) =&gt; {
++    const user = account();
++    if (!user || (source === &#x27;Mos ID&#x27; &amp;&amp; state.page !== &#x27;mos&#x27;)) return;
++    sharedVerifyIdentity(source, outcome);
++    if (outcome !== &#x27;match&#x27; || ![&#x27;profile&#x27;, &#x27;joined&#x27;].includes(state.page)) return;
++    if (source === &#x27;Mos ID&#x27;) {
++      // The example is provider data, independent of an entered profile name or employer record.
++      user.mosName = {
++        director: &#x27;Иванов Иван Иванович&#x27;, admin: &#x27;Соколова Мария Олеговна&#x27;, member: &#x27;Кузнецов Павел Андреевич&#x27;,
++      }[user.id] || &#x27;Петрова Анна Сергеевна&#x27;;
++      user.mosContacts = { ...exampleContact };
++    }
++    if (state.context === &#x27;join&#x27;) go(&#x27;join-search&#x27;);
++    else if (source === &#x27;Mos ID&#x27;) go(state.page);
++  };
++
++  syncInvitationChannels = element =&gt; {
++    if (element.dataset.form !== &#x27;team-invite&#x27;) return sharedSyncChannels(element);
++    for (const channel of [&#x27;email&#x27;, &#x27;phone&#x27;]) element.elements[channel].required = state.adminChannels.includes(channel);
++  };
++
++  function renderV3Auth() {
++    const { channel, mode, prefill, existingEmail } = state.auth;
++    const knownEmail = channel === &#x27;email&#x27; &amp;&amp; mode === &#x27;login&#x27; &amp;&amp;
++      (existingEmail || (state.linkedFlow &amp;&amp; state.proof &amp;&amp; prefill === inviteContact() &amp;&amp; byContact(&#x27;email&#x27;, prefill)));
++    if (!knownEmail) return renderAuth() + (channel === &#x27;email&#x27; &amp;&amp; mode === &#x27;login&#x27; ?
++      `&lt;div class=&quot;actions&quot;&gt;${button(&#x27;Забыли пароль?&#x27;, &#x27;recovery&#x27;)}&lt;/div&gt;` : &#x27;&#x27;);
++    return screen(&#x27;У вас уже есть аккаунт ВЕРО&#x27;, back(&#x27;back-auth&#x27;) +
++      `&lt;p class=&quot;panel&quot;&gt;${state.linkedFlow ? &#x27;На почту из приглашения уже зарегистрирован аккаунт ВЕРО. Введите пароль — после входа откроется приглашение.&#x27; : &#x27;На эту почту уже зарегистрирован аккаунт. Войдите с прежним паролем.&#x27;}&lt;/p&gt;` +
++      form(&#x27;auth&#x27;, field(&#x27;contact&#x27;, &#x27;Логин (email)&#x27;, `type=&quot;email&quot; autocomplete=&quot;username&quot; value=&quot;${escape(prefill)}&quot; required`) +
++        loginPassword() + submit(&#x27;Войти&#x27;)) +
++      `&lt;div class=&quot;actions&quot;&gt;${button(&#x27;Забыли пароль?&#x27;, &#x27;recovery&#x27;)}${button(&#x27;Войти по телефону&#x27;, &#x27;phone-login&#x27;)}&lt;/div&gt;`);
++  }
++
++  openInvite = () =&gt; {
++    if (inviteOpen() &amp;&amp; account() &amp;&amp; state.proof &amp;&amp; inviteContactConflict()) return go(&#x27;contact-conflict&#x27;);
++    return sharedOpenInvite();
++  };
++
++  function openV3Invitation() {
++    if (state.delivery !== &#x27;email&#x27; || !inviteOpen() ||
++        (state.invite.acceptedBy &amp;&amp; state.invite.acceptedVia !== &#x27;email&#x27;)) return openInvite();
++    state.proof = true; // Opening the simulated email link confirms this invitation contact.
++    state.linkedFlow = true;
++    if (account() || state.invite.acceptedBy || byContact(&#x27;email&#x27;, inviteContact())) return openInvite();
++    go(&#x27;invite-options&#x27;);
++  }
++
++  confirmContact = () =&gt; {
++    const { channel, contact, purpose } = state.challenge;
++    const existing = byContact(channel, contact);
++    if (channel === &#x27;email&#x27; &amp;&amp; purpose === &#x27;signup&#x27; &amp;&amp; existing) {
++      state.auth = { mode: &#x27;login&#x27;, channel, prefill: contact, existingEmail: true };
++      return go(&#x27;auth&#x27;);
++    }
++    if (channel === &#x27;phone&#x27; &amp;&amp; [&#x27;invite&#x27;, &#x27;signup&#x27;].includes(purpose) &amp;&amp; existing) state.existingPhoneAccount = existing.id;
++    return sharedConfirmContact();
++  };
++
++  const assignedAccess = value =&gt; [].concat(value || []);
++  const cellAccessLine = access =&gt; assignedAccess(access)
++    .map(({ cell, role }) =&gt; `&lt;small&gt;Сота «${escape(cell)}» · ${escape(role)}&lt;/small&gt;`).join(&#x27;&#x27;);
++
++  function renderTeam() {
++    if (!managesTeam()) return renderOrganizations();
++    const rows = state.accounts.filter(user =&gt; membership(user, state.teamOrg)).map(user =&gt; {
++      const role = membership(user, state.teamOrg).role;
++      const canEdit = role === employeeRole &amp;&amp; user.id !== state.accountId;
++      return `&lt;div class=&quot;status-row&quot;&gt;&lt;div&gt;&lt;strong&gt;${escape(user.mosName || user.name || user.email || user.phone)}&lt;/strong&gt;&lt;small&gt;${escape(role)}&lt;/small&gt;${cellAccessLine(membership(user, state.teamOrg).cellAccess)}&lt;/div&gt;
++        &lt;div class=&quot;actions&quot;&gt;${canEdit ? itemButton(&#x27;Открыть карточку&#x27;, &#x27;staff-card&#x27;, user.id) : &#x27;&#x27;}
++        ${canEdit &amp;&amp; leadsTeam() ? itemButton(&#x27;Назначить администратором&#x27;, &#x27;appoint&#x27;, user.id) : &#x27;&#x27;}
++        ${canEdit ? itemButton(&#x27;Отключить&#x27;, &#x27;disconnect&#x27;, user.id) : &#x27;&#x27;}&lt;/div&gt;&lt;/div&gt;`;
++    }).join(&#x27;&#x27;);
++    const invitations = state.invites.filter(invite =&gt; invite.organization === state.teamOrg).map(invite =&gt; {
++      const contactLines = Object.entries(invite.profileContacts || invite.contacts).map(([channel, value]) =&gt;
++        `&lt;small&gt;${contactLabel(channel)} · ${escape(value)} · ${invite.contacts[channel] ? &#x27;канал приглашения&#x27; : &#x27;указан в карточке&#x27;}&lt;/small&gt;`).join(&#x27;&#x27;);
++      return `&lt;div class=&quot;status-row&quot;&gt;&lt;div&gt;&lt;strong&gt;${escape(invite.name)}&lt;/strong&gt;&lt;small&gt;${escape(invite.role)}&lt;/small&gt;${contactLines}&lt;/div&gt;
++      &lt;span class=&quot;status&quot;&gt;${invitationStatuses[invite.status]}&lt;/span&gt;&lt;/div&gt;`;
++    }).join(&#x27;&#x27;);
++    const requests = state.joinRequests.filter(item =&gt; item.company === state.teamOrg &amp;&amp; item.status === &#x27;pending&#x27;).map(item =&gt; {
++      const user = state.accounts.find(account =&gt; account.id === item.owner);
++      return `&lt;div class=&quot;status-row&quot;&gt;&lt;div&gt;&lt;strong&gt;${escape(user.mosName || user.name || user.email || user.phone)}&lt;/strong&gt;
++        &lt;small&gt;Личность подтверждена · запрашивает роль «Сотрудник»&lt;/small&gt;&lt;/div&gt;
++        &lt;div class=&quot;actions&quot;&gt;${itemButton(&#x27;Одобрить заявку&#x27;, &#x27;join-approve&#x27;, item.id, &#x27;primary&#x27;)}
++        ${itemButton(&#x27;Отклонить заявку&#x27;, &#x27;join-deny&#x27;, item.id)}&lt;/div&gt;&lt;/div&gt;`;
++    }).join(&#x27;&#x27;);
++    return screen(&#x27;Команда организации&#x27;, `${back(&#x27;organizations&#x27;)}&lt;p class=&quot;muted&quot;&gt;${escape(state.teamOrg)} · ${teamRole()}&lt;/p&gt;
++      ${state.teamNotice ? `&lt;p class=&quot;panel&quot; role=&quot;status&quot;&gt;${escape(state.teamNotice)}&lt;/p&gt;` : &#x27;&#x27;}
++      ${primary(&#x27;Пригласить сотрудника&#x27;, &#x27;admin-new&#x27;)}
++      ${requests ? `&lt;section class=&quot;panel v3-panel&quot;&gt;&lt;h2&gt;Заявки на доступ&lt;/h2&gt;${requests}&lt;/section&gt;` : &#x27;&#x27;}
++      &lt;section class=&quot;panel v3-panel&quot; aria-labelledby=&quot;connected-staff&quot;&gt;&lt;h2 id=&quot;connected-staff&quot;&gt;Подключённые сотрудники&lt;/h2&gt;${rows}&lt;/section&gt;
++      ${invitations ? `&lt;section class=&quot;panel v3-panel&quot;&gt;&lt;h2&gt;Отправленные приглашения&lt;/h2&gt;${invitations}&lt;/section&gt;` : &#x27;&#x27;}`);
++  }
++
++  function renderTeamInvite() {
++    if (!managesTeam()) return renderOrganizations();
++    const checked = channel =&gt; state.adminChannels.includes(channel);
++    return screen(&#x27;Пригласить сотрудника&#x27;, back(&#x27;admin&#x27;) + `&lt;p class=&quot;muted&quot;&gt;${escape(state.teamOrg)} · Роль «Сотрудник»&lt;/p&gt;` + form(&#x27;team-invite&#x27;,
++      `&lt;div class=&quot;split&quot;&gt;${field(&#x27;surname&#x27;, &#x27;Фамилия&#x27;, &#x27;required&#x27;)}${field(&#x27;given&#x27;, &#x27;Имя&#x27;, &#x27;required&#x27;)}&lt;/div&gt;` +
++      field(&#x27;patronymic&#x27;, &#x27;Отчество (если есть)&#x27;) +
++      `&lt;div class=&quot;split&quot;&gt;${field(&#x27;email&#x27;, &#x27;Электронная почта&#x27;, `type=&quot;email&quot; ${checked(&#x27;email&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;}`)}
++      ${field(&#x27;phone&#x27;, &#x27;Телефон&#x27;, `type=&quot;tel&quot; ${checked(&#x27;phone&#x27;) ? &#x27;required&#x27; : &#x27;&#x27;}`)}&lt;/div&gt;` +
++      field(&#x27;snils&#x27;, &#x27;СНИЛС (обязательно)&#x27;, &#x27;inputmode=&quot;numeric&quot; placeholder=&quot;000-000-000 00&quot; required&#x27;) +
++      `&lt;fieldset class=&quot;channel-options&quot;&gt;&lt;legend&gt;Куда отправить приглашение&lt;/legend&gt;${[&#x27;email&#x27;, &#x27;phone&#x27;].map(channel =&gt;
++        `&lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;channel&quot; value=&quot;${channel}&quot;${checked(channel) ? &#x27; checked&#x27; : &#x27;&#x27;}&gt; ${deliveryLabel(channel)}&lt;/label&gt;`).join(&#x27;&#x27;)}
++      &lt;small&gt;Можно указать оба контакта сотрудника. Приглашение уйдёт только по выбранным каналам.&lt;/small&gt;&lt;/fieldset&gt;` + submit(&#x27;Отправить приглашение&#x27;)));
++  }
++
++  const cellRoleOptions = cell =&gt; &#x27;&lt;option value=&quot;&quot;&gt;Выберите роль&lt;/option&gt;&#x27; +
++    (cellRoles[cell] || []).map(role =&gt; `&lt;option&gt;${role}&lt;/option&gt;`).join(&#x27;&#x27;);
++
++  const teamMember = id =&gt; state.accounts.find(user =&gt; user.id === id &amp;&amp; membership(user, state.teamOrg)?.role === employeeRole);
++  function staffTarget() {
++    const draft = state.staffAssignment;
++    if (!draft || !managesTeam() || draft.company !== state.teamOrg || draft.manager !== state.accountId) return;
++    const member = teamMember(draft.member);
++    if (member &amp;&amp; member.id !== state.accountId) return member;
++  }
++
++  function renderStaffCard() {
++    const member = staffTarget();
++    if (!member) return renderTeam();
++    const relation = membership(member, state.teamOrg);
++    const access = assignedAccess(relation.cellAccess);
++    const draft = state.staffAssignment;
++    const choosingRole = state.page === &#x27;staff-role&#x27;;
++    const roles = cellRoles[draft.cell] || [];
++    const isAssigned = role =&gt; access.some(item =&gt; item.cell === draft.cell &amp;&amp; item.role === role);
++    const allAssigned = choosingRole &amp;&amp; roles.every(isAssigned);
++    const options = choosingRole ? roles.map(role =&gt; {
++      const assigned = isAssigned(role);
++      return `&lt;label class=&quot;staff-option&quot;&gt;&lt;input type=&quot;checkbox&quot; name=&quot;role&quot; value=&quot;${escape(role)}&quot;${assigned ? &#x27; checked disabled&#x27; : &#x27;&#x27;}&gt;
++        &lt;span&gt;${escape(role)}${assigned ? &#x27;&lt;small&gt;Уже назначена&lt;/small&gt;&#x27; : &#x27;&#x27;}&lt;/span&gt;&lt;/label&gt;`;
++    }) : Object.keys(cellRoles).map(cell =&gt;
++      `&lt;label class=&quot;staff-option&quot;&gt;&lt;input type=&quot;radio&quot; name=&quot;cell&quot; value=&quot;${escape(cell)}&quot;${draft.cell === cell ? &#x27; checked&#x27; : &#x27;&#x27;} required&gt;
++        &lt;span&gt;${escape(cell)}&lt;/span&gt;&lt;/label&gt;`);
++    const dialog = state.page === &#x27;staff-card&#x27; ? &#x27;&#x27; :
++      `&lt;dialog class=&quot;staff-dialog&quot; aria-labelledby=&quot;staff-dialog-title&quot;&gt;
++        &lt;button class=&quot;staff-close&quot; type=&quot;button&quot; aria-label=&quot;Закрыть&quot; data-action=&quot;staff-cancel&quot;&gt;×&lt;/button&gt;
++        &lt;h2 id=&quot;staff-dialog-title&quot;&gt;${choosingRole ? &#x27;Выберите роль&#x27; : &#x27;Выберите соту&#x27;}&lt;/h2&gt;
++        &lt;p class=&quot;muted&quot;&gt;${choosingRole ? `Сота «${escape(draft.cell)}»` : &#x27;Выберите соту, в которой сотруднику нужен доступ.&#x27;}&lt;/p&gt;
++        &lt;p class=&quot;alert&quot; role=&quot;alert&quot;${state.error ? &#x27;&#x27; : &#x27; hidden&#x27;}&gt;${escape(state.error)}&lt;/p&gt;
++        ${allAssigned ? &#x27;&lt;p&gt;Все доступные роли уже назначены.&lt;/p&gt;&#x27; : &#x27;&#x27;}
++        ${form(state.page, `&lt;div class=&quot;stack&quot;&gt;${options.join(&#x27;&#x27;)}&lt;/div&gt;
++          &lt;div class=&quot;actions&quot;&gt;${choosingRole ? button(&#x27;Назад&#x27;, &#x27;staff-cell&#x27;) : &#x27;&#x27;}
++          ${button(&#x27;Отмена&#x27;, &#x27;staff-cancel&#x27;)}${allAssigned ? &#x27;&#x27; : submit(choosingRole ? &#x27;Назначить&#x27; : &#x27;Далее&#x27;)}&lt;/div&gt;`)}&lt;/dialog&gt;`;
++    return screen(&#x27;Карточка сотрудника&#x27;, `${back(&#x27;admin&#x27;)}&lt;section class=&quot;panel v3-panel&quot;&gt;
++      &lt;h2&gt;${escape(member.mosName || member.name || member.email || member.phone)}&lt;/h2&gt;
++      &lt;p class=&quot;muted&quot;&gt;${escape(state.teamOrg)} · ${escape(relation.role)}&lt;/p&gt;
++      &lt;div class=&quot;stack&quot;&gt;${[member.email, member.phone].filter(Boolean).map(contact =&gt; `&lt;span&gt;${escape(contact)}&lt;/span&gt;`).join(&#x27;&#x27;)}&lt;/div&gt;
++      &lt;/section&gt;&lt;section class=&quot;panel v3-panel&quot;&gt;&lt;div class=&quot;status-row&quot;&gt;&lt;h2&gt;Роли в сотах&lt;/h2&gt;${primary(&#x27;Назначить роль&#x27;, &#x27;staff-cell&#x27;)}&lt;/div&gt;
++      ${access.length ? cellAccessLine(access) : &#x27;&lt;p class=&quot;muted&quot;&gt;Роли пока не назначены.&lt;/p&gt;&#x27;}
++      &lt;/section&gt;${draft.notice ? `&lt;p class=&quot;panel&quot; role=&quot;status&quot;&gt;${escape(draft.notice)}&lt;/p&gt;` : &#x27;&#x27;}${dialog}`);
++  }
++
++  function submitStaffAssignment(element) {
++    const member = staffTarget();
++    if (!member || state.page !== element.dataset.form || !element.reportValidity()) return;
++    const draft = state.staffAssignment;
++    const data = new FormData(element);
++    if (state.page === &#x27;staff-cell&#x27;) {
++      const cell = data.get(&#x27;cell&#x27;);
++      if (!Object.hasOwn(cellRoles, cell)) return;
++      draft.cell = cell;
++      return go(&#x27;staff-role&#x27;);
++    }
++    const relation = membership(member, draft.company);
++    const access = assignedAccess(relation.cellAccess);
++    const roles = [...new Set(data.getAll(&#x27;role&#x27;))];
++    const validRoles = cellRoles[draft.cell] || [];
++    if (!roles.length || !roles.every(role =&gt; validRoles.includes(role))) {
++      const alert = element.closest(&#x27;dialog&#x27;).querySelector(&#x27;[role=alert]&#x27;);
++      alert.textContent = &#x27;Выберите хотя бы одну новую роль.&#x27;;
++      alert.hidden = false;
++      return;
++    }
++    const added = roles.filter(role =&gt; !access.some(item =&gt; item.cell === draft.cell &amp;&amp; item.role === role));
++    if (!added.length) return;
++    relation.cellAccess = [...access, ...added.map(role =&gt; ({ cell: draft.cell, role }))];
++    draft.notice = added.length === 1 ? &#x27;Роль назначена.&#x27; : &#x27;Роли назначены.&#x27;;
++    closeStaffDialog();
++  }
++
++  function closeStaffDialog() {
++    go(&#x27;staff-card&#x27;);
++    main.querySelector(&#x27;[data-action=&quot;staff-cell&quot;]&#x27;)?.focus({ preventScroll: true });
++  }
++
++  main.addEventListener(&#x27;cancel&#x27;, event =&gt; {
++    if (!event.target.matches(&#x27;.staff-dialog&#x27;)) return;
++    event.preventDefault();
++    closeStaffDialog();
++  }, true);
++
++  function teamChange(id, kind, confirmed = false) {
++    if (!(kind === &#x27;appoint&#x27; ? leadsTeam() : managesTeam())) return;
++    const member = teamMember(id);
++    if (!member || member === account()) return;
++    if (!confirmed) {
++      state.teamChange = { id, kind };
++      return go(&#x27;team-confirm&#x27;);
++    }
++    const relation = membership(member, state.teamOrg);
++    if (kind === &#x27;appoint&#x27;) relation.role = accessRole;
++    else {
++      member.roles.splice(member.roles.indexOf(relation), 1);
++      const request = state.joinRequests.findLast(item =&gt; item.owner === member.id &amp;&amp; item.company === state.teamOrg &amp;&amp; item.status === &#x27;approved&#x27;);
++      if (request) request.status = &#x27;revoked&#x27;;
++    }
++    state.teamNotice = kind === &#x27;appoint&#x27; ? &#x27;Администратор назначен.&#x27; : &#x27;Доступ сотрудника к организации отключён.&#x27;;
++    state.teamChange = null;
++    state.existingPhoneAccount = null;
++    go(&#x27;admin&#x27;);
++  }
++
++  function switchDemoActor(id) {
++    state.accountId = id;
++    state.teamOrg = directorCompany(account()) || null;
++    state.teamNotice = &#x27;&#x27;;
++    state.teamChange = null;
++    state.staffAssignment = null;
++    state.proof = state.linkedFlow = state.recoveringInvite = state.connectAfterAuth = false;
++    openOrganizations();
++  }
++
++  function selectInvitation(invite, channel) {
++    state.invite = invite;
++    state.delivery = channel;
++    state.existingPhoneAccount = null;
++    state.proof = state.linkedFlow = state.recoveringInvite = false;
++  }
++
++  function openDemoLetter(id, channel) {
++    const invite = state.invites.find(item =&gt; item.id === Number(id));
++    if (!invite?.contacts[channel]) return;
++    selectInvitation(invite, channel);
++    state.accountId = null;
++    go(&#x27;letter&#x27;);
++  }
++
++  fill = () =&gt; {
++    sharedFill();
++    if (state.page === &#x27;join-search&#x27;) {
++      const user = account();
++      const example = joinDirectory.find(({ name }) =&gt; !membership(user, name) &amp;&amp; !companyInvitation(name, user)) || joinDirectory[0];
++      main.querySelector(&#x27;#join-inn&#x27;).value = example.inn;
++      updateJoinSearch(example.inn);
++    }
++    if (state.page !== &#x27;admin-new&#x27;) return;
++    const next = state.invites.length + 10;
++    for (const [id, value] of Object.entries({
++      surname: &#x27;Смирнова&#x27;, given: &#x27;Елена&#x27;, patronymic: &#x27;Андреевна&#x27;,
++      email: `elena${next}@example.test`, phone: `+79000000${String(next).padStart(3, &#x27;0&#x27;)}`,
++      snils: String(next + 500).padStart(11, &#x27;0&#x27;),
++    })) main.querySelector(&#x27;#&#x27; + id).value = value;
++  };
++
++  function submitTeamInvite(element) {
++    if (!managesTeam() || !element.reportValidity()) return;
++    const data = new FormData(element);
++    const channels = data.getAll(&#x27;channel&#x27;);
++    if (!channels.length) return fail(&#x27;Выберите почту или SMS.&#x27;);
++    const names = [&#x27;surname&#x27;, &#x27;given&#x27;, &#x27;patronymic&#x27;].map(key =&gt; data.get(key).trim());
++    if (!names[0] || !names[1]) return fail(&#x27;Укажите фамилию и имя сотрудника.&#x27;);
++    const snils = normalizeSnils(data.get(&#x27;snils&#x27;));
++    if (!/^\d{11}$/.test(snils)) return fail(&#x27;Введите СНИЛС из 11 цифр.&#x27;, &#x27;snils&#x27;);
++    const profileContacts = Object.fromEntries([&#x27;email&#x27;, &#x27;phone&#x27;].filter(channel =&gt; data.get(channel).trim())
++      .map(channel =&gt; [channel, normalize(channel, data.get(channel))]));
++    const missingChannel = channels.find(channel =&gt; !profileContacts[channel]);
++    if (missingChannel) return fail(&#x27;Укажите контакт для выбранного канала отправки.&#x27;, missingChannel);
++    if (profileContacts.phone &amp;&amp; !/^\+7\d{10}$/.test(profileContacts.phone)) return fail(&#x27;Проверьте формат номера телефона.&#x27;, &#x27;phone&#x27;);
++    const contacts = Object.fromEntries(channels.map(channel =&gt; [channel, profileContacts[channel]]));
++    const alreadyConnected = membership(bySnils(snils), state.teamOrg) ||
++      channels.some(channel =&gt; membership(byContact(channel, contacts[channel]), state.teamOrg));
++    if (alreadyConnected) return fail(&#x27;Этот сотрудник уже подключён к организации.&#x27;);
++    if (state.joinRequests.some(item =&gt; item.company === state.teamOrg &amp;&amp; item.snils === snils &amp;&amp; item.status === &#x27;pending&#x27;)) {
++      return fail(&#x27;У сотрудника уже есть заявка на доступ. Рассмотрите её в разделе «Пользователи».&#x27;);
++    }
++    if (state.invites.some(invite =&gt; invite.organization === state.teamOrg &amp;&amp; invite.snils === snils &amp;&amp;
++        ![&#x27;connected&#x27;, &#x27;declined&#x27;, &#x27;revoked&#x27;].includes(invite.status))) return fail(&#x27;У этого сотрудника уже есть приглашение в организацию.&#x27;);
++    const invite = { id: state.invites.length + 1, status: &#x27;sent&#x27;, organization: state.teamOrg,
++      role: employeeRole, name: names.filter(Boolean).join(&#x27; &#x27;), snils, contacts, profileContacts };
++    state.invites.push(invite);
++    selectInvitation(invite, channels[0]);
++    go(&#x27;sent&#x27;);
++  }
++
++  submitForm = element =&gt; {
++    if ([&#x27;staff-cell&#x27;, &#x27;staff-role&#x27;].includes(element.dataset.form)) return submitStaffAssignment(element);
++    if (element.dataset.form === &#x27;join-send&#x27;) return submitJoin(element);
++    if (element.dataset.form === &#x27;team-invite&#x27;) return submitTeamInvite(element);
++    if (element.dataset.form === &#x27;profile-name&#x27; &amp;&amp; account() &amp;&amp; !account().mosName &amp;&amp; element.reportValidity()) {
++      account().name = new FormData(element).get(&#x27;profile-name&#x27;).trim();
++      return go(&#x27;profile&#x27;);
++    }
++    if (element.dataset.form !== &#x27;admin&#x27;) sharedSubmit(element);
++  };
++
++  Object.assign(views, {
++    profile: renderAccessProfile,
++    auth: renderV3Auth,
++    contact: () =&gt; {
++      const email = state.channel === &#x27;email&#x27;;
++      const fromMos = account().mosContacts?.[state.channel] || &#x27;&#x27;;
++      const attributes = `type=&quot;${email ? &#x27;email&#x27; : &#x27;tel&#x27;}&quot; autocomplete=&quot;${email ? &#x27;email&#x27; : &#x27;tel&#x27;}&quot; value=&quot;${escape(fromMos)}&quot; required`;
++      return screen(email ? &#x27;Добавить вход по почте&#x27; : &#x27;Добавить телефон&#x27;, back() +
++        (email ? &#x27;&lt;p&gt;Подтвердите почту по ссылке из письма, затем задайте пароль. Этот адрес станет логином в вашем аккаунте.&lt;/p&gt;&#x27; : &#x27;&#x27;) +
++        form(&#x27;add-contact&#x27;, field(&#x27;contact&#x27;, contactLabel(state.channel), attributes) + submit(email ? &#x27;Получить письмо&#x27; : &#x27;Подтвердить контакт&#x27;)));
++    },
++    &#x27;profile-name&#x27;: () =&gt; screen(&#x27;Имя в профиле&#x27;, back() + &#x27;&lt;p&gt;Имя можно добавить или изменить в любое время.&lt;/p&gt;&#x27; +
++      form(&#x27;profile-name&#x27;, field(&#x27;profile-name&#x27;, &#x27;Как вас зовут?&#x27;, `autocomplete=&quot;name&quot; maxlength=&quot;120&quot; value=&quot;${escape(account().name)}&quot;`) + submit(&#x27;Сохранить&#x27;))),
++    &#x27;invite-options&#x27;: () =&gt; screen(&#x27;Продолжить по приглашению&#x27;,
++      &#x27;&lt;p&gt;Уже есть аккаунт ВЕРО? Войдите с привычной почтой или телефоном. После входа откроется это приглашение.&lt;/p&gt;&#x27; +
++      `&lt;div class=&quot;stack&quot;&gt;${primary(&#x27;Войти в свой аккаунт&#x27;, &#x27;invite-existing-login&#x27;)}
++        &lt;p&gt;Впервые в ВЕРО? Создайте аккаунт на почту, на которую пришло приглашение.&lt;/p&gt;
++        ${button(&#x27;Создать аккаунт&#x27;, &#x27;signup&#x27;)}&lt;/div&gt;`),
++    organizations: renderOrganizations,
++    &#x27;join-search&#x27;: () =&gt; screen(&#x27;Подать заявку по ИНН&#x27;, back(&#x27;organizations&#x27;) +
++      &#x27;&lt;p&gt;Введите ИНН компании. Заявка поступит на рассмотрение после отправки.&lt;/p&gt;&#x27; +
++      field(&#x27;join-inn&#x27;, &#x27;ИНН организации&#x27;, `inputmode=&quot;numeric&quot; maxlength=&quot;12&quot; value=&quot;${escape(state.joinInn)}&quot;`) +
++      `&lt;div id=&quot;join-result&quot; aria-live=&quot;polite&quot;&gt;${renderJoinResult()}&lt;/div&gt;`),
++    admin: renderTeam,
++    &#x27;admin-new&#x27;: renderTeamInvite,
++    &#x27;staff-card&#x27;: renderStaffCard,
++    &#x27;staff-cell&#x27;: renderStaffCard,
++    &#x27;staff-role&#x27;: renderStaffCard,
++    sent: () =&gt; screen(&#x27;Приглашение отправлено&#x27;, `&lt;p&gt;${escape(state.invite.name)}&lt;/p&gt;
++      ${button(&#x27;К списку приглашений&#x27;, &#x27;admin&#x27;)}${demo(deliveryButtons(state.invite))}`),
++    &#x27;team-confirm&#x27;: () =&gt; {
++      const { id, kind } = state.teamChange;
++      const member = teamMember(id);
++      if (!member || !(kind === &#x27;appoint&#x27; ? leadsTeam() : managesTeam())) return renderTeam();
++      const appointing = kind === &#x27;appoint&#x27;;
++      return screen(appointing ? &#x27;Назначить администратора&#x27; : &#x27;Отключить сотрудника&#x27;,
++        `${back(&#x27;admin&#x27;)}&lt;p class=&quot;panel&quot;&gt;&lt;strong&gt;${escape(member.name || member.email || member.phone)}&lt;/strong&gt;&lt;br&gt;${escape(state.teamOrg)}&lt;/p&gt;
++        &lt;p&gt;${appointing ? &#x27;Сотрудник сможет приглашать и отключать сотрудников этой организации.&#x27; : &#x27;Сотрудник потеряет доступ к этой организации. Его аккаунт и доступ к другим компаниям сохранятся.&#x27;}&lt;/p&gt;
++        ${primary(appointing ? &#x27;Назначить администратором&#x27; : &#x27;Отключить сотрудника&#x27;, &#x27;confirm-team-change&#x27;)}`);
++    },
++    mismatch: () =&gt; state.context === &#x27;join&#x27; ? screen(&#x27;Не удалось подтвердить личность&#x27;,
++      &#x27;&lt;p&gt;Попробуйте другой способ проверки или обратитесь в поддержку.&lt;/p&gt;&#x27; + primary(&#x27;К заявке на доступ&#x27;, &#x27;join-review&#x27;)) : sharedMismatch(),
++    invite: () =&gt; screen(&#x27;Вас пригласили в организацию&#x27;, `${state.existingPhoneAccount === state.accountId ? &#x27;&lt;p class=&quot;panel&quot; role=&quot;status&quot;&gt;Вы вошли в свой аккаунт ВЕРО по подтверждённому номеру.&lt;/p&gt;&#x27; : &#x27;&#x27;}
++      ${details()}&lt;p&gt;Проверьте имя и организацию. Если в приглашении ошибка, обратитесь к тому, кто его отправил.&lt;/p&gt;
++      &lt;div class=&quot;stack&quot;&gt;${primary(&#x27;Принять приглашение&#x27;, &#x27;accept&#x27;)}${button(&#x27;Отклонить приглашение&#x27;, &#x27;decline&#x27;)}${button(&#x27;Решить позже&#x27;, &#x27;organizations&#x27;)}&lt;/div&gt;`),
++    joined: () =&gt; screen(state.existingRole ? &#x27;Вы уже подключены к организации&#x27; : &#x27;Вы подключены к организации&#x27;,
++      `${details(state.existingRole || state.invite.role)}${cellAccessLine(membership(account(), state.invite.organization)?.cellAccess)}${primary(&#x27;Мои организации&#x27;, &#x27;organizations&#x27;)}`),
++  });
++
++  Object.assign(actions, {
++    fill,
++    organizations: openOrganizations,
++    &#x27;join-search&#x27;: () =&gt; {
++      if (!account()) return;
++      state.joinInn = &#x27;&#x27;;
++      go(&#x27;join-search&#x27;);
++    },
++    &#x27;join-verify&#x27;: () =&gt; { if (account() &amp;&amp; joinCompany()) startIdentity(&#x27;join&#x27;); },
++    &#x27;join-review&#x27;: () =&gt; { if (account() &amp;&amp; joinCompany()) go(&#x27;join-search&#x27;); },
++    &#x27;back-identity&#x27;: () =&gt; go(state.context === &#x27;join&#x27; ? &#x27;join-search&#x27; : &#x27;profile&#x27;),
++    &#x27;join-approve&#x27;: id =&gt; resolveJoin(id, true),
++    &#x27;join-deny&#x27;: id =&gt; resolveJoin(id, false),
++    &#x27;profile-name&#x27;: () =&gt; { if (account() &amp;&amp; !account().mosName) go(&#x27;profile-name&#x27;); },
++    &#x27;profile-invitations&#x27;: () =&gt; {
++      const invitations = pendingInvitations(account());
++      if (invitations.length === 1) return actions[&#x27;view-invitation&#x27;](invitations[0].id);
++      if (invitations.length &gt; 1) {
++        openOrganizations();
++        main.querySelector(&#x27;#awaiting-invitations&#x27;)?.focus();
++      }
++    },
++    open: openV3Invitation,
++    &#x27;email-confirm&#x27;: confirmContact,
++    logout: () =&gt; { state.existingPhoneAccount = null; sharedLogout(); },
++    &#x27;demo-send&#x27;: () =&gt; {
++      switchDemoActor(&#x27;admin&#x27;);
++      state.teamOrg = demoOrganization;
++      actions[&#x27;admin-new&#x27;]();
++    },
++    &#x27;demo-employee&#x27;: () =&gt; switchDemoActor(&#x27;A1&#x27;),
++    &#x27;demo-director&#x27;: () =&gt; switchDemoActor(&#x27;director&#x27;),
++    &#x27;demo-admin&#x27;: () =&gt; switchDemoActor(&#x27;admin&#x27;),
++    &#x27;director-company&#x27;: company =&gt; {
++      if (directorCompanies(account()).includes(company)) actions.team(company);
++    },
++    team: company =&gt; {
++      const user = account();
++      const role = membership(user, company)?.role;
++      if (role !== directorRole &amp;&amp; role !== accessRole) return;
++      if (role === directorRole &amp;&amp; rememberedCompany.get(user.id) !== company) {
++        rememberedCompany.set(user.id, company);
++        parent.postMessage({ type: &#x27;vero:director-companies:save&#x27;, userId: user.id, company }, &#x27;*&#x27;);
++      }
++      state.teamOrg = company;
++      state.teamNotice = &#x27;&#x27;;
++      state.teamChange = null;
++      state.staffAssignment = null;
++      go(&#x27;admin&#x27;);
++    },
++    admin: () =&gt; { if (managesTeam()) go(&#x27;admin&#x27;); },
++    &#x27;staff-card&#x27;: id =&gt; {
++      if (!managesTeam() || !teamMember(id) || id === state.accountId) return;
++      state.staffAssignment = { company: state.teamOrg, manager: state.accountId, member: id };
++      go(&#x27;staff-card&#x27;);
++    },
++    &#x27;staff-cell&#x27;: () =&gt; { if (staffTarget()) go(&#x27;staff-cell&#x27;); },
++    &#x27;staff-cancel&#x27;: () =&gt; { if (staffTarget()) closeStaffDialog(); },
++    &#x27;admin-new&#x27;: () =&gt; {
++      if (!managesTeam()) return;
++      state.adminChannels = [&#x27;email&#x27;];
++      go(&#x27;admin-new&#x27;);
++    },
++    appoint: id =&gt; teamChange(id, &#x27;appoint&#x27;),
++    disconnect: id =&gt; teamChange(id, &#x27;disconnect&#x27;),
++    &#x27;confirm-team-change&#x27;: () =&gt; {
++      if (state.teamChange) teamChange(state.teamChange.id, state.teamChange.kind, true);
++    },
++    &#x27;view-invitation&#x27;: id =&gt; {
++      const invite = state.invites.find(item =&gt; item.id === Number(id));
++      const user = account();
++      if (!invite || !visibleInvitation(invite, user)) return;
++      const channel = invite.acceptedVia || Object.keys(invite.contacts).find(key =&gt; invite.contacts[key] === user[key]) || Object.keys(invite.contacts)[0];
++      selectInvitation(invite, channel);
++      state.proof = invite.acceptedBy === user.id;
++      openInvite();
++    },
++    decline: () =&gt; {
++      if (!account() || !state.proof || !openForResponse(state.invite) || inviteContactConflict()) return;
++      state.invite.status = &#x27;declined&#x27;;
++      openOrganizations();
++    },
++    &#x27;open-record&#x27;: openDemoLetter,
++    &#x27;session-invite&#x27;: () =&gt; {
++      const invite = sessionInvitation();
++      if (!invite) return;
++      const channel = invite.acceptedVia || Object.keys(invite.contacts)[0];
++      selectInvitation(invite, channel);
++      openV3Invitation();
++    },
++    letter: () =&gt; {
++      const invite = state.invites.at(-1);
++      if (invite) openDemoLetter(invite.id, Object.keys(invite.contacts)[0]);
++    },
++  });
++
++  // Demo verification is kept outside the screen history, so going back cannot reuse an old code.
++  const confirmV3Contact = confirmContact;
++  const submitV3Form = submitForm;
++  const fillV3 = fill;
++  const resetV3Access = reset;
++  const logoutV3 = actions.logout;
++  const demoCodeLifetime = 5 * 60 * 1000;
++  const demoResendDelay = 30 * 1000;
++  const demoAttemptLimit = 5;
++  const codesIssued = new Map();
++  const recentVerifications = new Map();
++  const resetPasswords = new Map();
++  let verification;
++  let nextVerificationId = 0;
++
++  const challengeKey = ({ channel, contact, purpose }) =&gt; [channel, contact, purpose].join(&#x27;:&#x27;);
++
++  function issueVerification(challenge) {
++    const usesLink = challenge.channel === &#x27;email&#x27; &amp;&amp; challenge.purpose !== &#x27;invite&#x27;;
++    const key = challenge.channel + &#x27;:&#x27; + challenge.contact;
++    const prior = codesIssued.get(key) || 0;
++    if (!usesLink) codesIssued.set(key, prior + 1);
++    const now = Date.now();
++    const issued = {
++      id: challenge.id, usesLink,
++      code: usesLink ? null : String((Number(code) + prior) % 1000000).padStart(6, &#x27;0&#x27;),
++      expiresAt: now + demoCodeLifetime, resendAt: now + demoResendDelay, attempts: 0,
++      status: &#x27;issued&#x27;,
++      ownerId: challenge.purpose === &#x27;password-reset&#x27; ? byContact(&#x27;email&#x27;, challenge.contact)?.id : null,
++    };
++    recentVerifications.set(challengeKey(challenge), issued);
++    return issued;
++  }
++
++  function tooSoon(challenge) {
++    const previous = recentVerifications.get(challengeKey(challenge));
++    if (!previous || previous.status === &#x27;used&#x27; || Date.now() &gt;= previous.resendAt) return false;
++    const seconds = Math.ceil((previous.resendAt - Date.now()) / 1000);
++    fail(`Повторная отправка будет доступна через ${seconds} сек.`);
++    return true;
++  }
++
++  startChallenge = (channel, contact, purpose) =&gt; {
++    const challenge = { channel, contact, purpose, from: state.page };
++    if (tooSoon(challenge)) return;
++    state.challenge = { ...challenge, id: ++nextVerificationId };
++    verification = issueVerification(state.challenge);
++    go(&#x27;challenge&#x27;);
++  };
++
++  function challengeForScreen() {
++    return verification?.id === state.challenge?.id ? verification : null;
++  }
++
++  function challengeError(active) {
++    if (active?.status === &#x27;used&#x27; || active?.status === &#x27;approved&#x27;) return &#x27;Подтверждение уже использовано. Запросите новое.&#x27;;
++    if (!active || Date.now() &gt;= active.expiresAt) return active?.usesLink ? &#x27;Срок действия ссылки истёк.&#x27; : &#x27;Код истёк. Запросите новый.&#x27;;
++    if (active.attempts &gt;= demoAttemptLimit) return &#x27;Слишком много попыток. Запросите новый код.&#x27;;
++    return &#x27;&#x27;;
++  }
++
++  function finishVerification(input, expectedLink) {
++    if (state.page !== &#x27;challenge&#x27;) return;
++    const active = challengeForScreen();
++    const issue = challengeError(active);
++    if (issue) return fail(issue, expectedLink ? undefined : &#x27;code&#x27;);
++    if (active.usesLink !== expectedLink) return;
++    if (!expectedLink &amp;&amp; input !== active.code) {
++      active.attempts += 1;
++      return fail(challengeError(active) || &#x27;Неверный код. Проверьте последнее сообщение.&#x27;, &#x27;code&#x27;);
++    }
++    if (state.challenge.purpose === &#x27;password-reset&#x27;) {
++      if (!active.ownerId) return fail(&#x27;Ссылка недействительна. Запросите новое письмо.&#x27;);
++      active.status = &#x27;approved&#x27;;
++      return go(&#x27;reset-password&#x27;);
++    }
++    active.status = &#x27;used&#x27;;
++    confirmV3Contact();
++  }
++
++  function renderV3Challenge() {
++    const { channel, contact, purpose } = state.challenge;
++    const recovery = purpose === &#x27;password-reset&#x27;;
++    const usesLink = channel === &#x27;email&#x27; &amp;&amp; purpose !== &#x27;invite&#x27;;
++    const active = challengeForScreen();
++    const issue = challengeError(active);
++    const title = channel === &#x27;phone&#x27; ? &#x27;Подтвердите телефон&#x27; : &#x27;Проверьте почту&#x27;;
++    const message = recovery ? &#x27;&lt;p&gt;Если этот адрес связан с аккаунтом, на него придёт ссылка для сброса пароля.&lt;/p&gt;&#x27; :
++      `&lt;p&gt;${usesLink ? &#x27;Ссылка отправлена на&#x27; : &#x27;Код отправлен на&#x27;} &lt;strong&gt;${escape(contact)}&lt;/strong&gt;.&lt;/p&gt;`;
++    const content = usesLink ? demo(primary(&#x27;Открыть ссылку из письма&#x27;, &#x27;email-confirm&#x27;)) :
++      form(&#x27;code&#x27;, field(&#x27;code&#x27;, channel === &#x27;phone&#x27; ? &#x27;Код из SMS&#x27; : &#x27;Код из письма&#x27;,
++        &#x27;inputmode=&quot;numeric&quot; autocomplete=&quot;one-time-code&quot; maxlength=&quot;6&quot; required&#x27;) + submit(&#x27;Подтвердить код&#x27;));
++    return screen(title, message + (issue &amp;&amp; !state.error ? `&lt;p class=&quot;alert&quot;&gt;${issue}&lt;/p&gt;` : &#x27;&#x27;) + content +
++      `&lt;div class=&quot;actions&quot;&gt;${button(usesLink ? &#x27;Отправить письмо ещё раз&#x27; : &#x27;Отправить код ещё раз&#x27;, &#x27;resend&#x27;)}
++      ${button(purpose === &#x27;invite&#x27; ? &#x27;Вернуться к приглашению&#x27; : &#x27;Изменить контакт&#x27;, &#x27;back-challenge&#x27;)}&lt;/div&gt;
++      &lt;details class=&quot;demo-box&quot;&gt;&lt;summary&gt;Управление демо&lt;/summary&gt;
++      ${active?.code ? `&lt;p&gt;Код из последнего сообщения &lt;strong&gt;${active.code}&lt;/strong&gt;&lt;/p&gt;` : &#x27;&#x27;}
++      ${button(&#x27;Демо: срок истёк&#x27;, &#x27;expire-challenge&#x27;)}&lt;/details&gt;`);
++  }
++
++  function beginRecovery() {
++    state.recoveryFrom = state.page;
++    state.recoveryEmail = main.querySelector(&#x27;input[type=email]&#x27;)?.value ||
++      (state.auth?.channel === &#x27;email&#x27; ? state.auth.prefill : &#x27;&#x27;);
++    go(&#x27;recovery&#x27;);
++  }
++
++  function saveResetPassword(values) {
++    const active = challengeForScreen();
++    if (state.page !== &#x27;reset-password&#x27; || state.challenge.purpose !== &#x27;password-reset&#x27; ||
++        active?.status !== &#x27;approved&#x27; || Date.now() &gt;= active.expiresAt) {
++      return fail(&#x27;Срок действия ссылки истёк. Запросите новое письмо.&#x27;);
++    }
++    if (values.password !== values.repeat) return fail(&#x27;Пароли должны совпадать.&#x27;, &#x27;repeat&#x27;);
++    const user = state.accounts.find(item =&gt; item.id === active.ownerId &amp;&amp; item.email === state.challenge.contact);
++    if (!user) return fail(&#x27;Ссылка недействительна. Запросите новое письмо.&#x27;);
++    active.status = &#x27;used&#x27;;
++    user.password = values.password;
++    resetPasswords.set(user.email, user.password);
++    state.accountId = null;
++    state.recoveringInvite = state.recoveryFrom === &#x27;conflict&#x27; &amp;&amp; state.context === &#x27;invite&#x27;;
++    state.auth = { mode: &#x27;login&#x27;, channel: &#x27;email&#x27;, prefill: user.email };
++    go(&#x27;reset-complete&#x27;);
++  }
++
++  submitForm = element =&gt; {
++    const kind = element.dataset.form;
++    if ([&#x27;code&#x27;, &#x27;reset-request&#x27;, &#x27;reset-password&#x27;].includes(kind)) {
++      if (!element.reportValidity()) return;
++      const values = Object.fromEntries(new FormData(element));
++      if (kind === &#x27;code&#x27;) return finishVerification(values.code, false);
++      if (kind === &#x27;reset-password&#x27;) return saveResetPassword(values);
++      state.recoveryEmail = normalize(&#x27;email&#x27;, values[&#x27;recovery-email&#x27;]);
++      return startChallenge(&#x27;email&#x27;, state.recoveryEmail, &#x27;password-reset&#x27;);
++    }
++    if (kind === &#x27;entry-login&#x27; || (kind === &#x27;auth&#x27; &amp;&amp; state.auth.channel === &#x27;email&#x27; &amp;&amp; !signup())) {
++      const email = normalize(&#x27;email&#x27;, new FormData(element).get(&#x27;contact&#x27;));
++      const user = byContact(&#x27;email&#x27;, email);
++      if (user &amp;&amp; resetPasswords.has(email)) user.password = resetPasswords.get(email);
++    }
++    return submitV3Form(element);
++  };
++
++  fill = () =&gt; {
++    fillV3();
++    const input = main.querySelector(&#x27;#code&#x27;);
++    const active = challengeForScreen();
++    if (input &amp;&amp; active?.code) input.value = active.code;
++    const recoveryEmail = main.querySelector(&#x27;#recovery-email&#x27;);
++    if (recoveryEmail &amp;&amp; !recoveryEmail.value) recoveryEmail.value = state.accounts[0].email;
++  };
++
++  reset = () =&gt; {
++    verification = null;
++    codesIssued.clear();
++    recentVerifications.clear();
++    resetPasswords.clear();
++    resetV3Access();
++    if (scenario.value === &#x27;send&#x27;) actions[&#x27;demo-send&#x27;]();
++  };
++
++  Object.assign(views, {
++    challenge: renderV3Challenge,
++    recovery: () =&gt; screen(&#x27;Восстановить пароль&#x27;, back(&#x27;back-recovery&#x27;) +
++      &#x27;&lt;p&gt;Укажите почту для входа. Мы пришлём ссылку для сброса пароля, если адрес связан с аккаунтом.&lt;/p&gt;&#x27; +
++      form(&#x27;reset-request&#x27;, field(&#x27;recovery-email&#x27;, &#x27;Электронная почта&#x27;, `type=&quot;email&quot; autocomplete=&quot;email&quot; value=&quot;${escape(state.recoveryEmail)}&quot; required`) + submit(&#x27;Отправить ссылку&#x27;)) +
++      `&lt;div class=&quot;actions&quot;&gt;${button(&#x27;Войти по телефону&#x27;, &#x27;recovery-phone&#x27;)}${button(&#x27;Нет доступа к почте и телефону&#x27;, &#x27;recovery-support&#x27;)}&lt;/div&gt;`),
++    &#x27;reset-password&#x27;: () =&gt; screen(&#x27;Задайте новый пароль&#x27;, form(&#x27;reset-password&#x27;, newPassword() + submit(&#x27;Сохранить пароль&#x27;)) +
++      button(&#x27;Запросить новое письмо&#x27;, &#x27;retry-recovery&#x27;)),
++    &#x27;reset-complete&#x27;: () =&gt; screen(&#x27;Пароль изменён&#x27;, &#x27;&lt;p&gt;Войдите с новым паролем.&lt;/p&gt;&#x27; +
++      primary(state.linkedFlow ? &#x27;Войти и вернуться к приглашению&#x27; : &#x27;Перейти ко входу&#x27;, &#x27;back-reset-login&#x27;)),
++    &#x27;recovery-support&#x27;: () =&gt; screen(&#x27;Восстановление через поддержку&#x27;, back(&#x27;retry-recovery&#x27;) +
++      &#x27;&lt;p&gt;Если почта и телефон недоступны, обратитесь в поддержку ВЕРО. После проверки личности поддержка поможет вернуть доступ к вашему аккаунту.&lt;/p&gt;&#x27;),
++  });
++
++  Object.assign(actions, {
++    reset, fill,
++    recovery: beginRecovery,
++    &#x27;retry-recovery&#x27;: () =&gt; { verification = null; go(&#x27;recovery&#x27;); },
++    &#x27;back-recovery&#x27;: () =&gt; go(state.recoveryFrom || &#x27;entry&#x27;),
++    &#x27;back-reset-login&#x27;: () =&gt; go(&#x27;auth&#x27;),
++    &#x27;recovery-support&#x27;: () =&gt; go(&#x27;recovery-support&#x27;),
++    &#x27;recovery-phone&#x27;: () =&gt; {
++      state.recoveringInvite = state.recoveryFrom === &#x27;conflict&#x27; &amp;&amp; state.context === &#x27;invite&#x27;;
++      state.accountId = null;
++      startAuth(&#x27;login&#x27;, true, &#x27;phone&#x27;);
++    },
++    &#x27;email-confirm&#x27;: () =&gt; finishVerification(null, true),
++    &#x27;back-challenge&#x27;: () =&gt; {
++      verification = null;
++      if (state.challenge.purpose === &#x27;invite&#x27;) return go(&#x27;letter&#x27;);
++      go(state.challenge.from);
++    },
++    resend: () =&gt; {
++      if (state.page !== &#x27;challenge&#x27; || tooSoon(state.challenge)) return;
++      state.challenge = { ...state.challenge, id: ++nextVerificationId };
++      verification = issueVerification(state.challenge);
++      go(&#x27;challenge&#x27;);
++      fail(verification.usesLink ? &#x27;Запрошена новая ссылка.&#x27; : &#x27;Отправлен новый код. Предыдущий код больше не действует.&#x27;);
++    },
++    &#x27;expire-challenge&#x27;: () =&gt; {
++      const active = challengeForScreen();
++      if (!active || active.status !== &#x27;issued&#x27;) return;
++      active.expiresAt = active.resendAt = 0;
++      go(&#x27;challenge&#x27;);
++    },
++    logout: () =&gt; { verification = null; logoutV3(); },
++  });
++
++  document.addEventListener(&#x27;click&#x27;, event =&gt; {
++    const target = event.target.closest(&#x27;[data-action], button[type=submit]&#x27;);
++    if (target?.type === &#x27;submit&#x27;) {
++      event.preventDefault();
++      return submitForm(target.form);
++    }
++    const action = target?.dataset.action;
++    actions[action]?.(target.dataset.id, target.dataset.channel);
++  });
++  main.addEventListener(&#x27;keydown&#x27;, event =&gt; {
++    if (event.key === &#x27;Enter&#x27; &amp;&amp; event.target.matches(&#x27;input:not([type=checkbox])&#x27;) &amp;&amp; event.target.form) {
++      event.preventDefault();
++      submitForm(event.target.form);
++    }
++  });
++  scenario.addEventListener(&#x27;change&#x27;, reset);
++  main.addEventListener(&#x27;change&#x27;, event =&gt; {
++    if (event.target.id === &#x27;identity-outcome&#x27;) state.identityOutcome = event.target.value;
++    if (event.target.name === &#x27;channel&#x27;) {
++      state.channelsEdited = true;
++      state.adminChannels = new FormData(event.target.form).getAll(&#x27;channel&#x27;);
++      syncInvitationChannels(event.target.form);
++    }
++    if (event.target.id === &#x27;invite-role&#x27;) {
++      state.adminRole = event.target.value;
++      if (!state.channelsEdited) state.adminChannels = [state.adminRole === &#x27;Водитель&#x27; ? &#x27;phone&#x27; : &#x27;email&#x27;];
++      syncInvitationChannels(event.target.form);
++    }
++  });
++  function submitForm(element) {
++    if (!element.reportValidity()) return;
++    const data = new FormData(element);
++    const values = Object.fromEntries(data);
++    const kind = element.dataset.form;
++    if (kind === &#x27;entry-login&#x27; || (kind === &#x27;auth&#x27; &amp;&amp; state.auth.channel === &#x27;email&#x27; &amp;&amp; !signup())) {
++      const contact = normalize(&#x27;email&#x27;, values.contact);
++      const user = byContact(&#x27;email&#x27;, contact);
++      return user?.password === values.password ? signedIn(user) : fail(&#x27;Проверьте почту и пароль.&#x27;, &#x27;password&#x27;);
++    }
++    if (kind === &#x27;auth&#x27; || kind === &#x27;add-contact&#x27;) {
++      const channel = kind === &#x27;auth&#x27; ? state.auth.channel : state.channel;
++      const contact = normalize(channel, values.contact);
++      if (channel === &#x27;phone&#x27; &amp;&amp; !/^\+7\d{10}$/.test(contact)) return fail(&#x27;Укажите номер в формате +7 900 000-00-00.&#x27;, &#x27;contact&#x27;);
++      if (kind === &#x27;add-contact&#x27;) return startChallenge(channel, contact, &#x27;add&#x27;);
++      state.auth.prefill = contact;
++      return startChallenge(channel, contact, state.auth.mode);
++    }
++    if (kind === &#x27;code&#x27;) return values.code === code ? confirmContact() : fail(&#x27;Неверный код. Попробуйте ещё раз.&#x27;, &#x27;code&#x27;);
++    if (kind === &#x27;add-password&#x27;) {
++      if (values.password !== values.repeat) return fail(&#x27;Пароли должны совпадать.&#x27;, &#x27;repeat&#x27;);
++      const user = account();
++      const email = state.challenge.contact;
++      if (byContact(&#x27;email&#x27;, email)) return fail(&#x27;Этот адрес уже связан с аккаунтом. Воспользуйтесь восстановлением доступа.&#x27;);
++      user.email = email;
++      user.password = values.password;
++      return go(&#x27;profile&#x27;);
++    }
++    if (kind === &#x27;finish&#x27;) {
++      if (values.password !== values.repeat) return fail(&#x27;Пароли должны совпадать.&#x27;, &#x27;repeat&#x27;);
++      const { channel, contact } = state.auth;
++      if (byContact(channel, contact)) { startAuth(&#x27;login&#x27;); return fail(&#x27;Этот контакт уже используется для входа.&#x27;); }
++      const user = { id: `A${state.accounts.length + 1}`, [channel]: contact, password: values.password, roles: [], mos: false };
++      state.accounts.push(user);
++      return signedIn(user);
++    }
++    if (kind === &#x27;admin&#x27;) {
++      const channels = data.getAll(&#x27;channel&#x27;);
++      if (!channels.length) return fail(&#x27;Выберите почту или SMS для отправки приглашения.&#x27;);
++      const contacts = Object.fromEntries(channels.map(channel =&gt; [channel, normalize(channel, values[channel])]));
++      const snils = normalizeSnils(values.snils);
++      const name = [values.surname, values.given, values.patronymic].map(value =&gt; value.trim());
++      if (!name[0] || !name[1]) return fail(&#x27;Укажите фамилию и имя сотрудника.&#x27;);
++      if (!/^\d{11}$/.test(snils)) return fail(&#x27;Введите СНИЛС из 11 цифр.&#x27;, &#x27;snils&#x27;);
++      if (contacts.phone &amp;&amp; !/^\+7\d{10}$/.test(contacts.phone)) return fail(&#x27;Проверьте формат номера телефона.&#x27;, &#x27;phone&#x27;);
++      state.invite = { id: state.invites.length + 1, status: &#x27;sent&#x27;, organization: &#x27;ООО «Вектор»&#x27;,
++        name: name.filter(Boolean).join(&#x27; &#x27;), role: values.role, contacts, snils };
++      state.delivery = values.role === &#x27;Водитель&#x27; &amp;&amp; contacts.phone ? &#x27;phone&#x27; : channels[0];
++      state.invites.push(state.invite);
++      state.inviteMatch = bySnils(snils)?.id || null;
++      state.accountId = null;
++      state.proof = false;
++      state.linkedFlow = false;
++      state.connectAfterAuth = false;
++      state.recoveringInvite = false;
++      go(&#x27;sent&#x27;);
++    }
++    if (kind === &#x27;company-certificate&#x27;) {
++      if (values.certificate === &#x27;expired&#x27;) return fail(&#x27;Срок действия сертификата истёк. Выберите другой сертификат.&#x27;, &#x27;certificate&#x27;);
++      if (values.certificate !== &#x27;director&#x27;) return fail(&#x27;Для подключения нужен сертификат генерального директора.&#x27;, &#x27;certificate&#x27;);
++      return go(&#x27;company-review&#x27;);
++    }
++    if (kind === &#x27;company-review&#x27;) {
++      const application = ownApplication();
++      if (application &amp;&amp; application.status !== &#x27;rejected&#x27;) return go(&#x27;company-status&#x27;);
++      if (state.applications.some(item =&gt; item.owner !== state.accountId &amp;&amp; item.status !== &#x27;rejected&#x27;)) return fail(&#x27;По этому ИНН уже есть заявка или подключённая организация.&#x27;);
++      if (application) application.status = &#x27;pending&#x27;;
++      else state.applications.push({ owner: state.accountId, status: &#x27;pending&#x27; });
++      return go(&#x27;company-status&#x27;);
++    }
++  }
++  scenario.value = &#x27;send&#x27;;
++  reset();
++  const history = createPrototypeHistory({
++    read: () =&gt; ({ model: state, signature: JSON.stringify({ ...state, joinInn: undefined }) }),
++    write: snapshot =&gt; { state = snapshot; render(); },
++    scope: () =&gt; scenario.value,
++  });
++  addEventListener(&#x27;message&#x27;, event =&gt; {
++    if (event.source === parent &amp;&amp; event.data?.type === &#x27;vero:fill&#x27;) { fill(); history.record(); }
++  });
++})();
++&lt;/script&gt;
++&lt;/body&gt;
++&lt;/html&gt;
++" hidden></iframe></div>
+ </section>
+ <section id="stand-schemes" role="tabpanel" aria-labelledby="stand-tab-schemes" hidden><iframe id="stand-frame-schemes" title="Схемы регистрации" sandbox="allow-scripts" referrerpolicy="no-referrer" data-page="&lt;!doctype html&gt;&lt;html lang=&quot;ru&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;ВЕРО — схемы регистрации&lt;/title&gt;&lt;style&gt;*{box-sizing:border-box}[hidden]{display:none!important}.diagram[data-orientation=horizontal] svg{width:auto}.tools [aria-pressed=true]{background:#25343a;color:white}body{margin:0;background:#f6f8f8;color:#18383f;font:14px/1.5 Arial,sans-serif}main{max-width:1160px;margin:auto;padding:26px 18px}h1{font-size:28px;margin:0 0 10px}h2{font-size:20px;margin:0}p{color:#65767b}nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}nav a{padding:7px 10px;background:white;border:1px solid #cedadb;border-radius:4px}a{color:#1c6876}article{background:white;border:1px solid #cfdbdd;border-radius:8px;padding:20px;margin:20px 0}.card-head{display:flex;gap:14px}.card-head p{margin:7px 0 16px}.number{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:6px;background:#eaf2f3}.tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:10px 0}button,.downloads a{font:12px Arial,sans-serif;border:1px solid #cddbdd;border-radius:4px;padding:8px 10px;background:white;color:#1c5964;cursor:pointer}button:focus-visible,a:focus-visible,.diagram:focus-visible{outline:3px solid #96b9f5;outline-offset:3px}.downloads{margin-left:auto;display:flex;gap:8px}.downloads a{text-decoration:none}.diagram{border:1px solid #d3dfe0;border-radius:5px;overflow:auto;max-height:650px;padding:14px;background:white}.diagram svg{display:block;width:100%;height:auto;max-width:none}.tools [data-scale]{font-size:12px;min-width:64px;text-align:center}li{margin:7px 0}ul{padding-left:20px;margin-bottom:0}.meta{font-size:12px;color:#60757b}@media(max-width:600px){main{padding:18px 10px}article{padding:12px}h1{font-size:23px}h2{font-size:18px}.downloads{margin-left:0;width:100%}.diagram{max-height:70vh}}&lt;/style&gt;&lt;style&gt;.has-expanded-scheme{overflow:hidden}
+ article.is-expanded{position:fixed;inset:8px;z-index:1000;margin:0;display:flex;flex-direction:column;min-height:0;box-shadow:0 0 0 20px #f6f8f8}
+@@ -3927,7 +5698,7 @@ article.is-expanded .tools{flex:none}
+   const back = byId('stand-back');
+   const forward = byId('stand-forward');
+   const position = byId('stand-history-position');
+-  
++
+ (() => {
+   const frames = {"10": {"title": "Выберите сертификат УКЭП"}, "11": {"title": "Проверьте данные организации"}, "12": {"title": "Организация на проверке"}, "13": {"title": "Организация подключена"}, "14": {"title": "Письмо с приглашением"}, "15": {"title": "Продолжить по приглашению"}, "16": {"title": "Вход по приглашению"}, "17": {"title": "Создать аккаунт по приглашению"}, "18": {"title": "Аккаунт с почтой приглашения есть"}, "19": {"title": "Подтвердите почту приглашения"}, "20": {"title": "Принять или отклонить приглашение"}, "21": {"title": "Приглашение отклонено"}, "22": {"title": "Вход выполнен"}, "23": {"title": "Сотрудник присоединился"}, "24": {"title": "Новый аккаунт по приглашению"}, "25": {"title": "Вход нового сотрудника"}, "27": {"title": "Вход подключённого сотрудника"}, "28": {"title": "Вход подключённого сотрудника выполнен"}, "29": {"title": "Восстановление пароля"}, "30": {"title": "Письмо для восстановления отправлено"}, "31": {"title": "Письмо о восстановлении"}, "32": {"title": "Новый пароль"}, "33": {"title": "Пароль изменён"}, "34": {"title": "Вход через mos.ru"}, "35": {"title": "Создание аккаунта через mos.ru"}, "36": {"title": "Аккаунт создан через mos.ru"}, "37": {"title": "Mos ID подключён"}, "38": {"title": "Вход в существующий аккаунт"}, "01": {"title": "Вход в ВЕРО"}, "02": {"title": "Регистрация организации"}, "03": {"title": "Проверьте почту"}, "04": {"title": "Письмо для подтверждения"}, "05": {"title": "Пароль для входа"}, "07": {"title": "Добро пожаловать"}, "08а": {"title": "Подключите организацию"}, "06": {"title": "Почта уже зарегистрирована"}, "03а": {"title": "Проверьте почту — повторная отправка"}, "04а": {"title": "Ссылка подтверждения устарела"}, "10б": {"title": "Проблема с сертификатом"}, "13а": {"title": "Проверка не пройдена"}, "05а": {"title": "Сервис недоступен"}, "24а": {"title": "Приглашение — сервис недоступен"}, "16а": {"title": "Вход с почтой приглашения"}, "20а": {"title": "Приглашение для текущей почты"}, "23а": {"title": "Организация добавлена к аккаунту"}, "19а": {"title": "Код просрочен"}, "19б": {"title": "Код не совпадает"}, "19в": {"title": "Нет доступа к почте"}, "19г": {"title": "Код выслан повторно"}, "32а": {"title": "Ссылка восстановления устарела"}, "34а": {"title": "Подключение Mos ID"}, "37а": {"title": "Конфликт Mos ID"}, "34б": {"title": "Ошибка входа через Mos ID"}, "34в": {"title": "Ошибка подключения Mos ID"}, "30а": {"title": "Новое письмо запрошено"}};
+   const iframe = document.querySelector('#stand-frame-letter');
+@@ -3949,7 +5720,7 @@ article.is-expanded .tools{flex:none}
+   const frameFor = name => byId('stand-frame-' + name);
+   const send = (frame, data) => frame.contentWindow.postMessage(data, '*');
+   const history = action => send(frameFor(activeVariant), { type: 'vero:history', action });
+-  const directorFrame = frameFor('one-account-v3');
++  const directorFrame = frameFor('invitation');
+   const directorStorage = 'vero.v3.director-company';
+   const directorChoices = new Map();
+   try {
